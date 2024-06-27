@@ -13,7 +13,7 @@ If you are interested in collaborating with us on this project, please contact m
 ## Run project locally
 ```bash
 git clone https://github.com/sloukit/pydew-valley-uzh.git
-pip install pygame
+pip install pygame-ce
 cd pydew-valley-uzh-main
 python3 main.py
 ```
