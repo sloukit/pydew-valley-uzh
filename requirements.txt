@@ -1,1 +1,3 @@
 pygame-ce>=2.5.0
+pygbag==0.9.1
+PyTMX==3.32

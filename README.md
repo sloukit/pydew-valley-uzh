@@ -11,12 +11,30 @@ You find more details on the game levels here: https://docs.google.com/spreadshe
 If you are interested in collaborating with us on this project, please contact me at s.kittelberger[at]psychologie.uzh.ch.
 
 ## Run project locally
+
+### Clone and install dependencies
+
 ```bash
 git clone https://github.com/sloukit/pydew-valley-uzh.git
-pip install pygame
 cd pydew-valley-uzh-main
+pip install -r requirements.txt
+```
+
+### Run the game locally
+
+```bash
 python3 main.py
 ```
+
+### Run the game in a browser with `pygbag`
+
+Start a local webserver:
+
+```bash
+pygbag ./main.py
+```
+
+Once this is running, you can access the game in browser by navigating to http://localhost:8000, or http://localhost:8000#debug to run in debug mode.
 
 ## Resources
 This game builts on a Clear Code tutorial: \
