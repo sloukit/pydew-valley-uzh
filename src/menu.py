@@ -1,5 +1,10 @@
 import pygame
-from .settings import *
+from .settings import (
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    PURCHASE_PRICES,
+    SALE_PRICES
+    )
 
 
 class Menu:
