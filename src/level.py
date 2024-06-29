@@ -6,12 +6,12 @@ from .transition import Transition
 from random import randint
 from .sky import Sky, Rain
 from .overlay import Overlay
-from .menu import Menu
-
+from .menus import ShopMenu
 
 class Level:
-    def __init__(self, tmx_maps, character_frames, level_frames, overlay_frames, font, sounds):
+    def __init__(self, tmx_maps, character_frames, level_frames, overlay_frames, font, sounds, game_state):
         self.display_surface = pygame.display.get_surface()
+        self.game_state = game_state
 
         # sprite groups
         self.entities = {}
@@ -40,8 +40,7 @@ class Level:
 
         # overlays
         self.overlay = Overlay(self.entities['Player'], overlay_frames)
-        self.menu = Menu(self.entities['Player'], self.toggle_shop, font)
-        self.shop_active = False
+        self.shop_menu = ShopMenu(font, game_state, self.entities['Player'])
 
     def setup(self, tmx_maps, character_frames, level_frames):
         self.sounds["music"].set_volume(0.1)
@@ -119,7 +118,9 @@ class Level:
             if collided_interaction_sprite[0].name == 'Bed':
                 self.start_reset()
             if collided_interaction_sprite[0].name == 'Trader':
-                self.toggle_shop()
+                self.shop_menu.bg = self.display_surface.copy()
+                self.game_state.append("shop_menu")
+
 
     def reset(self):
         self.current_day += 1
@@ -164,21 +165,14 @@ class Level:
                     self.soil_layer.grid[int(plant.rect.centery / (TILE_SIZE * SCALE_FACTOR))][
                         int(plant.rect.centerx / (TILE_SIZE * SCALE_FACTOR))].remove('P')
 
-    def toggle_shop(self):
-        self.shop_active = not self.shop_active
-
     def update(self, dt):
-        if not self.shop_active:
-            self.all_sprites.update(dt)
         self.all_sprites.draw(self.entities['Player'].rect.center)
         self.plant_collision()
         self.overlay.display(self.sky.get_time())
         self.sky.display(dt)
+        self.all_sprites.update(dt)
 
-        if self.shop_active:
-            self.menu.update()
-
-        if self.raining and not self.shop_active:
+        if self.raining:
             self.rain.update()
 
         if self.day_transition:
