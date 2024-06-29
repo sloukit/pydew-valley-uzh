@@ -1,9 +1,4 @@
-import pygame
-from .settings import (
-    TILE_SIZE,
-    SCALE_FACTOR,
-    LAYERS
-)
+from .settings import *
 from .sprites import Sprite, Plant
 from random import choice
 

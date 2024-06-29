@@ -1,18 +1,5 @@
-import pygame
-import sys
-from src.settings import (
-    SCREEN_WIDTH,
-    SCREEN_HEIGHT
-)
-from src.support import (
-    tmx_importer,
-    animation_importer,
-    import_folder_dict,
-    import_folder,
-    character_importer,
-    sound_importer,
-    import_font
-)
+from src.settings import *
+from src.support import *
 from src.level import Level
 from src.main_menu import main_menu
 

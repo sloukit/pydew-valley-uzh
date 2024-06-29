@@ -1,14 +1,5 @@
-import pygame
-import sys
-from os import path, sep, walk, listdir
-from os.path import join
+from .settings import *
 
-from .settings import (
-    SCALE_FACTOR,
-    load_pygame,
-    TILE_SIZE,
-    CHAR_TILE_SIZE
-)
 
 def resource_path(relative_path: str):
     """Get absolute path to resource, works for dev and for PyInstaller"""
@@ -21,19 +12,16 @@ def resource_path(relative_path: str):
 
 
 def import_font(size, font_path):
-    '''Load and return a font object'''
     return pygame.font.Font(resource_path(font_path), size)
 
 
 def import_image(img_path, alpha=True):
-    '''Load and return an image, with scaling applied'''
     full_path = resource_path(img_path)
     surf = pygame.image.load(full_path).convert_alpha() if alpha else pygame.image.load(full_path).convert()
     return pygame.transform.scale_by(surf, SCALE_FACTOR)
 
 
 def import_folder(fold_path):
-    '''Load and return all images in a folder as a list of scaled surfaces'''
     frames = []
     for folder_path, _, file_names in walk(resource_path(fold_path)):
         for file_name in sorted(file_names, key=lambda name: int(name.split('.')[0])):
@@ -43,7 +31,6 @@ def import_folder(fold_path):
 
 
 def import_folder_dict(fold_path):
-    '''Load and return all images in a folder as a dictionary of scaled surfaces'''
     frames = {}
     for folder_path, _, file_names in walk(resource_path(fold_path)):
         for file_name in file_names:
@@ -54,7 +41,6 @@ def import_folder_dict(fold_path):
 
 
 def tmx_importer(tmx_path):
-    '''Load and return TMX files as a dictionary of pygame surfaces'''
     files = {}
     for folder_path, _, file_names in walk(resource_path(tmx_path)):
         for file_name in file_names:
@@ -64,7 +50,6 @@ def tmx_importer(tmx_path):
 
 
 def animation_importer(*path):
-    '''Load and return animations from a path as a dictionary of lists of scaled surfaces'''
     animation_dict = {}
     for folder_path, _, file_names in walk(join(*path)):
         for file_name in file_names:
@@ -80,7 +65,6 @@ def animation_importer(*path):
 
 
 def single_character_importer(*path):
-    '''Load and return character animations from a single image as a dictionary of lists of scaled surfaces'''
     char_dict = {}
     full_path = join(*path)
     surf = pygame.image.load(full_path).convert_alpha()
@@ -96,7 +80,6 @@ def single_character_importer(*path):
 
 
 def character_importer(chr_path):
-    '''Load and return character animations from a dictionary as a nested dictionary'''
     # create dict with subfolders 
     for _, sub_folders, _ in walk(resource_path(chr_path)):
         if sub_folders:
@@ -111,7 +94,6 @@ def character_importer(chr_path):
 
 
 def sound_importer(*path, default_volume=0.5):
-    '''Load and return sounds from a dictionary as a dictionary of pygame sound objects'''
     sounds_dict = {}
 
     for sound_name in listdir(resource_path(join(*path))):

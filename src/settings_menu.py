@@ -1,11 +1,8 @@
 import pygame
-from .settings import (
-    SCREEN_HEIGHT,
-    SCREEN_WIDTH
-)
+from .settings import *
 
 
-class Settings_Menu:
+class settings_menu:
     def __init__(self, font, sounds):
 
         # general setup
