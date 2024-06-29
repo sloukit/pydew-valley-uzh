@@ -62,7 +62,8 @@ class Level:
             if obj.name == 'Tree':
                 Tree((obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR), pygame.transform.scale_by(obj.image, SCALE_FACTOR),
                      (self.all_sprites, self.collision_sprites, self.tree_sprites), obj.name,
-                     level_frames['objects']['apple'], level_frames['objects']['stump'])
+                     level_frames['objects']['apple'], level_frames['objects']['stump'],level_frames['objects']['tree'],
+                     [level_frames['objects']['Tree Grow3'],level_frames['objects']['Tree Grow2'],level_frames['objects']['Tree Grow1'],level_frames['objects']['Tree Grow0']])
             else:
                 Sprite((obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR), pygame.transform.scale_by(obj.image, SCALE_FACTOR),
                        (self.all_sprites, self.collision_sprites))
@@ -136,9 +137,11 @@ class Level:
 
         # apples on the trees
         for tree in self.tree_sprites.sprites():
+            tree.recover()
             for apple in tree.apple_sprites.sprites():
                 apple.kill()
             tree.create_fruit()
+            
 
         # sky
         self.sky.start_color = [255, 255, 255]
