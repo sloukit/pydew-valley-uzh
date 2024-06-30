@@ -69,19 +69,24 @@ class Tree(CollideableSprite):
         self.stump_surf = stump_surf
         self.tree_surf = tree_surf
         self.recover_surf = recover_surf
+        print(recover_surf.get_size())
         self.health = 5
         self.hitbox = None
         self.alive = True
         self.apple_sprites = pygame.sprite.Group()
         self.create_fruit()
-        self.grow_frame_info = [(3,18,10,14),(19,13,10,19),(32,7,16,25),(49,6,14,26)]
+        self.grow_frame_info = [(12,72,40,56),(76,52,40,76),(128,28,64,100),(196,24,56,104)]
         self.position = pos
         self.frames = []
         #pygame.Rect(area)
+        i = 0
         for area in self.grow_frame_info:
-            new_frame = pygame.transform.scale_by(self.recover_surf.subsurface(pygame.Rect(0,0,64,32)),SCALE_FACTOR)
-            
+            new_frame = self.recover_surf.subsurface(pygame.Rect(area))
             self.frames.append(new_frame)
+            print(i)
+            i += 1
+            
+        
 
     def create_fruit(self):
         if self.alive:
@@ -132,16 +137,18 @@ class Tree(CollideableSprite):
             if self.health < 1:
                 
                 self.image = self.frames[self.health+3]
-                print(self.frames,self.image)
+                
+                
                 self.rect = self.image.get_frect(midbottom=self.rect.midbottom)
                 self.hitbox = self.rect.inflate(-self.rect.width, -self.rect.height)
             else:
                 self.health = 5
                 self.hitbox = None
+                self.image = self.tree_surf
                 self.rect = self.image.get_frect(topleft=self.position)
                 self.alive = True
                 self.create_fruit()
-                self.image = self.tree_surf
+                
 
 
 
