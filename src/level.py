@@ -63,7 +63,7 @@ class Level:
                 Tree((obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR), pygame.transform.scale_by(obj.image, SCALE_FACTOR),
                      (self.all_sprites, self.collision_sprites, self.tree_sprites), obj.name,
                      level_frames['objects']['apple'], level_frames['objects']['stump'],level_frames['objects']['tree'],
-                     [level_frames['objects']['Tree Grow3'],level_frames['objects']['Tree Grow2'],level_frames['objects']['Tree Grow1'],level_frames['objects']['Tree Grow0']])
+                     level_frames['objects']['tree grow'])
             else:
                 Sprite((obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR), pygame.transform.scale_by(obj.image, SCALE_FACTOR),
                        (self.all_sprites, self.collision_sprites))
