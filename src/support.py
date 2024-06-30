@@ -11,17 +11,17 @@ def resource_path(relative_path: str):
     return path.join(base_path, relative_path)
 
 
-def import_font(size, font_path):
+def import_font(size: int, font_path: str) -> pygame.font.Font: # Might be changed later on if we use pygame.freetype instead
     return pygame.font.Font(resource_path(font_path), size)
 
 
-def import_image(img_path, alpha=True):
+def import_image(img_path: str, alpha: bool = True) -> pygame.Surface:
     full_path = resource_path(img_path)
     surf = pygame.image.load(full_path).convert_alpha() if alpha else pygame.image.load(full_path).convert()
     return pygame.transform.scale_by(surf, SCALE_FACTOR)
 
 
-def import_folder(fold_path):
+def import_folder(fold_path: str) -> list[pygame.Surface]:
     frames = []
     for folder_path, _, file_names in walk(resource_path(fold_path)):
         for file_name in sorted(file_names, key=lambda name: int(name.split('.')[0])):
@@ -30,7 +30,7 @@ def import_folder(fold_path):
     return frames
 
 
-def import_folder_dict(fold_path):
+def import_folder_dict(fold_path: str) -> dict[str, pygame.Surface]:
     frames = {}
     for folder_path, _, file_names in walk(resource_path(fold_path)):
         for file_name in file_names:
@@ -40,7 +40,7 @@ def import_folder_dict(fold_path):
     return frames
 
 
-def tmx_importer(tmx_path):
+def tmx_importer(tmx_path: str) -> MapDict:
     files = {}
     for folder_path, _, file_names in walk(resource_path(tmx_path)):
         for file_name in file_names:
@@ -49,9 +49,9 @@ def tmx_importer(tmx_path):
     return files
 
 
-def animation_importer(*path):
+def animation_importer(*ani_path: str) -> dict[str, AniFrames]:
     animation_dict = {}
-    for folder_path, _, file_names in walk(join(*path)):
+    for folder_path, _, file_names in walk(join(*ani_path)):
         for file_name in file_names:
             full_path = join(folder_path, file_name)
             surf = pygame.image.load(full_path).convert_alpha()
@@ -64,9 +64,9 @@ def animation_importer(*path):
     return animation_dict
 
 
-def single_character_importer(*path):
+def single_character_importer(*sc_path: str) -> AniFrames:
     char_dict = {}
-    full_path = join(*path)
+    full_path = join(*sc_path)
     surf = pygame.image.load(full_path).convert_alpha()
     for row, dir in enumerate(['down', 'up', 'left']):
         char_dict[dir] = []
@@ -79,7 +79,7 @@ def single_character_importer(*path):
     return char_dict
 
 
-def character_importer(chr_path):
+def character_importer(chr_path: str) -> dict[str, AniFrames]:
     # create dict with subfolders 
     for _, sub_folders, _ in walk(resource_path(chr_path)):
         if sub_folders:
@@ -93,12 +93,19 @@ def character_importer(chr_path):
     return char_dict
 
 
-def sound_importer(*path, default_volume=0.5):
+def sound_importer(*snd_path: str, default_volume: float = 0.5) -> SoundDict:
     sounds_dict = {}
 
-    for sound_name in listdir(resource_path(join(*path))):
+    for sound_name in listdir(resource_path(join(*snd_path))):
         key = sound_name.split('.')[0]
-        value = pygame.mixer.Sound(join(*path, sound_name))
+        value = pygame.mixer.Sound(join(*snd_path, sound_name))
         value.set_volume(default_volume)
         sounds_dict[key] = value
     return sounds_dict
+
+
+def generate_particle_surf(img: pygame.Surface) -> pygame.Surface:
+    px_mask = pygame.mask.from_surface(img)
+    ret = px_mask.to_surface()
+    ret.set_colorkey("black")
+    return ret

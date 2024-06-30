@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="30" height="25" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="14">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="30" height="25" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="41">
  <tileset firstgid="1" source="../tilesets/grass_tileset.tsx"/>
  <tileset firstgid="78" source="../tilesets/hill_tileset.tsx"/>
  <tileset firstgid="155" source="../tilesets/house_tileset.tsx"/>
@@ -125,6 +125,17 @@
   <object id="6" x="80.7734" y="112.137" width="46.4017" height="47.4758"/>
   <object id="7" x="337.272" y="111.923" width="45.9721" height="47.9055"/>
   <object id="8" x="432.653" y="207.089" width="47.0462" height="48.5499"/>
+  <object id="30" x="64.3333" y="336.667" width="351.333" height="62.6667"/>
+  <object id="31" x="48" y="368.364" width="16" height="31.4545"/>
+  <object id="32" x="64.5455" y="320.364" width="15.4545" height="15.4545"/>
+  <object id="33" x="176" y="320" width="31.8182" height="16.5455"/>
+  <object id="34" x="80.3636" y="304" width="95.4545" height="32.5455"/>
+  <object id="35" x="415.818" y="384.364" width="64" height="15.2727"/>
+  <object id="36" x="415.455" y="352" width="16.3636" height="32.1818"/>
+  <object id="37" x="431.273" y="367.636" width="16.3636" height="16.5455"/>
+  <object id="38" x="320.182" y="320.182" width="31.4545" height="17.0909"/>
+  <object id="39" x="384.182" y="319.818" width="15.4545" height="16.9091"/>
+  <object id="40" x="351.818" y="304" width="32.1818" height="33.0909"/>
  </objectgroup>
  <objectgroup id="7" name="BG decoration objects"/>
  <objectgroup id="6" name="Collidable objects">
