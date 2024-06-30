@@ -78,16 +78,9 @@ class Tree(CollideableSprite):
         self.grow_frame_info = [(12,72,40,56),(76,52,40,76),(128,28,64,100),(196,24,56,104)]
         self.position = pos
         self.frames = []
-        #pygame.Rect(area)
-        i = 0
         for area in self.grow_frame_info:
             new_frame = self.recover_surf.subsurface(pygame.Rect(area))
             self.frames.append(new_frame)
-            print(i)
-            i += 1
-            
-        
-
     def create_fruit(self):
         if self.alive:
             for pos in APPLE_POS['default']:
