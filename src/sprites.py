@@ -62,23 +62,32 @@ class Plant(CollideableSprite):
 
 
 class Tree(CollideableSprite):
-    def __init__(self, pos, surf, groups, name, apple_surf, stump_surf):
+    def __init__(self, pos, surf, groups, name, apple_surf, stump_surf, tree_surf, recover_surf): # to clear up some stuff, recover_surf requires an array of frames which dont change, so you can copy it from here: [level_frames['objects']['Tree Grow3'],level_frames['objects']['Tree Grow2'],level_frames['objects']['Tree Grow1'],level_frames['objects']['Tree Grow0']]
         super().__init__(pos, surf, groups, (30 * SCALE_FACTOR, 20 * SCALE_FACTOR))
         self.name = name
         self.apple_surf = apple_surf
         self.stump_surf = stump_surf
+        self.tree_surf = tree_surf
+        self.recover_surf = recover_surf
+        print(recover_surf.get_size())
         self.health = 5
         self.hitbox = None
         self.alive = True
         self.apple_sprites = pygame.sprite.Group()
         self.create_fruit()
-
+        self.grow_frame_info = [(12,72,40,56),(76,52,40,76),(128,28,64,100),(196,24,56,104)]
+        self.position = pos
+        self.frames = []
+        for area in self.grow_frame_info:
+            new_frame = self.recover_surf.subsurface(pygame.Rect(area))
+            self.frames.append(new_frame)
     def create_fruit(self):
-        for pos in APPLE_POS['default']:
-            if randint(0, 10) < 6:
-                x = pos[0] + self.rect.left
-                y = pos[1] + self.rect.top
-                Sprite((x, y), self.apple_surf, (self.apple_sprites, self.groups()[0]), LAYERS['fruit'])
+        if self.alive:
+            for pos in APPLE_POS['default']:
+                if randint(0, 10) < 6:
+                    x = pos[0] + self.rect.left
+                    y = pos[1] + self.rect.top
+                    Sprite((x, y), self.apple_surf, (self.apple_sprites, self.groups()[0]), LAYERS['fruit'])
 
     def hit(self, entity):
         self.health -= 1
@@ -89,11 +98,51 @@ class Tree(CollideableSprite):
             entity.add_resource('apple')
         if self.health <= 0 and self.alive:
             print('x')
+            #for the recovery animation
+            self.health = -4
+
             self.image = self.stump_surf
             self.rect = self.image.get_frect(midbottom=self.rect.midbottom)
             self.hitbox = self.rect.inflate(-10, -self.rect.height * 0.6)
             self.alive = False
+            #adds apples that were on the tree
+            entity.add_resource('apple', len(self.apple_sprites.sprites()))
             entity.add_resource('wood', 5)
+            #removes all thew apples
+            for apple in self.apple_sprites.sprites():
+                apple.kill()
+            
+        elif self.health <= 0 and not self.alive and self.health != -4:
+            
+            self.health = -4
+            self.image = self.stump_surf
+            self.rect = self.image.get_frect(midbottom=self.rect.midbottom)
+            self.hitbox = self.rect.inflate(-10, -self.rect.height * 0.6)
+            #adds less wood because the tree is regrowing and is not fully grown
+            entity.add_resource('wood', 1)
+     
+            
+            
+    #whenever the tree is chopped, it slowly regrows, this function steps through the regrowing animation
+    def recover(self):
+        if not self.alive:
+            self.health += 1
+            if self.health < 1:
+                
+                self.image = self.frames[self.health+3]
+                
+                
+                self.rect = self.image.get_frect(midbottom=self.rect.midbottom)
+                self.hitbox = self.rect.inflate(-self.rect.width, -self.rect.height)
+            else:
+                self.health = 5
+                self.hitbox = None
+                self.image = self.tree_surf
+                self.rect = self.image.get_frect(topleft=self.position)
+                self.alive = True
+                self.create_fruit()
+                
+
 
 
 class AnimatedSprite(Sprite):
@@ -197,6 +246,10 @@ class Player(CollideableSprite):
             if recent_keys[pygame.K_q]:
                 self.tool_index = (self.tool_index + 1) % len(self.available_tools)
                 self.current_tool = self.available_tools[self.tool_index]
+
+            if recent_keys[pygame.K_v]:
+                print(self.inventory)
+                #used for debug, remove asap
 
             # tool use
             if recent_keys[pygame.K_SPACE]:
