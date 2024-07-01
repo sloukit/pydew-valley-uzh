@@ -1,5 +1,8 @@
-import pygame
-from .settings import *
+from .settings import (
+    pygame,
+    SCREEN_HEIGHT,
+    SCREEN_WIDTH
+)
 
 
 class settings_menu:

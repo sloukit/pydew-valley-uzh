@@ -1,5 +1,8 @@
-import pygame
-from .settings import *
+from .settings import (
+    pygame,
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT
+)
 
 
 class pause_menu:

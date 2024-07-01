@@ -1,4 +1,9 @@
-from .settings import *
+from .settings import (
+    pygame,
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    LAYERS
+)
 from .sprites import WaterDrop
 from random import choice, randint
 

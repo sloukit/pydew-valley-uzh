@@ -1,4 +1,18 @@
-from .settings import *
+import sys
+from os import path, sep, walk, listdir
+from os.path import join
+
+
+from .settings import (
+    pygame,
+    SCALE_FACTOR,
+    load_pygame,
+    TILE_SIZE,
+    CHAR_TILE_SIZE,
+    MapDict,
+    AniFrames,
+    SoundDict
+)
 
 
 def resource_path(relative_path: str):

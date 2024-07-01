@@ -1,5 +1,17 @@
-from .settings import *
-from .sprites import *
+from .settings import (
+    pygame,
+    MapDict,
+    TILE_SIZE
+)
+from .sprites import (
+    SCALE_FACTOR,
+    Sprite,
+    LAYERS,
+    AnimatedSprite,
+    Tree,
+    Player,
+    ParticleSprite
+)
 from .groups import AllSprites
 from .soil import SoilLayer
 from .transition import Transition
