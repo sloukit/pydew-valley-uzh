@@ -2,7 +2,7 @@ import pygame
 from .settings import *
 
 
-class settings_menu:
+class SettingsMenu:
     def __init__(self, font, sounds):
 
         # general setup

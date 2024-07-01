@@ -1,4 +1,5 @@
 from .settings import *
+from .dialog import TextBox
 
 
 # TODO : we could replace this with pygame.sprite.LayeredUpdates, as that is a subclass of pygame.sprite.Group that natively supports layers
@@ -17,4 +18,4 @@ class AllSprites(pygame.sprite.Group):
 
             for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
                 if sprite.z == layer:
-                    self.display_surface.blit(sprite.image, sprite.rect.topleft + self.offset)
+                    self.display_surface.blit(sprite.image, sprite.rect.topleft + self.offset * (not isinstance(sprite, TextBox)))

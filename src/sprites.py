@@ -2,8 +2,10 @@ from .settings import *
 from .timer import Timer
 from .support import generate_particle_surf
 from random import randint, choice
-from .pause_menu import pause_menu
-from .settings_menu import settings_menu
+from .pause_menu import PauseMenu
+from .settingsmenu import SettingsMenu
+
+
 class Sprite(pygame.sprite.Sprite):
     def __init__(self, pos: tuple[int | float, int | float], surf: pygame.Surface, groups: tuple[pygame.sprite.Group], z: int = LAYERS['main'], name: str | None = None):
         super().__init__(groups)
@@ -151,7 +153,8 @@ class Entity(Sprite):
 
 
 class Player(CollideableSprite):
-    def __init__(self, pos: Coordinate, frames, groups, collision_sprites: pygame.sprite.Group, apply_tool: Function, interact: Function, sounds: SoundDict):
+    def __init__(self, game, pos: Coordinate, frames, groups, collision_sprites: pygame.sprite.Group, apply_tool: Function, interact: Function, sounds: SoundDict, font):
+        self.game = game
         self.frames, self.frame_index, self.state, self.facing_direction = frames, 0, 'idle', 'down'
         super().__init__(pos, self.frames[self.state][self.facing_direction][self.frame_index], groups,
                          (44 * SCALE_FACTOR, 40 * SCALE_FACTOR))
@@ -174,8 +177,8 @@ class Player(CollideableSprite):
         self.tool_active = False
         self.just_used_tool = False
         self.apply_tool = apply_tool
-        self.pause_menu = pause_menu(self.font)
-        self.settings_menu = settings_menu(self.font, self.sounds)
+        self.pause_menu = PauseMenu(self.font)
+        self.settings_menu = SettingsMenu(self.font, self.sounds)
         # seeds 
         self.available_seeds = ['corn', 'tomato']
         self.seed_index = 0
@@ -197,20 +200,32 @@ class Player(CollideableSprite):
 
     def input(self):
         keys = pygame.key.get_pressed()
+        recent_keys = pygame.key.get_just_pressed()
+        if recent_keys[pygame.K_SPACE] and self.game.dm.showing_dialogue:
+            self.game.dm.advance()
+            if not self.game.dm.showing_dialogue:
+                self.blocked = False
+            return
         # movement
         if not self.tool_active and not self.blocked:
-            recent_keys = pygame.key.get_just_pressed()
             if recent_keys[pygame.K_ESCAPE]:
                 self.paused = not self.paused
                 self.direction.y = 0
                 self.direction.x = 0
+                return
+            if recent_keys[pygame.K_t]:
+                if self.game.dm.showing_dialogue:
+                    pass
+                else:
+                    self.game.dm.open_dialogue("test")
+                    self.blocked = True
+                return
 
         if not self.tool_active and not self.blocked and not self.paused:
             self.direction.x = int(keys[pygame.K_RIGHT]) - int(keys[pygame.K_LEFT])
             self.direction.y = int(keys[pygame.K_DOWN]) - int(keys[pygame.K_UP])
             self.direction = self.direction.normalize() if self.direction else self.direction
 
-            recent_keys = pygame.key.get_just_pressed()
             # tool switch 
             if recent_keys[pygame.K_q]:
                 self.tool_index = (self.tool_index + 1) % len(self.available_tools)

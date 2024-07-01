@@ -2,7 +2,7 @@ import pygame
 from .settings import *
 
 
-class pause_menu:
+class PauseMenu:
     def __init__(self, font):
 
         # general setup

@@ -2,10 +2,14 @@ import pygame
 from .settings import *
 
 
-class main_menu:
+class MainMenuInternal:
     def __init__(self, font, music):
 
         # general setup
+        self.text_surfs = None
+        self.total_height = None
+        self.menu_top = None
+        self.main_rect = None
         self.display_surface = pygame.display.get_surface()
         self.font = font
         self.index = 0
@@ -36,6 +40,7 @@ class main_menu:
         self.main_rect = pygame.Rect(SCREEN_WIDTH / 2 - self.width / 2, self.menu_top, self.width, self.total_height)
 
         # buy / sell text surface
+        
     def input(self):
         keys = pygame.key.get_just_pressed()
 
@@ -70,6 +75,7 @@ class main_menu:
 
         pygame.draw.rect(self.display_surface, 'White', text_rect.inflate(10, 10), 0, 4)
         self.display_surface.blit(text_surf, text_rect)
+        
     def update(self):
         self.input()
         self.main_menu_title()

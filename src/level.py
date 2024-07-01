@@ -10,8 +10,10 @@ from .menu import Menu
 
 
 class Level:
-    def __init__(self, tmx_maps: MapDict, character_frames, level_frames, overlay_frames, font, sounds):
+    def __init__(self, game, tmx_maps: MapDict, character_frames, level_frames, overlay_frames, font, sounds):
         self.display_surface = pygame.display.get_surface()
+
+        self.game = game
 
         # sprite groups
         self.entities = {}
@@ -81,7 +83,7 @@ class Level:
         # playable entities
         self.entities = {}
         for obj in tmx_maps['main'].get_layer_by_name('Entities'):
-            self.entities[obj.name] = Player(pos=(obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR),
+            self.entities[obj.name] = Player(game=self.game, pos=(obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR),
                                              frames=character_frames['rabbit'],
                                              groups=self.all_sprites,
                                              collision_sprites=self.collision_sprites,
@@ -95,7 +97,6 @@ class Level:
             for tree in self.tree_sprites:
                 if tree.rect.collidepoint(pos):
                     tree.hit(entity)
-                    # self.create_particle(tree)
                     self.sounds['axe'].play()
 
         if tool == 'hoe':
