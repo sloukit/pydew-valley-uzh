@@ -1,67 +1,91 @@
-from .settings import *
-from .sprites import WaterDrop
-from random import choice, randint
+import pygame
+from src.settings import (
+    LAYERS,
+    SCREEN_HEIGHT,
+    SCREEN_WIDTH,
+)
+from src.sprites import WaterDrop
+import random
+
 
 class Sky:
     def __init__(self):
         self.display_surface = pygame.display.get_surface()
-        self.full_surf = pygame.Surface((SCREEN_WIDTH,SCREEN_HEIGHT))
-        self.start_color = [255,255,255]
-        self.end_color = (38,101,189)
+        self.full_surf = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.start_color = [255, 255, 255]
+        self.end_color = (38, 101, 189)
 
-        # calculates the increments between the above start and end colors to ensure they all increase/decrease at a constant rate (720 minutes between noon and midnight)
-        self.color_increment = [(self.start_color[0] - self.end_color[0]) / 720, 
-                                (self.start_color[1] - self.end_color[1]) / 720, 
-                                (self.start_color[2] - self.end_color[2]) / 720] 
-        
-        self.game_hour = 12                             #   game starts at this hour
-        self.game_minute = 00                           #   game starts at this minute
-        self.seconds_per_minute = 0.7                   #   number of seconds per in game minute (reference - stardew valley each minute is 0.7 seconds)
-        self.last_time = pygame.time.get_ticks()        #   gets the creation time in ticks
+        # calculates the increments between the above start and end colors to
+        # ensure they all increase/decrease at a constant rate (720 minutes
+        # between noon and midnight)
+        self.color_increment = [
+            (self.start_color[0] - self.end_color[0]) / 720,
+            (self.start_color[1] - self.end_color[1]) / 720,
+            (self.start_color[2] - self.end_color[2]) / 720]
+
+        self.game_hour = 12  # game starts at this hour
+        self.game_minute = 00  # game starts at this minute
+        # number of seconds per in game minute (reference - stardew valley each
+        # minute is 0.7 seconds)
+        self.seconds_per_minute = 0.7
+        # gets the creation time in ticks
+        self.last_time = pygame.time.get_ticks()
 
     def display(self, dt):
-        #   DAY / NIGHT CYCLE 
+        #   DAY / NIGHT CYCLE
         current_time = pygame.time.get_ticks()
-        if(current_time - self.last_time > self.seconds_per_minute * 1000):     # if more than seconds_per_minute has passed, update clock
-            self.last_time = current_time                                       
+        # if more than seconds_per_minute has passed, update clock
+        if (current_time - self.last_time > self.seconds_per_minute * 1000):
+            self.last_time = current_time
             self.game_minute += 1
-            
-            if(self.game_minute > 59):  # minutes cycle every 60 in game minutes
+
+            # minutes cycle every 60 in game minutes
+            if (self.game_minute > 59):
                 self.game_minute = 0
                 self.game_hour += 1
-            if(self.game_hour > 23):    # hours cycle every 24 in game hours
+            if (self.game_hour > 23):    # hours cycle every 24 in game hours
                 self.game_hour = 0
 
-            # Loop through each index of the current overlay color, then increment it by the above determined increments between noon and midnight
+            # Loop through each index of the current overlay color, then
+            # increment it by the above determined increments between noon and
+            # midnight
             for index, value in enumerate(self.end_color):
                 if (self.game_hour >= 12):
                     self.start_color[index] -= self.color_increment[index]
-                    if(self.start_color[index] < 0): self.start_color[index] = 0
+                    if (self.start_color[index] < 0):
+                        self.start_color[index] = 0
                 else:
                     self.start_color[index] += self.color_increment[index]
-                    if(self.start_color[index] > 255): self.start_color[index] = 255
-            
+                    if (self.start_color[index] > 255):
+                        self.start_color[index] = 255
+
         self.full_surf.fill(self.start_color)
-        self.display_surface.blit(self.full_surf, (0,0), special_flags = pygame.BLEND_RGBA_MULT)
+        self.display_surface.blit(
+            self.full_surf, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
 
     def set_time(self, hours, minutes):
         self.game_hour = hours
         self.game_minute = minutes
         num_of_minutes = hours * 60 + minutes
-        
+
         # if number of minutes is less than noon, add increments to color
-        # if number of minutes is greater than noon, subtract increments to color
-        if(num_of_minutes < 720):           
-            new_color = [self.end_color[0],self.end_color[1],self.end_color[2]]         # darkest color is midnight
+        # if number of minutes is greater than noon, subtract increments to
+        # color
+        if (num_of_minutes < 720):
+            new_color = [self.end_color[0], self.end_color[1],
+                         self.end_color[2]]         # darkest color is midnight
             for index, value in enumerate(self.end_color):
-                new_color[index] += self.color_increment[index] * num_of_minutes
+                new_color[index] += self.color_increment[index] * \
+                    num_of_minutes
         else:
             num_of_minutes -= 720
-            new_color = [255,255,255]                                                   # brightest color is noon
+            # brightest color is noon
+            new_color = [255, 255, 255]
             for index, value in enumerate(self.end_color):
-                new_color[index] -= self.color_increment[index] * num_of_minutes
-            
-        self.start_color = new_color 
+                new_color[index] -= self.color_increment[index] * \
+                    num_of_minutes
+
+        self.start_color = new_color
         return
 
     def get_time(self):
@@ -77,19 +101,25 @@ class Rain:
 
     def create_floor(self):
         WaterDrop(
-            surf = choice(self.floor_frames), 
-            pos = (randint(0,self.floor_w),randint(0,self.floor_h)), 
-            moving = False, 
-            groups = self.all_sprites, 
-            z = LAYERS['rain floor'])
+            surf=random.choice(self.floor_frames),
+            pos=(
+                random.randint(0, self.floor_w),
+                random.randint(0, self.floor_h),
+            ),
+            moving=False,
+            groups=self.all_sprites,
+            z=LAYERS['rain floor'])
 
     def create_drops(self):
         WaterDrop(
-            surf = choice( self.drop_frames ), 
-            pos = (randint(0,self.floor_w),randint(0,self.floor_h)), 
-            moving = True, 
-            groups = self.all_sprites, 
-            z = LAYERS['rain drops'])
+            surf=random.choice(self.drop_frames),
+            pos=(
+                random.randint(0, self.floor_w),
+                random.randint(0, self.floor_h),
+            ),
+            moving=True,
+            groups=self.all_sprites,
+            z=LAYERS['rain drops'])
 
     def update(self):
         self.create_floor()
