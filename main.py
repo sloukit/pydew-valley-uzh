@@ -1,5 +1,21 @@
-from src.settings import *
-from src.support import *
+from src.settings import (
+    pygame,
+    SCREEN_HEIGHT,
+    SCREEN_WIDTH
+)
+from src.support import (
+    sys,
+    AniFrames,
+    MapDict,
+    SoundDict,
+    tmx_importer,
+    animation_importer,
+    import_folder_dict,
+    import_folder,
+    character_importer,
+    sound_importer,
+    import_font,
+)
 from src.level import Level
 from src.main_menu import main_menu
 
@@ -83,7 +99,7 @@ class MainMenu:
     def __init__(self):
         self.menu = True
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        pygame.init()
+        # pygame.init()
         self.font = import_font(30, 'font/LycheeSoda.ttf')
         pygame.display.set_caption('PyDew')
         self.clock = pygame.time.Clock()
@@ -91,7 +107,7 @@ class MainMenu:
         self.main_menu = main_menu(self.font, self.sounds["music"])
         self.background = pygame.image.load("images/menu_background/bg.png")
         self.background = pygame.transform.scale(self.background, (SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.game = Game(self)
+        self.game = Game()
     def run(self):
         while self.menu:
             dt = self.clock.tick() / 1000

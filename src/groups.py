@@ -1,4 +1,10 @@
-from .settings import *
+from .settings import (
+    pygame,
+    SCREEN_HEIGHT,
+    SCREEN_WIDTH,
+    Coordinate,
+    LAYERS
+)
 
 
 # TODO : we could replace this with pygame.sprite.LayeredUpdates, as that is a subclass of pygame.sprite.Group that natively supports layers

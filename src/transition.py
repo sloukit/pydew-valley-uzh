@@ -1,4 +1,9 @@
-from .settings import *
+from .settings import (
+    pygame,
+    Function,
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT
+)
 
 
 class Transition:

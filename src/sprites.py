@@ -1,4 +1,14 @@
-from .settings import *
+from .settings import (
+    pygame,
+    LAYERS,
+    SCALE_FACTOR,
+    GROW_SPEED,
+    APPLE_POS,
+    Coordinate,
+    Function,
+    SoundDict,
+    
+)
 from .timer import Timer
 from .support import generate_particle_surf
 from random import randint, choice
@@ -159,7 +169,7 @@ class Player(CollideableSprite):
         # movement
         self.direction = pygame.Vector2()
         self.speed = 250
-        self.font = font
+        # self.font = font  # font is not used anywhere
         self.collision_sprites = collision_sprites
         self.blocked = False
         self.paused = False
