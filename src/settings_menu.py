@@ -7,6 +7,7 @@ class settings_menu:
 
         # general setup
         self.display_surface = pygame.display.get_surface()
+        
         self.font = font
         self.index = 0
         # options
@@ -37,6 +38,10 @@ class settings_menu:
             },
         }
         self.setup()
+
+    def run(self):
+        self.update()
+        pygame.display.update()
 
     def setup(self):
         # create the text surfaces

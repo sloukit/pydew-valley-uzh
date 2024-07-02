@@ -20,6 +20,10 @@ class pause_menu:
         self.options = ("Resume", "Options", "Main Menu")
         self.setup()
 
+    def run(self):
+        self.update()
+        pygame.display.update()
+
     def setup(self):
         # create the text surfaces
         self.text_surfs = []

@@ -2,8 +2,8 @@ from .settings import *
 from .timer import Timer
 from .support import generate_particle_surf
 from random import randint, choice
-from .pause_menu import pause_menu
-from .settings_menu import settings_menu
+# from .pause_menu import pause_menu
+# from .settings_menu import settings_menu
 class Sprite(pygame.sprite.Sprite):
     def __init__(self, pos: tuple[int | float, int | float], surf: pygame.Surface, groups: tuple[pygame.sprite.Group], z: int = LAYERS['main'], name: str | None = None):
         super().__init__(groups)
@@ -159,7 +159,7 @@ class Player(CollideableSprite):
         # movement
         self.direction = pygame.Vector2()
         self.speed = 250
-        self.font = font
+        # self.font = font
         self.collision_sprites = collision_sprites
         self.blocked = False
         self.paused = False
@@ -174,8 +174,8 @@ class Player(CollideableSprite):
         self.tool_active = False
         self.just_used_tool = False
         self.apply_tool = apply_tool
-        self.pause_menu = pause_menu(self.font)
-        self.settings_menu = settings_menu(self.font, self.sounds)
+        # self.pause_menu = pause_menu(self.font)
+        # self.settings_menu = settings_menu(self.font, self.sounds)
         # seeds 
         self.available_seeds = ['corn', 'tomato']
         self.seed_index = 0

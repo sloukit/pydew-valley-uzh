@@ -87,8 +87,8 @@ class Level:
                                              collision_sprites=self.collision_sprites,
                                              apply_tool=self.apply_tool,
                                              interact=self.interact,
-                                             sounds=self.sounds, 
-                                             font=self.font)
+                                             sounds=self.sounds
+                                             )
 
     def apply_tool(self, tool, pos, entity):
         if tool == 'axe':
@@ -169,7 +169,7 @@ class Level:
     def toggle_shop(self):
         self.shop_active = not self.shop_active
 
-    def update(self, dt):
+    def update(self, dt):        
         if not self.shop_active:
             self.all_sprites.update(dt)
         self.all_sprites.draw(self.entities['Player'].rect.center)
@@ -185,3 +185,12 @@ class Level:
 
         if self.day_transition:
             self.transition.play()
+
+    def run(self):
+        # placeholder for the start state
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+        # self.display.fill('blue')  # placeholder for start screen rendering
+        pygame.display.update()
