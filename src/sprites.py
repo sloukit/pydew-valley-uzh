@@ -65,7 +65,7 @@ class Plant(CollideableSprite):
 
 
 class Tree(CollideableSprite):
-    def __init__(self, pos, surf, groups, name, apple_surf, stump_surf):
+    def __init__(self, pos, surf, groups, name, apple_surf, stump_surf,recover_surf):
         super().__init__(pos, surf, groups, (30 * SCALE_FACTOR, 20 * SCALE_FACTOR))
         self.name = name
         self.part_surf = generate_particle_surf(self.image)
@@ -78,24 +78,40 @@ class Tree(CollideableSprite):
         self.alive = True
         self.apple_sprites = pygame.sprite.Group()
         self.create_fruit()
+        self.position = pos
+        self.grow_frame_info = [(12,72,40,56),(76,52,40,76),(128,28,64,100),(196,24,56,104)]
+        self.frames = []
+        for area in self.grow_frame_info:
+            new_frame = recover_surf.subsurface(pygame.Rect(area))
+            self.frames.append(new_frame)
 
     def unhit(self):
         self.was_hit = False
         if self.health < 0:
-            self.image = self.stump_surf
+            if self.health == -4:
+                self.image = self.stump_surf
+                
+            else:
+                self.hitbox = self.rect.inflate(-self.rect.width, -self.rect.height)
+                self.image = self.frames[self.health+3]
+            
             if self.alive:
                 self.rect = self.image.get_frect(midbottom=self.rect.midbottom)
                 self.hitbox = self.rect.inflate(-10, -self.rect.height * 0.6)
                 self.alive = False
+                print("x")
+            print(self.health)
+            print(self.alive)
         elif self.health >= 0 and self.alive:
             self.image = self.surf
 
     def create_fruit(self):
-        for pos in APPLE_POS['default']:
-            if randint(0, 10) < 6:
-                x = pos[0] + self.rect.left
-                y = pos[1] + self.rect.top
-                Sprite((x, y), self.apple_surf, (self.apple_sprites, self.groups()[0]), LAYERS['fruit'])
+        if self.alive:
+            for pos in APPLE_POS['default']:
+                if randint(0, 10) < 6:
+                    x = pos[0] + self.rect.left
+                    y = pos[1] + self.rect.top
+                    Sprite((x, y), self.apple_surf, (self.apple_sprites, self.groups()[0]), LAYERS['fruit'])
 
     def update(self, dt):
         self.timer.update()
@@ -104,16 +120,51 @@ class Tree(CollideableSprite):
         if self.was_hit:
             return
         self.was_hit = True
-        self.health -= 1
+        
+        if self.alive:
+
+            self.health -= 1
+        
         # remove an apple
         if len(self.apple_sprites.sprites()) > 0:
             random_apple = choice(self.apple_sprites.sprites())
             random_apple.kill()
             entity.add_resource('apple')
         if self.health < 0 and self.alive:
-            entity.add_resource("wood", 5)
+            
+            #adds apples that were on the tree
+            entity.add_resource('apple', len(self.apple_sprites.sprites()))
+            entity.add_resource('wood', 5)
+            self.health = -4
+            print("xx")
+            #removes all thew apples
+            for apple in self.apple_sprites.sprites():
+                apple.kill()
+        elif not self.alive:
+            entity.add_resource('wood', 1)
+            self.health = -4
+            self.alive = True # this is used to trick the system into reseting the growing cycle in the most scuffed way possible, im very sorry
         self.image = generate_particle_surf(self.image)
         self.timer.activate()
+#whenever the tree is chopped, it slowly regrows, this function steps through the regrowing animation
+    def recover(self):
+        if not self.alive:
+            self.health = self.health + 1
+            print("recovered")
+            if self.health < 1:
+                
+                self.image = self.frames[self.health+3]
+                
+                
+                self.rect = self.image.get_frect(midbottom=self.rect.midbottom)
+                self.hitbox = self.rect.inflate(-self.rect.width, -self.rect.height)
+            else:
+                self.health = 5
+                self.hitbox = None
+                self.image = self.surf
+                self.rect = self.image.get_frect(topleft=self.position)
+                self.alive = True
+                self.create_fruit()        
 
 
 class AnimatedSprite(Sprite):

@@ -64,7 +64,7 @@ class Level:
             if obj.name == 'Tree':
                 Tree((obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR), pygame.transform.scale_by(obj.image, SCALE_FACTOR),
                      (self.all_sprites, self.collision_sprites, self.tree_sprites), obj.name,
-                     level_frames['objects']['apple'], level_frames['objects']['stump'])
+                     level_frames['objects']['apple'], level_frames['objects']['stump'], level_frames['objects']['tree grow'])
             else:
                 Sprite((obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR), pygame.transform.scale_by(obj.image, SCALE_FACTOR),
                        (self.all_sprites, self.collision_sprites))
@@ -140,6 +140,7 @@ class Level:
         # apples on the trees
         # No need to iterate using explicit sprites() call. Iterating over a sprite group normally will do the same thing
         for tree in self.tree_sprites:
+            tree.recover()
             for apple in tree.apple_sprites:
                 apple.kill()
             tree.create_fruit()
