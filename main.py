@@ -32,14 +32,14 @@ class Game():
         # assets
         self.tmx_maps = tmx_importer('data/maps')
         self.level_frames = {
-            'animations': support.animation_importer('images', 'animations'),
-            'soil': support.import_folder_dict('images/soil'),
-            'soil water': support.import_folder_dict('images/soil water'),
-            'tomato': support.import_folder('images/plants/tomato'),
-            'corn': support.import_folder('images/plants/corn'),
-            'rain drops': support.import_folder('images/rain/drops'),
-            'rain floor': support.import_folder('images/rain/floor'),
-            'objects': support.import_folder_dict('images/objects')
+            'animations': animation_importer('images', 'animations'),
+            'soil': import_folder_dict('images/soil'),
+            'soil water': import_folder_dict('images/soil water'),
+            'tomato': import_folder('images/plants/tomato'),
+            'corn': import_folder('images/plants/corn'),
+            'rain drops': import_folder('images/rain/drops'),
+            'rain floor': import_folder('images/rain/floor'),
+            'objects': import_folder_dict('images/objects')
         }
         self.overlay_frames = import_folder_dict('images/overlay')
         self.character_frames = character_importer('images/characters')
