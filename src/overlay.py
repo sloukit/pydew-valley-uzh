@@ -1,7 +1,5 @@
 import pygame
-from src.settings import (
-    OVERLAY_POSITIONS,
-)
+from src.settings import *
 
 
 

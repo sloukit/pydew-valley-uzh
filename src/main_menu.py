@@ -1,8 +1,5 @@
 import pygame
-from src.settings import (
-    SCREEN_HEIGHT,
-    SCREEN_WIDTH,
-)
+from src.settings import *
 
 
 class MainMenuInternal:

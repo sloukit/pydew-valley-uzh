@@ -1,14 +1,6 @@
-import pygame
-from src.settings import (
-    TILE_SIZE,
-    SCALE_FACTOR,
-    LAYERS,
-)
-from src.sprites import (
-    Plant,
-    Sprite,
-)
-import random
+from .settings import *
+from .sprites import Sprite, Plant
+from random import *
 
 
 class SoilLayer:

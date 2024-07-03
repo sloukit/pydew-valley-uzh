@@ -1,9 +1,10 @@
 from .settings import *
-from .timer import Timer
+from .timer import Timer 
 from .support import generate_particle_surf
 from random import randint, choice
 from .pause_menu import PauseMenu
 from .settings_menu import SettingsMenu
+import random
 
 class Sprite(pygame.sprite.Sprite):
     def __init__(self,
@@ -25,7 +26,7 @@ class ParticleSprite(Sprite):
         white_surf = pygame.mask.from_surface(surf).to_surface()
         white_surf.set_colorkey('black')
         super().__init__(pos, white_surf, groups, LAYERS['particles'])
-        self.timer = timer.Timer(duration, autostart=True, func=self.kill)
+        self.timer = Timer(duration, autostart=True, func=self.kill)
 
     def update(self, dt):
         self.timer.update()
@@ -77,11 +78,11 @@ class Tree(CollideableSprite):
             (30 * SCALE_FACTOR, 20 * SCALE_FACTOR),
         )
         self.name = name
-        self.part_surf = support.generate_particle_surf(self.image)
+        self.part_surf = generate_particle_surf(self.image)
         self.apple_surf = apple_surf
         self.stump_surf = stump_surf
         self.health = 5
-        self.timer = timer.Timer(300, func=self.unhit)
+        self.timer = Timer(300, func=self.unhit)
         self.hitbox = None
         self.was_hit = False
         self.alive = True
@@ -122,7 +123,7 @@ class Tree(CollideableSprite):
             entity.add_resource('apple')
         if self.health < 0 and self.alive:
             entity.add_resource("wood", 5)
-        self.image = support.generate_particle_surf(self.image)
+        self.image = generate_particle_surf(self.image)
         self.timer.activate()
 
 class AnimatedSprite(Sprite):
@@ -140,7 +141,7 @@ class AnimatedSprite(Sprite):
 class WaterDrop(Sprite):
     def __init__(self, pos, surf, groups, moving, z):
         super().__init__(pos, surf, groups, z)
-        self.timer = timer.Timer(
+        self.timer = Timer(
             random.randint(400, 600),
             autostart=True,
             func=self.kill,

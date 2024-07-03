@@ -7,19 +7,8 @@ from src.transition import Transition
 from src.sky import Sky, Rain
 from src.overlay import Overlay
 from src.menu import Menu
-from src.sprites import (
-    AnimatedSprite,
-    ParticleSprite,
-    Tree,
-    Sprite,
-    Player,
-)
-from src.settings import (
-    TILE_SIZE,
-    SCALE_FACTOR,
-    LAYERS,
-    MapDict,
-)
+from src.sprites import *
+from src.settings import *
 
 
 class Level:

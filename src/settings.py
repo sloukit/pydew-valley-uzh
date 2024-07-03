@@ -18,7 +18,7 @@ if sys.version_info < (3, 12):
         DeprecationWarning,
     )
 import pytmx
-
+from pytmx.util_pygame import load_pygame
 from enum import IntEnum, StrEnum
 from types import FunctionType as Function
 

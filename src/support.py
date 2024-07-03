@@ -2,6 +2,7 @@ from .settings import *
 from os import *
 
 
+
 def resource_path(relative_path: str):
     """Get absolute path to resource, works for dev and for PyInstaller"""
     relative_path = relative_path.replace("/", sep)
@@ -46,7 +47,7 @@ def tmx_importer(tmx_path: str) -> MapDict:
     for folder_path, _, file_names in walk(resource_path(tmx_path)):
         for file_name in file_names:
             full_path = path.join(folder_path, file_name)
-            files[file_name.split('.')[0]] = pygame.load_pygame(full_path)
+            files[file_name.split('.')[0]] = load_pygame(full_path)
     return files
 
 

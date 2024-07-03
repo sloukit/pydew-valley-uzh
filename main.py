@@ -67,7 +67,6 @@ class Game():
                                 self.quit()                  
 
                 case "playing":
-                    self.level.update(dt)   
                     if keys[pygame.K_ESCAPE]:
                         if self.playing_gamestate == "unpaused": self.playing_gamestate = "paused"
                         else: self.playing_gamestate = "unpaused"
