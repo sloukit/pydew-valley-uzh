@@ -13,7 +13,6 @@ class Sprite(pygame.sprite.Sprite):
         self.z = z
         self.name = name
 
-
 class ParticleSprite(Sprite):
     def __init__(self, pos, surf, groups, duration=300):
         white_surf = pygame.mask.from_surface(surf).to_surface()
@@ -24,12 +23,10 @@ class ParticleSprite(Sprite):
     def update(self, dt):
         self.timer.update()
 
-
 class CollideableSprite(Sprite):
     def __init__(self, pos, surf, groups, shrink, z=LAYERS['main']):
         super().__init__(pos, surf, groups, z)
         self.hitbox_rect = self.rect.inflate(-shrink[0], -shrink[1])
-
 
 class Plant(CollideableSprite):
     def __init__(self, seed_type, groups, soil_sprite, frames, check_watered):
@@ -60,7 +57,6 @@ class Plant(CollideableSprite):
 
             self.image = self.frames[int(self.age)]
             self.rect = self.image.get_frect(midbottom=self.soil.rect.midbottom + pygame.math.Vector2(0, 2))
-
 
 class Tree(CollideableSprite):
     def __init__(self, pos, surf, groups, name, apple_surf, stump_surf):
@@ -113,7 +109,6 @@ class Tree(CollideableSprite):
         self.image = generate_particle_surf(self.image)
         self.timer.activate()
 
-
 class AnimatedSprite(Sprite):
     def __init__(self, pos, frames, groups, z=LAYERS['main']):
         self.frames, self.frame_index = frames, 0
@@ -125,7 +120,6 @@ class AnimatedSprite(Sprite):
 
     def update(self, dt):
         self.animate(dt)
-
 
 class WaterDrop(Sprite):
     def __init__(self, pos, surf, groups, moving, z):
@@ -143,12 +137,10 @@ class WaterDrop(Sprite):
         if self.moving:
             self.rect.topleft += self.direction * self.speed * dt
 
-
 class Entity(Sprite):
     def __init__(self, pos, frames, groups, z=LAYERS['main']):
         self.frames, self.frame_index, self.state = frames, 0, 'idle'
         super().__init__(pos, frames[self.state][0], groups, z)
-
 
 class Player(CollideableSprite):
     def __init__(self, pos: Coordinate, frames, groups, collision_sprites: pygame.sprite.Group, apply_tool: Function, interact: Function, sounds: SoundDict, font: pygame.Font):
@@ -204,8 +196,8 @@ class Player(CollideableSprite):
         # movement
         if not self.tool_active and not self.blocked:
             recent_keys = pygame.key.get_just_pressed()
-            if recent_keys[pygame.K_ESCAPE]:
-                self.paused = not self.paused
+            
+            if self.paused:
                 self.direction.y = 0
                 self.direction.x = 0
 

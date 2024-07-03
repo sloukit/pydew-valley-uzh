@@ -54,6 +54,7 @@ class Menu:
 
         if keys[pygame.K_ESCAPE]:
             self.toggle_menu()
+            
 
         if keys[pygame.K_SPACE]:
             current_item = self.options[self.index]
@@ -91,7 +92,6 @@ class Menu:
             self.display_surface.blit(surf, pos_rect)
 
     def update(self):
-        self.input()
         self.display_money()
 
         for text_index, text_surf in enumerate(self.text_surfs):

@@ -48,7 +48,6 @@ class SoilLayer:
                     surf = choice(list(self.level_frames['soil water'].values()))
                     Sprite((x,y), surf, [self.all_sprites, self.water_sprites], LAYERS['soil water'])
 
-
     def check_watered(self, pos):
         x = int(pos[0] / (TILE_SIZE * SCALE_FACTOR))
         y = int(pos[1] / (TILE_SIZE * SCALE_FACTOR))

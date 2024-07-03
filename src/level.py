@@ -43,9 +43,9 @@ class Level:
         self.menu = Menu(self.entities['Player'], self.toggle_shop, font)
         self.shop_active = False
 
+
     def setup(self, tmx_maps: MapDict, character_frames, level_frames):
-        self.sounds["music"].set_volume(0.1)
-        self.sounds["music"].play(-1)
+
         # environment
         for layer in ['Lower ground', 'Upper ground']:
             for x, y, surf in tmx_maps['main'].get_layer_by_name(layer).tiles():
@@ -141,7 +141,7 @@ class Level:
         # plants
         self.soil_layer.update_plants()
 
-        self.sky.set_time(6, 0)  # set to 0600 hours upon sleeping
+        self.sky.set_time(0, 0)  # set to 0600 hours upon sleeping
 
         # soil
         self.soil_layer.remove_water()
@@ -183,10 +183,12 @@ class Level:
     def toggle_shop(self):
         self.shop_active = not self.shop_active
 
-    def update(self, dt):
+    def draw(self, dt):
+        self.all_sprites.draw(self.entities['Player'].rect.center)
+
         if not self.shop_active:
             self.all_sprites.update(dt)
-        self.all_sprites.draw(self.entities['Player'].rect.center)
+        
         self.plant_collision()
         self.overlay.display(self.sky.get_time())
         self.sky.display(dt)
