@@ -7,19 +7,8 @@ from src.transition import Transition
 from src.sky import Sky, Rain
 from src.overlay import Overlay
 from src.menu import Menu
-from src.sprites import (
-    AnimatedSprite,
-    ParticleSprite,
-    Tree,
-    Sprite,
-    Player,
-)
-from src.settings import (
-    TILE_SIZE,
-    SCALE_FACTOR,
-    LAYERS,
-    MapDict,
-)
+from src.sprites import *
+from src.settings import *
 
 
 class Level:
@@ -74,9 +63,9 @@ class Level:
         self.menu = Menu(self.entities['Player'], self.toggle_shop, font)
         self.shop_active = False
 
+
     def setup(self, tmx_maps: MapDict, character_frames, level_frames):
-        self.sounds["music"].set_volume(0.1)
-        self.sounds["music"].play(-1)
+
         # environment
         for layer in ['Lower ground', 'Upper ground']:
             for x, y, surf in tmx_maps['main'].get_layer_by_name(
@@ -138,36 +127,49 @@ class Level:
         # playable entities
         self.entities = {}
         for obj in tmx_maps['main'].get_layer_by_name('Entities'):
-            self.entities[obj.name] = Player(
-                pos=(obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR),
-                frames=character_frames['rabbit'],
-                groups=self.all_sprites,
-                collision_sprites=self.collision_sprites,
-                apply_tool=self.apply_tool,
-                interact=self.interact,
-                sounds=self.sounds,
-                font=self.font,
-            )
 
-    def apply_tool(self, tool, pos, entity):
-        if tool == 'axe':
-            for tree in self.tree_sprites:
-                if tree.rect.collidepoint(pos):
-                    tree.hit(entity)
-                    # self.create_particle(tree)
-                    self.sounds['axe'].play()
+            self.entities[obj.name] = Player(pos=(obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR),
+                                             frames=character_frames['rabbit'],
+                                             groups=self.all_sprites,
+                                             collision_sprites=self.collision_sprites,
+                                             apply_tool=self.apply_tool,
+                                             interact=self.interact,
+                                             sounds=self.sounds,
+                                             font=self.font)
 
-        if tool == 'hoe':
-            self.soil_layer.hoe(pos, hoe_sound=self.sounds['hoe'])
+    def apply_tool(self, tool: FarmingTool, pos, entity):
+        match tool:
+            case FarmingTool.AXE:
+                for tree in self.tree_sprites:
+                    if tree.rect.collidepoint(pos):
+                        tree.hit(entity)
+                        self.sounds['axe'].play()
+            case FarmingTool.HOE:
+                self.soil_layer.hoe(pos, hoe_sound=self.sounds['hoe'])
+            case FarmingTool.WATERING_CAN:
+                self.soil_layer.water(pos)
+                self.sounds['water'].play()
+            case _:  # All seeds
+                self.soil_layer.plant_seed(pos, entity.available_seeds[tool - FarmingTool.get_first_seed_id()],
+                                           entity.inventory, plant_sounds=[self.sounds['plant'], self.sounds['cant_plant']])
 
-        if tool == 'water':
-            self.soil_layer.water(pos)
-            self.sounds['water'].play()
+        # if tool == 'axe':
+        #     for tree in self.tree_sprites:
+        #         if tree.rect.collidepoint(pos):
+        #             tree.hit(entity)
+        #             self.sounds['axe'].play()
 
-        if tool in ('corn', 'tomato'):
-            self.soil_layer.plant_seed(
-                pos, tool, entity.inventory, plant_sounds=[
-                    self.sounds['plant'], self.sounds['cant_plant']])
+        # if tool == 'hoe':
+        #     self.soil_layer.hoe(pos, hoe_sound=self.sounds['hoe'])
+
+        # if tool == 'water':
+        #     self.soil_layer.water(pos)
+        #     self.sounds['water'].play()
+        #
+        # if tool in ('corn', 'tomato'):
+        #     self.soil_layer.plant_seed(pos, tool, entity.inventory,
+        #                                plant_sounds=[self.sounds['plant'], self.sounds['cant_plant']])
+
 
     def create_particle(self, sprite):
         ParticleSprite(sprite.rect.topleft, sprite.image, self.all_sprites)
@@ -187,7 +189,7 @@ class Level:
         # plants
         self.soil_layer.update_plants()
 
-        self.sky.set_time(6, 0)  # set to 0600 hours upon sleeping
+        self.sky.set_time(0, 0)  # set to 0600 hours upon sleeping
 
         # soil
         self.soil_layer.remove_water()
@@ -197,9 +199,8 @@ class Level:
             self.soil_layer.water_all()
 
         # apples on the trees
-        # No need to iterate using explicit sprites() call.
-        # Iterating over a sprite group normally will do the same thing
-        for tree in self.tree_sprites:
+        for tree in self.tree_sprites:  # No need to iterate using explicit sprites() call. Iterating over a sprite group normally will do the same thing
+
             for apple in tree.apple_sprites:
                 apple.kill()
             tree.create_fruit()
@@ -235,10 +236,12 @@ class Level:
     def toggle_shop(self):
         self.shop_active = not self.shop_active
 
-    def update(self, dt):
+    def draw(self, dt):
+        self.all_sprites.draw(self.entities['Player'].rect.center)
+
         if not self.shop_active:
             self.all_sprites.update(dt)
-        self.all_sprites.draw(self.entities['Player'].rect.center)
+        
         self.plant_collision()
         self.overlay.display(self.sky.get_time())
         self.sky.display(dt)

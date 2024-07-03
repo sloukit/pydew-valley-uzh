@@ -5,7 +5,6 @@ from src import settings
 
 class Transition:
     def __init__(self, reset: Function, finish_reset: Function):
-
         # setup
         self.display_surface = pygame.display.get_surface()
         self.reset = reset

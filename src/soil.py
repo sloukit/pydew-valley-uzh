@@ -1,14 +1,6 @@
-import pygame
-from src.settings import (
-    TILE_SIZE,
-    SCALE_FACTOR,
-    LAYERS,
-)
-from src.sprites import (
-    Plant,
-    Sprite,
-)
-import random
+from .settings import *
+from .sprites import Sprite, Plant
+from random import *
 
 
 class SoilLayer:
@@ -59,15 +51,10 @@ class SoilLayer:
                     cell.append('W')
                     x = index_col * TILE_SIZE * SCALE_FACTOR
                     y = index_row * TILE_SIZE * SCALE_FACTOR
-                    surf = random.choice(
-                        list(self.level_frames['soil water'].values())
-                    )
-                    Sprite(
-                        (x, y),
-                        surf,
-                        [self.all_sprites, self.water_sprites],
-                        LAYERS['soil water'],
-                    )
+
+                    surf = choice(list(self.level_frames['soil water'].values()))
+                    Sprite((x,y), surf, [self.all_sprites, self.water_sprites], LAYERS['soil water'])
+
 
     def check_watered(self, pos):
         x = int(pos[0] / (TILE_SIZE * SCALE_FACTOR))

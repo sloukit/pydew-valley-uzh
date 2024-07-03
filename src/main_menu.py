@@ -1,18 +1,15 @@
 import pygame
-from src.settings import (
-    SCREEN_HEIGHT,
-    SCREEN_WIDTH,
-)
+from src.settings import *
 
 
-class main_menu:
+class MainMenuInternal:
     def __init__(self, font, music):
-
         # general setup
         self.display_surface = pygame.display.get_surface()
         self.font = font
         self.index = 0
         self.music = music
+
         # options
         self.width = 400
         self.space = 10
@@ -21,10 +18,8 @@ class main_menu:
         self.pressed_quit = False
         # entries
         self.options = ("Play", "Quit")
-        self.setup()
-
-    def setup(self):
-        self.music.play()
+        
+        self.music.play() 
         # create the text surfaces
         self.text_surfs = []
         self.total_height = 0
@@ -43,24 +38,16 @@ class main_menu:
             self.total_height)
 
         # buy / sell text surface
-    def input(self):
-        keys = pygame.key.get_just_pressed()
 
-        self.index = (
-            self.index + int(keys[pygame.K_DOWN]) - int(keys[pygame.K_UP])
-        ) % len(self.options)
+
+    def input(self, keys):
+        self.index = (self.index + int(keys[pygame.K_DOWN]) - int(keys[pygame.K_UP])) % len(self.options)
 
         if keys[pygame.K_SPACE]:
             current_item = self.options[self.index]
-            if 'Play' in current_item:
-                if not self.pressed_quit:
-                    self.pressed_play = True
-            elif 'Quit' in current_item:
-                if not self.pressed_play:
-                    self.pressed_quit = True
-
+            return current_item
+        
     def show_entry(self, text_surf, top, index, text_index):
-
         # background
         bg_rect = pygame.Rect(self.main_rect.left, top, self.width,
                               text_surf.get_height() + (self.padding * 2))
@@ -81,7 +68,7 @@ class main_menu:
         if index == text_index:
             pygame.draw.rect(self.display_surface, 'black', bg_rect, 4, 4)
 
-    def main_menu_title(self):
+    def draw(self):
         text_surf = self.font.render('Main Menu', False, 'Black')
         text_rect = text_surf.get_frect(
             midtop=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 20))
@@ -90,9 +77,6 @@ class main_menu:
                          text_rect.inflate(10, 10), 0, 4)
         self.display_surface.blit(text_surf, text_rect)
 
-    def update(self):
-        self.input()
-        self.main_menu_title()
 
         for text_index, text_surf in enumerate(self.text_surfs):
             top = self.main_rect.top + text_index * \
