@@ -191,7 +191,7 @@ class Level:
         # plants
         self.soil_layer.update_plants()
 
-        self.time.set_time(6, 0)  # set to 0600 hours upon sleeping
+        self.game_time.set_time(6, 0)  # set to 0600 hours upon sleeping
 
         # soil
         self.soil_layer.remove_water()
@@ -207,9 +207,6 @@ class Level:
             for apple in tree.apple_sprites:
                 apple.kill()
             tree.create_fruit()
-
-        # sky
-        self.sky.start_color = [255, 255, 255]
 
     def finish_reset(self):
         self.day_transition = False
