@@ -9,14 +9,16 @@ import random
 
 
 class Sky:
-    def __init__(self):
+    def __init__(self, game_time):
         self.display_surface = pygame.display.get_surface()
         self.full_surf = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.start_color = [255, 255, 255]
         self.end_color = (38, 101, 189)
+        self.game_time = game_time
 
-    def display(self, time):
+    def display(self):
         # get time
+        time = self.game_time.get_time()
         hour = time[0]
         minute = time[1]
         num_minutes = hour * 60 + minute

@@ -62,7 +62,7 @@ class Level:
         self.game_time = GameTime()
 
         # weather
-        self.sky = Sky()
+        self.sky = Sky(self.game_time)
         self.rain = Rain(
             self.all_sprites,
             level_frames,
@@ -245,7 +245,7 @@ class Level:
             self.all_sprites.update(dt)
         self.all_sprites.draw(self.entities['Player'].rect.center)
         self.plant_collision()
-        self.sky.display(self.game_time.get_time())
+        self.sky.display()
         self.overlay.display()
 
         if self.shop_active:
