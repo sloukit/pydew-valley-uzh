@@ -20,6 +20,7 @@ from src.settings import (
     LAYERS,
     MapDict,
 )
+from src.game_time import GameTime
 
 
 class Level:
@@ -57,6 +58,9 @@ class Level:
         self.day_transition = False
         self.current_day = 0
 
+        # game time
+        self.game_time = GameTime()
+
         # weather
         self.sky = Sky()
         self.rain = Rain(
@@ -70,7 +74,7 @@ class Level:
              SCALE_FACTOR))
 
         # overlays
-        self.overlay = Overlay(self.entities['Player'], overlay_frames)
+        self.overlay = Overlay(self.entities['Player'], overlay_frames, self.game_time)
         self.menu = Menu(self.entities['Player'], self.toggle_shop, font)
         self.shop_active = False
 
@@ -187,7 +191,7 @@ class Level:
         # plants
         self.soil_layer.update_plants()
 
-        self.sky.set_time(6, 0)  # set to 0600 hours upon sleeping
+        self.time.set_time(6, 0)  # set to 0600 hours upon sleeping
 
         # soil
         self.soil_layer.remove_water()
@@ -237,11 +241,12 @@ class Level:
 
     def update(self, dt):
         if not self.shop_active:
+            self.game_time.update()
             self.all_sprites.update(dt)
         self.all_sprites.draw(self.entities['Player'].rect.center)
         self.plant_collision()
-        self.overlay.display(self.sky.get_time())
-        self.sky.display(dt)
+        self.sky.display(self.game_time.get_time())
+        self.overlay.display()
 
         if self.shop_active:
             self.menu.update()
