@@ -15,7 +15,7 @@ class Overlay:
 
         # imports
         self.overlay_frames = overlay_frames
-        self.clock = Clock(game_time)
+        self.clock = Clock(game_time, 'digital')
 
     def display(self):
 
