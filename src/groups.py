@@ -5,6 +5,7 @@ from src.settings import (
     SCREEN_WIDTH,
     Coordinate,
 )
+from src.dialog import TextBox
 
 
 # TODO : we could replace this with pygame.sprite.LayeredUpdates, as that
@@ -27,4 +28,4 @@ class AllSprites(pygame.sprite.Group):
                     key=lambda sprite: sprite.rect.centery):
                 if sprite.z == layer:
                     self.display_surface.blit(
-                        sprite.image, sprite.rect.topleft + self.offset)
+                        sprite.image, sprite.rect.topleft + self.offset if not isinstance(sprite, TextBox) else (0, 0))
