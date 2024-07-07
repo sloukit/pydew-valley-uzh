@@ -1,4 +1,6 @@
-from .settings import *
+from types import FunctionType as Function
+import pygame
+from src import settings
 
 
 class Transition:
@@ -10,7 +12,10 @@ class Transition:
         self.finish_reset = finish_reset
 
         # overlay image
-        self.image = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.image = pygame.Surface((
+            settings.SCREEN_WIDTH,
+            settings.SCREEN_HEIGHT,
+        ))
         self.color = 255
         self.speed = -2
 
@@ -26,4 +31,5 @@ class Transition:
             self.finish_reset()
 
         self.image.fill((self.color, self.color, self.color))
-        self.display_surface.blit(self.image, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
+        self.display_surface.blit(
+            self.image, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)

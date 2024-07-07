@@ -1,15 +1,24 @@
-import pygame, sys, warnings
-import pygame.freetype # The explicit import is needed, as this module is not automatically imported when you import pygame.
+import pygame
+import sys
+import warnings
+# The explicit import is needed, as this module is not automatically
+# imported when you import pygame.
+import pygame.freetype
+from enum import Enum
 if not getattr(pygame, "IS_CE", False):
-    raise ImportError("The game requires Pygame CE to function. (hint: type pip uninstall pygame and then pip install pygame-ce)")
+    raise ImportError(
+        "The game requires Pygame CE to function. "
+        "(hint: type pip uninstall pygame and then pip install pygame-ce)"
+    )
 if sys.version_info < (3, 12):
-    warnings.warn(f"The project is currently running under Python {sys.version_info.major}.{sys.version_info.minor}. Consider upgrading to 3.12 or the most recent version available before running the game further.",
-                  DeprecationWarning)
-from os.path import join
-from os import walk, path, sep, listdir
-from pytmx.util_pygame import load_pygame
+    warnings.warn(
+        f"The project is currently running under Python "
+        f"{sys.version_info.major}.{sys.version_info.minor}. "
+        f"Consider upgrading to 3.12 or the most recent version available "
+        f"before running the game further.",
+        DeprecationWarning,
+    )
 import pytmx
-from types import FunctionType as Function
 
 type Coordinate = tuple[int | float, int | float]
 type SoundDict = dict[str, pygame.mixer.Sound]
@@ -58,6 +67,19 @@ APPLE_POS = {
     'small': [(18, 17), (30, 37), (12, 50), (30, 45), (20, 30), (30, 10)],
     'default': [(30, 24), (60, 65), (50, 50), (16, 40), (45, 50), (42, 70)]
 }
+
+
+class GameState(Enum):
+    MAIN_MENU = 0
+    LEVEL = 1
+    PAUSE = 2
+    SETTINGS = 3
+    SHOP = 4
+    EXIT = 5
+    GAME_OVER = 6
+    WIN = 7
+    CREDITS = 8
+
 
 CHARS_PER_LINE = 45
 TB_SIZE = (493, 264)
