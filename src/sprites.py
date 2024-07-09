@@ -1,9 +1,9 @@
-from .settings import LAYERS, GROW_SPEED, APPLE_POS, SCALE_FACTOR, KEYBINDS, SCREEN_WIDTH, SCREEN_HEIGHT
+from .settings import LAYERS, GROW_SPEED, APPLE_POS, SCALE_FACTOR, KEYBINDS, SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE
 import pygame
 from pygame import Vector2 as vector    
 from .timer import Timer
 from random import randint, choice
-from .support import load_data, save_data
+from .support import load_data, save_data, map_coords_to_tile
 
 
 class Sprite(pygame.sprite.Sprite):
@@ -405,28 +405,54 @@ class Player(CollideableSprite):
         self.animate(dt)
 
     # draw
+    def draw_target_tile(self, offset):
+        # if self.tool_active:
+        target_pos = self.get_target_pos()
+        rect_pos = map_coords_to_tile(target_pos)
+        tile_size = TILE_SIZE * SCALE_FACTOR
+        pos = vector(rect_pos) * tile_size - offset
+        rect = pygame.Rect(pos, (tile_size, tile_size))
+        pygame.draw.rect(self.display_surface, 'red', rect, 2)
+
+    def draw_self_tile(self, offset):
+        pos = self.pos 
+        rect_pos = map_coords_to_tile(pos)
+        tile_size = TILE_SIZE * SCALE_FACTOR
+        pos = vector(rect_pos) * tile_size - offset
+        rect = pygame.Rect(pos, (tile_size, tile_size))
+        pygame.draw.rect(self.display_surface, 'grey', rect, 2)    
+
     def draw_test(self):
+        
         if self.test_active:
-            rect = self.rect.copy()
+
             offset = vector(self.rect.center) - vector(SCREEN_WIDTH//2, SCREEN_HEIGHT//2)
+            self.draw_target_tile(offset)
+            self.draw_self_tile(offset)
+
+            # rect
+            rect = self.rect.copy()
             rect.topleft -= offset
             pygame.draw.rect(self.display_surface, 'red', rect, 2)
 
+            # hitbox pos
             pos = self.pos - offset
             pygame.draw.circle(self.display_surface, 'yellow', pos, 5)
 
-            # hitbox
+            # hitbox rect
             rect = self.hitbox_rect.copy()
             rect.topleft -= offset
             pygame.draw.rect(self.display_surface, 'blue', rect, 0, 2)
 
             # blocks
             for sprite in self.collision_sprites:
+                # hitbox
                 color = 'yellow' if sprite.name == 'Rock' else 'blue'
                 rect = sprite.hitbox_rect.copy()
                 rect.topleft -= offset
                 pygame.draw.rect(self.display_surface, color, rect, 0, 2)
 
+                # rect
                 rect = sprite.rect.copy()
                 rect.topleft -= offset
                 pygame.draw.rect(self.display_surface, 'red', rect, 2)
