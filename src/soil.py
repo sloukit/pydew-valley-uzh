@@ -6,6 +6,9 @@ from .support import screen_to_tile, tile_to_screen
 from .sprites import Sprite, Plant
 from .settings import LAYERS                   
 
+
+# TODO : REFACTOR THIS CLASS
+
 class SoilLayer:
     def __init__(self, all_sprites, collision_sprites, tmx_map, level_frames):
         # sprite groups
@@ -24,12 +27,12 @@ class SoilLayer:
             self.grid[y][x].append('F')
     
     def is_farmable(self, pos):
-        x, y = screen_to_tile(pos)
+        x, y = pos
         return 'F' in self.grid[y][x]
     
     def hoe(self, pos, sound):
         if self.is_farmable(pos):
-            x, y = screen_to_tile(pos)
+            x, y = pos
             self.grid[y][x].append('X')
             self.create_soil_tiles()
             sound.play()
@@ -37,6 +40,7 @@ class SoilLayer:
 
     def water(self, pos):
         for soil_sprite in self.soil_sprites.sprites():
+            pos = tile_to_screen(pos)
             if soil_sprite.rect.collidepoint(pos):
 
                 x, y = screen_to_tile(soil_sprite.rect.topleft)
@@ -74,6 +78,7 @@ class SoilLayer:
 
     def plant_seed(self, pos, seed, inventory, plant_sounds):
         for soil_sprite in self.soil_sprites.sprites():
+            pos = tile_to_screen(pos)
             if soil_sprite.rect.collidepoint(pos):
 
                 x, y = screen_to_tile(soil_sprite.rect.topleft)
@@ -81,7 +86,7 @@ class SoilLayer:
                 if 'P' not in self.grid[y][x] and inventory[seed+" seed"] > 0:
                     self.grid[y][x].append('P')
                     Plant(seed, [self.all_sprites, self.plant_sprites, self.collision_sprites], soil_sprite, self.level_frames[seed], self.check_watered)
-                    inventory[seed+" seed"] -= 1
+                    inventory[seed + " seed"] -= 1
                     plant_sounds[0].play()
                 else:
                     # play a sound that indecates u cant plant a seed

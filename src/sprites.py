@@ -186,6 +186,7 @@ class Player(CollideableSprite):
         self.display_surface = pygame.display.get_surface()
 
         # movement
+        self.pos = vector()
         self.keybinds = self.import_controls() 
         self.direction = vector()
         self.speed = 250
@@ -205,6 +206,7 @@ class Player(CollideableSprite):
         self.current_tool = self.available_tools[self.tool_index]
         self.tool_active = False
         self.apply_tool = apply_tool
+        self.on_farmable_tile = False
 
         # seeds 
         self.available_seeds = ['corn', 'tomato']
@@ -332,17 +334,19 @@ class Player(CollideableSprite):
         self.image = current_animation[index]
 
     # actions
-    def get_target_pos(self):
-        vectors = {
-            'left': vector(-1, 0), 
-            'right': vector(1, 0), 
-            'down': vector(0, 1),
-            'up': vector(0, -1), 
-        }
-        return self.rect.center + vectors[self.facing_direction] * 40
+    def get_target_tile_pos(self):
+        # vectors = {
+        #     'left': vector(-1, 0), 
+        #     'right': vector(1, 0), 
+        #     'down': vector(0, 1),
+        #     'up': vector(0, -1), 
+        # }
+        # screen_pos = self.rect.center + vectors[self.facing_direction] * 40
+        # return screen_to_tile(screen_pos)
+        return screen_to_tile(self.pos)
 
     def plant_seed(self):
-        target_pos = self.get_target_pos()
+        target_pos = self.get_target_tile_pos()
         player = self
         self.apply_tool(self.current_seed, target_pos, player)
     
@@ -351,7 +355,7 @@ class Player(CollideableSprite):
             self.sounds['swing'].play()
 
     def use_tool(self):
-        target_pos = self.get_target_pos()
+        target_pos = self.get_target_tile_pos()
         player = self
         self.apply_tool(self.current_tool, target_pos, player)
 
@@ -413,35 +417,33 @@ class Player(CollideableSprite):
         self.animate(dt)
 
     # draw
-    def draw_target_tile(self, offset):
-        # if self.tool_active:
-        target_pos = self.get_target_pos()
-        rect_pos = screen_to_tile(target_pos)
-        tile_size = TILE_SIZE * SCALE_FACTOR
-        pos = tile_to_screen(rect_pos) - offset
-        rect = pygame.Rect(pos, (tile_size, tile_size))
-        pygame.draw.rect(self.display_surface, 'red', rect, 2)
+    def draw_farmable_tile_preview(self, offset):
+        if self.on_farmable_tile and self.current_tool == 'hoe':
+            target_tile_pos = screen_to_tile(self.pos)
+            x, y = tile_to_screen(target_tile_pos) - offset
+            tile_size = TILE_SIZE * SCALE_FACTOR
+            rect = pygame.Rect(x, y, tile_size, tile_size)
+            pygame.draw.rect(self.display_surface, 'beige', rect, 4, 8)
+    
+    def draw_chopable_tree_preview(self, offset):
+        pass
 
-    def draw_self_tile(self, offset):
-        pos = self.pos 
-        rect_pos = screen_to_tile(pos)
-        tile_size = TILE_SIZE * SCALE_FACTOR
-        pos = tile_to_screen(rect_pos) - offset
-        rect = pygame.Rect(pos, (tile_size, tile_size))
-        pygame.draw.rect(self.display_surface, 'grey', rect, 2)   
+    def draw_plantable_tile_preview(self, offset):
+        pass
+
+    def draw_preview(self, offset):
+        self.draw_farmable_tile_preview(offset)
+        self.draw_chopable_tree_preview(offset)
+        self.draw_plantable_tile_preview(offset)
+
 
     def draw(self, display_surface, offset): 
         self.draw_test(-offset)
+        self.draw_preview(-offset)
         display_surface.blit(self.image, self.rect.topleft + offset)
 
     def draw_test(self, offset):
-        
         if self.test_active:
-
-            # offset = vector(self.rect.center) - vector(SCREEN_WIDTH//2, SCREEN_HEIGHT//2)
-            self.draw_target_tile(offset)
-            self.draw_self_tile(offset)
-
             # rect
             rect = self.rect.copy()
             rect.topleft -= offset

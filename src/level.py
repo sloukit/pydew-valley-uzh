@@ -2,9 +2,10 @@ import pygame
 import sys
 
 from random import randint
+from pygame import Vector2 as vector
 
 from .sprites import Sprite, Tree, ParticleSprite, AnimatedSprite, CollideableSprite, Player, Hill, Rock
-from .settings import SCALE_FACTOR, LAYERS, GameState
+from .settings import SCALE_FACTOR, LAYERS, SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, GameState
 from .support import screen_to_tile, load_data, tile_to_screen
 from .transition import Transition
 from .groups import AllSprites
@@ -189,7 +190,8 @@ class Level:
     # player actions
     def apply_tool(self, tool, pos, entity):
         if tool == 'axe':
-            collided_trees = [tree for tree in self.tree_sprites if tree.rect.collidepoint(pos)]
+            screen_pos = screen_to_tile(pos)
+            collided_trees = [tree for tree in self.tree_sprites if tree.rect.collidepoint(screen_pos)]
             for tree in collided_trees:
                 tree.hit(entity)
                 self.create_particle(tree)
@@ -258,6 +260,10 @@ class Level:
         current_time = self.sky.get_time()
         self.overlay.display(current_time)
 
+
+    
+
+
     def draw(self, dt):
         self.display_surface.fill('gray')
         self.all_sprites.draw(self.player.rect.center)
@@ -266,6 +272,12 @@ class Level:
 
 
     # update
+    def update_player_action_preview(self):
+        pos = self.player.pos
+        tile_pos = screen_to_tile(pos)
+        self.player.on_farmable_tile = self.soil_layer.is_farmable(tile_pos)
+       
+
     def update_rain(self):
         if self.raining and not self.shop_active:
             self.rain.update()
@@ -279,6 +291,7 @@ class Level:
         # update
         self.event_loop()
         self.plant_collision()
+        self.update_player_action_preview()
         self.update_rain()
         self.update_day()
 
