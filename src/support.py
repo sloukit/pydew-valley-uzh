@@ -113,11 +113,16 @@ def save_data(data, file_name):
     folder_path = resource_path('data/settings')
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
-    with open(resource_path('data/settings/' + file_name), 'w') as file:
+    file_path = resource_path('data/settings/' + file_name)
+    with open(file_path, 'w') as file:
         json.dump(data, file, indent=4)
+
     
 def load_data(file_name):
-    with open(resource_path('data/settings/' + file_name), 'r') as file:
+    file_path = resource_path('data/settings/' + file_name)
+    if not os.path.exists(file_path):
+        return None
+    with open(file_path, 'r') as file:
         return json.load(file)
     
 def map_coords_to_tile(pos):

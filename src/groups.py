@@ -19,3 +19,8 @@ class AllSprites(pygame.sprite.Group):
             for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
                 if sprite.z == layer:
                     self.display_surface.blit(sprite.image, sprite.rect.topleft + self.offset)
+                
+                if sprite.name is not None:
+                    rect = sprite.rect.copy()
+                    rect.topleft += self.offset
+                    pygame.draw.rect(self.display_surface, 'red', rect, 1)          

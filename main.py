@@ -73,7 +73,7 @@ class Game:
         self.overlay_frames = import_folder_dict('images/overlay')
         self.character_frames = character_importer('images/characters')
 
-        self.sounds = sound_importer('audio', default_volume=0)
+        self.sounds = sound_importer('audio', default_volume=0.1)
 
         self.font = import_font(30, 'font/LycheeSoda.ttf')
 

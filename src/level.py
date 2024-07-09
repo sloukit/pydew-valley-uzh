@@ -3,7 +3,7 @@ import pygame, sys
 from random import randint
 
 from .settings import TILE_SIZE, SCALE_FACTOR, LAYERS, GameState
-from .sprites import Sprite, Player, Tree, ParticleSprite, AnimatedSprite
+from .sprites import Sprite, Tree, ParticleSprite, AnimatedSprite, CollideableSprite, Player
 from .support import map_coords_to_tile, load_data
 from .transition import Transition
 from .groups import AllSprites
@@ -85,8 +85,8 @@ class Level:
     
     def setup_layer_objects(self, layer, setup_func):
         for obj in self.tmx_maps['main'].get_layer_by_name(layer):
-            x = obj.x * SCALE_FACTOR
-            y = obj.y * SCALE_FACTOR
+            x = int(obj.x * SCALE_FACTOR)
+            y = int(obj.y * SCALE_FACTOR)
             pos = (x, y)
             setup_func(pos, obj)
 
@@ -99,17 +99,17 @@ class Level:
 
             Tree(pos, image, (self.all_sprites, self.collision_sprites, self.tree_sprites), obj.name, apple_frames, stump_frames)
         else:
-            Sprite(pos, image, (self.all_sprites, self.collision_sprites))
+            CollideableSprite(pos, image, (self.all_sprites, self.collision_sprites))
     
     def setup_collisions(self, pos, obj):
-        size = (obj.width * SCALE_FACTOR, obj.height * SCALE_FACTOR)
+        size = (int(obj.width * SCALE_FACTOR), int(obj.height * SCALE_FACTOR))
         image = pygame.Surface(size)
-        Sprite(pos, image, self.collision_sprites)
+        CollideableSprite(pos, image, self.collision_sprites)
         
     def setup_interactions(self, pos, obj):
-        size = (obj.width * SCALE_FACTOR, obj.height * SCALE_FACTOR)
+        size = (int(obj.width * SCALE_FACTOR), int(obj.height * SCALE_FACTOR))
         image = pygame.Surface(size)
-        Sprite(pos, image, self.interaction_sprites, LAYERS['main'], obj.name)
+        Sprite(pos, image, (self.interaction_sprites), LAYERS['main'], obj.name)
         
     def setup_entities(self, pos, obj):
         self.entities[obj.name] = Player(
@@ -120,7 +120,6 @@ class Level:
             apply_tool=self.apply_tool,
             interact=self.interact,
             sounds=self.sounds, 
-            font=self.font
         )
 
     def get_map_size(self):
@@ -187,7 +186,9 @@ class Level:
                 self.sounds['axe'].play()
 
         if tool == 'hoe':
-            self.soil_layer.hoe(pos, hoe_sound=self.sounds['hoe'])
+            self.soil_layer.hoe(pos)
+            self.sounds['hoe'].play()
+
 
         if tool == 'water':
             self.soil_layer.water(pos)
@@ -251,6 +252,7 @@ class Level:
     def draw(self, dt):
         self.display_surface.fill('gray')
         self.all_sprites.draw(self.player.rect.center)
+        self.player.draw_test()
         self.draw_overlay()
         self.sky.display(dt)
 

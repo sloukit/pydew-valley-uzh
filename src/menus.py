@@ -173,7 +173,7 @@ class MainMenu(GeneralMenu):
             if event.key == pygame.K_ESCAPE:
                 self.quit_game()
             if event.key == pygame.K_RETURN:
-                self.switch_screen(GameState.LEVEL)
+                self.button_action('Play')
 
 
 class PauseMenu(GeneralMenu):
@@ -195,8 +195,7 @@ class PauseMenu(GeneralMenu):
     def handle_events(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                self.switch_screen(GameState.LEVEL)
-
+                self.button_action('Resume')
 
 class SettingsMenu(GeneralMenu):
     def __init__(self, switch_screen, sounds, level):

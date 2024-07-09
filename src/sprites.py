@@ -1,5 +1,6 @@
-from .settings import LAYERS, GROW_SPEED, APPLE_POS, SCALE_FACTOR, KEYBINDS
+from .settings import LAYERS, GROW_SPEED, APPLE_POS, SCALE_FACTOR, KEYBINDS, SCREEN_WIDTH, SCREEN_HEIGHT
 import pygame
+from pygame import Vector2 as vector    
 from .timer import Timer
 from random import randint, choice
 from .support import load_data, save_data
@@ -27,15 +28,16 @@ class ParticleSprite(Sprite):
 
 
 class CollideableSprite(Sprite):
-    def __init__(self, pos, surf, groups, shrink, z=LAYERS['main']):
-        super().__init__(pos, surf, groups, z)
-        self.hitbox_rect = self.rect.inflate(-shrink[0], -shrink[1])
+    def __init__(self, pos, surf, groups, z=LAYERS['main'], name=None):
+        super().__init__(pos, surf, groups, z, name)
+        self.hitbox_rect = self.rect.copy()
 
 
 class Plant(CollideableSprite):
     def __init__(self, seed_type, groups, soil_sprite, frames, check_watered):
         super().__init__(soil_sprite.rect.center, frames[0], groups, (0, 0), LAYERS['plant'])
         self.rect.center = soil_sprite.rect.center + pygame.Vector2(0.5, -3) * SCALE_FACTOR
+        self.hitbox_rect = self.rect.copy()
         self.soil = soil_sprite
         self.check_watered = check_watered
         self.frames = frames
@@ -65,12 +67,14 @@ class Plant(CollideableSprite):
 
 class Tree(CollideableSprite):
     def __init__(self, pos, surf, groups, name, apple_surf, stump_surf):
-        super().__init__(pos, surf, groups, (30 * SCALE_FACTOR, 20 * SCALE_FACTOR))
+        super().__init__(pos, surf, groups)
         self.name = name
         self.apple_surf = apple_surf
         self.stump_surf = stump_surf
         self.health = 5
         self.hitbox = None
+        self.hitbox_rect = pygame.Rect(0, 0, 40, 20)
+        self.hitbox_rect.midbottom = self.rect.midbottom
         self.alive = True
         self.apple_sprites = pygame.sprite.Group()
         self.create_fruit()
@@ -128,35 +132,50 @@ class WaterDrop(Sprite):
             self.rect.topleft += self.direction * self.speed * dt
 
 
+class Hill(CollideableSprite):
+    def __init__(self, pos, surf, groups):
+        super().__init__(pos, surf, groups)
+        self.hitbox_rect = self.rect.inflate(0, -30)
+        self.hitbox_rect.midbottom = self.rect.midbottom
+
+
 class Entity(Sprite):
     def __init__(self, pos, frames, groups, z=LAYERS['main']):
         self.frames, self.frame_index, self.state = frames, 0, 'idle'
         super().__init__(pos, frames[self.state][0], groups, z)
 
 
+
 class Player(CollideableSprite):
-    def __init__(self, pos, frames, groups, collision_sprites, apply_tool, interact, sounds, font):
-        self.frames, self.frame_index, self.state, self.facing_direction = frames, 0, 'idle', 'down'
-        super().__init__(pos, self.frames[self.state][self.facing_direction][self.frame_index], groups,
-                         (44 * SCALE_FACTOR, 40 * SCALE_FACTOR))
+    def __init__(self, pos, frames, groups, collision_sprites, apply_tool, interact, sounds):
+        # animations
+        self.frames = frames
+        self.frame_index = 0
+        self.state = 'idle'
+        self.facing_direction = 'down'
+        surface = self.frames[self.state][self.facing_direction][self.frame_index]
+        self.animation_speed = 4
+
+        # main setup
+        super().__init__(pos, surface, groups)
+        self.display_surface = pygame.display.get_surface()
 
         # movement
         self.keybinds = self.import_controls() 
-        self.direction = pygame.Vector2()
+        self.direction = vector()
         self.speed = 250
-        self.font = font
         self.collision_sprites = collision_sprites
         self.blocked = False
         self.interact = interact
-        self.plant_collide_rect = self.hitbox_rect.inflate(10, 10)
+        self.hitbox_offset = vector(0, -62)
 
         # tools
         self.available_tools = ['axe', 'hoe', 'water']
         self.tool_index = 0
         self.current_tool = self.available_tools[self.tool_index]
         self.tool_active = False
-        self.just_used_tool = False
         self.apply_tool = apply_tool
+
         # seeds 
         self.available_seeds = ['corn', 'tomato']
         self.seed_index = 0
@@ -176,45 +195,19 @@ class Player(CollideableSprite):
         # sounds
         self.sounds = sounds
     
+    # imports
     def import_controls(self):
-        try:
-            data =  load_data('keybinds.json')
-            if len(data) == len(KEYBINDS):
-                return data
-        except:
-            pass
-        save_data(KEYBINDS, 'keybinds.json')
-        return KEYBINDS            
-
-    # controls
-    def update_controls(self):
-        controls = {}
-        keys = pygame.key.get_just_pressed()
-        linear_keys = pygame.key.get_pressed()
-        mouse_buttons = pygame.mouse.get_pressed()
-
-        for control_name, control in self.keybinds.items():
-            control_type = control['type']
-            value = control['value']
-            if control_type == 'key':
-                controls[control_name] = keys[value]
-            if control_type == 'mouse':
-                controls[control_name] = mouse_buttons[value]
-            if control_name in ('up', 'down', 'left', 'right'):
-                controls[control_name] = linear_keys[value]
-        return controls
+        data =  load_data('keybinds.json')
+        if len(data) != len(KEYBINDS):
+            save_data(KEYBINDS, 'keybinds.json')
+            return KEYBINDS   
+        return data
     
-
-
-
+    # input
     def input(self):
-        self.controls = self.update_controls()
-
         # movement
         if not self.tool_active and not self.blocked:
-            self.direction.x = int(self.controls['right']) - int(self.controls['left'])
-            self.direction.y = int(self.controls['down']) - int(self.controls['up'])
-            self.direction = self.direction.normalize() if self.direction else self.direction
+            self.update_direction()
 
             # tool switch 
             if self.controls['next tool']:
@@ -225,90 +218,175 @@ class Player(CollideableSprite):
             if self.controls['use']:
                 self.tool_active = True
                 self.frame_index = 0
-                self.direction = pygame.Vector2()
-                if self.current_tool in {'hoe', 'axe'}:
-                    self.sounds['swing'].play()
+                self.direction = vector()
+                self.play_tool_sound()
 
             # seed switch 
             if self.controls['next seed']:
                 self.seed_index = (self.seed_index + 1) % len(self.available_seeds)
                 self.current_seed = self.available_seeds[self.seed_index]
 
-            # seed used 
+            # seed use
             if self.controls['plant']:
-                self.use_tool('seed')
+                self.plant_seed()
 
             # interact
             if self.controls['interact']:
                 self.interact()
 
-    def get_state(self):
+    # movement
+    def move(self, dt):
+        # x 
+        x_movement = self.direction.x * self.speed * dt
+        self.rect.x += int(x_movement)
+        self.check_collision('horizontal')
+        
+        # y
+        y_movement = self.direction.y * self.speed * dt
+        self.rect.y += int(y_movement)
+        self.check_collision('vertical')
+
+    def check_collision(self, direction):
+        self.pos = vector(self.rect.midbottom) + self.hitbox_offset
+
+        if direction == 'vertical':
+            for sprite in self.collision_sprites:
+                if sprite.hitbox_rect.collidepoint(self.pos) :
+                    if self.direction.y < 0:
+                        self.pos.y = sprite.hitbox_rect.bottom
+                    if self.direction.y > 0:
+                        self.pos.y = sprite.hitbox_rect.top - 1
+
+        
+        if direction == 'horizontal':
+            for sprite in self.collision_sprites:
+                if sprite.hitbox_rect.collidepoint(self.pos):
+                    if self.direction.x < 0:
+                        self.pos.x = sprite.hitbox_rect.right
+                    if self.direction.x > 0:
+                        self.pos.x = sprite.hitbox_rect.left - 1
+
+        self.rect.midbottom = self.pos - self.hitbox_offset
+
+    # animation
+    def get_animation(self):
+        state = self.current_tool if self.tool_active else self.state
+        direction = self.facing_direction
+        current_animation = self.frames[state][direction]
+        return current_animation
+
+    def animate(self, dt):
+        current_animation = self.get_animation()
+        self.frame_index += self.animation_speed * dt
+
+        if int(self.frame_index) == len(current_animation) - 1:
+            if self.tool_active:    
+                self.use_tool()
+
+        if self.frame_index >= len(current_animation):
+            if self.tool_active:    
+                self.state = 'idle'
+                self.tool_active = False
+
+            self.frame_index %= len(current_animation)
+
+        index = int(self.frame_index)
+        self.image = current_animation[index]
+
+    # actions
+    def get_target_pos(self):
+        vectors = {
+            'left': vector(-1, 0), 
+            'right': vector(1, 0), 
+            'down': vector(0, 1),
+            'up': vector(0, -1), 
+        }
+        return self.rect.center + vectors[self.facing_direction] * 40
+
+    def plant_seed(self):
+        target_pos = self.get_target_pos()
+        player = self
+        self.apply_tool(self.current_seed, target_pos, player)
+    
+    def play_tool_sound(self):
+        if self.current_tool in ('hoe', 'axe'):
+            self.sounds['swing'].play()
+
+    def use_tool(self):
+        target_pos = self.get_target_pos()
+        player = self
+        self.apply_tool(self.current_tool, target_pos, player)
+
+    def add_resource(self, resource, amount=1):
+        self.inventory[resource] += amount
+        self.sounds['success'].play()
+
+    # update
+    def update_direction(self):
+        self.direction = vector()
+        if self.controls['right']:
+            self.direction.x = 1
+        if self.controls['left']:
+            self.direction.x = -1
+        if self.controls['down']:
+            self.direction.y = 1
+        if self.controls['up']:
+            self.direction.y = -1
+
+    def update_controls(self):
+        self.controls = {}
+
+        keys = pygame.key.get_just_pressed()
+        linear_keys = pygame.key.get_pressed()
+        mouse_buttons = pygame.mouse.get_pressed()
+
+        for name, control in self.keybinds.items():
+            control_type = control['type']
+            value = control['value']
+            if control_type == 'key':
+                self.controls[name] = keys[value]
+            if control_type == 'mouse':
+                self.controls[name] = mouse_buttons[value]
+            if name in ('up', 'down', 'left', 'right'):
+                self.controls[name] = linear_keys[value]
+
+    def update_state(self):
         self.state = 'walk' if self.direction else 'idle'
 
-    def get_facing_direction(self):
+    def update_facing_direction(self):
         # prioritizes vertical animations, flip if statements to get horizontal ones
         if self.direction.x:
             self.facing_direction = 'right' if self.direction.x > 0 else 'left'
         if self.direction.y:
             self.facing_direction = 'down' if self.direction.y > 0 else 'up'
 
-    def get_target_pos(self):
-        vectors = {'left': pygame.Vector2(-1, 0), 'right': pygame.Vector2(1, 0), 'down': pygame.Vector2(0, 1),
-                   'up': pygame.Vector2(0, -1), }
-        return self.rect.center + vectors[self.facing_direction] * 40
-
-    def move(self, dt):
-        self.hitbox_rect.x += self.direction.x * self.speed * dt
-        self.collision('horizontal')
-        self.hitbox_rect.y += self.direction.y * self.speed * dt
-        self.collision('vertical')
-        self.rect.center = self.plant_collide_rect.center = self.hitbox_rect.center
-
-    def collision(self, direction):
-        for sprite in self.collision_sprites:
-            if sprite.rect.colliderect(self.hitbox_rect):
-                if direction == 'horizontal':
-                    if self.direction.x > 0:
-                        self.hitbox_rect.right = sprite.rect.left
-                    if self.direction.x < 0:
-                        self.hitbox_rect.left = sprite.rect.right
-                else:
-                    if self.direction.y < 0:
-                        self.hitbox_rect.top = sprite.rect.bottom
-                    if self.direction.y > 0:
-                        self.hitbox_rect.bottom = sprite.rect.top
-
-    def animate(self, dt):
-        current_animation = self.frames[self.state][self.facing_direction]
-        self.frame_index += 4 * dt
-        if not self.tool_active:
-            self.image = current_animation[int(self.frame_index) % len(current_animation)]
-        else:
-            tool_animation = self.frames[self.available_tools[self.tool_index]][self.facing_direction]
-            if self.frame_index < len(tool_animation):
-                self.image = tool_animation[min((round(self.frame_index), len(tool_animation) - 1))]
-                if round(self.frame_index) == len(tool_animation) - 1 and not self.just_used_tool:
-                    self.just_used_tool = True
-                    self.use_tool('tool')
-            else:
-                # self.use_tool('tool')
-                self.state = 'idle'
-                self.tool_active = False
-                self.just_used_tool = False
-
-    def use_tool(self, option):
-        self.apply_tool(self.current_tool if option == 'tool' else self.current_seed, self.get_target_pos(), self)
-
-    def add_resource(self, resource, amount=1):
-        self.inventory[resource] += amount
-        self.sounds['success'].play()
-    
     def update_keybinds(self):
-        self.keybinds = load_data('keybinds.json')
-
+        self.keybinds = self.import_controls()
+    
     def update(self, dt):
+        # update
+        self.update_controls()
+        self.update_state()
+        self.update_facing_direction()
+
+        # actions
         self.input()
-        self.get_state()
-        self.get_facing_direction()
         self.move(dt)
         self.animate(dt)
+
+    # draw
+    def draw_test(self):
+        rect = self.rect.copy()
+        offset = vector(self.rect.center) - vector(SCREEN_WIDTH//2, SCREEN_HEIGHT//2)
+        rect.topleft -= offset
+        pygame.draw.rect(self.display_surface, 'red', rect, 2)
+
+        pos = self.pos - offset
+        pygame.draw.circle(self.display_surface, 'yellow', pos, 5)
+
+        # blocks
+        for sprite in self.collision_sprites:
+            # if sprite.name is not None:
+            rect = sprite.hitbox_rect.copy()
+            rect.topleft -= offset
+            pygame.draw.rect(self.display_surface, 'blue', rect, 0, 2)
