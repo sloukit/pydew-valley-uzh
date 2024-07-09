@@ -1,10 +1,11 @@
-import pygame, sys
+import pygame
+import sys
 
 from random import randint
 
-from .settings import TILE_SIZE, SCALE_FACTOR, LAYERS, GameState
-from .sprites import Sprite, Tree, ParticleSprite, AnimatedSprite, CollideableSprite, Player, Hill, Rock, Bed
-from .support import map_coords_to_tile, load_data
+from .sprites import Sprite, Tree, ParticleSprite, AnimatedSprite, CollideableSprite, Player, Hill, Rock
+from .settings import SCALE_FACTOR, LAYERS, GameState
+from .support import screen_to_tile, load_data, tile_to_screen
 from .transition import Transition
 from .groups import AllSprites
 from .overlay import Overlay
@@ -70,8 +71,7 @@ class Level:
 
     def setup_layer_tiles(self, layer, setup_func):
         for  x, y, surf in self.tmx_maps['main'].get_layer_by_name(layer).tiles():
-            x = x * TILE_SIZE * SCALE_FACTOR
-            y = y * TILE_SIZE * SCALE_FACTOR
+            x , y = tile_to_screen((x, y))
             pos = (x, y)
             setup_func(pos, surf)
             
@@ -130,7 +130,10 @@ class Level:
         )
 
     def get_map_size(self):
-        return (self.tmx_maps['main'].width * TILE_SIZE * SCALE_FACTOR, self.tmx_maps['main'].height * TILE_SIZE * SCALE_FACTOR)
+        width = self.tmx_maps['main'].width
+        height = self.tmx_maps['main'].height
+        size = tile_to_screen((width, height))
+        return size
 
     def activate_music(self):
         volume = 0.1
@@ -172,7 +175,7 @@ class Level:
                     self.player.add_resource(ressource, quantity)
 
                     # update grid
-                    x, y = map_coords_to_tile(plant.rect.center)
+                    x, y = screen_to_tile(plant.rect.center)
                     self.soil_layer.grid[y][x].remove('P')
 
                     # remove plant
@@ -258,7 +261,6 @@ class Level:
     def draw(self, dt):
         self.display_surface.fill('gray')
         self.all_sprites.draw(self.player.rect.center)
-        self.player.draw_test()
         self.draw_overlay()
         self.sky.display(dt)
 

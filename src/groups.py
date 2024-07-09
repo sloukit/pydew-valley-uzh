@@ -23,5 +23,6 @@ class AllSprites(pygame.sprite.Group):
 
             for sprite in sorted_sprites:
                 if sprite.z == layer:
-                    self.display_surface.blit(sprite.image, sprite.rect.topleft + self.offset)
+                    sprite.draw(self.display_surface, self.offset)
+                    
                 

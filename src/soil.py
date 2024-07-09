@@ -1,7 +1,10 @@
-from .settings import TILE_SIZE, SCALE_FACTOR, LAYERS                   
 import pygame
-from .sprites import Sprite, Plant
+
 from random import choice
+
+from .support import screen_to_tile, tile_to_screen
+from .sprites import Sprite, Plant
+from .settings import LAYERS                   
 
 class SoilLayer:
     def __init__(self, all_sprites, collision_sprites, tmx_map, level_frames):
@@ -20,9 +23,13 @@ class SoilLayer:
         for x, y, _ in tmx_map.get_layer_by_name('Farmable').tiles():
             self.grid[y][x].append('F')
     
+    def is_farmable(self, pos):
+        x, y = screen_to_tile(pos)
+        return 'F' in self.grid[y][x]
+    
     def hoe(self, pos, sound):
-        x, y = int(pos[0] / (TILE_SIZE * SCALE_FACTOR)), int(pos[1] / (TILE_SIZE * SCALE_FACTOR))        
-        if 'F' in self.grid[y][x]:
+        if self.is_farmable(pos):
+            x, y = screen_to_tile(pos)
             self.grid[y][x].append('X')
             self.create_soil_tiles()
             sound.play()
@@ -32,8 +39,7 @@ class SoilLayer:
         for soil_sprite in self.soil_sprites.sprites():
             if soil_sprite.rect.collidepoint(pos):
 
-                x = int(soil_sprite.rect.x / (TILE_SIZE * SCALE_FACTOR))
-                y = int(soil_sprite.rect.y / (TILE_SIZE * SCALE_FACTOR))
+                x, y = screen_to_tile(soil_sprite.rect.topleft)
                 self.grid[y][x].append('W')
 
                 pos = soil_sprite.rect.topleft
@@ -45,15 +51,13 @@ class SoilLayer:
             for index_col, cell in enumerate(row):
                 if 'X' in cell and 'W' not in cell:
                     cell.append('W')
-                    x = index_col * TILE_SIZE * SCALE_FACTOR
-                    y = index_row * TILE_SIZE * SCALE_FACTOR
+                    x, y = tile_to_screen((index_col, index_row))
                     surf = choice(list(self.level_frames['soil water'].values()))
                     Sprite((x,y), surf, [self.all_sprites, self.water_sprites], LAYERS['soil water'])
 
 
     def check_watered(self, pos):
-        x = int(pos[0] / (TILE_SIZE * SCALE_FACTOR))
-        y = int(pos[1] / (TILE_SIZE * SCALE_FACTOR))
+        x, y = screen_to_tile(pos)
         cell = self.grid[y][x]
         return 'W' in cell
 
@@ -72,8 +76,7 @@ class SoilLayer:
         for soil_sprite in self.soil_sprites.sprites():
             if soil_sprite.rect.collidepoint(pos):
 
-                x = int(soil_sprite.rect.x / (TILE_SIZE * SCALE_FACTOR))
-                y = int(soil_sprite.rect.y / (TILE_SIZE * SCALE_FACTOR))
+                x, y = screen_to_tile(soil_sprite.rect.topleft)
 
                 if 'P' not in self.grid[y][x] and inventory[seed+" seed"] > 0:
                     self.grid[y][x].append('P')
@@ -128,8 +131,8 @@ class SoilLayer:
                         if all((l,r,b)) and not t: tile_type = 'lrt'
 
                         Sprite(
-                            pos = (index_col * TILE_SIZE * SCALE_FACTOR,index_row * TILE_SIZE * SCALE_FACTOR),
+                            pos = tile_to_screen((index_col, index_row)),
                             surf = self.level_frames['soil'][tile_type],
                             groups = (self.all_sprites, self.soil_sprites),
                             z = LAYERS['soil']
-                            )
+                        )

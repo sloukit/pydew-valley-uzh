@@ -4,6 +4,7 @@ from os import path, sep, walk, listdir
 from os.path import join           
 from pytmx.util_pygame import load_pygame          
 from .settings import TILE_SIZE, CHAR_TILE_SIZE, SCALE_FACTOR
+from pygame.math import Vector2 as vector
 
 
 def resource_path(relative_path: str):
@@ -125,5 +126,9 @@ def load_data(file_name):
     with open(file_path, 'r') as file:
         return json.load(file)
     
-def map_coords_to_tile(pos):
-    return (pos[0] // (TILE_SIZE * SCALE_FACTOR), pos[1] // (TILE_SIZE * SCALE_FACTOR))
+def screen_to_tile(pos):
+    return (int(pos[0] // (TILE_SIZE * SCALE_FACTOR)), int(pos[1] // (TILE_SIZE * SCALE_FACTOR)))
+
+def tile_to_screen(pos):
+    return (int(pos[0] * TILE_SIZE * SCALE_FACTOR), int(pos[1] * TILE_SIZE * SCALE_FACTOR))
+    

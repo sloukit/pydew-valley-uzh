@@ -3,7 +3,7 @@ import pygame
 from pygame import Vector2 as vector    
 from .timer import Timer
 from random import randint, choice
-from .support import load_data, save_data, map_coords_to_tile
+from .support import load_data, save_data, screen_to_tile, tile_to_screen
 
 
 class Sprite(pygame.sprite.Sprite):
@@ -15,6 +15,9 @@ class Sprite(pygame.sprite.Sprite):
         self.z = z
         self.name = name
         self.hitbox_rect = self.rect.copy()
+    
+    def draw(self, display_surface, offset):
+        display_surface.blit(self.image, self.rect.topleft + offset)
 
 
 class ParticleSprite(Sprite):
@@ -85,7 +88,7 @@ class Tree(CollideableSprite):
             if randint(0, 10) < 6:
                 x = pos[0] + self.rect.left
                 y = pos[1] + self.rect.top
-                Sprite((x, y), self.apple_surf, (self.apple_sprites, self.groups()[0]), LAYERS['fruit'])
+                Sprite((x, y), self.apple_surf, (self.apple_sprites), LAYERS['fruit'])
 
     def hit(self, entity):
         self.health -= 1
@@ -101,6 +104,11 @@ class Tree(CollideableSprite):
             self.hitbox = self.rect.inflate(-10, -self.rect.height * 0.6)
             self.alive = False
             entity.add_resource('wood', 5)
+    
+    def draw(self, display_surface, offset):
+        super().draw(display_surface, offset)
+        for apple in self.apple_sprites:
+            apple.draw(display_surface, offset)
 
 
 class AnimatedSprite(Sprite):
@@ -408,25 +416,29 @@ class Player(CollideableSprite):
     def draw_target_tile(self, offset):
         # if self.tool_active:
         target_pos = self.get_target_pos()
-        rect_pos = map_coords_to_tile(target_pos)
+        rect_pos = screen_to_tile(target_pos)
         tile_size = TILE_SIZE * SCALE_FACTOR
-        pos = vector(rect_pos) * tile_size - offset
+        pos = tile_to_screen(rect_pos) - offset
         rect = pygame.Rect(pos, (tile_size, tile_size))
         pygame.draw.rect(self.display_surface, 'red', rect, 2)
 
     def draw_self_tile(self, offset):
         pos = self.pos 
-        rect_pos = map_coords_to_tile(pos)
+        rect_pos = screen_to_tile(pos)
         tile_size = TILE_SIZE * SCALE_FACTOR
-        pos = vector(rect_pos) * tile_size - offset
+        pos = tile_to_screen(rect_pos) - offset
         rect = pygame.Rect(pos, (tile_size, tile_size))
-        pygame.draw.rect(self.display_surface, 'grey', rect, 2)    
+        pygame.draw.rect(self.display_surface, 'grey', rect, 2)   
 
-    def draw_test(self):
+    def draw(self, display_surface, offset): 
+        self.draw_test(-offset)
+        display_surface.blit(self.image, self.rect.topleft + offset)
+
+    def draw_test(self, offset):
         
         if self.test_active:
 
-            offset = vector(self.rect.center) - vector(SCREEN_WIDTH//2, SCREEN_HEIGHT//2)
+            # offset = vector(self.rect.center) - vector(SCREEN_WIDTH//2, SCREEN_HEIGHT//2)
             self.draw_target_tile(offset)
             self.draw_self_tile(offset)
 
