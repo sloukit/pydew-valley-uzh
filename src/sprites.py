@@ -37,9 +37,9 @@ class CollideableSprite(Sprite):
         self.hitbox_rect = self.rect.copy()
 
 
-class Plant(CollideableSprite):
+class Plant(Sprite):
     def __init__(self, seed_type, groups, soil_sprite, frames, check_watered):
-        super().__init__(soil_sprite.rect.center, frames[0], groups, (0, 0), LAYERS['plant'])
+        super().__init__(soil_sprite.rect.center, frames[0], groups, LAYERS['plant'])
         self.rect.center = soil_sprite.rect.center + pygame.Vector2(0.5, -3) * SCALE_FACTOR
         self.hitbox_rect = self.rect.copy()
         self.soil = soil_sprite
@@ -52,6 +52,7 @@ class Plant(CollideableSprite):
         self.max_age = len(self.frames) - 1
         self.grow_speed = GROW_SPEED[seed_type]
         self.harvestable = False
+        self.image = self.frames[0]
 
     def grow(self):
         if self.check_watered(self.rect.center):
@@ -67,6 +68,11 @@ class Plant(CollideableSprite):
 
             self.image = self.frames[int(self.age)]
             self.rect = self.image.get_frect(midbottom=self.soil.rect.midbottom + pygame.math.Vector2(0, 2))
+    
+    # def draw(self, display_surface, offset):
+    #     print('drawing')
+    #     display_surface.blit(self.image, (500, 500))
+
 
 
 class Tree(CollideableSprite):
@@ -98,7 +104,7 @@ class Tree(CollideableSprite):
             random_apple.kill()
             entity.add_resource('apple')
         if self.health <= 0 and self.alive:
-            print('x')
+            # print('x')
             self.image = self.stump_surf
             self.rect = self.image.get_frect(midbottom=self.rect.midbottom)
             self.hitbox = self.rect.inflate(-10, -self.rect.height * 0.6)
@@ -172,6 +178,7 @@ class Player(CollideableSprite):
     def __init__(self, pos, frames, groups, collision_sprites, apply_tool, interact, sounds):
 
         self.test_active = False    
+        self.allSprites = groups
 
         # animations
         self.frames = frames
@@ -213,6 +220,7 @@ class Player(CollideableSprite):
         self.seed_index = 0
         self.current_seed = self.available_seeds[self.seed_index]
         self.plant_collide_rect = pygame.Rect(0, 0, 40, 40)
+        self.on_plantable_tile = False
 
         # inventory 
         self.inventory = {
@@ -425,15 +433,18 @@ class Player(CollideableSprite):
             rect = pygame.Rect(x, y, tile_size, tile_size)
             pygame.draw.rect(self.display_surface, 'beige', rect, 4, 8)
     
-    def draw_chopable_tree_preview(self, offset):
-        pass
 
     def draw_plantable_tile_preview(self, offset):
-        pass
+        if self.on_plantable_tile and self.inventory[self.current_seed + ' seed'] > 0:
+            target_tile_pos = screen_to_tile(self.pos)
+            x, y = tile_to_screen(target_tile_pos) - offset
+            tile_size = TILE_SIZE * SCALE_FACTOR
+            rect = pygame.Rect(x, y, tile_size, tile_size)
+            color = (150, 166, 88)
+            pygame.draw.rect(self.display_surface, color, rect, 4, 8)
 
     def draw_preview(self, offset):
         self.draw_farmable_tile_preview(offset)
-        self.draw_chopable_tree_preview(offset)
         self.draw_plantable_tile_preview(offset)
 
 
@@ -470,3 +481,10 @@ class Player(CollideableSprite):
                 rect = sprite.rect.copy()
                 rect.topleft -= offset
                 pygame.draw.rect(self.display_surface, 'red', rect, 2)
+            
+        
+            for sprite in self.allSprites:
+                if sprite.z == LAYERS['plant']:
+                    rect = sprite.rect.copy()
+                    rect.topleft -= offset
+                    pygame.draw.rect(self.display_surface, 'green', rect, 2)

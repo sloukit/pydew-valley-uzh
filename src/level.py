@@ -261,9 +261,6 @@ class Level:
         self.overlay.display(current_time)
 
 
-    
-
-
     def draw(self, dt):
         self.display_surface.fill('gray')
         self.all_sprites.draw(self.player.rect.center)
@@ -277,7 +274,7 @@ class Level:
         tile_pos = screen_to_tile(pos)
 
         self.player.on_farmable_tile = self.soil_layer.is_farmable(tile_pos) and not self.soil_layer.is_hoed_tile(tile_pos)
-       
+        self.player.on_plantable_tile = self.soil_layer.is_hoed_tile(tile_pos) and self.soil_layer.is_plantable(tile_pos)
 
     def update_rain(self):
         if self.raining and not self.shop_active:

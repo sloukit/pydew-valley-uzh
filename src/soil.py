@@ -4,7 +4,8 @@ from random import choice
 
 from .support import screen_to_tile, tile_to_screen
 from .sprites import Sprite, Plant
-from .settings import LAYERS                   
+from .settings import LAYERS, TILE_SIZE       
+from pygame.math import Vector2 as vector            
 
 
 # TODO : REFACTOR THIS CLASS
@@ -34,8 +35,13 @@ class SoilLayer:
         x, y = pos
         return 'F' in self.grid[y][x]
     
+    def is_plantable(self, pos):
+        x, y = pos
+        return 'P' not in self.grid[y][x]
+    
+    
     def hoe(self, pos, sound):
-        if self.is_farmable(pos):
+        if self.is_farmable(pos) and not self.is_hoed_tile(pos):
             x, y = pos
             self.grid[y][x].append('X')
             self.create_soil_tiles()
@@ -44,8 +50,9 @@ class SoilLayer:
 
     def water(self, pos):
         for soil_sprite in self.soil_sprites.sprites():
-            pos = tile_to_screen(pos)
-            if soil_sprite.rect.collidepoint(pos):
+            screen_pos = tile_to_screen(pos) + vector(TILE_SIZE // 2, TILE_SIZE // 2)
+
+            if soil_sprite.rect.collidepoint(screen_pos):
 
                 x, y = screen_to_tile(soil_sprite.rect.topleft)
                 self.grid[y][x].append('W')
@@ -81,16 +88,19 @@ class SoilLayer:
                     cell.remove('W')
 
     def plant_seed(self, pos, seed, inventory, plant_sounds):
+
         for soil_sprite in self.soil_sprites.sprites():
-            pos = tile_to_screen(pos)
-            if soil_sprite.rect.collidepoint(pos):
+            screen_pos = tile_to_screen(pos) + vector(TILE_SIZE // 2, TILE_SIZE // 2)
 
-                x, y = screen_to_tile(soil_sprite.rect.topleft)
+            if soil_sprite.rect.collidepoint(screen_pos):
 
-                if 'P' not in self.grid[y][x] and inventory[seed+" seed"] > 0:
+                x, y = screen_to_tile(soil_sprite.rect.center)
+                seed_name = seed + " seed"
+
+                if 'P' not in self.grid[y][x] and inventory[seed_name] > 0:
                     self.grid[y][x].append('P')
-                    Plant(seed, [self.all_sprites, self.plant_sprites, self.collision_sprites], soil_sprite, self.level_frames[seed], self.check_watered)
-                    inventory[seed + " seed"] -= 1
+                    Plant(seed, [self.all_sprites, self.plant_sprites], soil_sprite, self.level_frames[seed], self.check_watered)
+                    inventory[seed_name] -= 1
                     plant_sounds[0].play()
                 else:
                     # play a sound that indecates u cant plant a seed
@@ -106,42 +116,42 @@ class SoilLayer:
             for index_col, cell in enumerate(row):
                 if 'X' in cell:
                         
-                        # tile options 
-                        t = 'X' in self.grid[index_row - 1][index_col]
-                        b = 'X' in self.grid[index_row + 1][index_col]
-                        r = 'X' in row[index_col + 1]
-                        l = 'X' in row[index_col - 1]
+                    # tile options 
+                    t = 'X' in self.grid[index_row - 1][index_col]
+                    b = 'X' in self.grid[index_row + 1][index_col]
+                    r = 'X' in row[index_col + 1]
+                    l = 'X' in row[index_col - 1]
 
-                        tile_type = 'o'
+                    tile_type = 'o'
 
-                        # all sides
-                        if all((t,r,b,l)): tile_type = 'x'
+                    # all sides
+                    if all((t,r,b,l)): tile_type = 'x'
 
-                        # horizontal tiles only
-                        if l and not any((t,r,b)): tile_type = 'r'
-                        if r and not any((t,l,b)): tile_type = 'l'
-                        if r and l and not any((t,b)): tile_type = 'lr'
+                    # horizontal tiles only
+                    if l and not any((t,r,b)): tile_type = 'r'
+                    if r and not any((t,l,b)): tile_type = 'l'
+                    if r and l and not any((t,b)): tile_type = 'lr'
 
-                        # vertical only 
-                        if t and not any((r,l,b)): tile_type = 'b'
-                        if b and not any((r,l,t)): tile_type = 't'
-                        if b and t and not any((r,l)): tile_type = 'tb'
+                    # vertical only 
+                    if t and not any((r,l,b)): tile_type = 'b'
+                    if b and not any((r,l,t)): tile_type = 't'
+                    if b and t and not any((r,l)): tile_type = 'tb'
 
-                        # corners 
-                        if l and b and not any((t,r)): tile_type = 'tr'
-                        if r and b and not any((t,l)): tile_type = 'tl'
-                        if l and t and not any((b,r)): tile_type = 'br'
-                        if r and t and not any((b,l)): tile_type = 'bl'
+                    # corners 
+                    if l and b and not any((t,r)): tile_type = 'tr'
+                    if r and b and not any((t,l)): tile_type = 'tl'
+                    if l and t and not any((b,r)): tile_type = 'br'
+                    if r and t and not any((b,l)): tile_type = 'bl'
 
-                        # T shapes
-                        if all((t,b,r)) and not l: tile_type = 'tbr'
-                        if all((t,b,l)) and not r: tile_type = 'tbl'
-                        if all((l,r,t)) and not b: tile_type = 'lrb'
-                        if all((l,r,b)) and not t: tile_type = 'lrt'
+                    # T shapes
+                    if all((t,b,r)) and not l: tile_type = 'tbr'
+                    if all((t,b,l)) and not r: tile_type = 'tbl'
+                    if all((l,r,t)) and not b: tile_type = 'lrb'
+                    if all((l,r,b)) and not t: tile_type = 'lrt'
 
-                        Sprite(
-                            pos = tile_to_screen((index_col, index_row)),
-                            surf = self.level_frames['soil'][tile_type],
-                            groups = (self.all_sprites, self.soil_sprites),
-                            z = LAYERS['soil']
-                        )
+                    Sprite(
+                        pos = tile_to_screen((index_col, index_row)),
+                        surf = self.level_frames['soil'][tile_type],
+                        groups = (self.all_sprites, self.soil_sprites),
+                        z = LAYERS['soil']
+                    )
