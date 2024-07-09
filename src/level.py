@@ -275,7 +275,8 @@ class Level:
     def update_player_action_preview(self):
         pos = self.player.pos
         tile_pos = screen_to_tile(pos)
-        self.player.on_farmable_tile = self.soil_layer.is_farmable(tile_pos)
+
+        self.player.on_farmable_tile = self.soil_layer.is_farmable(tile_pos) and not self.soil_layer.is_hoed_tile(tile_pos)
        
 
     def update_rain(self):
@@ -291,7 +292,6 @@ class Level:
         # update
         self.event_loop()
         self.plant_collision()
-        self.update_player_action_preview()
         self.update_rain()
         self.update_day()
 
@@ -300,6 +300,8 @@ class Level:
 
         if self.shop_active:                # temporary because shop will be a separate screen
             self.shop.update()
+        
+        self.update_player_action_preview()
 
         # draw
         self.draw(dt)

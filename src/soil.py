@@ -25,6 +25,10 @@ class SoilLayer:
         self.grid = [[[] for col in range(tmx_map.width)] for row in range(tmx_map.height)]
         for x, y, _ in tmx_map.get_layer_by_name('Farmable').tiles():
             self.grid[y][x].append('F')
+
+    def is_hoed_tile(self, pos):
+        x, y = pos
+        return 'X' in self.grid[y][x]
     
     def is_farmable(self, pos):
         x, y = pos
