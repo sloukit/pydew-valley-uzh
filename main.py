@@ -17,6 +17,7 @@ class Game:
         pygame.display.set_caption('PyDew')
 
         # frames
+        self.frames = None
         self.character_frames = None
         self.level_frames = None
         self.overlay_frames = None
@@ -26,11 +27,6 @@ class Game:
         self.sounds = None
         self.font = None
         self.load_assets()
-        self.frames = {
-            'character': self.character_frames,
-            'level': self.level_frames,
-            'overlay': self.overlay_frames
-        }
 
         # game setup
         self.running = True
@@ -72,6 +68,12 @@ class Game:
         }
         self.overlay_frames = import_folder_dict('images/overlay')
         self.character_frames = character_importer('images/characters')
+        
+        self.frames = {
+            'character': self.character_frames,
+            'level': self.level_frames,
+            'overlay': self.overlay_frames
+        }
 
         self.sounds = sound_importer('audio', default_volume=0.1)
 

@@ -130,10 +130,10 @@
  <objectgroup id="6" name="Collidable objects">
   <object id="2" name="Tree" gid="212" x="336" y="272" width="24" height="30"/>
   <object id="3" name="Tree" gid="212" x="272" y="256" width="24" height="30"/>
-  <object id="4" gid="207" x="224" y="288" width="16" height="12"/>
-  <object id="5" gid="216" x="320" y="352" width="16" height="12"/>
+  <object id="4" name="Rock" gid="207" x="224" y="288" width="16" height="12"/>
+  <object id="5" name="Rock" gid="216" x="320" y="352" width="16" height="12"/>
   <object id="12" gid="220" x="56.8024" y="198.474" width="14" height="17"/>
-  <object id="13" gid="219" x="288.381" y="162.665" width="14" height="22"/>
+  <object id="13" name="Bed" gid="219" x="288.381" y="162.665" width="14" height="22"/>
  </objectgroup>
  <objectgroup id="5" name="Entities">
   <object id="1" name="Player" x="112" y="192">

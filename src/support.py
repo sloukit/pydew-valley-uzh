@@ -40,8 +40,8 @@ def import_folder_dict(fold_path):
     for folder_path, _, file_names in walk(resource_path(fold_path)):
         for file_name in file_names:
             full_path = join(folder_path, file_name)
-            frames[file_name.split('.')[0]] = pygame.transform.scale_by(pygame.image.load(full_path).convert_alpha(),
-                                                                        SCALE_FACTOR)
+            image = pygame.image.load(full_path).convert_alpha()
+            frames[file_name.split('.')[0]] = pygame.transform.scale_by(image, SCALE_FACTOR)
     return frames
 
 

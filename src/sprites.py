@@ -14,6 +14,7 @@ class Sprite(pygame.sprite.Sprite):
         self.rect = self.image.get_frect(topleft=pos)
         self.z = z
         self.name = name
+        self.hitbox_rect = self.rect.copy()
 
 
 class ParticleSprite(Sprite):
@@ -131,12 +132,25 @@ class WaterDrop(Sprite):
         if self.moving:
             self.rect.topleft += self.direction * self.speed * dt
 
+class Bed(CollideableSprite):
+    def __init__(self, pos, surf, groups):
+        super().__init__(pos, surf, groups, LAYERS['main'], 'Bed')
+        self.hitbox_rect = self.rect.inflate(40, 0)
+        self.hitbox_rect.midbottom = self.rect.midbottom
+
+class Rock(CollideableSprite):
+    def __init__(self, pos, surf, groups):
+        super().__init__(pos, surf, groups, LAYERS['main'], 'Rock')
+        self.hitbox_rect = self.rect.inflate(20, -20)
+        self.hitbox_rect.midbottom = self.rect.midbottom
+
 
 class Hill(CollideableSprite):
     def __init__(self, pos, surf, groups):
-        super().__init__(pos, surf, groups)
-        self.hitbox_rect = self.rect.inflate(0, -30)
-        self.hitbox_rect.midbottom = self.rect.midbottom
+        super().__init__(pos, surf, groups, LAYERS['main'], 'Hill')
+        self.hitbox_rect = self.rect.inflate(40, 10)
+        # self.hitbox_rect = self.rect.inflate(40, -38)
+        self.hitbox_rect.midbottom = self.rect.midbottom + vector(0, 10)
 
 
 class Entity(Sprite):
@@ -148,6 +162,9 @@ class Entity(Sprite):
 
 class Player(CollideableSprite):
     def __init__(self, pos, frames, groups, collision_sprites, apply_tool, interact, sounds):
+
+        self.test_active = False    
+
         # animations
         self.frames = frames
         self.frame_index = 0
@@ -167,7 +184,12 @@ class Player(CollideableSprite):
         self.collision_sprites = collision_sprites
         self.blocked = False
         self.interact = interact
-        self.hitbox_offset = vector(0, -62)
+
+        # hitbox
+        self.hitbox_offset = vector(0, -65)
+        hitbox_midtop = self.rect.midbottom + self.hitbox_offset
+        self.hitbox_rect = pygame.Rect(0, 0, 40, 40)
+        self.hitbox_rect.midtop = hitbox_midtop
 
         # tools
         self.available_tools = ['axe', 'hoe', 'water']
@@ -180,6 +202,7 @@ class Player(CollideableSprite):
         self.available_seeds = ['corn', 'tomato']
         self.seed_index = 0
         self.current_seed = self.available_seeds[self.seed_index]
+        self.plant_collide_rect = pygame.Rect(0, 0, 40, 40)
 
         # inventory 
         self.inventory = {
@@ -205,6 +228,10 @@ class Player(CollideableSprite):
     
     # input
     def input(self):
+
+        if pygame.key.get_just_pressed()[pygame.K_t]:
+            self.test_active = not self.test_active
+
         # movement
         if not self.tool_active and not self.blocked:
             self.update_direction()
@@ -245,6 +272,9 @@ class Player(CollideableSprite):
         y_movement = self.direction.y * self.speed * dt
         self.rect.y += int(y_movement)
         self.check_collision('vertical')
+
+        # hitbox
+        self.hitbox_rect.midbottom = self.pos
 
     def check_collision(self, direction):
         self.pos = vector(self.rect.midbottom) + self.hitbox_offset
@@ -376,17 +406,27 @@ class Player(CollideableSprite):
 
     # draw
     def draw_test(self):
-        rect = self.rect.copy()
-        offset = vector(self.rect.center) - vector(SCREEN_WIDTH//2, SCREEN_HEIGHT//2)
-        rect.topleft -= offset
-        pygame.draw.rect(self.display_surface, 'red', rect, 2)
+        if self.test_active:
+            rect = self.rect.copy()
+            offset = vector(self.rect.center) - vector(SCREEN_WIDTH//2, SCREEN_HEIGHT//2)
+            rect.topleft -= offset
+            pygame.draw.rect(self.display_surface, 'red', rect, 2)
 
-        pos = self.pos - offset
-        pygame.draw.circle(self.display_surface, 'yellow', pos, 5)
+            pos = self.pos - offset
+            pygame.draw.circle(self.display_surface, 'yellow', pos, 5)
 
-        # blocks
-        for sprite in self.collision_sprites:
-            # if sprite.name is not None:
-            rect = sprite.hitbox_rect.copy()
+            # hitbox
+            rect = self.hitbox_rect.copy()
             rect.topleft -= offset
             pygame.draw.rect(self.display_surface, 'blue', rect, 0, 2)
+
+            # blocks
+            for sprite in self.collision_sprites:
+                color = 'yellow' if sprite.name == 'Rock' else 'blue'
+                rect = sprite.hitbox_rect.copy()
+                rect.topleft -= offset
+                pygame.draw.rect(self.display_surface, color, rect, 0, 2)
+
+                rect = sprite.rect.copy()
+                rect.topleft -= offset
+                pygame.draw.rect(self.display_surface, 'red', rect, 2)

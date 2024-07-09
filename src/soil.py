@@ -20,11 +20,12 @@ class SoilLayer:
         for x, y, _ in tmx_map.get_layer_by_name('Farmable').tiles():
             self.grid[y][x].append('F')
     
-    def hoe(self, pos):
+    def hoe(self, pos, sound):
         x, y = int(pos[0] / (TILE_SIZE * SCALE_FACTOR)), int(pos[1] / (TILE_SIZE * SCALE_FACTOR))        
         if 'F' in self.grid[y][x]:
             self.grid[y][x].append('X')
             self.create_soil_tiles()
+            sound.play()
             
 
     def water(self, pos):

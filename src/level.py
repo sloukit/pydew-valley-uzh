@@ -3,7 +3,7 @@ import pygame, sys
 from random import randint
 
 from .settings import TILE_SIZE, SCALE_FACTOR, LAYERS, GameState
-from .sprites import Sprite, Tree, ParticleSprite, AnimatedSprite, CollideableSprite, Player
+from .sprites import Sprite, Tree, ParticleSprite, AnimatedSprite, CollideableSprite, Player, Hill, Rock, Bed
 from .support import map_coords_to_tile, load_data
 from .transition import Transition
 from .groups import AllSprites
@@ -59,8 +59,8 @@ class Level:
     def setup(self):
         self.activate_music()
 
-        self.setup_layer_tiles('Lower ground', self.setup_environment)
-        self.setup_layer_tiles('Upper ground', self.setup_environment)
+        self.setup_layer_tiles('Lower ground', self.setup_lower_ground)
+        self.setup_layer_tiles('Upper ground', self.setup_upper_ground)
         self.setup_layer_tiles('Water', self.setup_water)
 
         self.setup_layer_objects('Collidable objects', self.setup_objects)
@@ -75,9 +75,13 @@ class Level:
             pos = (x, y)
             setup_func(pos, surf)
             
-    def setup_environment(self, pos, surf):
+    def setup_lower_ground(self, pos, surf):
         image = pygame.transform.scale_by(surf, SCALE_FACTOR)
         Sprite(pos, image, self.all_sprites, LAYERS['lower ground'])
+
+    def setup_upper_ground(self, pos, surf):
+        image = pygame.transform.scale_by(surf, SCALE_FACTOR)
+        Sprite(pos, image, self.all_sprites, LAYERS['upper ground'])
     
     def setup_water(self, pos, surf):
         image = self.frames['level']['animations']['water']
@@ -98,18 +102,21 @@ class Level:
             stump_frames = self.frames['level']['objects']['stump']
 
             Tree(pos, image, (self.all_sprites, self.collision_sprites, self.tree_sprites), obj.name, apple_frames, stump_frames)
+        elif obj.name == 'Rock':
+            Rock(pos, image, (self.all_sprites, self.collision_sprites))
         else:
             CollideableSprite(pos, image, (self.all_sprites, self.collision_sprites))
     
     def setup_collisions(self, pos, obj):
         size = (int(obj.width * SCALE_FACTOR), int(obj.height * SCALE_FACTOR))
         image = pygame.Surface(size)
-        CollideableSprite(pos, image, self.collision_sprites)
+        Hill(pos, image, self.collision_sprites)
         
     def setup_interactions(self, pos, obj):
         size = (int(obj.width * SCALE_FACTOR), int(obj.height * SCALE_FACTOR))
         image = pygame.Surface(size)
-        Sprite(pos, image, (self.interaction_sprites), LAYERS['main'], obj.name)
+        
+        CollideableSprite(pos, image, (self.interaction_sprites), LAYERS['main'], obj.name)
         
     def setup_entities(self, pos, obj):
         self.entities[obj.name] = Player(
@@ -186,8 +193,7 @@ class Level:
                 self.sounds['axe'].play()
 
         if tool == 'hoe':
-            self.soil_layer.hoe(pos)
-            self.sounds['hoe'].play()
+            self.soil_layer.hoe(pos, self.sounds['hoe'])
 
 
         if tool == 'water':
