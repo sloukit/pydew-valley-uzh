@@ -56,12 +56,13 @@ class SoilLayer:
             tile.farmable = True
             self.map[(x, y)] = tile
     
-    def update_tile_cluster(self, tile):
+    def update_tile_cluster(self, pos, tile):
         neighbors = ""
+        tile_pos = vector(pos)
         for direction, (dx, dy) in self.NEIGHBOR_DIRECTIONS.items():
-            neighbor_pos = (self.pos[0] + dx, self.pos[1] + dy)
+            neighbor_pos = (tile_pos.x + dx, tile_pos.y + dy)
             neighbor_tile = self.map.get(neighbor_pos)
-            if neighbor_tile and neighbor_tile.is_hoed:
+            if neighbor_tile and neighbor_tile.hoed:
                 neighbors += direction
         tile.neighbors = neighbors if neighbors else 'X'
     
@@ -74,7 +75,7 @@ class SoilLayer:
         if tile.farmable and not tile.hoed:
             tile.hoed = True
             self.sounds['hoe'].play()
-            self.update_tile_cluster(tile)
+            self.update_tile_cluster(pos, tile)
             self.update_tile_image(tile)
 
     def water(self, pos):
@@ -89,11 +90,13 @@ class SoilLayer:
         
     def plant(self, pos, seed, inventory):
         tile = self.map.get(pos)
-        if tile.hoed and tile.watered and not tile.planted:
+        seed_name = seed + ' seed'
+        
+        if tile.hoed and not tile.planted and inventory[seed_name] > 0:
             tile.planted = True
             frames = self.level_frames[seed]
             tile.plant = Plant(seed, [self.all_sprites, self.plant_sprites], tile, frames, self.check_watered)   # TODO: rm check_watered and tile
-            inventory[seed] -= 1
+            inventory[seed_name] -= 1
             self.sounds['plant'].play()
             # self.sounds['cant plant'].play()
     

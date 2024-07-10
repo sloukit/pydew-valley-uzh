@@ -205,7 +205,7 @@ class Level:
             self.soil_layer.water(pos)
 
         if tool in ('corn', 'tomato'):
-            self.soil_layer.plant_seed(pos, tool, entity.inventory)
+            self.soil_layer.plant(pos, tool, entity.inventory)
 
     def interact(self):
         collided_interactions = pygame.sprite.spritecollide(self.player, self.interaction_sprites, False)
