@@ -247,7 +247,7 @@ class Player(CollideableSprite):
     # input
     def input(self):
 
-        if pygame.key.get_just_pressed()[pygame.K_t]:
+        if self.controls['test']:
             self.test_active = not self.test_active
 
         # movement

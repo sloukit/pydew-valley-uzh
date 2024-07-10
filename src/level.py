@@ -191,7 +191,6 @@ class Level:
     def apply_tool(self, tool, pos, entity):
         if tool == 'axe':
             screen_pos = tile_to_screen(pos)
-            print(screen_pos)
             collided_trees = [tree for tree in self.tree_sprites if tree.rect.collidepoint(screen_pos)]
             for tree in collided_trees:
                 tree.hit(entity)
