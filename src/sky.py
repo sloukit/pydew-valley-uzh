@@ -22,7 +22,7 @@ class Sky:
             '20' : (255, 219, 203),
             '24' : (38, 101, 189)
         }
-        self.colors_hours = list(self.colors.keys)
+        self.colors_hours = list(map(int, self.colors.keys()))
         self.colors_rgb = list(self.colors.values())
 
         self.color = self.get_color()
@@ -43,10 +43,10 @@ class Sky:
             color_index = -1
 
         # start and end colors
-        start_color = list(self.colors_rgb)[color_index]
-        end_color = list(self.colors_rgb)[color_index + 1]
-        start_hour = int(self.colors_hours)[color_index]
-        end_hour = int(self.colors_hours)[color_index + 1]
+        start_color = self.colors_rgb[color_index]
+        end_color = self.colors_rgb[color_index + 1]
+        start_hour = self.colors_hours[color_index]
+        end_hour = self.colors_hours[color_index + 1]
 
         # just for time intervals like 23:00 - 7:00
         end_hour = end_hour if end_hour > start_hour else end_hour + 24

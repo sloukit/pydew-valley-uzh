@@ -7,7 +7,7 @@ class GameTime:
         self.game_minute = 0     # game starts at this minute
 
         # number of seconds per in game minute (reference - stardew valley each minute is 0.7 seconds)
-        self.seconds_per_game_minute = 0.7
+        self.seconds_per_game_minute = 0.01
 
         # gets the creation time in ticks
         self.last_time = pygame.time.get_ticks()
