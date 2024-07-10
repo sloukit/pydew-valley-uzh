@@ -35,7 +35,7 @@ class Level:
         self.tmx_maps = tmx_maps
 
         # soil 
-        self.soil_layer = SoilLayer(self.all_sprites, self.collision_sprites, tmx_maps['main'], frames['level'])
+        self.soil_layer = SoilLayer(self.all_sprites, self.collision_sprites, tmx_maps['main'], frames['level'], sounds)
 
         # weather 
         self.sky = Sky()
@@ -198,15 +198,14 @@ class Level:
                 self.sounds['axe'].play()
 
         if tool == 'hoe':
-            self.soil_layer.hoe(pos, self.sounds['hoe'])
+            self.soil_layer.hoe(pos)
 
 
         if tool == 'water':
             self.soil_layer.water(pos)
-            self.sounds['water'].play()
 
         if tool in ('corn', 'tomato'):
-            self.soil_layer.plant_seed(pos, tool, entity.inventory, plant_sounds=[self.sounds['plant'], self.sounds['cant_plant']])
+            self.soil_layer.plant_seed(pos, tool, entity.inventory)
 
     def interact(self):
         collided_interactions = pygame.sprite.spritecollide(self.player, self.interaction_sprites, False)
@@ -270,11 +269,11 @@ class Level:
 
     # update
     def update_player_action_preview(self):
-        pos = self.player.pos
-        tile_pos = screen_to_tile(pos)
+        pos = screen_to_tile(self.player.pos)
+        tile = self.soil_layer.map.get(pos)
 
-        self.player.on_farmable_tile = self.soil_layer.is_farmable(tile_pos) and not self.soil_layer.is_hoed_tile(tile_pos)
-        self.player.on_plantable_tile = self.soil_layer.is_hoed_tile(tile_pos) and self.soil_layer.is_plantable(tile_pos)
+        self.player.on_farmable_tile = tile and tile.farmable and not tile.hoed
+        self.player.on_plantable_tile = tile and tile.hoed and not tile.planted
 
     def update_rain(self):
         if self.raining and not self.shop_active:
