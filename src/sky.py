@@ -56,8 +56,6 @@ class Sky:
         for index, (start_value, end_value) in enumerate(zip(start_color, end_color)):
             color[index] = int(color_perc * end_value + (1 - color_perc) * start_value)
 
-        print()
-
         return color
 
     def display(self):
@@ -65,8 +63,7 @@ class Sky:
         # draw
         self.color = self.get_color()
         self.full_surf.fill(self.color)
-        self.display_surface.blit(
-            self.full_surf, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
+        self.display_surface.blit(self.full_surf, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
 
 class Rain:
     def __init__(self, all_sprites, level_frames, map_size):
