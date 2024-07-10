@@ -84,14 +84,10 @@ class SoilLayer:
             tile.planted = True
             frames = self.level_frames[seed]
             groups = [self.all_sprites, self.plant_sprites]
-            tile.plant = Plant(seed, groups, tile, frames, self.check_watered)
+            tile.plant = Plant(seed, groups, tile, frames)
             inventory[seed_name] -= 1
             self.sounds["plant"].play()
             # self.sounds['cant plant'].play()
-
-    def check_watered(self, pos):
-        tile = self.map.get(pos)
-        return tile.watered
 
     def determine_tile_type(self, pos):
         x, y = pos

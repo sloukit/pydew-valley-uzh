@@ -2,10 +2,9 @@ import pygame
 import sys
 
 from random import randint
-from pygame import Vector2 as vector
 
 from .sprites import Sprite, Tree, ParticleSprite, AnimatedSprite, CollideableSprite, Player, Hill, Rock
-from .settings import SCALE_FACTOR, LAYERS, SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE, GameState
+from .settings import SCALE_FACTOR, LAYERS, GameState
 from .support import screen_to_tile, load_data, tile_to_screen
 from .transition import Transition
 from .groups import AllSprites

@@ -1,4 +1,4 @@
-from .settings import LAYERS, GROW_SPEED, APPLE_POS, SCALE_FACTOR, KEYBINDS, SCREEN_WIDTH, SCREEN_HEIGHT, TILE_SIZE
+from .settings import LAYERS, GROW_SPEED, APPLE_POS, SCALE_FACTOR, KEYBINDS, TILE_SIZE
 import pygame
 from pygame import Vector2 as vector    
 from .timer import Timer
@@ -38,24 +38,28 @@ class CollideableSprite(Sprite):
 
 
 class Plant(Sprite):
-    def __init__(self, seed_type, groups, soil_sprite, frames, check_watered):
-        super().__init__(soil_sprite.rect.center, frames[0], groups, LAYERS['plant'])
-        self.rect.center = soil_sprite.rect.center + pygame.Vector2(0.5, -3) * SCALE_FACTOR
-        self.hitbox_rect = self.rect.copy()
-        self.soil = soil_sprite
-        self.check_watered = check_watered
+    def __init__(self, seed, groups, tile, frames):
+        super().__init__(tile.rect.center, frames[0], groups, LAYERS['plant'])
+        
+        # main setup
         self.frames = frames
+        self.image = self.frames[0]
+        self.rect.center = tile.rect.center + vector(0.5, -3) * SCALE_FACTOR
+        self.hitbox_rect = self.rect.copy()
         self.hitbox = None
 
-        self.seed_type = seed_type
+        # tile
+        self.tile = tile
+
+        # plant
+        self.seed = seed
         self.age = 0
         self.max_age = len(self.frames) - 1
-        self.grow_speed = GROW_SPEED[seed_type]
+        self.grow_speed = GROW_SPEED[seed]
         self.harvestable = False
-        self.image = self.frames[0]
 
     def grow(self):
-        if self.check_watered(self.rect.center):
+        if self.tile.watered:
             self.age += self.grow_speed
 
             if int(self.age) > 0:
@@ -66,14 +70,10 @@ class Plant(Sprite):
                 self.age = self.max_age
                 self.harvestable = True
 
-            self.image = self.frames[int(self.age)]
-            self.rect = self.image.get_frect(midbottom=self.soil.rect.midbottom + pygame.math.Vector2(0, 2))
+            index = int(self.age)
+            self.image = self.frames[index]
+            self.rect = self.image.get_frect(midbottom=self.tile.rect.midbottom + vector(0, 2))
     
-    # def draw(self, display_surface, offset):
-    #     print('drawing')
-    #     display_surface.blit(self.image, (500, 500))
-
-
 
 class Tree(CollideableSprite):
     def __init__(self, pos, surf, groups, name, apple_surf, stump_surf):
