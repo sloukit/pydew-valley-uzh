@@ -20,7 +20,7 @@ class Sky:
             '12' : (255, 255, 255),
             '18' : (255, 240, 234),
             '20' : (255, 219, 203),
-            '24' : (38, 101, 189)
+            '22' : (38, 101, 189)
         }
         self.colors_hours = list(map(int, self.colors.keys()))
         self.colors_rgb = list(self.colors.values())
@@ -49,8 +49,8 @@ class Sky:
         end_hour = self.colors_hours[color_index + 1]
 
         # just for time intervals like 23:00 - 7:00
-        end_hour = end_hour if end_hour > start_hour else end_hour + 24
-        precise_hour = precise_hour if precise_hour >= start_hour else precise_hour + 24
+        end_hour += 24 * (end_hour <= start_hour)
+        precise_hour += 24 * (precise_hour < start_hour)
 
         # calculate color
         color_perc = (precise_hour - start_hour) / (end_hour - start_hour)

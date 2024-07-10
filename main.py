@@ -8,7 +8,9 @@ from src import main_menu
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, mm):
+        self.main_menu = mm
+        self.settings_menu = None
         self.character_frames: dict[str, settings.AniFrames] | None = None
         self.level_frames: dict | None = None
         self.tmx_maps: settings.MapDict | None = None
