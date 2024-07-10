@@ -22,6 +22,9 @@ class Sky:
             '20' : (255, 219, 203),
             '24' : (38, 101, 189)
         }
+        self.colors_hours = list(self.colors.keys)
+        self.colors_rgb = list(self.colors.values())
+
         self.color = self.get_color()
 
     def get_color(self):
@@ -32,8 +35,7 @@ class Sky:
 
         # find nearest hours in self.colors
         color_index = 0
-        for index in range(len(self.colors)):
-            color_hour = int(list(self.colors.keys())[index])
+        for index, color_hour in enumerate(self.colors_hours):
             if precise_hour < color_hour:
                 color_index = index - 1
                 break
@@ -41,10 +43,10 @@ class Sky:
             color_index = -1
 
         # start and end colors
-        start_color = list(self.colors.values())[color_index]
-        end_color = list(self.colors.values())[color_index + 1]
-        start_hour = int(list(self.colors.keys())[color_index])
-        end_hour = int(list(self.colors.keys())[color_index + 1])
+        start_color = list(self.colors_rgb)[color_index]
+        end_color = list(self.colors_rgb)[color_index + 1]
+        start_hour = int(self.colors_hours)[color_index]
+        end_hour = int(self.colors_hours)[color_index + 1]
 
         # just for time intervals like 23:00 - 7:00
         end_hour = end_hour if end_hour > start_hour else end_hour + 24
