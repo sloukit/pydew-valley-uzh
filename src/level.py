@@ -35,7 +35,7 @@ class Level:
         self.tmx_maps = tmx_maps
 
         # soil 
-        self.soil_layer = SoilLayer(self.all_sprites, self.collision_sprites, tmx_maps['main'], frames['level'], sounds)
+        self.soil_layer = SoilLayer(self.all_sprites, tmx_maps['main'], frames['level'], sounds)
 
         # weather 
         self.sky = Sky()
