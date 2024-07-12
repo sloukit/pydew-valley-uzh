@@ -1,15 +1,17 @@
-import sys
-import pygame  # noqa
+import pygame  
 
 from src import settings
+from src.screens.shop import ShopMenu
 from src.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from src.enums import GameState
 from src import support
-from src import level
 
-from src.level import Level
-from src.dialog import DialogueManager, prepare_tb_image
-from src.menus import MainMenu, PauseMenu, SettingsMenu, ShopMenu
+from src.screens.level import Level
+from src.npc.dialog import DialogueManager, prepare_tb_image
+from src.screens.menu import MainMenu
+from src.screens.pause import PauseMenu
+from src.screens.settings import SettingsMenu
+
 
 
 class Game:
@@ -25,6 +27,7 @@ class Game:
         self.level_frames: dict | None = None
         self.tmx_maps: settings.MapDict | None = None
         self.overlay_frames: dict[str, pygame.Surface] | None = None
+        self.frames: dict[str, dict] | None = None
 
         # assets
         self.tmx_maps = None
@@ -35,36 +38,28 @@ class Game:
         self.tb_cname_base_surf: pygame.Surface | None = None
         self.font: pygame.font.Font | None = None
         self.sounds: settings.SoundDict | None = None
-        pygame.init()
-        self.screen = pygame.display.set_mode((
-            settings.SCREEN_WIDTH,
-            settings.SCREEN_HEIGHT,
-        ))
-        pygame.display.set_caption('PyDew')
-        self.clock = pygame.time.Clock()
-        self.running = True
-        self.load_assets()
-        self.frames = {
-            'character': self.character_frames,
-            'level': self.level_frames,
-            'overlay': self.overlay_frames
-        }
 
-        # game setup
+        # main setup
         self.running = True
-        self.level = Level(self, self.switch_state, self.tmx_maps, self.frames, self.sounds)
-        self.dm = DialogueManager(self.level.all_sprites, self.tb_cname_base_surf, self.tb_main_text_base_surf)
         self.clock = pygame.time.Clock()
+        self.load_assets()
 
         # screens
+        self.level = Level(self, self.switch_state, self.tmx_maps, self.frames, self.sounds)
         self.main_menu = MainMenu(self.switch_state)
         self.pause_menu = PauseMenu(self.switch_state)
         self.settings_menu = SettingsMenu(self.switch_state, self.sounds, self.level)
+        self.shop_menu = ShopMenu(self.level.player, self.switch_state, self.font)
 
+        # dialog
+        self.dm = DialogueManager(self.level.all_sprites, self.tb_cname_base_surf, self.tb_main_text_base_surf)
+
+        # screens
         self.menus = {
             GameState.MAIN_MENU: self.main_menu,
             GameState.PAUSE: self.pause_menu,
             GameState.SETTINGS: self.settings_menu,
+            GameState.SHOP: self.shop_menu,
         }
         self.current_state = GameState.MAIN_MENU
 
@@ -87,6 +82,12 @@ class Game:
         }
         self.overlay_frames = support.import_folder_dict('images/overlay')
         self.character_frames = support.character_importer('images/characters')
+        self.frames = {
+            'character': self.character_frames,
+            'level': self.level_frames,
+            'overlay': self.overlay_frames
+        }
+
         self._tb_base = pygame.image.load(support.resource_path("images/textbox.png")).convert_alpha()
         self.tb_cname_base_surf = self._tb_base.subsurface(pygame.Rect(0, 0, 212, 67))
         self.tb_main_text_base_surf = self._tb_base.subsurface(pygame.Rect(0, 74, 391, 202))
@@ -97,20 +98,17 @@ class Game:
 
         self.font = support.import_font(30, 'font/LycheeSoda.ttf')
 
-    def check_pause(self):
+    def game_paused(self):
         return self.current_state != GameState.LEVEL
 
     def run(self):
         while self.running:
             dt = self.clock.tick() / 1000
 
-            game_paused = self.check_pause()
-            self.level.update(dt,)
+            self.level.update(dt)
 
-            # a menu is opened
-            if game_paused:
-                self.menus[self.current_state].update()
-                
+            if self.game_paused():
+                self.menus[self.current_state].update(dt)
 
             pygame.display.update()
 

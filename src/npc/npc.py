@@ -1,336 +1,18 @@
-from abc import ABC, abstractmethod
-from dataclasses import dataclass
+
+from __future__ import annotations
 from enum import IntEnum
 from typing import Callable
+from src.sprites.entity import Entity
+from src.enums import InventoryResource, FarmingTool, ItemToUse
+from src.settings import SCALE_FACTOR
+from pathfinding.core.grid import Grid as PF_Grid
+from pathfinding.finder.a_star import AStarFinder as PF_AStarFinder
+from src.npc.npc_behaviour import Selector, Sequence, Condition, Action
+from src.settings import Coordinate, AniFrames
 
 import pygame
 import random
 
-from pathfinding.core.grid import Grid as PF_Grid
-from pathfinding.finder.a_star import AStarFinder as PF_AStarFinder
-
-from src import settings
-from src.menus import PauseMenu, SettingsMenu
-from src.npc_behaviour import Selector, Sequence, Condition, Action
-from src.npc_behaviour import Context as BehaviourContext
-from src.settings import (
-    APPLE_POS,
-    GROW_SPEED,
-    LAYERS,
-    SCALE_FACTOR,
-    GameState
-)
-
-from src.enums import InventoryResource, FarmingTool, ItemToUse
-from src import savefile
-
-from src import support
-from src import timer
-
-
-class Sprite(pygame.sprite.Sprite):
-    def __init__(self,
-                 pos: tuple[int | float,
-                            int | float],
-                 surf: pygame.Surface,
-                 groups: tuple[pygame.sprite.Group] | pygame.sprite.Group,
-                 z: int = LAYERS['main'],
-                 name: str | None = None):
-        super().__init__(groups)
-        self.surf = surf
-        self.image = surf
-        self.rect = self.image.get_frect(topleft=pos)
-        self.z = z
-        self.name = name
-
-
-class ParticleSprite(Sprite):
-    def __init__(self, pos, surf, groups, duration=300):
-        white_surf = pygame.mask.from_surface(surf).to_surface()
-        white_surf.set_colorkey('black')
-        super().__init__(pos, white_surf, groups, LAYERS['particles'])
-        self.timer = timer.Timer(duration, autostart=True, func=self.kill)
-
-    def update(self, dt):
-        self.timer.update()
-
-
-class CollideableSprite(Sprite):
-    def __init__(self, pos, surf, groups, shrink, z=LAYERS['main']):
-        super().__init__(pos, surf, groups, z)
-        self.hitbox_rect = self.rect.inflate(-shrink[0], -shrink[1])
-
-
-class Plant(CollideableSprite):
-    def __init__(self, seed_type, groups, soil_sprite, frames, check_watered):
-        super().__init__(soil_sprite.rect.center,
-                         frames[0], groups, (0, 0), LAYERS['plant'])
-        self.rect.center = soil_sprite.rect.center + \
-            pygame.Vector2(0.5, -3) * SCALE_FACTOR
-        self.soil = soil_sprite
-        self.check_watered = check_watered
-        self.frames = frames
-        self.hitbox = None
-
-        self.seed_type = seed_type
-        self.age = 0
-        self.max_age = len(self.frames) - 1
-        self.grow_speed = GROW_SPEED[seed_type.as_plant_name()]
-        self.harvestable = False
-
-    def grow(self):
-        if self.check_watered(self.rect.center):
-            self.age += self.grow_speed
-
-            if int(self.age) > 0:
-                self.z = LAYERS['main']
-                self.hitbox = self.rect.inflate(-26, -self.rect.height * 0.4)
-
-            if self.age >= self.max_age:
-                self.age = self.max_age
-                self.harvestable = True
-
-            self.image = self.frames[int(self.age)]
-            self.rect = self.image.get_frect(
-                midbottom=self.soil.rect.midbottom + pygame.math.Vector2(0, 2))
-
-
-class Tree(CollideableSprite):
-    def __init__(self, pos, surf, groups, name, apple_surf, stump_surf):
-        super().__init__(
-            pos,
-            surf,
-            groups,
-            (30 * SCALE_FACTOR, 20 * SCALE_FACTOR),
-        )
-        self.name = name
-        self.part_surf = support.generate_particle_surf(self.image)
-        self.apple_surf = apple_surf
-        self.stump_surf = stump_surf
-        self.health = 5
-        self.timer = timer.Timer(300, func=self.unhit)
-        self.hitbox = None
-        self.was_hit = False
-        self.alive = True
-        self.apple_sprites = pygame.sprite.Group()
-        self.create_fruit()
-
-    def unhit(self):
-        self.was_hit = False
-        if self.health < 0:
-            self.image = self.stump_surf
-            if self.alive:
-                self.rect = self.image.get_frect(midbottom=self.rect.midbottom)
-                self.hitbox = self.rect.inflate(-10, -self.rect.height * 0.6)
-                self.alive = False
-        elif self.health >= 0 and self.alive:
-            self.image = self.surf
-
-    def create_fruit(self):
-        for pos in APPLE_POS['default']:
-            if random.randint(0, 10) < 6:
-                x = pos[0] + self.rect.left
-                y = pos[1] + self.rect.top
-                Sprite((x, y), self.apple_surf, (self.apple_sprites,
-                       self.groups()[0]), LAYERS['fruit'])
-
-    def update(self, dt):
-        self.timer.update()
-
-    def hit(self, entity):
-        if self.was_hit:
-            return
-        self.was_hit = True
-        self.health -= 1
-        # remove an apple
-        if len(self.apple_sprites.sprites()) > 0:
-            random_apple = random.choice(self.apple_sprites.sprites())
-            random_apple.kill()
-            entity.add_resource(InventoryResource.APPLE)
-        if self.health < 0 and self.alive:
-            entity.add_resource(InventoryResource.WOOD, 5)
-        self.image = support.generate_particle_surf(self.image)
-        self.timer.activate()
-
-
-class AnimatedSprite(Sprite):
-    def __init__(self, pos, frames, groups, z=LAYERS['main']):
-        self.frames, self.frame_index = frames, 0
-        super().__init__(pos, frames[0], groups, z)
-
-    def animate(self, dt):
-        self.frame_index += 2 * dt
-        self.image = self.frames[int(self.frame_index) % len(self.frames)]
-
-    def update(self, dt):
-        self.animate(dt)
-
-
-class WaterDrop(Sprite):
-    def __init__(self, pos, surf, groups, moving, z):
-        super().__init__(pos, surf, groups, z)
-        self.timer = timer.Timer(
-            random.randint(400, 600),
-            autostart=True,
-            func=self.kill,
-        )
-        self.start_time = pygame.time.get_ticks()
-        self.moving = moving
-
-        if moving:
-            self.direction = pygame.Vector2(-2, 4)
-            self.speed = random.randint(200, 250)
-
-    def update(self, dt):
-        self.timer.update()
-        if self.moving:
-            self.rect.topleft += self.direction * self.speed * dt
-
-
-class Entity(CollideableSprite, ABC):
-    def __init__(
-            self,
-            pos: settings.Coordinate,
-            frames: dict[str, settings.AniFrames],
-            groups: tuple[pygame.sprite.Group],
-            collision_sprites: pygame.sprite.Group,
-            shrink: tuple[int, int],
-            apply_tool: Callable,
-            z=LAYERS['main']):
-        self.frames = frames
-        self.frame_index = 0
-        self.state = 'idle'
-        self.facing_direction = 'down'
-
-        super().__init__(
-            pos,
-            self.frames[self.state][self.facing_direction][self.frame_index],
-            groups,
-            shrink,
-            z=z
-        )
-
-        # movement
-        self.direction = pygame.Vector2()
-        self.speed = 100
-        self.collision_sprites = collision_sprites
-        self.plant_collide_rect = self.hitbox_rect.inflate(10, 10)
-
-        # tools
-        self.available_tools = ['axe', 'hoe', 'water']
-        self.current_tool = FarmingTool.get_first_tool_id()
-        self.tool_index = self.current_tool.value - FarmingTool.get_first_tool_id().value
-
-        self.tool_active = False
-        self.just_used_tool = False
-        self.apply_tool = apply_tool
-
-        # seeds
-        self.available_seeds = ['corn', 'tomato']
-        self.current_seed = FarmingTool.get_first_seed_id()
-        self.seed_index = self.current_seed.value - FarmingTool.get_first_seed_id().value
-
-        # inventory
-        self.inventory = {
-            InventoryResource.WOOD: 0,
-            InventoryResource.APPLE: 0,
-            InventoryResource.CORN: 0,
-            InventoryResource.TOMATO: 0,
-            InventoryResource.CORN_SEED: 0,
-            InventoryResource.TOMATO_SEED: 0,
-        }
-
-        # Not all Entities can go to the market, so those that can't should not have money either
-        self.money = 0
-
-    def get_state(self):
-        self.state = 'walk' if self.direction else 'idle'
-
-    def get_facing_direction(self):
-        # prioritizes vertical animations, flip if statements to get horizontal
-        # ones
-        if self.direction.x:
-            self.facing_direction = 'right' if self.direction.x > 0 else 'left'
-        if self.direction.y:
-            self.facing_direction = 'down' if self.direction.y > 0 else 'up'
-
-    def get_target_pos(self):
-        vectors = {
-            'left': pygame.Vector2(-1, 0),
-            'right': pygame.Vector2(1, 0),
-            'down': pygame.Vector2(0, 1),
-            'up': pygame.Vector2(0, -1),
-        }
-        return self.rect.center + vectors[self.facing_direction] * 40
-
-    @abstractmethod
-    def move(self, dt):
-        pass
-
-    # FIXME: Sometimes NPCs get stuck inside the player's hitbox
-    def collision(self, direction) -> bool:
-        """
-        :return: true: Entity collides with a sprite in self.collision_sprites, otherwise false
-        """
-        colliding_rect = False
-
-        for sprite in self.collision_sprites:
-            if sprite is not self:
-
-                # Entities should collide with their hitbox_rects to make them able to approach
-                #  each other further than the empty space on their sprite images would allow
-                if isinstance(sprite, Entity):
-                    if sprite.hitbox_rect.colliderect(self.hitbox_rect):
-                        colliding_rect = sprite.hitbox_rect
-                elif sprite.rect.colliderect(self.hitbox_rect):
-                    colliding_rect = sprite.rect
-
-                if colliding_rect:
-                    if direction == 'horizontal':
-                        if self.direction.x > 0:
-                            self.hitbox_rect.right = colliding_rect.left
-                        if self.direction.x < 0:
-                            self.hitbox_rect.left = colliding_rect.right
-                    else:
-                        if self.direction.y < 0:
-                            self.hitbox_rect.top = colliding_rect.bottom
-                        if self.direction.y > 0:
-                            self.hitbox_rect.bottom = colliding_rect.top
-
-        return bool(colliding_rect)
-
-    def animate(self, dt):
-        current_animation = self.frames[self.state][self.facing_direction]
-        self.frame_index += 4 * dt
-        if not self.tool_active:
-            self.image = current_animation[int(
-                self.frame_index) % len(current_animation)]
-        else:
-            tool_animation = self.frames[self.available_tools[self.tool_index]
-            ][self.facing_direction]
-            if self.frame_index < len(tool_animation):
-                self.image = tool_animation[min(
-                    (round(self.frame_index), len(tool_animation) - 1))]
-                if round(self.frame_index) == len(tool_animation) - \
-                        1 and not self.just_used_tool:
-                    self.just_used_tool = True
-                    self.use_tool(ItemToUse.REGULAR_TOOL)
-            else:
-                # self.use_tool('tool')
-                self.state = 'idle'
-                self.tool_active = False
-                self.just_used_tool = False
-
-    def use_tool(self, option: ItemToUse):
-        self.apply_tool((self.current_tool, self.current_seed)[option], self.get_target_pos(), self)
-
-    def add_resource(self, resource, amount=1):
-        self.inventory[resource] += amount
-
-    def update(self, dt):
-        self.get_state()
-        self.get_facing_direction()
-        self.animate(dt)
 
 
 _NONSEED_INVENTORY_DEFAULT_AMOUNT = 20
@@ -341,167 +23,9 @@ _INV_DEFAULT_AMOUNTS = (
 )
 
 
-class Player(Entity):
-    def __init__(
-            self,
-            game,
-            pos: settings.Coordinate,
-            frames,
-            groups,
-            collision_sprites: pygame.sprite.Group,
-            apply_tool: Callable,
-            interact: Callable,
-            sounds: settings.SoundDict,
-            font: pygame.font.Font):
-
-        save_data = savefile.load_savefile()
-        self.game = game
-
-        super().__init__(
-            pos,
-            frames,
-            groups,
-            collision_sprites,
-            (44 * SCALE_FACTOR, 40 * SCALE_FACTOR),
-            apply_tool
-        )
-
-        # movement
-        self.keybinds = self.import_controls()
-        self.controls = {}
-        self.speed = 250
-        self.blocked = False
-        self.paused = False
-        self.font = font
-        self.interact = interact
-        self.sounds = sounds
-
-        # menus
-
-        self.current_tool = save_data.get("current_tool", FarmingTool.get_first_tool_id())
-        self.tool_index = self.current_tool.value - 1
-
-        self.current_seed = save_data.get("current_seed", FarmingTool.get_first_seed_id())
-        self.seed_index = self.current_seed.value - FarmingTool.get_first_seed_id().value
-
-        # inventory
-        self.inventory = {
-            res: save_data["inventory"].get(
-                res.as_serialised_string(),
-                _SEED_INVENTORY_DEFAULT_AMOUNT if res >= InventoryResource.CORN_SEED else
-                _NONSEED_INVENTORY_DEFAULT_AMOUNT
-            )
-            for res in InventoryResource.__members__.values()
-        }
-        self.money = save_data.get("money", 200)
-
-        # sounds
-        self.sounds = sounds
-
-    def save(self):
-        # We compact the inventory first, i.e. remove any default values if they didn't change.
-        # This is to save space in the save file.
-        compacted_inv = self.inventory.copy()
-        key_set = list(compacted_inv.keys())
-        for k in key_set:
-            # The default amount for each resource differs
-            # according to whether said resource is a seed or not
-            # (5 units for seeds, 20 units for everything else).
-            if self.inventory[k] == _INV_DEFAULT_AMOUNTS[k.is_seed()]:
-                del compacted_inv[k]
-        savefile.save(self.current_tool, self.current_seed, self.money, compacted_inv)
-
-    @staticmethod
-    def import_controls():
-        try:
-            data = support.load_data('keybinds.json')
-            if len(data) == len(settings.KEYBINDS):
-                return data
-        except FileNotFoundError:
-            pass
-        support.save_data(settings.KEYBINDS, 'keybinds.json')
-        return settings.KEYBINDS
-
-        # controls
-
-    def update_controls(self):
-        controls = {}
-        keys = pygame.key.get_just_pressed()
-        linear_keys = pygame.key.get_pressed()
-        mouse_buttons = pygame.mouse.get_pressed()
-
-        for control_name, control in self.keybinds.items():
-            control_type = control['type']
-            value = control['value']
-            if control_type == 'key':
-                controls[control_name] = keys[value]
-            if control_type == 'mouse':
-                controls[control_name] = mouse_buttons[value]
-            if control_name in ('up', 'down', 'left', 'right'):
-                controls[control_name] = linear_keys[value]
-        return controls
-
-    def input(self):
-        self.controls = self.update_controls()
-
-        # movement
-        if not self.tool_active and not self.blocked:
-            self.direction.x = int(self.controls['right']) - int(self.controls['left'])
-            self.direction.y = int(self.controls['down']) - int(self.controls['up'])
-            self.direction = self.direction.normalize() if self.direction else self.direction
-
-            # tool switch
-            if self.controls['next tool']:
-                self.tool_index = (self.tool_index + 1) % len(self.available_tools)
-                self.current_tool = FarmingTool(self.tool_index + FarmingTool.get_first_tool_id())
-
-            # tool use
-            if self.controls['use']:
-                self.tool_active = True
-                self.frame_index = 0
-                self.direction = pygame.Vector2()
-                if self.current_tool.is_swinging_tool():
-                    self.sounds['swing'].play()
-
-            # seed switch
-            if self.controls['next seed']:
-                self.seed_index = (self.seed_index + 1) % len(self.available_seeds)
-                self.current_seed = FarmingTool(self.seed_index + FarmingTool.get_first_seed_id())
-
-            # seed used
-            if self.controls['plant']:
-                self.use_tool(ItemToUse.SEED)
-
-            # interact
-            if self.controls['interact']:
-                self.interact()
-
-    def move(self, dt):
-        self.hitbox_rect.x += self.direction.x * self.speed * dt
-        self.collision('horizontal')
-        self.hitbox_rect.y += self.direction.y * self.speed * dt
-        self.collision('vertical')
-        self.rect.center = self.hitbox_rect.center
-        self.plant_collide_rect.center = self.hitbox_rect.center
-
-    def get_current_tool_string(self):
-        return self.available_tools[self.tool_index]
-
-    def get_current_seed_string(self):
-        return self.available_seeds[self.seed_index]
-
-    def add_resource(self, resource, amount=1):
-        super().add_resource(resource, amount)
-        self.sounds['success'].play()
-
-    def update(self, dt):
-        self.input()
-        super().update(dt)
-
-
 # <editor-fold desc="NPC">
-@dataclass
-class NPCBehaviourContext(BehaviourContext):
+# @dataclass
+class NPCBehaviourContext:
     npc: "NPC"
 
 
@@ -712,7 +236,7 @@ class NPCBehaviourMethods:
         Makes the NPC wander to a random location in a 5 tile radius.
         :return: True if path has successfully been created, otherwise False
         """
-        tile_size = settings.SCALE_FACTOR * 16
+        tile_size = SCALE_FACTOR * 16
 
         # current NPC position on the tilemap
         tile_coord = pygame.Vector2(context.npc.rect.centerx, context.npc.rect.centery) / tile_size
@@ -773,8 +297,8 @@ class NPC(Entity):
 
     def __init__(
             self,
-            pos: settings.Coordinate,
-            frames: dict[str, settings.AniFrames],
+            pos: Coordinate,
+            frames: dict[str, AniFrames],
             groups: tuple[pygame.sprite.Group],
             collision_sprites: pygame.sprite.Group,
             apply_tool: Callable,
@@ -821,7 +345,7 @@ class NPC(Entity):
         if not self.pf_grid.walkable(coord[0], coord[1]):
             return False
 
-        tile_size = settings.SCALE_FACTOR * 16
+        tile_size = SCALE_FACTOR * 16
 
         # current NPC position on the tilemap
         tile_coord = pygame.Vector2(self.rect.centerx, self.rect.centery) / tile_size
@@ -851,7 +375,7 @@ class NPC(Entity):
         return True
 
     def move(self, dt):
-        tile_size = settings.SCALE_FACTOR * 16
+        tile_size = SCALE_FACTOR * 16
 
         # current NPC position on the tilemap
         tile_coord = pygame.Vector2(self.rect.centerx, self.rect.centery) / tile_size

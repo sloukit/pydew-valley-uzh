@@ -1,15 +1,12 @@
-import pygame  # noqa
-from src.settings import (
-    LAYERS,
-    SCREEN_HEIGHT,
-    SCREEN_WIDTH,
-    Coordinate,
-)
-from src.dialog import TextBox
+import pygame 
+from src.settings import LAYERS, SCREEN_WIDTH, SCREEN_HEIGHT, Coordinate
+from src.npc.dialog import TextBox
 
 
 # TODO : we could replace this with pygame.sprite.LayeredUpdates, as that
 # is a subclass of pygame.sprite.Group that natively supports layers
+
+
 class AllSprites(pygame.sprite.Group):
     def __init__(self):
         super().__init__()

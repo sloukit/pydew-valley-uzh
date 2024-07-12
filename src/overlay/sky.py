@@ -4,7 +4,7 @@ from src.settings import (
     SCREEN_HEIGHT,
     SCREEN_WIDTH,
 )
-from src.sprites import WaterDrop
+from src.sprites.water_drop import WaterDrop
 import random
 
 

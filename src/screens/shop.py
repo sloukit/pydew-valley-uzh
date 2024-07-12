@@ -8,7 +8,7 @@ from src.enums import InventoryResource
 
 # TODO: Refactor this class
 
-class Menu:
+class ShopMenu:
     def __init__(self, player, toggle_menu, font):
 
         # general setup

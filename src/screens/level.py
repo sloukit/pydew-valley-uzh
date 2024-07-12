@@ -1,28 +1,22 @@
-import math
 import sys
+import pygame 
 
-import pygame  # noqa
 
+from random import randint
 from pathfinding.core.grid import Grid as PF_Grid
 from pathfinding.finder.a_star import AStarFinder as PF_AStarFinder
 
-from src import settings
 from src.support import map_coords_to_tile, load_data, resource_path
 from src.groups import AllSprites
-from src.soil import SoilLayer
-from src.transition import Transition
-from random import randint
-from src.sky import Sky, Rain
-from src.overlay import Overlay
-from src.shop import Menu
-from src.sprites import (
-    AnimatedSprite,
-    ParticleSprite,
-    Tree,
-    Sprite,
-    Player,
-    NPC, NPCBehaviourMethods,
-)
+from src.overlay.soil import SoilLayer
+from src.overlay.transition import Transition
+from src.overlay.sky import Sky, Rain
+from src.overlay.overlay import Overlay
+from src.screens.shop import ShopMenu
+from src.sprites.base import Sprite, AnimatedSprite
+from src.sprites.particle import ParticleSprite
+from src.sprites.tree import Tree
+from src.sprites.player import Player
 from src.enums import FarmingTool, GameState
 from src.settings import (
     TILE_SIZE,
@@ -93,7 +87,7 @@ class Level:
 
         # overlays
         self.overlay = Overlay(self.player, frames['overlay'])
-        self.shop = Menu(self.player, self.toggle_shop, self.font)
+        self.shop = ShopMenu(self.player, self.toggle_shop, self.font)
         self.shop_active = False
 
 
@@ -197,7 +191,7 @@ class Level:
     # plant collision
     def plant_collision(self):
         if self.soil_layer.plant_sprites:
-            for plant in self.soil_layer.plant_sprites
+            for plant in self.soil_layer.plant_sprites:
 
                 is_player_near = plant.rect.colliderect(self.player.plant_collide_rect)
 
@@ -315,12 +309,7 @@ class Level:
         self.plant_collision()
         self.update_rain()
         self.update_day()
-
-        if not self.shop_active:            # temporary because shop will be a separate screen
-            self.all_sprites.update(dt)
-
-        if self.shop_active:                # temporary because shop will be a separate screen
-            self.shop.update()
+        self.all_sprites.update(dt)
 
         # draw
         self.draw(dt)
