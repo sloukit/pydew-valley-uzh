@@ -1,3 +1,11 @@
+# /// script
+# dependencies = [
+#  "pygame-ce",
+#  "pytmx",
+# ]
+# ///
+
+import asyncio
 import pygame  
 
 from src import settings
@@ -102,7 +110,7 @@ class Game:
     def game_paused(self):
         return self.current_state != GameState.LEVEL
 
-    def run(self):
+    async def run(self):
         while self.running:
             dt = self.clock.tick() / 1000
 
@@ -115,7 +123,9 @@ class Game:
 
             pygame.display.update()
 
+            await asyncio.sleep(0)
+
 
 if __name__ == '__main__':
     game = Game()
-    game.run()
+    asyncio.run(game.run())
