@@ -151,12 +151,15 @@ class Player(Entity):
                 self.interact()
 
     def move(self, dt):
-        self.hitbox_rect.x += self.direction.x * self.speed * dt
-        self.collision('horizontal')
-        self.hitbox_rect.y += self.direction.y * self.speed * dt
-        self.collision('vertical')
-        self.rect.midbottom = self.hitbox_rect.midbottom + self.hitbox_offset
-        self.plant_collide_rect.center = self.hitbox_rect.center
+        # x 
+        x_movement = self.direction.x * self.speed * dt
+        self.rect.x += int(x_movement)
+        self.check_collision('horizontal')
+        
+        # y
+        y_movement = self.direction.y * self.speed * dt
+        self.rect.y += int(y_movement)
+        self.check_collision('vertical')
 
     def get_current_tool_string(self):
         return self.available_tools[self.tool_index]

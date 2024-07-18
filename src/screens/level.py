@@ -246,7 +246,7 @@ class Level:
         if self.soil_layer.plant_sprites:
             for plant in self.soil_layer.plant_sprites:
 
-                is_player_near = plant.rect.colliderect(self.player.plant_collide_rect)
+                is_player_near = plant.rect.colliderect(self.player.hitbox_rect)
 
                 if plant.harvestable and is_player_near:
 

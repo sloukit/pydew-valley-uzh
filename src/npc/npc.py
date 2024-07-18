@@ -186,21 +186,23 @@ class NPC(NPCBase):
                     #  unless it collides with another entity while it is in-between two coordinates
                     self.direction.update((round(dx / distance), round(dy / distance)))
 
-            self.hitbox_rect.update((
-                next_position[0] * SCALED_TILE_SIZE - self.hitbox_rect.width / 2,
-                self.hitbox_rect.top,
-            ), self.hitbox_rect.size)
-            colliding = self.collision('horizontal')
 
-            self.hitbox_rect.update((
-                self.hitbox_rect.left,
-                next_position[1] * SCALED_TILE_SIZE - self.hitbox_rect.height / 2
-            ), self.hitbox_rect.size)
-            colliding = colliding or self.collision('vertical')
+            # self.hitbox_rect.update((
+            #     next_position[0] * SCALED_TILE_SIZE - self.hitbox_rect.width / 2,
+            #     self.hitbox_rect.top,
+            # ), self.hitbox_rect.size)
+            # colliding = self.check_collision('horizontal')
 
-            if colliding:
-                self.abort_path()
+            # self.hitbox_rect.update((
+            #     self.hitbox_rect.left,
+            #     next_position[1] * SCALED_TILE_SIZE - self.hitbox_rect.height / 2
+            # ), self.hitbox_rect.size)
+            # colliding = colliding or self.check_collision('vertical')
 
-        self.rect.update((self.hitbox_rect.centerx - self.rect.width / 2,
-                          self.hitbox_rect.centery - self.rect.height / 2), self.rect.size)
-        self.plant_collide_rect.center = self.hitbox_rect.center
+            # if colliding:
+            #     self.abort_path()
+
+
+        # self.rect.update((self.hitbox_rect.centerx - self.rect.width / 2,
+        #                   self.hitbox_rect.centery - self.rect.height / 2), self.rect.size)
+        

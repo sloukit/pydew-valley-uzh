@@ -34,14 +34,13 @@ class Entity(CollideableSprite, ABC):
         )
 
         # hitbox
-        self.hitbox_rect = pygame.Rect((0, 0), (34, 8))
+        self.hitbox_rect = pygame.Rect(pos, (34, 8))
         self.hitbox_offset = pygame.Vector2(0, 62) 
 
         # movement
         self.direction = pygame.Vector2()
         self.speed = 100
         self.collision_sprites = collision_sprites
-        self.plant_collide_rect = self.hitbox_rect.inflate(10, 10)
 
         # tools
         self.available_tools = ['axe', 'hoe', 'water']
@@ -70,6 +69,7 @@ class Entity(CollideableSprite, ABC):
         # Not all Entities can go to the market, so those that can't should not have money either
         self.money = 0
 
+
     def get_state(self):
         self.state = 'walk' if self.direction else 'idle'
 
@@ -89,36 +89,33 @@ class Entity(CollideableSprite, ABC):
         pass
 
     # FIXME: Sometimes NPCs get stuck inside the player's hitbox
-    def collision(self, direction) -> bool:
+    def check_collision(self, direction):
         """
         :return: true: Entity collides with a sprite in self.collision_sprites, otherwise false
         """
-        colliding_rect = False
+        # colliding_rect = False
+        # return bool(colliding_rect)
+
+        self.hitbox_rect.midbottom = self.rect.midbottom - self.hitbox_offset
 
         for sprite in self.collision_sprites:
-            if sprite is not self:
+            if sprite is not self and sprite.rect.colliderect(self.hitbox_rect):
 
-                # Entities should collide with their hitbox_rects to make them able to approach
-                #  each other further than the empty space on their sprite images would allow
-                if isinstance(sprite, Entity):
-                    if sprite.hitbox_rect.colliderect(self.hitbox_rect):
-                        colliding_rect = sprite.hitbox_rect
-                elif sprite.rect.colliderect(self.hitbox_rect):
-                    colliding_rect = sprite.rect
+                if direction == 'horizontal':
+                    if self.direction.x > 0:
+                        self.hitbox_rect.right = sprite.rect.left
+                    if self.direction.x < 0:
+                        self.hitbox_rect.left = sprite.rect.right
+                if direction == 'vertical':
+                    if self.direction.y < 0:
+                        self.hitbox_rect.top = sprite.rect.bottom
+                    if self.direction.y > 0:
+                        self.hitbox_rect.bottom = sprite.rect.top
 
-                if colliding_rect:
-                    if direction == 'horizontal':
-                        if self.direction.x > 0:
-                            self.hitbox_rect.right = colliding_rect.left
-                        if self.direction.x < 0:
-                            self.hitbox_rect.left = colliding_rect.right
-                    else:
-                        if self.direction.y < 0:
-                            self.hitbox_rect.top = colliding_rect.bottom
-                        if self.direction.y > 0:
-                            self.hitbox_rect.bottom = colliding_rect.top
+        
+        self.rect.midbottom = self.hitbox_rect.midbottom + self.hitbox_offset
 
-        return bool(colliding_rect)
+        
 
     def animate(self, dt):
         current_animation = self.frames[self.state][self.facing_direction]
