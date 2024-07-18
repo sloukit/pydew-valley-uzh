@@ -4,33 +4,44 @@ PyDew Valley is a project created by ClearCode in Python using pygame-ce to be u
 
 For more information, please contact s.kittelberger[at]psychologie.uzh.ch.
 
-## Build Instructions
+## Build and Run Instructions
 
 To see how this project works, please check [CONTRIBUTING.md](./CONTRIBUTING.md)
 
-1. Clone this repository
+NOTE: You might want to create a [`virtual environment`](https://docs.python.org/3/library/venv.html)
+before installing dependencies for this project.
 
-```
+Clone and install dependencies:
+
+```bash
 git clone https://github.com/sloukit/pydew-valley-uzh.git
+cd pydew-valley-uzh
+pip install -r requirements.txt
 ```
 
-2. Install dependencies
-
-```
-pip install pygame-ce
-```
-
-3. Run this project
-```
+Run the game locally:
+```bash
 python3 main.py
 ```
+
+### Running the Game in a Browser with `pygbag`
+
+Build the game and launch a local web server using this command:
+
+```bash
+pygbag ./main.py
+```
+
+Once this is running, you can access the game in browser by navigating to
+http://localhost:8000, or http://localhost:8000#debug to run in debug mode.
+
 
 ## Team
 
 This section is continuously updated.
 
--  [Sophie Kittelberger](https://github.com/sloukit), Project Director
-- [larsbutler](https://github.com/larsbutler), Project Director, Game Developer, & Quality Analyst
+- [Sophie Kittelberger](https://github.com/sloukit), Project Director
+- [Lars Butler](https://github.com/larsbutler), Project Director, Game Developer, & Quality Analyst
 - [bromeon](https://github.com/bromeon), Project Director, Game Developer, & Quality Analyst
 - [novial](https://github.com/novialriptide), Game Developer & Quality Analyst
 - [fortwoone](https://github.com/fortwoone), Game Developer & Quality Analyst
