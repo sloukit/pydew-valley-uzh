@@ -33,6 +33,10 @@ class Entity(CollideableSprite, ABC):
             z=z
         )
 
+        # hitbox
+        self.hitbox_rect = pygame.Rect((0, 0), (34, 8))
+        self.hitbox_offset = pygame.Vector2(0, 62) 
+
         # movement
         self.direction = pygame.Vector2()
         self.speed = 100

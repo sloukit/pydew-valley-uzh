@@ -49,7 +49,6 @@ class Player(Entity):
         self.paused = False
         self.font = font
         self.interact = interact
-        self.sounds = sounds
 
         # menus
 
@@ -156,7 +155,7 @@ class Player(Entity):
         self.collision('horizontal')
         self.hitbox_rect.y += self.direction.y * self.speed * dt
         self.collision('vertical')
-        self.rect.center = self.hitbox_rect.center
+        self.rect.midbottom = self.hitbox_rect.midbottom + self.hitbox_offset
         self.plant_collide_rect.center = self.hitbox_rect.center
 
     def get_current_tool_string(self):
