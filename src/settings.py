@@ -55,4 +55,5 @@ KEYBINDS = {
     'next seed': {'type': "key", 'value': pygame.K_LSHIFT, 'text': "Cycle Seeds"},
     'plant': {'type': "key", 'value': pygame.K_RETURN, 'text': "Plant Current Seed"},
     'interact': {'type': "key", 'value': pygame.K_i, 'text': "Interact"},
+    'hitbox': {'type': "key", 'value': pygame.K_h, 'text': "Show/Hide Hitboxes"},
 }

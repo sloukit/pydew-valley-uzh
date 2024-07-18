@@ -17,6 +17,7 @@ class Sprite(pygame.sprite.Sprite):
         self.rect = self.image.get_frect(topleft=pos)
         self.z = z
         self.name = name
+        self.hitbox_rect = self.rect
 
 
 class CollideableSprite(Sprite):
