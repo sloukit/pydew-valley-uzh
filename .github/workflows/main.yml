@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  lint:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,3 +25,7 @@ jobs:
     - name: Check style
       run: |
         tox -e style
+
+    - name: Run tests
+      run: |
+        tox -e py312
