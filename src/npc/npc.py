@@ -114,10 +114,12 @@ class NPC(NPCBase):
 
         path_raw = self.pf_finder.find_path(start, end, self.pf_grid)
 
-        # The first position in the path will always be removed as it is the same coordinate the NPC is already
-        #  standing on. Otherwise, if the NPC is just standing a little bit off the center of its current coordinate, it
-        #  may turn around quickly once it reaches it, if the second coordinate of the path points in the same direction
-        #  as where the NPC was just standing.
+        # The first position in the path will always be removed as it is the
+        # same coordinate the NPC is already standing on. Otherwise, if the
+        # NPC is just standing a little bit off the center of its current
+        # coordinate, it may turn around quickly once it reaches it, if the
+        # second coordinate of the path points in the same direction as where
+        # the NPC was just standing.
         self.pf_path = [(i.x + .5, i.y + .5) for i in path_raw[0][1:]]
 
         if not self.pf_path:
@@ -139,7 +141,8 @@ class NPC(NPCBase):
         if self.pf_state == NPCState.MOVING:
             if not self.pf_path:
                 # runs in case the path has been emptied in the meantime
-                #  (e.g. NPCBehaviourMethods.wander_to_interact created a path to a tile adjacent to the NPC)
+                # (e.g. NPCBehaviourMethods.wander_to_interact created a path
+                # to a tile adjacent to the NPC)
                 self.complete_path()
                 return
 
@@ -178,12 +181,15 @@ class NPC(NPCBase):
                     remaining_distance = 0
 
                     # Rounding the direction leads to smoother animations,
-                    #  e.g. if the distance vector was (-0.99, -0.01), the NPC would face upwards, although it moves
-                    #  much more to the left than upwards, as the animation method favors vertical movement
+                    # e.g. if the distance vector was (-0.99, -0.01), the NPC
+                    # would face upwards, although it moves much more to the
+                    # left than upwards, as the animation method favors
+                    # vertical movement
                     #
                     # Maybe normalise the vector?
-                    #  Currently, it is not necessary as the NPC is not moving diagonally yet,
-                    #  unless it collides with another entity while it is in-between two coordinates
+                    # Currently, it is not necessary as the NPC is not moving
+                    # diagonally yet, unless it collides with another entity
+                    # while it is in-between two coordinates
                     self.direction.update((round(dx / distance), round(dy / distance)))
 
             self.hitbox_rect.update((

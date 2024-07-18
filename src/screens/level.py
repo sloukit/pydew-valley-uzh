@@ -101,7 +101,8 @@ class Level:
         self.activate_music()
 
         self.pf_matrix_size = (self.tmx_maps["main"].width, self.tmx_maps["main"].height)
-        self.pf_matrix = [[1 for _ in range(self.pf_matrix_size[0])] for _ in range(self.pf_matrix_size[1])]
+        self.pf_matrix = [[1 for _ in range(self.pf_matrix_size[0])]
+                          for _ in range(self.pf_matrix_size[1])]
 
         self.setup_layer_tiles('Lower ground', self.setup_environment)
         self.setup_layer_tiles('Upper ground', self.setup_environment)
@@ -159,7 +160,15 @@ class Level:
             apple_frames = self.frames['level']['objects']['apple']
             stump_frames = self.frames['level']['objects']['stump']
 
-            Tree(pos, image, (self.all_sprites, self.collision_sprites, self.tree_sprites), obj.name, apple_frames, stump_frames)
+            Tree(
+                pos,
+                image,
+                (self.all_sprites,
+                 self.collision_sprites,
+                 self.tree_sprites),
+                obj.name,
+                apple_frames,
+                stump_frames)
         else:
             Sprite(pos, image, (self.all_sprites, self.collision_sprites))
 
@@ -200,10 +209,11 @@ class Level:
                                   pf_matrix=self.pf_matrix,
                                   pf_grid=self.pf_grid,
                                   pf_finder=self.pf_finder
-        )
+                                  )
 
     def get_map_size(self):
-        return self.tmx_maps['main'].width * TILE_SIZE * SCALE_FACTOR, self.tmx_maps['main'].height * TILE_SIZE * SCALE_FACTOR
+        return self.tmx_maps['main'].width * TILE_SIZE * \
+            SCALE_FACTOR, self.tmx_maps['main'].height * TILE_SIZE * SCALE_FACTOR
 
     def activate_music(self):
         volume = 0.1
@@ -214,8 +224,8 @@ class Level:
         self.sounds["music"].set_volume(volume)
         self.sounds["music"].play(-1)
 
-
     # events
+
     def event_loop(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -271,7 +281,8 @@ class Level:
                 self.soil_layer.plant(pos, tool, entity.inventory)
 
     def interact(self):
-        collided_interactions = pygame.sprite.spritecollide(self.player, self.interaction_sprites, False)
+        collided_interactions = pygame.sprite.spritecollide(
+            self.player, self.interaction_sprites, False)
         if collided_interactions:
             if collided_interactions[0].name == 'Bed':
                 self.start_reset()

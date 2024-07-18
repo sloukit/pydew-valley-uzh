@@ -1,6 +1,5 @@
 import pygame.freetype
 import pytmx
-from src.import_checks import *
 
 type Coordinate = tuple[int | float, int | float]
 type SoundDict = dict[str, pygame.mixer.Sound]

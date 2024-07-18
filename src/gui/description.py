@@ -6,7 +6,6 @@ from src.support import load_data, save_data, resource_path
 from pygame.math import Vector2 as vector
 
 
-
 class Description:
     def __init__(self, pos):
         # surface

@@ -10,7 +10,7 @@ from pygame.math import Vector2 as vector
 
 
 class GeneralMenu:
-    def __init__(self,  title, options, switch, size, center=vector()):
+    def __init__(self, title, options, switch, size, center=vector()):
         # general setup
         self.display_surface = pygame.display.get_surface()
         self.buttons_surface = pygame.Surface(size)
@@ -71,7 +71,6 @@ class GeneralMenu:
 
     def handle_events(self, event):
         pass
-    
 
     def get_hovered_button(self):
         for button in self.buttons:

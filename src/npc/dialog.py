@@ -1,6 +1,12 @@
-from ..support import resource_path
-from ..settings import CHARS_PER_LINE, TB_SIZE, SCREEN_WIDTH, SCREEN_HEIGHT, TB_LAYER
-from ..timer import Timer
+from src.support import resource_path
+from src.settings import (
+    CHARS_PER_LINE,
+    TB_SIZE,
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    TB_LAYER,
+)
+from src.timer import Timer
 import pygame
 import json
 from jsmin import jsmin  # JSON minifier function (removes comments, notably)
@@ -10,10 +16,11 @@ import textwrap
 
 class TextBox(pygame.sprite.Sprite):
     """Text box sprite that contains a part of text."""
-    _TXT_SURF_EXTREMITIES: tuple[pygame.Rect, pygame.Rect] = (pygame.Rect(0, 0, 14, 202), pygame.Rect(373, 0, 18, 202))
+    _TXT_SURF_EXTREMITIES: tuple[pygame.Rect, pygame.Rect] = (
+        pygame.Rect(0, 0, 14, 202), pygame.Rect(373, 0, 18, 202))
     _TXT_SURF_REGULAR_AREA: pygame.Rect = pygame.Rect(14, 0, 1, 202)
     _CNAME_SURF_RECT: pygame.Rect = pygame.Rect(8, 0, 212, 67)
-    _TXT_SURF_RECT: pygame.Rect = pygame.Rect(0, 64, TB_SIZE[0], TB_SIZE[1]-64)
+    _TXT_SURF_RECT: pygame.Rect = pygame.Rect(0, 64, TB_SIZE[0], TB_SIZE[1] - 64)
     _TB_IMAGE: pygame.Surface | None = None
 
     @classmethod
@@ -28,7 +35,10 @@ class TextBox(pygame.sprite.Sprite):
         blit_list = [
             (start, pygame.Rect(0, txt_part_top, *start.size)),
             (end, pygame.Rect(373, txt_part_top, *end.size)),
-            *((regular, pygame.Rect(x, txt_part_top, *regular.size)) for x in range(start.width, 373)),
+            *(
+                (regular, pygame.Rect(x, txt_part_top, *regular.size))
+                for x in range(start.width, 373)
+            ),
             (cname_surf, cls._CNAME_SURF_RECT)
         ]
         cls._TB_IMAGE.fblits(blit_list)
@@ -56,7 +66,8 @@ class TextBox(pygame.sprite.Sprite):
         self._finished_advancing: bool = False
         self._txt_needs_rerender: bool = True
         self._chr_index: int = 1
-        self.rect: pygame.FRect = self.image.get_frect(bottom=SCREEN_HEIGHT, centerx=(SCREEN_WIDTH // 2))
+        self.rect: pygame.FRect = self.image.get_frect(
+            bottom=SCREEN_HEIGHT, centerx=(SCREEN_WIDTH // 2))
 
     @property
     def finished_advancing(self):
@@ -67,8 +78,6 @@ class TextBox(pygame.sprite.Sprite):
         self._finished_advancing = val
         if val:
             self._chr_index = len(self.text)
-
-    # finished_advancing = property(fget=attrgetter("_finished_advancing"), fset=_set_finished_advancing)
 
     def _advance_by_one(self):
         self._chr_index += 1
@@ -91,7 +100,8 @@ class TextBox(pygame.sprite.Sprite):
         if not self.timer:
             self.timer.activate()
         self.timer.update()
-        # Keeping variable args tuple and keyword arguments dict syntax for compatibility with base method
+        # Keeping variable args tuple and keyword arguments dict syntax for
+        # compatibility with base method
         if self._finished_advancing and self.image is not self._fin_img:
             self.image = self._fin_img
         elif not self._finished_advancing and self._txt_needs_rerender:
@@ -117,14 +127,20 @@ def prepare_tb_image(cname_surf: pygame.Surface, txt_surf: pygame.Surface):
 class DialogueManager:
     """Dialogue manager object.
     This class will store all dialogues and has a method to show a dialogue on-screen."""
-    def __init__(self, sprite_group: pygame.sprite.Group, cname_surf: pygame.Surface, txt_surf: pygame.Surface):
+
+    def __init__(
+            self,
+            sprite_group: pygame.sprite.Group,
+            cname_surf: pygame.Surface,
+            txt_surf: pygame.Surface):
         self.spr_grp: pygame.sprite.Group = sprite_group
         self._cname_surf: pygame.Surface = cname_surf
         self._txt_surf: pygame.Surface = txt_surf
         # Open the dialogues file and dump all of its content in here,
         # while purging the raw file content from its comments.
         with open(resource_path("data/dialogues.json"), "r") as dialogue_file:
-            self.dialogues: dict[str, list[list[str, str]]] = json.loads(jsmin(dialogue_file.read()))
+            self.dialogues: dict[str, list[list[str, str]]
+                                 ] = json.loads(jsmin(dialogue_file.read()))
         self._tb_list: list[TextBox] = []
         self._msg_index: int = 0
         self._showing_dialogue: bool = False
@@ -185,7 +201,8 @@ class DialogueManager:
             return
         self._msg_index += 1
         if self._msg_index >= len(self._tb_list):
-            # Reached the end of the dialogue, clear everything away to make space for the next dialogue
+            # Reached the end of the dialogue, clear everything away to make space for
+            # the next dialogue
             self._purge_tb_list()
             self._showing_dialogue = False
             return

@@ -23,7 +23,8 @@ class _EventDefinition:
         try:
             return cls._EDEF_CACHE[code]
         except LookupError as exc:
-            raise ValueError(f"given code ({code}) is not linked to a registered event type") from exc
+            raise ValueError(
+                f"given code ({code}) is not linked to a registered event type") from exc
 
     @classmethod
     def from_name(cls, name: str) -> Self:
@@ -61,7 +62,11 @@ class _EventDefinition:
         self.code = code
 
     def __repr__(self):
-        return f"<EventDefinition(name='{self.__name__}', code={self.code}, {', '.join((f'{attr}:{value}' for attr, value in self.attrs.items()))}>"
+        return f"<EventDefinition(name='{
+            self.__name__}', code={
+            self.code}, {
+            ', '.join(
+                (f'{attr}:{value}' for attr, value in self.attrs.items()))}>"
 
     def __hash__(self):
         return hash(
@@ -215,4 +220,3 @@ def post_event(code: int, **attrs: Type | SpecialForm):
     :raise ValueError: if the given code is not a valid event type."""
     edef = _EventDefinition.from_code(code)
     pygame.event.post(edef(**attrs))
-
