@@ -13,7 +13,7 @@ class SettingsMenu(GeneralMenu):
         title = 'Settings'
         size = (400, 400)
         switch = switch_screen
-        center = vector(SCREEN_WIDTH/2, SCREEN_HEIGHT/2) + vector(-350, 0)
+        center = vector(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2) + vector(-350, 0)
         super().__init__(title, options, switch, size, center)
 
         # description
@@ -60,4 +60,3 @@ class SettingsMenu(GeneralMenu):
     def update(self, dt):
         self.keybinds_description.update_keybinds(dt)
         super().update(dt)
-

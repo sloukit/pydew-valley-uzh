@@ -37,13 +37,18 @@ def decoder_object_hook(o):
     return processed
 
 
-def save(current_tool: FarmingTool, current_seed: FarmingTool, money: int, inventory: dict[InventoryResource, int]):
+def save(
+    current_tool: FarmingTool,
+    current_seed: FarmingTool,
+    money: int,
+    inventory: dict[InventoryResource, int],
+):
     with open(resource_path("data/save.json"), "w") as file:
         serialised_inventory = {k.as_serialised_string(): inventory[k] for k in inventory}
         keys_to_convert = list(serialised_inventory.keys())
         serialised_inventory[CONVERT_TO_IR] = keys_to_convert
         obj_to_dump = {
-            CONVERT_TO_FT:["current_tool", "current_seed"],
+            CONVERT_TO_FT: ["current_tool", "current_seed"],
             "money": money,
             "current_tool": current_tool.as_serialised_string(),
             "current_seed": current_seed.as_serialised_string(),

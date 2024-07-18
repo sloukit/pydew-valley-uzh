@@ -25,4 +25,3 @@ class PauseMenu(GeneralMenu):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.switch_screen(GameState.LEVEL)
-

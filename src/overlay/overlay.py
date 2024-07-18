@@ -27,8 +27,10 @@ class Overlay:
         # clock
         font = pygame.font.SysFont('Arial', 30)  # font/size is temporary
 
-        hours = str(time[0]).rjust(2, "0")  # if hours are less than 10, add a 0 to stay in the hh:mm format
-        minutes = str(time[1]).rjust(2, "0")  # if minutes are less than 10, add a 0 to stay in the hh:mm format
+        # if hours are less than 10, add a 0 to stay in the hh:mm format
+        hours = str(time[0]).rjust(2, "0")
+        # if minutes are less than 10, add a 0 to stay in the hh:mm format
+        minutes = str(time[1]).rjust(2, "0")
 
         text_surface = font.render(f"{hours}:{minutes}", False, (255, 255, 255))
         self.display_surface.blit(text_surface, (10, 10))

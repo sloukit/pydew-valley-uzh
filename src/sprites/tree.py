@@ -1,4 +1,3 @@
-
 import random
 import pygame
 from src.sprites.base import CollideableSprite, Sprite
@@ -6,7 +5,6 @@ from src import timer
 from src.settings import LAYERS, SCALE_FACTOR, APPLE_POS
 from src.support import generate_particle_surf
 from src.enums import InventoryResource
-
 
 
 class Tree(CollideableSprite):
@@ -65,4 +63,3 @@ class Tree(CollideableSprite):
             entity.add_resource(InventoryResource.WOOD, 5)
         self.image = generate_particle_surf(self.image)
         self.timer.activate()
-

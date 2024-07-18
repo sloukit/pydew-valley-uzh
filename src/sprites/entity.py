@@ -123,7 +123,8 @@ class Entity(CollideableSprite, ABC):
             self.image = current_animation[int(
                 self.frame_index) % len(current_animation)]
         else:
-            tool_animation = self.frames[self.available_tools[self.tool_index]
+            tool_animation = self.frames[
+                self.available_tools[self.tool_index]
             ][self.facing_direction]
             if self.frame_index < len(tool_animation):
                 self.image = tool_animation[min(
@@ -149,4 +150,3 @@ class Entity(CollideableSprite, ABC):
         self.get_facing_direction()
         self.move(dt)
         self.animate(dt)
-

@@ -1,4 +1,14 @@
-import pygame  
+# /// script
+# dependencies = [
+#  "pygame-ce",
+#  "pytmx",
+# ]
+# ///
+
+import asyncio
+import pygame
+
+from src import import_checks  # noqa: F401
 
 from src import settings
 from src.screens.shop import ShopMenu
@@ -11,7 +21,6 @@ from src.npc.dialog import DialogueManager, prepare_tb_image
 from src.screens.menu import MainMenu
 from src.screens.pause import PauseMenu
 from src.screens.settings import SettingsMenu
-
 
 
 class Game:
@@ -52,7 +61,11 @@ class Game:
         self.shop_menu = ShopMenu(self.level.player, self.switch_state, self.font)
 
         # dialog
-        self.dm = DialogueManager(self.level.all_sprites, self.tb_cname_base_surf, self.tb_main_text_base_surf)
+        self.dm = DialogueManager(
+            self.level.all_sprites,
+            self.tb_cname_base_surf,
+            self.tb_main_text_base_surf,
+        )
 
         # screens
         self.menus = {
@@ -89,7 +102,9 @@ class Game:
             'overlay': self.overlay_frames
         }
 
-        self._tb_base = pygame.image.load(support.resource_path("images/textbox.png")).convert_alpha()
+        self._tb_base = pygame.image.load(
+            support.resource_path("images/textbox.png")
+        ).convert_alpha()
         self.tb_cname_base_surf = self._tb_base.subsurface(pygame.Rect(0, 0, 212, 67))
         self.tb_main_text_base_surf = self._tb_base.subsurface(pygame.Rect(0, 74, 391, 202))
         prepare_tb_image(self.tb_cname_base_surf, self.tb_main_text_base_surf)
@@ -102,12 +117,12 @@ class Game:
     def game_paused(self):
         return self.current_state != GameState.LEVEL
 
-    def run(self):
+    async def run(self):
         while self.running:
             dt = self.clock.tick() / 1000
 
-
-            # removing level update because it makes two times for event in pygame.event.get() so it makes the game laggy
+            # removing level update because it makes two times for event in pygame.event.get()
+            # so it makes the game laggy
             # self.level.update(dt)
 
             # if self.game_paused():
@@ -115,7 +130,9 @@ class Game:
 
             pygame.display.update()
 
+            await asyncio.sleep(0)
+
 
 if __name__ == '__main__':
     game = Game()
-    game.run()
+    asyncio.run(game.run())

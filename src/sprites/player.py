@@ -168,7 +168,7 @@ class Player(Entity):
     def add_resource(self, resource, amount=1):
         super().add_resource(resource, amount)
         self.sounds['success'].play()
-    
+
     def update_keybinds(self):
         self.keybinds = self.import_controls()
 

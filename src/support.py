@@ -127,7 +127,7 @@ def character_importer(chr_path: str) -> dict[str, settings.AniFrames]:
 def sound_importer(
         *snd_path: str,
         default_volume: float = 0.5
-        ) -> settings.SoundDict:
+) -> settings.SoundDict:
     sounds_dict = {}
 
     for sound_name in os.listdir(resource_path(os.path.join(*snd_path))):
@@ -169,9 +169,11 @@ def flip_items(d: dict) -> dict:
         ret[val] = key
     return ret
 
+
 def tile_to_screen(pos):
     tile_size = TILE_SIZE * SCALE_FACTOR
     return pos[0] * tile_size, pos[1] * tile_size
+
 
 def screen_to_tile(pos):
     tile_size = TILE_SIZE * SCALE_FACTOR

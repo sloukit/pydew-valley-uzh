@@ -61,7 +61,8 @@ class NPCBehaviourMethods:
     @staticmethod
     def will_create_new_farmland(context: NPCBehaviourContext) -> bool:
         """
-        :return: True: untilled farmland available AND (all other farmland planted and watered OR 1/3), otherwise False
+        :return: True: untilled farmland available AND (all other farmland
+        planted and watered OR 1/3), otherwise False
         """
         empty_farmland_available = 0
         unplanted_farmland_available = 0
@@ -77,9 +78,10 @@ class NPCBehaviourMethods:
 
         if empty_farmland_available <= 0:
             return False
-        
-        return (unplanted_farmland_available == 0 and unwatered_farmland_available == 0) or random.randint(0, 2) == 0
 
+        return (
+            unplanted_farmland_available == 0 and unwatered_farmland_available == 0
+        ) or random.randint(0, 2) == 0
 
     @staticmethod
     def create_new_farmland(context: NPCBehaviourContext) -> bool:
@@ -108,7 +110,8 @@ class NPCBehaviourMethods:
     @staticmethod
     def will_plant_tilled_farmland(context: NPCBehaviourContext) -> bool:
         """
-        :return: True if unplanted farmland available AND (all other farmland watered OR 3/4), otherwise False
+        :return: True if unplanted farmland available AND (all other farmland
+        watered OR 3/4), otherwise False
         """
         unplanted_farmland_available = 0
         unwatered_farmland_available = 0
@@ -127,7 +130,9 @@ class NPCBehaviourMethods:
     @staticmethod
     def plant_random_seed(context: NPCBehaviourContext) -> bool:
         """
-        Finds a random unplanted but tilled tile, makes the NPC walk to and plant a random seed on it.
+        Finds a random unplanted but tilled tile, makes the NPC walk to and
+        plant a random seed on it.
+
         :return: True if path has successfully been created, otherwise False
         """
         possible_coordinates = []
@@ -140,7 +145,9 @@ class NPCBehaviourMethods:
 
         def on_path_completion():
             context.npc.current_seed = FarmingTool.CORN_SEED
-            context.npc.seed_index = context.npc.current_seed.value - FarmingTool.get_first_seed_id().value
+            context.npc.seed_index = (
+                context.npc.current_seed.value - FarmingTool.get_first_seed_id().value
+            )
             context.npc.use_tool(ItemToUse(1))
 
         return NPCBehaviourMethods.wander_to_interact(
@@ -189,8 +196,9 @@ class NPCBehaviourMethods:
 
             facing = (facing[0], 0) if abs(facing[0]) > abs(facing[1]) else (0, facing[1])
 
-            # Deleting the final step of the path leads to the NPC always standing in reach of the tile they want to
-            #  interact with (cf. Entity.get_target_pos)
+            # Deleting the final step of the path leads to the NPC always
+            # standing in reach of the tile they want to
+            # interact with (cf. Entity.get_target_pos)
             context.npc.pf_path.pop(-1)
 
             @context.npc.on_path_completion
@@ -211,7 +219,9 @@ class NPCBehaviourMethods:
         """
 
         # current NPC position on the tilemap
-        tile_coord = pygame.Vector2(context.npc.rect.centerx, context.npc.rect.centery) / SCALED_TILE_SIZE
+        tile_coord = pygame.Vector2(
+            context.npc.rect.centerx,
+            context.npc.rect.centery) / SCALED_TILE_SIZE
 
         # To limit the required computing power, the NPC currently only tries to navigate to
         #  11 random points in its immediate vicinity (5 tile radius)
