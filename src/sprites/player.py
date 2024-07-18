@@ -3,10 +3,11 @@ from __future__ import annotations
 import pygame  # noqa
 from typing import Callable
 from pygame.math import Vector2 as vector
-from src import settings, savefile, support
+from src import settings, savefile
 from src.sprites.entity import Entity
 from src.enums import InventoryResource, FarmingTool, ItemToUse
 from src.settings import SCALE_FACTOR
+from src.gui.description import KeybindsDescription as keybinds_settings
 
 _NONSEED_INVENTORY_DEFAULT_AMOUNT = 20
 _SEED_INVENTORY_DEFAULT_AMOUNT = 5
@@ -42,7 +43,7 @@ class Player(Entity):
         )
 
         # movement
-        self.keybinds = self.import_controls()
+        self.keybinds = keybinds_settings.import_controls()
         self.controls = {}
         self.speed = 250
         self.blocked = False
@@ -86,18 +87,6 @@ class Player(Entity):
                 del compacted_inv[k]
         savefile.save(self.current_tool, self.current_seed, self.money, compacted_inv)
 
-    @staticmethod
-    def import_controls():
-        try:
-            data = support.load_data('keybinds.json')
-            if len(data) == len(settings.KEYBINDS):
-                return data
-        except FileNotFoundError:
-            pass
-        support.save_data(settings.KEYBINDS, 'keybinds.json')
-        return settings.KEYBINDS
-
-        # controls
 
     def update_controls(self):
         controls = {}
@@ -170,7 +159,7 @@ class Player(Entity):
         self.sounds['success'].play()
     
     def update_keybinds(self):
-        self.keybinds = self.import_controls()
+        self.keybinds = keybinds_settings.import_controls()
 
     def update(self, dt):
         self.input()

@@ -1,5 +1,6 @@
 
 import pygame
+from src import support
 from src.gui.components import Button, Slider, KeySetup
 from src.settings import KEYBINDS
 from src.support import load_data, save_data, resource_path
@@ -81,14 +82,12 @@ class Description:
 class KeybindsDescription(Description):
     def __init__(self, pos):
         super().__init__(pos)
-        self.default_keybinds = None
-        self.keybinds = {}
+        self.keybinds = self.import_controls()
         self.keys_group = []
         self.selection_key = None
         self.pressed_key = None
 
         # setup
-        self.import_data()
         self.create_keybinds()
         reset_btn_rect = pygame.Rect(0, 0, 100, 50)
         reset_btn_rect.bottomright = self.rect.bottomleft - vector(10, 0)
@@ -96,13 +95,24 @@ class KeybindsDescription(Description):
         self.reset_button = Button('Reset', self.font, reset_btn_rect, (0, 0))
 
     # setup
-    def import_data(self):
-        self.default_keybinds = KEYBINDS
-
+    @staticmethod
+    def import_controls():
+        default_keybinds = KEYBINDS
         try:
-            self.keybinds = load_data('keybinds.json')
+            keybinds = support.load_data('keybinds.json')
+
+            if len(keybinds) == len(default_keybinds):
+                return keybinds
+            
+            for key in default_keybinds:
+                if key not in keybinds:
+                    keybinds[key] = default_keybinds[key]
+            
+            return keybinds
+                    
         except FileNotFoundError:
-            self.keybinds = self.default_keybinds
+            support.save_data(KEYBINDS, 'keybinds.json')
+            return default_keybinds
 
     def save_data(self):
         data = {}
@@ -131,6 +141,10 @@ class KeybindsDescription(Description):
             self.keys_group.append(key_setup_button)
 
             index += 1
+
+        self.description_slider_surface = pygame.Surface((600, 60 * index + 10))
+        self.description_slider_rect = self.description_slider_surface.get_rect()
+        self.description_slider_surface.set_colorkey('green')
 
     # events
     def handle_events(self, event):
