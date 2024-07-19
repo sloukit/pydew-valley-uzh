@@ -4,7 +4,7 @@ from random import choice
 from src.enums import SeedType
 from src.support import tile_to_screen
 from src.sprites.base import Sprite
-from src.sprites.plant import Plant
+from src.sprites.objects.plant import Plant
 from src.settings import LAYERS, TILE_SIZE, SCALE_FACTOR
 
 

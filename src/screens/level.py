@@ -10,7 +10,7 @@ from pathfinding.finder.a_star import AStarFinder as PF_AStarFinder
 
 from src.npc.npc import NPC
 from src.npc.npc_behaviour import NPCBehaviourMethods
-from src.sprites.hill import Hill
+from src.sprites.objects.hill import Hill
 from src.support import map_coords_to_tile, load_data, resource_path
 from src.groups import AllSprites
 from src.overlay.soil import SoilLayer
@@ -20,8 +20,8 @@ from src.overlay.overlay import Overlay
 from src.screens.shop import ShopMenu
 from src.sprites.base import Sprite, AnimatedSprite
 from src.sprites.particle import ParticleSprite
-from src.sprites.tree import Tree
-from src.sprites.player import Player
+from src.sprites.objects.tree import Tree
+from src.sprites.entities.player import Player
 from src.enums import FarmingTool, GameState
 from src.settings import (
     SCREEN_HEIGHT,

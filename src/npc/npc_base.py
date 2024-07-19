@@ -8,7 +8,7 @@ from pathfinding.core.grid import Grid
 from pathfinding.finder.a_star import AStarFinder
 
 from src.overlay.soil import SoilLayer
-from src.sprites.entity import Entity
+from src.sprites.entities.entity import Entity
 
 
 # TODO: Refactor NPCState into Entity.state (maybe override Entity.get_state())

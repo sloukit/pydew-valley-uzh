@@ -4,7 +4,7 @@ import pygame  # noqa
 from typing import Callable
 from pygame.math import Vector2 as vector
 from src import settings, savefile, support
-from src.sprites.entity import Entity
+from src.sprites.entities.entity import Entity
 from src.enums import InventoryResource, FarmingTool, ItemToUse
 from src.settings import SCALE_FACTOR
 
