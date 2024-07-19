@@ -18,6 +18,10 @@ class Sprite(pygame.sprite.Sprite):
         self.z = z
         self.name = name
         self.hitbox_rect = self.rect.copy()
+        
+    def draw(self, display_surface, offset):
+        display_surface.blit(self.image, self.rect.topleft + offset)
+
 
 
 class CollideableSprite(Sprite):
