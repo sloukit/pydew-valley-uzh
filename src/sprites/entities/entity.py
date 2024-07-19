@@ -29,8 +29,7 @@ class Entity(CollideableSprite, ABC):
             pos,
             self.frames[self.state][self.facing_direction][self.frame_index],
             groups,
-            shrink,
-            z=z
+            z=z,
         )
 
         # hitbox
@@ -94,13 +93,14 @@ class Entity(CollideableSprite, ABC):
         """
         :return: true: Entity collides with a sprite in self.collision_sprites, otherwise false
         """
-        # colliding_rect = False
-        # return bool(colliding_rect)
 
         self.hitbox_rect.midbottom = self.rect.midbottom - self.hitbox_offset
+        self.is_colliding = False
 
         for sprite in self.collision_sprites:
             if sprite is not self and sprite.hitbox_rect.colliderect(self.hitbox_rect):
+
+                self.is_colliding = True
                 
                 if direction == 'horizontal':
                     if self.direction.x > 0:

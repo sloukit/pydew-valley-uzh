@@ -25,8 +25,8 @@ class Sprite(pygame.sprite.Sprite):
 
 
 class CollideableSprite(Sprite):
-    def __init__(self, pos, surf, groups, shrink, z=LAYERS['main']):
-        super().__init__(pos, surf, groups, z)
+    def __init__(self, pos, surf, groups, z=LAYERS['main'], name=None):
+        super().__init__(pos, surf, groups, z, name)
 
 
 

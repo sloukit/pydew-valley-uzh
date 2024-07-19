@@ -10,7 +10,10 @@ from pathfinding.finder.a_star import AStarFinder as PF_AStarFinder
 
 from src.npc.npc import NPC
 from src.npc.npc_behaviour import NPCBehaviourMethods
+from src.sprites.entities.trader import Trader
+from src.sprites.objects.bed import Bed
 from src.sprites.objects.hill import Hill
+from src.sprites.objects.rock import Rock
 from src.support import map_coords_to_tile, load_data, resource_path
 from src.groups import AllSprites
 from src.overlay.soil import SoilLayer
@@ -18,7 +21,7 @@ from src.overlay.transition import Transition
 from src.overlay.sky import Sky, Rain
 from src.overlay.overlay import Overlay
 from src.screens.shop import ShopMenu
-from src.sprites.base import Sprite, AnimatedSprite
+from src.sprites.base import CollideableSprite, Sprite, AnimatedSprite
 from src.sprites.particle import ParticleSprite
 from src.sprites.objects.tree import Tree
 from src.sprites.entities.player import Player
@@ -165,8 +168,14 @@ class Level:
             stump_frames = self.frames['level']['objects']['stump']
 
             Tree(pos, image, (self.all_sprites, self.collision_sprites, self.tree_sprites), obj.name, apple_frames, stump_frames)
+        elif obj.name == 'Rock':
+            Rock(pos, image, (self.all_sprites, self.collision_sprites))
+        elif obj.name == 'Bed':
+            Bed(pos, image, (self.all_sprites, self.collision_sprites))
+        elif obj.name == 'Trader':
+            Trader(pos, image, (self.all_sprites, self.collision_sprites))
         else:
-            Sprite(pos, image, (self.all_sprites, self.collision_sprites))
+            CollideableSprite(pos, image, (self.all_sprites, self.collision_sprites))
 
         self.pf_matrix_setup_collision((obj.x, obj.y), (obj.width, obj.height))
 

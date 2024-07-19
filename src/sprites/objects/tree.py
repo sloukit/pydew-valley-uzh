@@ -11,12 +11,7 @@ from src.enums import InventoryResource
 
 class Tree(CollideableSprite):
     def __init__(self, pos, surf, groups, name, apple_surf, stump_surf):
-        super().__init__(
-            pos,
-            surf,
-            groups,
-            (30 * SCALE_FACTOR, 20 * SCALE_FACTOR),
-        )
+        super().__init__(pos, surf, groups)
         self.name = name
         self.health = 5
         self.alive = True
