@@ -20,9 +20,12 @@ class AllSprites(pygame.sprite.Group):
 
         for layer in LAYERS.values():
 
-            for sprite in sorted(
-                    self.sprites(),
-                    key=lambda spr: spr.rect.centery):
+            if layer == LAYERS["main"]:
+                sorted_sprites = sorted(self.sprites(), key=lambda sprite: sprite.hitbox_rect.centery)
+            else:
+                sorted_sprites = sorted(self.sprites(), key=lambda sprite: sprite.rect.centery)
+
+            for sprite in sorted_sprites:
                 if sprite.z == layer:
                     self.display_surface.blit(
                         sprite.image, sprite.rect.topleft + (self.offset if not isinstance(sprite, TextBox) else (0, 0)))

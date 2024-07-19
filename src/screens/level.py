@@ -10,6 +10,7 @@ from pathfinding.finder.a_star import AStarFinder as PF_AStarFinder
 
 from src.npc.npc import NPC
 from src.npc.npc_behaviour import NPCBehaviourMethods
+from src.sprites.hill import Hill
 from src.support import map_coords_to_tile, load_data, resource_path
 from src.groups import AllSprites
 from src.overlay.soil import SoilLayer
@@ -172,7 +173,7 @@ class Level:
     def setup_collision(self, pos, obj):
         size = (obj.width * SCALE_FACTOR, obj.height * SCALE_FACTOR)
         image = pygame.Surface(size)
-        Sprite(pos, image, self.collision_sprites)
+        Hill(pos, image, self.collision_sprites)
 
         self.pf_matrix_setup_collision((obj.x, obj.y), (obj.width, obj.height))
 

@@ -17,13 +17,12 @@ class Sprite(pygame.sprite.Sprite):
         self.rect = self.image.get_frect(topleft=pos)
         self.z = z
         self.name = name
-        self.hitbox_rect = self.rect
+        self.hitbox_rect = self.rect.copy()
 
 
 class CollideableSprite(Sprite):
     def __init__(self, pos, surf, groups, shrink, z=LAYERS['main']):
         super().__init__(pos, surf, groups, z)
-        self.hitbox_rect = self.rect.inflate(-shrink[0], -shrink[1])
 
 
 
