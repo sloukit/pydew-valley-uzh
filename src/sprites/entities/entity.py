@@ -90,10 +90,6 @@ class Entity(CollideableSprite, ABC):
 
     # FIXME: Sometimes NPCs get stuck inside the player's hitbox
     def check_collision(self, direction):
-        """
-        :return: true: Entity collides with a sprite in self.collision_sprites, otherwise false
-        """
-
         self.hitbox_rect.midbottom = self.rect.midbottom - self.hitbox_offset
         self.is_colliding = False
 

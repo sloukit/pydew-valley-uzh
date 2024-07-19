@@ -127,87 +127,64 @@ class NPC(NPCBase):
         return True
 
     def move(self, dt):
-        # current NPC position on the tilemap
         tile_coord = pygame.Vector2(self.rect.centerx, self.rect.centery) / SCALED_TILE_SIZE
 
         if self.pf_state == NPCState.IDLE:
-            self.pf_state_duration -= dt
+            self.update_state(dt)
+        elif self.pf_state == NPCState.MOVING:
+            self.move_along_path(tile_coord, dt)
 
-            if self.pf_state_duration <= 0:
-                NPCBehaviourMethods.behaviour.run(NPCBehaviourContext(self))
+    def update_state(self, dt):
+        self.pf_state_duration -= dt
+        if self.pf_state_duration <= 0:
+            NPCBehaviourMethods.behaviour.run(NPCBehaviourContext(self))
 
-        if self.pf_state == NPCState.MOVING:
+    def move_along_path(self, tile_coord, dt):
+        if not self.pf_path:
+            self.complete_path()
+            return
+
+        next_position = (tile_coord.x, tile_coord.y)
+        remaining_distance = self.speed * dt / SCALED_TILE_SIZE
+
+        while remaining_distance:
+            if next_position == self.pf_path[0]:
+                self.pf_path.pop(0)
             if not self.pf_path:
-                # runs in case the path has been emptied in the meantime
-                #  (e.g. NPCBehaviourMethods.wander_to_interact created a path to a tile adjacent to the NPC)
                 self.complete_path()
-                return
+                break
 
-            next_position = (tile_coord.x, tile_coord.y)
+            dx, dy = self.pf_path[0][0] - next_position[0], self.pf_path[0][1] - next_position[1]
+            distance = (dx ** 2 + dy ** 2) ** 0.5
 
-            # remaining distance the npc moves in the current frame
-            remaining_distance = self.speed * dt / SCALED_TILE_SIZE
+            if remaining_distance >= distance:
+                next_position, remaining_distance = self.update_next_position(next_position, distance)
+            else:
+                next_position, remaining_distance = self.move_to_next_position(next_position, dx, dy, distance, remaining_distance)
 
-            while remaining_distance:
-                if next_position == self.pf_path[0]:
-                    # the NPC reached its current target position
-                    self.pf_path.pop(0)
+            self.update_direction(dx, dy, distance)
 
-                if not len(self.pf_path):
-                    # the NPC has completed its path
-                    self.complete_path()
-                    break
+        self.rect.centerx = next_position[0] * SCALED_TILE_SIZE
+        self.check_collision('horizontal')
 
-                # x- and y-distances from the NPCs current position to its target position
-                dx = self.pf_path[0][0] - next_position[0]
-                dy = self.pf_path[0][1] - next_position[1]
+        self.rect.centery = next_position[1] * SCALED_TILE_SIZE
+        self.check_collision('vertical')
 
-                distance = (dx ** 2 + dy ** 2) ** 0.5
+        if self.is_colliding:
+            self.abort_path()
 
-                if remaining_distance >= distance:
-                    # the NPC reaches its current target position in the current frame
-                    next_position = self.pf_path[0]
-                    remaining_distance -= distance
-                else:
-                    # the NPC does not reach its current target position in the current frame,
-                    #  so it continues to move towards it
-                    next_position = (
-                        next_position[0] + dx * remaining_distance / distance,
-                        next_position[1] + dy * remaining_distance / distance
-                    )
-                    remaining_distance = 0
+    def update_next_position(self, next_position, distance):
+        next_position = self.pf_path[0]
+        remaining_distance -= distance
+        return next_position, remaining_distance
 
-                    # Rounding the direction leads to smoother animations,
-                    #  e.g. if the distance vector was (-0.99, -0.01), the NPC would face upwards, although it moves
-                    #  much more to the left than upwards, as the animation method favors vertical movement
-                    #
-                    # Maybe normalise the vector?
-                    #  Currently, it is not necessary as the NPC is not moving diagonally yet,
-                    #  unless it collides with another entity while it is in-between two coordinates
-                    self.direction.update((round(dx / distance), round(dy / distance)))
+    def move_to_next_position(self, next_position, dx, dy, distance, remaining_distance):
+        next_position = (
+            next_position[0] + dx * remaining_distance / distance,
+            next_position[1] + dy * remaining_distance / distance
+        )
+        remaining_distance = 0
+        return next_position, remaining_distance
 
-            self.rect.centerx = next_position[0] * SCALED_TILE_SIZE
-            self.check_collision('horizontal')
-
-            self.rect.centery = next_position[1] * SCALED_TILE_SIZE
-            self.check_collision('vertical')
-
-            # self.hitbox_rect.update((
-            #     next_position[0] * SCALED_TILE_SIZE - self.hitbox_rect.width / 2,
-            #     self.hitbox_rect.top,
-            # ), self.hitbox_rect.size)
-            # colliding = self.check_collision('horizontal')
-
-            # self.hitbox_rect.update((
-            #     self.hitbox_rect.left,
-            #     next_position[1] * SCALED_TILE_SIZE - self.hitbox_rect.height / 2
-            # ), self.hitbox_rect.size)
-            # colliding = colliding or self.check_collision('vertical')
-
-            if self.is_colliding:
-                self.abort_path()
-
-
-        # self.rect.update((self.hitbox_rect.centerx - self.rect.width / 2,
-        #                   self.hitbox_rect.centery - self.rect.height / 2), self.rect.size)
-        
+    def update_direction(self, dx, dy, distance):
+        self.direction.update((round(dx / distance), round(dy / distance)))
