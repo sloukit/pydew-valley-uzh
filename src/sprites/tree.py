@@ -18,16 +18,24 @@ class Tree(CollideableSprite):
             (30 * SCALE_FACTOR, 20 * SCALE_FACTOR),
         )
         self.name = name
-        self.part_surf = generate_particle_surf(self.image)
-        self.apple_surf = apple_surf
-        self.stump_surf = stump_surf
         self.health = 5
-        self.timer = timer.Timer(300, func=self.unhit)
-        self.hitbox = None
-        self.was_hit = False
         self.alive = True
+        
+        self.timer = timer.Timer(300, func=self.unhit)
+        self.was_hit = False
+
+        # surfs
+        self.particle_surf = generate_particle_surf(self.image)
+        self.stump_surf = stump_surf
+
+        # apples
         self.apple_sprites = pygame.sprite.Group()
+        self.apple_surf = apple_surf
         self.create_fruit()
+
+        # hitbox
+        self.hitbox_rect = pygame.Rect(0, 0, 36, 18)
+        self.hitbox_rect.midbottom = self.rect.midbottom
 
     def unhit(self):
         self.was_hit = False
@@ -45,8 +53,7 @@ class Tree(CollideableSprite):
             if random.randint(0, 10) < 6:
                 x = pos[0] + self.rect.left
                 y = pos[1] + self.rect.top
-                Sprite((x, y), self.apple_surf, (self.apple_sprites,
-                       self.groups()[0]), LAYERS['fruit'])
+                Sprite((x, y), self.apple_surf, (self.apple_sprites), LAYERS['fruit'])
 
     def update(self, dt):
         self.timer.update()
@@ -66,3 +73,7 @@ class Tree(CollideableSprite):
         self.image = generate_particle_surf(self.image)
         self.timer.activate()
 
+    def draw(self, display_surface, offset):
+        super().draw(display_surface, offset)
+        for apple in self.apple_sprites:
+            apple.draw(display_surface, offset)

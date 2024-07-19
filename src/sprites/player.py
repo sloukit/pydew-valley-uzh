@@ -122,7 +122,7 @@ class Player(Entity):
         if not self.tool_active and not self.blocked:
             self.direction.x = int(self.controls['right']) - int(self.controls['left'])
             self.direction.y = int(self.controls['down']) - int(self.controls['up'])
-            self.direction = self.direction.normalize() if self.direction else self.direction
+            # self.direction = self.direction.normalize() if self.direction else self.direction
 
             # tool switch
             if self.controls['next tool']:

@@ -137,8 +137,8 @@ class Level:
 
     def setup_object_layer(self, layer, setup_func):
         for obj in self.tmx_maps['main'].get_layer_by_name(layer):
-            x = obj.x * SCALE_FACTOR
-            y = obj.y * SCALE_FACTOR
+            x = int(obj.x * SCALE_FACTOR)
+            y = int(obj.y * SCALE_FACTOR)
             pos = (x, y)
             setup_func(pos, obj)
 

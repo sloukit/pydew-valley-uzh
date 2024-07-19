@@ -99,18 +99,18 @@ class Entity(CollideableSprite, ABC):
         self.hitbox_rect.midbottom = self.rect.midbottom - self.hitbox_offset
 
         for sprite in self.collision_sprites:
-            if sprite is not self and sprite.rect.colliderect(self.hitbox_rect):
-
+            if sprite is not self and sprite.hitbox_rect.colliderect(self.hitbox_rect):
+                
                 if direction == 'horizontal':
                     if self.direction.x > 0:
-                        self.hitbox_rect.right = sprite.rect.left
+                        self.hitbox_rect.right = sprite.hitbox_rect.left 
                     if self.direction.x < 0:
-                        self.hitbox_rect.left = sprite.rect.right
+                        self.hitbox_rect.left = sprite.hitbox_rect.right
                 if direction == 'vertical':
                     if self.direction.y < 0:
-                        self.hitbox_rect.top = sprite.rect.bottom
+                        self.hitbox_rect.top = sprite.hitbox_rect.bottom 
                     if self.direction.y > 0:
-                        self.hitbox_rect.bottom = sprite.rect.top
+                        self.hitbox_rect.bottom = sprite.hitbox_rect.top
 
         
         self.rect.midbottom = self.hitbox_rect.midbottom + self.hitbox_offset
