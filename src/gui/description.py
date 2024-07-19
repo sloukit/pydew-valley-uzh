@@ -224,8 +224,8 @@ class KeybindsDescription(Description):
 
     def reset_keybinds(self):
         for key in self.keys_group:
-            key.value = self.default_keybinds[key.name]['value']
-            key.type = self.default_keybinds[key.name]['type']
+            key.value = KEYBINDS[key.name]['value']
+            key.type = KEYBINDS[key.name]['type']
             key.unicode = self.value_to_unicode(key.value)
             path = self.get_path(key.value)
             image = pygame.image.load(path)
