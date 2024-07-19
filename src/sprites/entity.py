@@ -45,7 +45,6 @@ class Entity(CollideableSprite, ABC):
         self.tool_index = self.current_tool.value - FarmingTool.get_first_tool_id().value
 
         self.tool_active = False
-        self.just_used_tool = False
         self.apply_tool = apply_tool
 
         # seeds
@@ -65,6 +64,9 @@ class Entity(CollideableSprite, ABC):
 
         # Not all Entities can go to the market, so those that can't should not have money either
         self.money = 0
+
+        # animation
+        self.animation_speed = 4
 
     def get_state(self):
         self.state = 'walk' if self.direction else 'idle'
@@ -115,28 +117,32 @@ class Entity(CollideableSprite, ABC):
                             self.hitbox_rect.bottom = colliding_rect.top
 
         return bool(colliding_rect)
+    
+    # animation
+    def get_animation(self):
+        current_tool_name = self.available_tools[self.tool_index]
+        state = current_tool_name if self.tool_active else self.state
+        direction = self.facing_direction
+        current_animation = self.frames[state][direction]
+        return current_animation
 
     def animate(self, dt):
-        current_animation = self.frames[self.state][self.facing_direction]
-        self.frame_index += 4 * dt
-        if not self.tool_active:
-            self.image = current_animation[int(
-                self.frame_index) % len(current_animation)]
-        else:
-            tool_animation = self.frames[self.available_tools[self.tool_index]
-            ][self.facing_direction]
-            if self.frame_index < len(tool_animation):
-                self.image = tool_animation[min(
-                    (round(self.frame_index), len(tool_animation) - 1))]
-                if round(self.frame_index) == len(tool_animation) - \
-                        1 and not self.just_used_tool:
-                    self.just_used_tool = True
-                    self.use_tool(ItemToUse.REGULAR_TOOL)
-            else:
-                # self.use_tool('tool')
+        current_animation = self.get_animation()
+        self.frame_index += self.animation_speed * dt
+
+        if int(self.frame_index) == len(current_animation) - 1:
+            if self.tool_active:    
+                self.use_tool(ItemToUse.REGULAR_TOOL)
+
+        if self.frame_index >= len(current_animation):
+            if self.tool_active:    
                 self.state = 'idle'
                 self.tool_active = False
-                self.just_used_tool = False
+
+            self.frame_index %= len(current_animation)
+
+        index = int(self.frame_index)
+        self.image = current_animation[index]
 
     def use_tool(self, option: ItemToUse):
         self.apply_tool((self.current_tool, self.current_seed)[option], self.get_target_pos(), self)
