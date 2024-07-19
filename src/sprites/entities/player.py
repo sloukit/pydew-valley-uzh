@@ -150,17 +150,6 @@ class Player(Entity):
             if self.controls['interact']:
                 self.interact()
 
-    def move(self, dt):
-        # x 
-        x_movement = self.direction.x * self.speed * dt
-        self.rect.x += int(x_movement)
-        self.check_collision('horizontal')
-        
-        # y
-        y_movement = self.direction.y * self.speed * dt
-        self.rect.y += int(y_movement)
-        self.check_collision('vertical')
-
     def get_current_tool_string(self):
         return self.available_tools[self.tool_index]
 

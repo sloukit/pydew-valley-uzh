@@ -84,9 +84,16 @@ class Entity(CollideableSprite, ABC):
     def get_target_pos(self):
         return screen_to_tile(self.hitbox_rect.center)
 
-    @abstractmethod
     def move(self, dt):
-        pass
+        # x 
+        x_movement = self.direction.x * self.speed * dt
+        self.rect.x += int(x_movement)
+        self.check_collision('horizontal')
+        
+        # y
+        y_movement = self.direction.y * self.speed * dt
+        self.rect.y += int(y_movement)
+        self.check_collision('vertical')
 
     # FIXME: Sometimes NPCs get stuck inside the player's hitbox
     def check_collision(self, direction):

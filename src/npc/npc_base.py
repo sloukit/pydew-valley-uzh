@@ -61,4 +61,4 @@ class NPCBase(Entity, ABC):
 
     @abstractmethod
     def move(self, dt):
-        pass
+        super().move(dt)

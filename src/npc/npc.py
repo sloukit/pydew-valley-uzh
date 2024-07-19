@@ -10,9 +10,11 @@ from src.npc.npc_behaviour import NPCBehaviourContext, NPCBehaviourMethods
 from src.enums import InventoryResource
 from src.settings import SCALE_FACTOR, SCALED_TILE_SIZE
 from src.settings import Coordinate, AniFrames
-
+from pygame.math import Vector2 as vector2
 import pygame
 import random
+
+from src.support import screen_to_tile
 
 
 class NPC(NPCBase):
@@ -53,7 +55,7 @@ class NPC(NPCBase):
             apply_tool
         )
 
-        self.speed = 150
+        self.speed = 250
 
         # TODO: Ensure that the NPC always has all needed seeds it needs in its inventory
         self.inventory = {
@@ -126,65 +128,55 @@ class NPC(NPCBase):
 
         return True
 
-    def move(self, dt):
-        tile_coord = pygame.Vector2(self.rect.centerx, self.rect.centery) / SCALED_TILE_SIZE
 
+    def move(self, dt):
         if self.pf_state == NPCState.IDLE:
             self.update_state(dt)
         elif self.pf_state == NPCState.MOVING:
-            self.move_along_path(tile_coord, dt)
+            self.update_direction()
+
+        super().move(dt)
+
+        if self.is_colliding:
+            self.abort_path()
+            return
 
     def update_state(self, dt):
         self.pf_state_duration -= dt
         if self.pf_state_duration <= 0:
             NPCBehaviourMethods.behaviour.run(NPCBehaviourContext(self))
 
-    def move_along_path(self, tile_coord, dt):
+    def update_direction(self):
         if not self.pf_path:
             self.complete_path()
             return
+        
+        # Get the next point in the path
+        next_point = self.pf_path[0]
+        current_point = screen_to_tile(self.rect.center)
+        
+        # Calculate the direction vector
+        dx = next_point[0] - current_point[0]
+        dy = next_point[1] - current_point[1]
+        
+        # If the NPC is close enough to the next point, move to the next point
+        if abs(dx) < 1 and abs(dy) < 1:
+            self.next_path_point()
+        
+        
+        # Normalize the direction vector
+        magnitude = (dx ** 2 + dy ** 2) ** 0.5
+        self.direction.x = round(dx / magnitude)
+        self.direction.y = round(dy / magnitude)
+    
 
-        next_position = (tile_coord.x, tile_coord.y)
-        remaining_distance = self.speed * dt / SCALED_TILE_SIZE
-
-        while remaining_distance:
-            if next_position == self.pf_path[0]:
-                self.pf_path.pop(0)
-            if not self.pf_path:
-                self.complete_path()
-                break
-
-            dx, dy = self.pf_path[0][0] - next_position[0], self.pf_path[0][1] - next_position[1]
-            distance = (dx ** 2 + dy ** 2) ** 0.5
-
-            if remaining_distance >= distance:
-                next_position, remaining_distance = self.update_next_position(next_position, distance)
-            else:
-                next_position, remaining_distance = self.move_to_next_position(next_position, dx, dy, distance, remaining_distance)
-
-            self.update_direction(dx, dy, distance)
-
-        self.rect.centerx = next_position[0] * SCALED_TILE_SIZE
-        self.check_collision('horizontal')
-
-        self.rect.centery = next_position[1] * SCALED_TILE_SIZE
-        self.check_collision('vertical')
-
-        if self.is_colliding:
-            self.abort_path()
-
-    def update_next_position(self, next_position, distance):
-        next_position = self.pf_path[0]
-        remaining_distance -= distance
-        return next_position, remaining_distance
-
-    def move_to_next_position(self, next_position, dx, dy, distance, remaining_distance):
-        next_position = (
-            next_position[0] + dx * remaining_distance / distance,
-            next_position[1] + dy * remaining_distance / distance
-        )
-        remaining_distance = 0
-        return next_position, remaining_distance
-
-    def update_direction(self, dx, dy, distance):
-        self.direction.update((round(dx / distance), round(dy / distance)))
+    def next_path_point(self):
+        self.pf_path.pop(0)
+        if not self.pf_path:
+            # NPC has reached the end of the path
+            self.direction.x, self.direction.y = 0, 0
+            return
+        next_point = self.pf_path[0]
+        current_point = screen_to_tile(self.rect.center)
+        dx = next_point[0] - current_point[0]
+        dy = next_point[1] - current_point[1]
