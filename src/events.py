@@ -3,7 +3,7 @@ import pygame
 from typing import Union, Type, NoReturn, Self
 from types import UnionType, NoneType
 
-SpecialForm = type(NoReturn)
+type SpecialForm = NoReturn
 
 
 class _EventDefinition:
@@ -132,59 +132,68 @@ class _EventDefinition:
 
     def __call__(self, **attrs):
         if self.attrs:
-            for attr in attrs:
-                try:
-                    assert attr in self.attrs
-                except AssertionError as err:
-                    raise TypeError(
-                        f"unexpected attributes for event type '{self.__name__}'"
-                    ) from err
-            for attr, attr_type in self.attrs.items():
-                if attr in attrs:
-                    # Raise an error if argument is given,
-                    # but not an instance of the expected type(s)
-                    if not isinstance(
-                            attrs[attr],
-                            getattr(
-                                attr_type,
-                                "__args__",
-                                attr_type
-                            )
-                    ):
-                        typenames = ",".join(
-                            map(
-                                lambda tp: tp.__name__,
-                                getattr(
-                                    attr_type,
-                                    "__args__",
-                                    (attr_type,)
-                                )
-                            )
-                        )
-                        raise TypeError(
-                            f"given value ({attrs[attr]}) for attribute {attr}"
-                            f" in event type '{self.__name__}' is an instance"
-                            f" of {type(attrs[attr]).__name__}, expected "
-                            f"one of these types: {typenames}"
-                        )
-                    continue
-                else:
-                    if "Optional" in repr(attr_type):
-                        pass
-                    elif isinstance(attr_type, UnionType) and NoneType in attr_type.__args__:
-                        pass
-                    elif attr in self.default_values_for_attrs:
-                        attrs[attr] = self.default_values_for_attrs[attr]
-                    else:
-                        raise TypeError(
-                            f"missing argument for event type '{self.__name__}' : '{attr}'"
-                        )
+            self.validate_attrs(attrs)
+            self.check_and_set_attr_types(attrs)
         else:
-            if attrs:
-                raise TypeError(
-                    f"event type '{self.__name__}' does not take any attributes"
-                )
+            self.handle_no_attrs(attrs)
         return pygame.event.Event(self.code, **attrs)
+
+    def validate_attrs(self, attrs):
+        """Validate that all provided attributes are expected."""
+        for attr in attrs:
+            if attr not in self.attrs:
+                raise TypeError(
+                    f"Unexpected attributes for event type '{self.__name__}'"
+                )
+
+    def check_and_set_attr_types(self, attrs):
+        """Check the type of each attribute and
+        set default values if needed."""
+        for attr, attr_type in self.attrs.items():
+            if attr in attrs:
+                self.validate_attr_type(attr, attrs[attr], attr_type)
+            else:
+                self.handle_missing_attr(attr, attr_type, attrs)
+
+    def validate_attr_type(self, attr, value, attr_type):
+        """Validate the type of a specific attribute."""
+        if not isinstance(value, getattr(attr_type, "__args__", attr_type)):
+            typenames = ",".join(
+                map(
+                    lambda tp: tp.__name__,
+                    getattr(attr_type, "__args__", (attr_type,))
+                )
+            )
+            message = (
+                f"Given value ({value}) for attribute {attr} "
+                f"in event type '{self.__name__}' is an instance "
+                f"of {type(value).__name__},"
+                f"expected one of these types: {typenames}"
+            )
+            raise TypeError(message)
+
+    def handle_missing_attr(self, attr, attr_type, attrs):
+        """Handle missing attributes and set default values if applicable."""
+        is_optional = "Optional" in repr(attr_type)
+        is_union_with_none = (
+            isinstance(attr_type, UnionType) and NoneType in attr_type.__args__
+        )
+
+        if is_optional or is_union_with_none:
+            return
+        elif attr in self.default_values_for_attrs:
+            attrs[attr] = self.default_values_for_attrs[attr]
+        else:
+            raise TypeError(
+                f"Missing argument for event type '{self.__name__}' : '{attr}'"
+            )
+
+    def handle_no_attrs(self, attrs):
+        """Handle the case when no attributes are expected."""
+        if attrs:
+            raise TypeError(
+                f"Event type '{self.__name__}' does not take any attributes"
+            )
 
 
 def get_event_def(code: int) -> _EventDefinition:
@@ -202,7 +211,10 @@ def get_event_def_from_name(name: str) -> _EventDefinition:
     return _EventDefinition.from_name(name)
 
 
-def create_custom_event_type(name: str, **attributes: Union[Type, SpecialForm, UnionType]) -> int:
+def create_custom_event_type(
+        name: str,
+        **attributes: Union[Type, SpecialForm, UnionType]
+        ) -> int:
     """Register a new event type and its specifications.
 
     :param name: The definition name (will be used in mostly error messages).

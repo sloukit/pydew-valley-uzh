@@ -130,9 +130,10 @@ class Player(Entity):
 
             # tool switch
             if self.controls['next tool']:
-                self.tool_index += 1
+                first_tool = FarmingTool.get_first_tool_id()
+                self.tool_index += 1 + first_tool
                 self.tool_index %= len(self.available_tools)
-                self.current_tool = FarmingTool(self.tool_index)
+                self.current_tool = FarmingTool(self.tool_index + first_tool)
 
             # tool use
             if self.controls['use']:
@@ -144,9 +145,10 @@ class Player(Entity):
 
             # seed switch
             if self.controls['next seed']:
+                first_seed = FarmingTool.get_first_seed_id()
                 self.seed_index += 1
                 self.seed_index %= len(self.available_seeds)
-                self.current_seed = FarmingTool(self.seed_index)
+                self.current_seed = FarmingTool(self.seed_index + first_seed)
 
             # seed used
             if self.controls['plant']:
@@ -165,6 +167,7 @@ class Player(Entity):
         self.plant_collide_rect.center = self.hitbox_rect.center
 
     def update_direction(self):
+        self.direction = vector()
         if self.controls['right']:
             self.direction.x = 1
         if self.controls['left']:
