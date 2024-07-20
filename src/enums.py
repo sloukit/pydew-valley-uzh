@@ -7,7 +7,8 @@ class PlayerState(IntEnum):
 
 
 class ItemToUse(IntEnum):
-    """Both available options for Player.use_tool. If any more have to be added, put them as members of this enum."""
+    """Both available options for Player.use_tool.
+    If any more have to be added, put them as members of this enum."""
     REGULAR_TOOL = 0
     SEED = 1
 
@@ -34,13 +35,17 @@ class GameState(IntEnum):
     CREDITS = 8
 
 
-# NOTE : DO NOT pay attention to anything the IDE might complain about in this class, as the enum generation mechanisms
-# will ensure _SERIALISABLE_STRINGS is actually treated like a tuple of strings instead of an integer.
+# NOTE : DO NOT pay attention to anything the IDE might complain
+# about in this class, as the enum generation mechanisms
+# will ensure _SERIALISABLE_STRINGS is actually treated
+# like a tuple of strings instead of an integer.
 class _SerialisableEnum(IntEnum):
-    _SERIALISABLE_STRINGS = nonmember(())  # This will be overridden in derived enums.
+    # This will be overridden in derived enums.
+    _SERIALISABLE_STRINGS = nonmember(())
 
     def as_serialised_string(self):
-        # We keep that method separate from the actual str dunder, so we can still get the original repr when debugging
+        # We keep that method separate from the actual str dunder,
+        # so we can still get the original repr when debugging
         return self._SERIALISABLE_STRINGS[self]  # noqa
 
     @classmethod
@@ -53,7 +58,9 @@ class _SerialisableEnum(IntEnum):
         try:
             return cls(cls._SERIALISABLE_STRINGS.index(val))  # noqa
         except IndexError as exc:
-            raise LookupError(f"serialised string '{val}' does not match any member in enum '{cls.__name__}'") from exc
+            err = f"""serialised string '{val}' does not
+            match any member in enum '{cls.__name__}'"""
+            raise LookupError(err) from exc
 
 
 class InventoryResource(_SerialisableEnum):
@@ -69,8 +76,10 @@ class InventoryResource(_SerialisableEnum):
         )
     )
 
-    # All item worths in the game. When traders buy things off you, they pay you for half the worth.
-    # If YOU buy something from THEM, then you have to pay the FULL worth, though.
+    # All item worths in the game. When traders buy things off you,
+    # they pay you for half the worth.
+    # If YOU buy something from THEM,
+    # then you have to pay the FULL worth, though.
     _ITEM_WORTHS = nonmember(
         (
             8,  # WOOD
@@ -97,7 +106,8 @@ class InventoryResource(_SerialisableEnum):
 
 
 class FarmingTool(_SerialisableEnum):
-    """Notably used to distinguish the different farming tools (including seeds) in-code."""
+    """Notably used to distinguish the different
+    farming tools (including seeds) in-code."""
     _SERIALISABLE_STRINGS = nonmember(
         (
             "none",
@@ -135,7 +145,8 @@ class FarmingTool(_SerialisableEnum):
 
     @classmethod
     def get_first_tool_id(cls):
-        """Return the first tool ID. This might change in the course of development."""
+        """Return the first tool ID.
+        This might change in the course of development."""
         return cls.AXE
 
     @classmethod

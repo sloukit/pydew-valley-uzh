@@ -1,6 +1,8 @@
 import pygame.freetype
 import pytmx
-from src.import_checks import *
+
+from src.import_checks import check_pygame_version
+check_pygame_version()
 
 type Coordinate = tuple[int | float, int | float]
 type SoundDict = dict[str, pygame.mixer.Sound]
@@ -52,7 +54,15 @@ KEYBINDS = {
     'right': {'type': "key", 'value': pygame.K_RIGHT, 'text': "Right"},
     'use': {'type': "key", 'value': pygame.K_SPACE, 'text': "Use"},
     'next tool': {'type': "key", 'value': pygame.K_TAB, 'text': "Cycle Tools"},
-    'next seed': {'type': "key", 'value': pygame.K_LSHIFT, 'text': "Cycle Seeds"},
-    'plant': {'type': "key", 'value': pygame.K_RETURN, 'text': "Plant Current Seed"},
+    'next seed': {
+        'type': "key",
+        'value': pygame.K_LSHIFT,
+        'text': "Cycle Seeds"
+    },
+    'plant': {
+        'type': "key",
+        'value': pygame.K_RETURN,
+        'text': "Plant Current Seed"
+    },
     'interact': {'type': "key", 'value': pygame.K_i, 'text': "Interact"},
 }

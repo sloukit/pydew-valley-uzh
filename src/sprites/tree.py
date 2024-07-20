@@ -8,7 +8,6 @@ from src.support import generate_particle_surf
 from src.enums import InventoryResource
 
 
-
 class Tree(CollideableSprite):
     def __init__(self, pos, surf, groups, name, apple_surf, stump_surf):
         super().__init__(
@@ -65,4 +64,3 @@ class Tree(CollideableSprite):
             entity.add_resource(InventoryResource.WOOD, 5)
         self.image = generate_particle_surf(self.image)
         self.timer.activate()
-

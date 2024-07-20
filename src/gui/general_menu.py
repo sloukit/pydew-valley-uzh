@@ -71,7 +71,6 @@ class GeneralMenu:
 
     def handle_events(self, event):
         pass
-    
 
     def get_hovered_button(self):
         for button in self.buttons:

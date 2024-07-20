@@ -10,7 +10,7 @@ from pathfinding.finder.a_star import AStarFinder as PF_AStarFinder
 
 from src.npc.npc import NPC
 from src.npc.npc_behaviour import NPCBehaviourMethods
-from src.support import map_coords_to_tile, load_data, resource_path
+from src.support import load_data, resource_path, screen_to_tile
 from src.groups import AllSprites
 from src.overlay.soil import SoilLayer
 from src.overlay.transition import Transition
@@ -38,7 +38,6 @@ class Level:
         self.switch_screen = switch
 
         # pathfinding
-        self.pf_matrix_size = ()
         self.pf_matrix = []
         self.pf_grid: PF_Grid | None = None
         self.pf_finder = PF_AStarFinder()
@@ -56,6 +55,7 @@ class Level:
         self.frames = frames
         self.sounds = sounds
         self.tmx_maps = tmx_maps
+        self.map_size = self.get_map_size()
 
         # soil
         self.soil_layer = SoilLayer(
@@ -67,7 +67,7 @@ class Level:
 
         # weather
         self.sky = Sky()
-        self.rain = Rain(self.all_sprites, frames['level'], self.get_map_size())
+        self.rain = Rain(self.all_sprites, frames['level'], self.map_size)
         self.raining = False
 
         # setup map
@@ -79,18 +79,6 @@ class Level:
         self.day_transition = False
         self.current_day = 0
 
-        # weather
-        self.sky = Sky()
-        self.rain = Rain(
-            self.all_sprites,
-            frames["level"],
-            (tmx_maps['main'].width *
-             TILE_SIZE *
-             SCALE_FACTOR,
-             tmx_maps['main'].height *
-             TILE_SIZE *
-             SCALE_FACTOR))
-
         # overlays
         self.overlay = Overlay(self.player, frames['overlay'])
         self.shop = ShopMenu(self.player, self.toggle_shop, self.font)
@@ -100,14 +88,15 @@ class Level:
     def setup(self):
         self.activate_music()
 
-        self.pf_matrix_size = (self.tmx_maps["main"].width, self.tmx_maps["main"].height)
-        self.pf_matrix = [[1 for _ in range(self.pf_matrix_size[0])] for _ in range(self.pf_matrix_size[1])]
+        width = self.tmx_maps["main"].width
+        height = self.tmx_maps["main"].height
+        self.pf_matrix = [[1 for _ in range(width)] for _ in range(height)]
 
         self.setup_layer_tiles('Lower ground', self.setup_environment)
         self.setup_layer_tiles('Upper ground', self.setup_environment)
         self.setup_layer_tiles('Water', self.setup_water)
 
-        self.setup_object_layer('Collidable objects', self.setup_collideable_object)
+        self.setup_object_layer('Collidable objects', self.setup_collidables)
         self.setup_object_layer('Collisions', self.setup_collision)
         self.setup_object_layer('Interactions', self.setup_interaction)
         self.setup_object_layer('Entities', self.setup_entities)
@@ -117,7 +106,8 @@ class Level:
         self.setup_object_layer('NPCs', self.setup_npc)
 
     def setup_layer_tiles(self, layer, setup_func):
-        for x, y, surf in self.tmx_maps['main'].get_layer_by_name(layer).tiles():
+        tmx_layer = self.tmx_maps['main'].get_layer_by_name(layer)
+        for x, y, surf in tmx_layer.tiles():
             x = x * TILE_SIZE * SCALE_FACTOR
             y = y * TILE_SIZE * SCALE_FACTOR
             pos = (x, y)
@@ -138,7 +128,7 @@ class Level:
             pos = (x, y)
             setup_func(pos, obj)
 
-    def pf_matrix_setup_collision(self, pos: tuple[float, float], size: tuple[float, float]):
+    def pf_matrix_setup_collision(self, pos, size):
         """
         :param pos: Absolute position of collision rect (x, y)
         :param size: Absolute size of collision rect (width, height)
@@ -152,14 +142,19 @@ class Level:
             for h in range(tile_h):
                 self.pf_matrix[tile_y + h][tile_x + w] = 0
 
-    def setup_collideable_object(self, pos, obj: pytmx.TiledObject):
+    def setup_collidables(self, pos, obj: pytmx.TiledObject):
         image = pygame.transform.scale_by(obj.image, SCALE_FACTOR)
 
         if obj.name == 'Tree':
             apple_frames = self.frames['level']['objects']['apple']
             stump_frames = self.frames['level']['objects']['stump']
 
-            Tree(pos, image, (self.all_sprites, self.collision_sprites, self.tree_sprites), obj.name, apple_frames, stump_frames)
+            tree_groups = (
+                self.all_sprites,
+                self.collision_sprites,
+                self.tree_sprites
+            )
+            Tree(pos, image, tree_groups, obj.name, apple_frames, stump_frames)
         else:
             Sprite(pos, image, (self.all_sprites, self.collision_sprites))
 
@@ -191,19 +186,22 @@ class Level:
         )
 
     def setup_npc(self, pos, obj):
-        self.npcs[obj.name] = NPC(pos=pos,
-                                  frames=self.frames['character']['rabbit'],
-                                  groups=(self.all_sprites, self.collision_sprites),
-                                  collision_sprites=self.collision_sprites,
-                                  apply_tool=self.apply_tool,
-                                  soil_layer=self.soil_layer,
-                                  pf_matrix=self.pf_matrix,
-                                  pf_grid=self.pf_grid,
-                                  pf_finder=self.pf_finder
+        self.npcs[obj.name] = NPC(
+            pos=pos,
+            frames=self.frames['character']['rabbit'],
+            groups=(self.all_sprites, self.collision_sprites),
+            collision_sprites=self.collision_sprites,
+            apply_tool=self.apply_tool,
+            soil_layer=self.soil_layer,
+            pf_matrix=self.pf_matrix,
+            pf_grid=self.pf_grid,
+            pf_finder=self.pf_finder
         )
 
     def get_map_size(self):
-        return self.tmx_maps['main'].width * TILE_SIZE * SCALE_FACTOR, self.tmx_maps['main'].height * TILE_SIZE * SCALE_FACTOR
+        width = self.tmx_maps['main'].width * TILE_SIZE * SCALE_FACTOR
+        height = self.tmx_maps['main'].height * TILE_SIZE * SCALE_FACTOR
+        return width, height
 
     def activate_music(self):
         volume = 0.1
@@ -213,7 +211,6 @@ class Level:
             pass
         self.sounds["music"].set_volume(volume)
         self.sounds["music"].play(-1)
-
 
     # events
     def event_loop(self):
@@ -235,7 +232,8 @@ class Level:
         if self.soil_layer.plant_sprites:
             for plant in self.soil_layer.plant_sprites:
 
-                is_player_near = plant.rect.colliderect(self.player.plant_collide_rect)
+                plant_rect = self.player.plant_collide_rect
+                is_player_near = plant.rect.colliderect(plant_rect)
 
                 if plant.harvestable and is_player_near:
 
@@ -245,7 +243,7 @@ class Level:
                     self.player.add_resource(ressource, quantity)
 
                     # update grid
-                    x, y = map_coords_to_tile(plant.rect.center)
+                    x, y = screen_to_tile(plant.rect.center)
                     self.soil_layer.grid[y][x].remove('P')
 
                     # remove plant
@@ -271,7 +269,8 @@ class Level:
                 self.soil_layer.plant(pos, tool, entity.inventory)
 
     def interact(self):
-        collided_interactions = pygame.sprite.spritecollide(self.player, self.interaction_sprites, False)
+        collided_interactions = pygame.sprite.spritecollide(
+            self.player, self.interaction_sprites, False)
         if collided_interactions:
             if collided_interactions[0].name == 'Bed':
                 self.start_reset()

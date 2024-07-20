@@ -60,4 +60,3 @@ class SettingsMenu(GeneralMenu):
     def update(self, dt):
         self.keybinds_description.update_keybinds(dt)
         super().update(dt)
-

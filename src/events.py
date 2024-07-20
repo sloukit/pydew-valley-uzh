@@ -15,7 +15,13 @@ class _EventDefinition:
 
     _EDEF_CACHE = {}  # INTERNAL USAGE!
     _EDEF_NAMES = set()
-    __slots__ = ("name", "__name__", "code", "_attrs", "default_values_for_attrs")
+    __slots__ = (
+        "name",
+        "__name__",
+        "code",
+        "_attrs",
+        "default_values_for_attrs"
+    )
 
     @classmethod
     def from_code(cls, code: int) -> Self:
@@ -23,7 +29,8 @@ class _EventDefinition:
         try:
             return cls._EDEF_CACHE[code]
         except LookupError as exc:
-            raise ValueError(f"given code ({code}) is not linked to a registered event type") from exc
+            err = f"given code '{code}' does not match an existing event type"
+            raise ValueError(err) from exc
 
     @classmethod
     def from_name(cls, name: str) -> Self:
@@ -31,7 +38,8 @@ class _EventDefinition:
         for edef in cls._EDEF_CACHE.values():
             if edef.__name__ == name:
                 return edef
-        raise ValueError(f"given name '{name}' does not match an existing event type")
+        err = f"given name '{name}' does not match an existing event type"
+        raise ValueError(err)
 
     @classmethod
     def add_to_edef_cache(cls, edef: Self):
@@ -45,7 +53,8 @@ class _EventDefinition:
         and raises an error if it isn't.
 
         :param name: The name to check for.
-        :raise ValueError: if the given name is not available for registering."""
+        :raise ValueError: if the given name is not
+        available for registering."""
         if name in cls._EDEF_NAMES:
             raise ValueError(f"event type '{name}' already exists")
 
@@ -61,11 +70,18 @@ class _EventDefinition:
         self.code = code
 
     def __repr__(self):
-        return f"<EventDefinition(name='{self.__name__}', code={self.code}, {', '.join((f'{attr}:{value}' for attr, value in self.attrs.items()))}>"
+        attrs_str = ', '.join(
+            f'{attr}:{value}' for attr, value in self.attrs.items()
+        )
+        return (
+            f"""<EventDefinition(name='{self.__name__}',
+            code={self.code},
+            {attrs_str})>"""
+        )
 
     def __hash__(self):
         return hash(
-            (self.__name__, self.code) + tuple(itm for itm in self.attrs.items())
+            (self.__name__, self.code) + tuple(self.attrs.items())
         )
 
     @property
@@ -77,9 +93,11 @@ class _EventDefinition:
 
         :param attr: The attribute to set a default for.
         :param value: The corresponding default value.
-        :raise TypeError: if the value does not match the type for this attribute
-        given when creating the event type.
-        :raise ValueError: if the attribute does not exist for this event type."""
+        :raise TypeError: if the value does not match the type
+        for this attribute given when creating the event type.
+        :raise ValueError: if the attribute does not exist
+        for this event type."""
+
         if attr not in self.attrs:
             raise ValueError(
                 f"invalid attribute for event type {self.__name__} : '{attr}'"
@@ -123,8 +141,8 @@ class _EventDefinition:
                     ) from err
             for attr, attr_type in self.attrs.items():
                 if attr in attrs:
-                    # Raise an error if argument is given, but not an instance of
-                    # the expected type(s)
+                    # Raise an error if argument is given,
+                    # but not an instance of the expected type(s)
                     if not isinstance(
                             attrs[attr],
                             getattr(
@@ -145,8 +163,8 @@ class _EventDefinition:
                         )
                         raise TypeError(
                             f"given value ({attrs[attr]}) for attribute {attr}"
-                            f" in event type '{self.__name__}' is an instance of"
-                            f"{type(attrs[attr]).__name__}, expected "
+                            f" in event type '{self.__name__}' is an instance"
+                            f" of {type(attrs[attr]).__name__}, expected "
                             f"one of these types: {typenames}"
                         )
                     continue
@@ -179,7 +197,6 @@ def get_event_def(code: int) -> _EventDefinition:
 
 def get_event_def_from_name(name: str) -> _EventDefinition:
     """Return the corresponding event type specification for the given name.
-
     :param name: The name to search for in the existing event types.
     :return: The corresponding definition."""
     return _EventDefinition.from_name(name)
@@ -215,4 +232,3 @@ def post_event(code: int, **attrs: Type | SpecialForm):
     :raise ValueError: if the given code is not a valid event type."""
     edef = _EventDefinition.from_code(code)
     pygame.event.post(edef(**attrs))
-

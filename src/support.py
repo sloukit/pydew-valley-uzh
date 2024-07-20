@@ -151,10 +151,6 @@ def load_data(file_name):
         return json.load(file)
 
 
-def map_coords_to_tile(pos):
-    return pos[0] // (TILE_SIZE * SCALE_FACTOR), pos[1] // (TILE_SIZE * SCALE_FACTOR)
-
-
 def generate_particle_surf(img: pygame.Surface) -> pygame.Surface:
     px_mask = pygame.mask.from_surface(img)
     ret = px_mask.to_surface()
@@ -163,15 +159,18 @@ def generate_particle_surf(img: pygame.Surface) -> pygame.Surface:
 
 
 def flip_items(d: dict) -> dict:
-    """Returns a copy of d with key-value pairs flipped (i.e. keys become values and vice-versa)."""
+    """Returns a copy of d with key-value pairs flipped
+    (i.e. keys become values and vice-versa)."""
     ret = {}
     for key, val in d.items():
         ret[val] = key
     return ret
 
+
 def tile_to_screen(pos):
     tile_size = TILE_SIZE * SCALE_FACTOR
     return pos[0] * tile_size, pos[1] * tile_size
+
 
 def screen_to_tile(pos):
     tile_size = TILE_SIZE * SCALE_FACTOR

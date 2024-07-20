@@ -1,8 +1,9 @@
-
 import random
 import pygame
+
 from src.sprites.base import Sprite
 from src import timer
+
 
 class WaterDrop(Sprite):
     def __init__(self, pos, surf, groups, moving, z):

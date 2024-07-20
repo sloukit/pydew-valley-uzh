@@ -58,11 +58,18 @@ class Selector(Composite):
 
 def weighted_shuffle(children: list[tuple[int, Node]]) -> list[Node]:
     """
+    Shuffles a list of nodes based on their weights.
+    References:
     https://softwareengineering.stackexchange.com/a/344274
     https://utopia.duth.gr/%7Epefraimi/research/data/2007EncOfAlg.pdf
     """
-    order = sorted(range(len(children)), key=lambda i: random.random() ** (1.0 / children[i][0]))
-    return [children[i][1] for i in order]
+    # Calculate the shuffle order based on weights
+    shuffle_order = sorted(
+        range(len(children)),
+        key=lambda i: random.random() ** (1.0 / children[i][0])
+    )
+    # Return the nodes in the new shuffled order
+    return [children[i][1] for i in shuffle_order]
 
 
 class RandomComposite(Node, ABC):

@@ -1,4 +1,4 @@
-import pygame 
+import pygame
 from src.settings import LAYERS, SCREEN_WIDTH, SCREEN_HEIGHT, Coordinate
 from src.npc.dialog import TextBox
 
@@ -20,9 +20,16 @@ class AllSprites(pygame.sprite.Group):
 
         for layer in LAYERS.values():
 
-            for sprite in sorted(
-                    self.sprites(),
-                    key=lambda spr: spr.rect.centery):
+            sorted_sprites = sorted(
+                self.sprites(), key=lambda sprite: sprite.rect.centery
+            )
+
+            for sprite in sorted_sprites:
                 if sprite.z == layer:
-                    self.display_surface.blit(
-                        sprite.image, sprite.rect.topleft + (self.offset if not isinstance(sprite, TextBox) else (0, 0)))
+                    if not isinstance(sprite, TextBox):
+                        offset = self.offset
+                    else:
+                        offset = pygame.Vector2()
+
+                    pos = sprite.rect.topleft + offset
+                    self.display_surface.blit(sprite.image, pos)
