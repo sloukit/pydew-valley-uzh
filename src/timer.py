@@ -26,6 +26,12 @@ class Timer:
         if self.repeat:
             self.activate()
 
+    def get_progress(self) -> float:
+        """returns a value between 0 and 1 that shows the timers progress
+        1 means duration finshed"""
+        curr = pygame.time.get_ticks()
+        return (curr - self.start_time)/ self.duration if self.active else 0
+
     def update(self):
         if self.active:
             if pygame.time.get_ticks() - self.start_time >= self.duration:

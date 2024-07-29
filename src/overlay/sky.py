@@ -1,6 +1,7 @@
 import pygame
+
+from src.enums import Layer
 from src.settings import (
-    LAYERS,
     SCREEN_HEIGHT,
     SCREEN_WIDTH,
 )
@@ -108,7 +109,7 @@ class Rain:
             ),
             moving=False,
             groups=self.all_sprites,
-            z=LAYERS['rain floor'])
+            z=Layer.RAIN_FLOOR)
 
     def create_drops(self):
         WaterDrop(
@@ -119,7 +120,7 @@ class Rain:
             ),
             moving=True,
             groups=self.all_sprites,
-            z=LAYERS['rain drops'])
+            z=Layer.RAIN_DROPS)
 
     def update(self):
         self.create_floor()

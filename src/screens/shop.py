@@ -1,9 +1,19 @@
-import pygame  # noqa
-from src.settings import SCREEN_WIDTH, SCREEN_HEIGHT
+from collections.abc import Callable
 
+import pygame  # noqa
+
+from src.enums import GameState
+from src.settings import (
+    SCREEN_HEIGHT,
+    SCREEN_WIDTH,
+)
+from src.sprites.entities.player import Player
+
+
+# TODO: Refactor this class
 
 class ShopMenu:
-    def __init__(self, player, toggle_menu, font):
+    def __init__(self, player: Player, switch_screen: Callable[[GameState], None], font):
 
         # general setup
 
@@ -12,7 +22,7 @@ class ShopMenu:
         self.main_rect = None
         self.menu_top = None
         self.player = player
-        self.toggle_menu = toggle_menu
+        self.switch_screen = switch_screen
         self.display_surface = pygame.display.get_surface()
         self.font = font
         self.index = 0
@@ -57,29 +67,33 @@ class ShopMenu:
 
         # buy / sell text surface
 
-    def input(self):
-        keys = pygame.key.get_just_pressed()
+    def handle_event(self, event: pygame.event.Event) -> bool:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                self.switch_screen(GameState.LEVEL)
+                return True
 
-        self.index = (
-            self.index + int(keys[pygame.K_DOWN]) - int(keys[pygame.K_UP])
-        ) % len(self.options)
+            elif event.key == pygame.K_SPACE:
+                current_item = self.options[self.index]
+                if current_item.is_seed():
+                    if self.player.money >= current_item.get_worth():
+                        self.player.inventory[current_item] += 1
+                        self.player.money -= current_item.get_worth()
 
-        if keys[pygame.K_ESCAPE]:
-            self.toggle_menu()
+                else:
+                    if self.player.inventory[current_item] > 0:
+                        self.player.inventory[current_item] -= 1
+                        self.player.money += current_item.get_worth() // 2
+                return True
 
-        if keys[pygame.K_SPACE]:
-            current_item = self.options[self.index]
-            if current_item.is_seed():
-                if self.player.money >= current_item.get_worth():
-                    self.player.inventory[current_item] += 1
-                    self.player.money -= current_item.get_worth()
+            elif event.key in (pygame.K_DOWN, pygame.K_UP):
+                self.index = (self.index + int(event.key == pygame.K_DOWN) - int(event.key == pygame.K_UP)
+                              ) % len(self.options)
+                return True
 
-            else:
-                if self.player.inventory[current_item] > 0:
-                    self.player.inventory[current_item] -= 1
-                    self.player.money += current_item.get_worth() // 2
+        return False
 
-    def show_entry(self, text_surf, amount, top, index, text_index):
+    def show_entry(self, text_surf: pygame.Surface, amount: int, top: int, index: int, text_index: int):
 
         # background
         bg_rect = pygame.Rect(self.main_rect.left, top, self.width,
@@ -109,8 +123,7 @@ class ShopMenu:
             )
             self.display_surface.blit(surf, pos_rect)
 
-    def update(self):
-        self.input()
+    def update(self, dt: int):
         self.display_money()
 
         for text_index, text_surf in enumerate(self.text_surfs):
