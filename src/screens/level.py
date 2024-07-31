@@ -427,8 +427,10 @@ class Level:
         if collided_interactions:
             if collided_interactions[0].name == 'Bed':
                 self.start_reset()
+                self.player.database.log_interaction('Bed')
             if collided_interactions[0].name == 'Trader':
                 self.switch_screen(GameState.SHOP)
+                self.player.database.log_interaction('Trader')
 
     def handle_event(self, event: pygame.event.Event) -> bool:
         hitbox_key = self.player.controls.SHOW_HITBOXES.control_value

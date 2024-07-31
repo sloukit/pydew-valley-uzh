@@ -167,3 +167,4 @@ cython_debug/
 __pycache__
 
 data/settings/*
+data/database/

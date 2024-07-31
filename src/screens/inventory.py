@@ -245,6 +245,7 @@ class InventoryMenu(AbstractMenu):
         if text == "goggles":
             has_goggles = not self.player.has_goggles
             self.player.has_goggles = has_goggles
+            self.player.database.log_goggles_wearing(has_goggles)
             for btn in self._special_btns:
                 if btn.text == "goggles":
                     btn.selected = has_goggles
