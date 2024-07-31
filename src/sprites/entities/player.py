@@ -14,6 +14,7 @@ from src.settings import Coordinate, SoundDict, GogglesStatus
 from src.sprites.character import Character
 from src.sprites.entities.entity import Entity
 from src.sprites.setup import EntityAsset
+from src.database import Database
 
 _NONSEED_INVENTORY_DEFAULT_AMOUNT = 20
 _SEED_INVENTORY_DEFAULT_AMOUNT = 5
@@ -94,6 +95,9 @@ class Player(Character):
 
         # sounds
         self.sounds = sounds
+
+        # database
+        self.database = Database()
 
     def focus_entity(self, entity: Entity):
         if self.focused_entity:
