@@ -41,8 +41,8 @@ class Database:
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS group_switches (
                 id INTEGER PRIMARY KEY,
-                old_group TEXT,
-                new_group TEXT,
+                old_group INTEGER,
+                new_group INTEGER,
                 switch_time TIMESTAMP
             )
         ''')
@@ -58,7 +58,7 @@ class Database:
     def log_map_switch(self, from_map, to_map):
         self.cursor.execute('''
             INSERT INTO map_switches (from_map, to_map, switch_time)
-            VALUES (?, ?)
+            VALUES (?, ?, ?)
         ''', (from_map, to_map, datetime.now()))
         self.conn.commit()
 
@@ -79,7 +79,7 @@ class Database:
     def log_group_switch(self, old_group, new_group):
         self.cursor.execute('''
             INSERT INTO group_switches (old_group, new_group, switch_time)
-            VALUES (?, ?)
+            VALUES (?, ?, ?)
         ''', (old_group, new_group, datetime.now()))
         self.conn.commit()
 
@@ -99,7 +99,7 @@ class Database:
 # db.log_goggles_wearing(True)
 
 # Log a bath house entry
-# db.log_bath_house_entry("Healthy")
+# db.log_bath_house_entry("Healthy, 90)
 
 # Log a group switch
-# db.log_group_switch("GroupA", "GroupB")
+# db.log_group_switch(1, 2)
