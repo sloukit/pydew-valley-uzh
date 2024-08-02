@@ -20,14 +20,16 @@ class Description:
         self.setup()
 
         # font
-        self.font = pygame.font.Font(resource_path('font/LycheeSoda.ttf'), 30)
+        self.font = pygame.font.Font(resource_path("font/LycheeSoda.ttf"), 30)
 
     # setup
     def setup(self):
         # description
         self.description_rect = pygame.Rect(0, 0, 600, 400)
         self.description_rect.topright = self.rect.topright
-        self.description_surface = pygame.Surface(self.description_rect.size, pygame.SRCALPHA)
+        self.description_surface = pygame.Surface(
+            self.description_rect.size, pygame.SRCALPHA
+        )
         # slider
         self.description_slider_surface = pygame.Surface((600, 600), pygame.SRCALPHA)
         self.description_slider_rect = self.description_surface.get_rect()
@@ -69,10 +71,10 @@ class Description:
         slide_bar_rect.right = self.description_rect.right - 2
         slide_bar_rect.top = self.description_rect.top - Y1 * coeff
 
-        pygame.draw.rect(self.display_surface, 'grey', slide_bar_rect, 0, 4)
+        pygame.draw.rect(self.display_surface, "grey", slide_bar_rect, 0, 4)
 
     def draw(self):
-        pygame.draw.rect(self.display_surface, 'White', self.rect, 0, 4)
+        pygame.draw.rect(self.display_surface, "White", self.rect, 0, 4)
         self.make_surface_transparent()
         self.draw_slider_bar()
 
@@ -91,21 +93,21 @@ class KeybindsDescription(Description):
         reset_btn_rect = pygame.Rect(0, 0, 100, 50)
         reset_btn_rect.bottomright = self.rect.bottomleft - vector(10, 0)
 
-        self.reset_button = Button('Reset', reset_btn_rect, self.font)
+        self.reset_button = Button("Reset", reset_btn_rect, self.font)
 
     def save_data(self):
         for key in self.keys_group:
             self.controls[key.name].control_value = key.value
 
-        save_data(self.controls.as_dict(), 'keybinds.json')
+        save_data(self.controls.as_dict(), "keybinds.json")
 
     def create_keybinds(self):
 
         margin = 10
-        size = (600, 60 * self.controls.length() + 2*margin)
+        size = (600, 60 * self.controls.length() + 2 * margin)
         self.description_slider_surface = pygame.Surface((size))
         self.description_slider_rect = self.description_slider_surface.get_rect()
-        self.description_slider_surface.set_colorkey('green')
+        self.description_slider_surface.set_colorkey("green")
 
         self.keys_group.clear()
         index = 0
@@ -126,9 +128,11 @@ class KeybindsDescription(Description):
 
     # events
     def handle_event(self, event: pygame.event.Event) -> bool:
-        return (super().handle_event(event) or
-                self.set_key(event) or
-                self.handle_click(event))
+        return (
+            super().handle_event(event)
+            or self.set_key(event)
+            or self.handle_click(event)
+        )
 
     # keybinds
     def get_hovered_key(self):
@@ -159,7 +163,7 @@ class KeybindsDescription(Description):
 
                 if self.pressed_key.hover(offset):
                     self.selection_key = self.pressed_key
-                    self.selection_key.bg_color = 'red'
+                    self.selection_key.bg_color = "red"
                 else:
                     self.remove_selection()
 
@@ -177,9 +181,9 @@ class KeybindsDescription(Description):
                     # Scrolling should not be allowed as keybind
                     return False
                 if self.selection_key.hover(offset):
-                    rpath = resource_path('images/keys/rclick.png')
-                    lpath = resource_path('images/keys/lclick.png')
-                    unknown = resource_path('images/keys/generic.png')
+                    rpath = resource_path("images/keys/rclick.png")
+                    lpath = resource_path("images/keys/lclick.png")
+                    unknown = resource_path("images/keys/generic.png")
                     if event.button == pygame.BUTTON_LEFT:
                         path = lpath
                     elif event.button == pygame.BUTTON_RIGHT:
@@ -213,7 +217,7 @@ class KeybindsDescription(Description):
         self.selection_key = None
 
         if self.pressed_key:
-            self.pressed_key.bg_color = 'grey'
+            self.pressed_key.bg_color = "grey"
             self.pressed_key = None
 
     def reset_keybinds(self):
@@ -306,18 +310,17 @@ class VolumeDescription(Description):
 
     def save_data(self):
         data = self.slider.get_value()
-        save_data(int(data), 'volume.json')
+        save_data(int(data), "volume.json")
 
     def import_data(self):
         try:
-            self.slider.value = load_data('volume.json')
+            self.slider.value = load_data("volume.json")
         except FileNotFoundError:
             pass
 
     # events
     def handle_event(self, event) -> bool:
-        return (super().handle_event(event) or
-                self.slider.handle_event(event))
+        return super().handle_event(event) or self.slider.handle_event(event)
 
     # draw
     def draw_slider(self):

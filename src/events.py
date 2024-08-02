@@ -1,4 +1,5 @@
 """Expansion over Pygame's event management system."""
+
 import pygame
 from typing import Union, Type, NoReturn, Self
 from types import UnionType, NoneType
@@ -23,7 +24,9 @@ class _EventDefinition:
         try:
             return cls._EDEF_CACHE[code]
         except LookupError as exc:
-            raise ValueError(f"given code ({code}) is not linked to a registered event type") from exc
+            raise ValueError(
+                f"given code ({code}) is not linked to a registered event type"
+            ) from exc
 
     @classmethod
     def from_name(cls, name: str) -> Self:
@@ -86,22 +89,11 @@ class _EventDefinition:
             )
         else:
             attr_type = self.attrs[attr]
-            if not isinstance(
-                    value,
-                    getattr(
-                        attr_type,
-                        "__args__",
-                        attr_type
-                    )
-            ):
+            if not isinstance(value, getattr(attr_type, "__args__", attr_type)):
                 typenames = ",".join(
                     map(
                         lambda tp: tp.__name__,
-                        getattr(
-                            attr_type,
-                            "__args__",
-                            (attr_type,)
-                        )
+                        getattr(attr_type, "__args__", (attr_type,)),
                     )
                 )
                 raise TypeError(
@@ -126,21 +118,12 @@ class _EventDefinition:
                     # Raise an error if argument is given, but not an instance of
                     # the expected type(s)
                     if not isinstance(
-                            attrs[attr],
-                            getattr(
-                                attr_type,
-                                "__args__",
-                                attr_type
-                            )
+                        attrs[attr], getattr(attr_type, "__args__", attr_type)
                     ):
                         typenames = ",".join(
                             map(
                                 lambda tp: tp.__name__,
-                                getattr(
-                                    attr_type,
-                                    "__args__",
-                                    (attr_type,)
-                                )
+                                getattr(attr_type, "__args__", (attr_type,)),
                             )
                         )
                         raise TypeError(
@@ -153,7 +136,10 @@ class _EventDefinition:
                 else:
                     if "Optional" in repr(attr_type):
                         pass
-                    elif isinstance(attr_type, UnionType) and NoneType in attr_type.__args__:
+                    elif (
+                        isinstance(attr_type, UnionType)
+                        and NoneType in attr_type.__args__
+                    ):
                         pass
                     elif attr in self.default_values_for_attrs:
                         attrs[attr] = self.default_values_for_attrs[attr]
@@ -185,7 +171,9 @@ def get_event_def_from_name(name: str) -> _EventDefinition:
     return _EventDefinition.from_name(name)
 
 
-def create_custom_event_type(name: str, **attributes: Union[Type, SpecialForm, UnionType]) -> int:
+def create_custom_event_type(
+    name: str, **attributes: Union[Type, SpecialForm, UnionType]
+) -> int:
     """Register a new event type and its specifications.
 
     :param name: The definition name (will be used in mostly error messages).
@@ -220,9 +208,7 @@ def post_event(code: int, **attrs: Type | SpecialForm):
 # Custom Events:
 
 # Adding this to the event definition cache so we can easily post quit events
-_EventDefinition.add_to_edef_cache(
-    _EventDefinition("Quit", pygame.QUIT)
-)
+_EventDefinition.add_to_edef_cache(_EventDefinition("Quit", pygame.QUIT))
 
 OPEN_INVENTORY = create_custom_event_type("OpenInventory")
 

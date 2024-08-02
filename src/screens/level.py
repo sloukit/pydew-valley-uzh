@@ -13,13 +13,7 @@ from src.overlay.sky import Sky, Rain
 from src.overlay.soil import SoilLayer
 from src.overlay.transition import Transition
 from src.screens.game_map import GameMap
-from src.settings import (
-    SCREEN_HEIGHT,
-    SCREEN_WIDTH,
-    MapDict,
-    SoundDict,
-    GAME_MAP
-)
+from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH, MapDict, SoundDict, GAME_MAP
 from src.sprites.character import Character
 from src.sprites.drops import DropsManager
 from src.sprites.entities.player import Player
@@ -73,15 +67,18 @@ class Level:
     show_hitbox_active: bool
 
     def __init__(
-            self, switch: Callable[[GameState], None], tmx_maps: MapDict,
-            frames: dict[str, dict], sounds: SoundDict
+        self,
+        switch: Callable[[GameState], None],
+        tmx_maps: MapDict,
+        frames: dict[str, dict],
+        sounds: SoundDict,
     ):
         # main setup
         self.display_surface = pygame.display.get_surface()
         self.switch_screen = switch
 
         # assets
-        self.font = pygame.font.Font(resource_path('font/LycheeSoda.ttf'), 30)
+        self.font = pygame.font.Font(resource_path("font/LycheeSoda.ttf"), 30)
         self.frames = frames
         self.sounds = sounds
         self.tmx_maps = tmx_maps
@@ -95,19 +92,11 @@ class Level:
         self.drop_sprites = pygame.sprite.Group()
         self.player_exit_warps = pygame.sprite.Group()
 
-        self.soil_layer = SoilLayer(
-            self.all_sprites,
-            self.frames["level"],
-            self.sounds
-        )
+        self.soil_layer = SoilLayer(self.all_sprites, self.frames["level"], self.sounds)
 
         self._emotes = self.frames["emotes"]
-        self.player_emote_manager = PlayerEmoteManager(
-            self._emotes, self.all_sprites
-        )
-        self.npc_emote_manager = NPCEmoteManager(
-            self._emotes, self.all_sprites
-        )
+        self.player_emote_manager = PlayerEmoteManager(self._emotes, self.all_sprites)
+        self.npc_emote_manager = NPCEmoteManager(self._emotes, self.all_sprites)
 
         self.player = Player(
             pos=(0, 0),
@@ -117,16 +106,14 @@ class Level:
             apply_tool=self.apply_tool,
             interact=self.interact,
             emote_manager=self.player_emote_manager,
-            sounds=self.sounds
+            sounds=self.sounds,
         )
         self.all_sprites.add_persistent(self.player)
         self.collision_sprites.add_persistent(self.player)
 
         # drops manager
         self.drops_manager = DropsManager(
-            self.all_sprites,
-            self.drop_sprites,
-            self.frames['level']['drops']
+            self.all_sprites, self.drop_sprites, self.frames["level"]["drops"]
         )
         self.drops_manager.player = self.player
 
@@ -139,19 +126,17 @@ class Level:
         self.map_transition = Transition(
             lambda: self.switch_to_map(self.current_map),
             self.finish_transition,
-            dur=2400
+            dur=2400,
         )
 
         self.activate_music()
 
         # day night cycle
-        self.day_transition = Transition(
-            self.reset, self.finish_transition, dur=3200
-        )
+        self.day_transition = Transition(self.reset, self.finish_transition, dur=3200)
         self.current_day = 0
 
         # overlays
-        self.overlay = Overlay(self.player, frames['overlay'])
+        self.overlay = Overlay(self.player, frames["overlay"])
         self.show_hitbox_active = False
 
     def load_map(self, game_map: Map, from_map: str = None):
@@ -168,24 +153,18 @@ class Level:
 
         self.game_map = GameMap(
             tilemap=self.tmx_maps[game_map],
-
             all_sprites=self.all_sprites,
             collision_sprites=self.collision_sprites,
             interaction_sprites=self.interaction_sprites,
             tree_sprites=self.tree_sprites,
             player_exit_warps=self.player_exit_warps,
-
             player=self.player,
-
             player_emote_manager=self.player_emote_manager,
             npc_emote_manager=self.npc_emote_manager,
-
             drops_manager=self.drops_manager,
-
             soil_layer=self.soil_layer,
             apply_tool=self.apply_tool,
-
-            frames=self.frames
+            frames=self.frames,
         )
 
         player_spawn = None
@@ -194,8 +173,10 @@ class Level:
         if from_map:
             player_spawn = self.game_map.player_entry_warps.get(from_map)
             if not player_spawn:
-                warnings.warn(f"No valid entry warp found for \"{game_map}\" "
-                              f"from: \"{self.current_map}\"")
+                warnings.warn(
+                    f'No valid entry warp found for "{game_map}" '
+                    f'from: "{self.current_map}"'
+                )
 
         # use default spawnpoint if no origin map is specified,
         # or if no entry warp for the player's origin map is found
@@ -205,9 +186,7 @@ class Level:
             else:
                 warnings.warn(f"No default spawnpoint found on {game_map}")
                 # fallback to the first player entry warp
-                player_spawn = next(iter(
-                    self.game_map.player_entry_warps.values()
-                ))
+                player_spawn = next(iter(self.game_map.player_entry_warps.values()))
 
         self.player.teleport(player_spawn)
 
@@ -218,7 +197,7 @@ class Level:
     def activate_music(self):
         volume = 0.1
         try:
-            volume = load_data('volume.json') / 1000
+            volume = load_data("volume.json") / 1000
         except FileNotFoundError:
             pass
         self.sounds["music"].set_volume(volume)
@@ -229,18 +208,14 @@ class Level:
         if self.soil_layer.plant_sprites:
             for plant in self.soil_layer.plant_sprites:
 
-                is_player_near = plant.rect.colliderect(
-                    self.player.hitbox_rect
-                )
+                is_player_near = plant.rect.colliderect(self.player.hitbox_rect)
 
                 if plant.harvestable and is_player_near:
 
                     # add resource
                     ressource: SeedType = plant.seed_type
                     quantity = 3
-                    self.player.add_resource(
-                        ressource.as_nonseed_ir(), quantity
-                    )
+                    self.player.add_resource(ressource.as_nonseed_ir(), quantity)
 
                     # update grid
                     x, y = map_coords_to_tile(plant.rect.center)
@@ -256,7 +231,7 @@ class Level:
         if self.tmx_maps.get(map_name):
             self.load_map(map_name, from_map=self.current_map)
         else:
-            warnings.warn(f"Error loading map: Map \"{map_name}\" not found")
+            warnings.warn(f'Error loading map: Map "{map_name}" not found')
 
             # fallback which reloads the current map and sets the player to the
             # entry warp of the map that should have been switched to
@@ -265,9 +240,7 @@ class Level:
     def create_particle(self, sprite: pygame.sprite.Sprite):
         ParticleSprite(sprite.rect.topleft, sprite.image, self.all_sprites)
 
-    def apply_tool(
-            self, tool: FarmingTool, pos: tuple[int, int], entity: Character
-    ):
+    def apply_tool(self, tool: FarmingTool, pos: tuple[int, int], entity: Character):
         match tool:
             case FarmingTool.AXE:
                 for tree in pygame.sprite.spritecollide(
@@ -276,7 +249,7 @@ class Level:
                     False,
                     lambda spr, tree_spr: spr.axe_hitbox.colliderect(
                         tree_spr.hitbox_rect
-                    )
+                    ),
                 ):
                     tree.hit(entity)
                     self.sounds["axe"].play()
@@ -284,7 +257,7 @@ class Level:
                 self.soil_layer.hoe(pos)
             case FarmingTool.WATERING_CAN:
                 self.soil_layer.water(pos)
-                self.sounds['water'].play()
+                self.sounds["water"].play()
             case _:  # All seeds
                 self.soil_layer.plant(pos, tool, entity.inventory)
 
@@ -293,9 +266,9 @@ class Level:
             self.player, self.interaction_sprites, False
         )
         if collided_interactions:
-            if collided_interactions[0].name == 'Bed':
+            if collided_interactions[0].name == "Bed":
                 self.start_day_transition()
-            if collided_interactions[0].name == 'Trader':
+            if collided_interactions[0].name == "Trader":
                 self.switch_screen(GameState.SHOP)
 
     def handle_event(self, event: pygame.event.Event) -> bool:
@@ -386,16 +359,18 @@ class Level:
             for sprite in self.collision_sprites:
                 rect = sprite.rect.copy()
                 rect.topleft += offset
-                pygame.draw.rect(self.display_surface, 'red', rect, 2)
+                pygame.draw.rect(self.display_surface, "red", rect, 2)
 
                 hitbox = sprite.hitbox_rect.copy()
                 hitbox.topleft += offset
-                pygame.draw.rect(self.display_surface, 'blue', hitbox, 2)
+                pygame.draw.rect(self.display_surface, "blue", hitbox, 2)
             for drop in self.drop_sprites:
-                pygame.draw.rect(self.display_surface, 'red',
-                                 drop.rect.move(*offset), 2)
-                pygame.draw.rect(self.display_surface, 'blue',
-                                 drop.hitbox_rect.move(*offset), 2)
+                pygame.draw.rect(
+                    self.display_surface, "red", drop.rect.move(*offset), 2
+                )
+                pygame.draw.rect(
+                    self.display_surface, "blue", drop.hitbox_rect.move(*offset), 2
+                )
 
     def draw_overlay(self):
         current_time = self.sky.get_time()

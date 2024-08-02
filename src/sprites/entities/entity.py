@@ -23,12 +23,13 @@ class Entity(CollideableSprite, ABC):
     collision_sprites: pygame.sprite.Group
 
     def __init__(
-            self,
-            pos: settings.Coordinate,
-            assets: EntityAsset,
-            groups: tuple[pygame.sprite.Group, ...],
-            collision_sprites: pygame.sprite.Group,
-            z=Layer.MAIN):
+        self,
+        pos: settings.Coordinate,
+        assets: EntityAsset,
+        groups: tuple[pygame.sprite.Group, ...],
+        collision_sprites: pygame.sprite.Group,
+        z=Layer.MAIN,
+    ):
 
         self.assets = assets
 
@@ -50,7 +51,7 @@ class Entity(CollideableSprite, ABC):
             pos,
             self.assets[self.state][self.facing_direction].get_frame(0),
             groups,
-            z=z
+            z=z,
         )
 
         # movement
@@ -138,8 +139,7 @@ class Entity(CollideableSprite, ABC):
     def focus(self):
         self.focused = True
         self.focused_indicator = Sprite(
-            (0, 0), indicators.ENTITY_FOCUSED, (self.groups()[0],),
-            Layer.EMOTES
+            (0, 0), indicators.ENTITY_FOCUSED, (self.groups()[0],), Layer.EMOTES
         )
 
     def unfocus(self):
@@ -178,7 +178,7 @@ class Entity(CollideableSprite, ABC):
                         abs(self.last_hitbox_rect.right - distances_rect.left),
                         abs(self.last_hitbox_rect.left - distances_rect.right),
                         abs(self.last_hitbox_rect.bottom - distances_rect.top),
-                        abs(self.last_hitbox_rect.top - distances_rect.bottom)
+                        abs(self.last_hitbox_rect.top - distances_rect.bottom),
                     )
 
                     shortest_distance = min(distances)
@@ -212,9 +212,11 @@ class Entity(CollideableSprite, ABC):
 
         if self.focused_indicator:
             self.focused_indicator.rect.update(
-             (self.rect.centerx - self.focused_indicator.rect.width / 2,
-              self.rect.centery - 56 - self.focused_indicator.rect.height / 2),
-             self.focused_indicator.rect.size
+                (
+                    self.rect.centerx - self.focused_indicator.rect.width / 2,
+                    self.rect.centery - 56 - self.focused_indicator.rect.height / 2,
+                ),
+                self.focused_indicator.rect.size,
             )
         self.move(dt)
         self.animate(dt)

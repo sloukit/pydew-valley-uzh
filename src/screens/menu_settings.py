@@ -14,13 +14,16 @@ from src.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
 class SettingsMenu(GeneralMenu):
     def __init__(
-            self, switch_screen: Callable[[GameState], None], sounds: settings.SoundDict, controls: Type[Controls]
+        self,
+        switch_screen: Callable[[GameState], None],
+        sounds: settings.SoundDict,
+        controls: Type[Controls],
     ):
-        options = ['Keybinds', 'Volume', 'Back']
-        title = 'Settings'
+        options = ["Keybinds", "Volume", "Back"]
+        title = "Settings"
         size = (400, 400)
         switch = switch_screen
-        center = vector(SCREEN_WIDTH/2, SCREEN_HEIGHT/2) + vector(-350, 0)
+        center = vector(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2) + vector(-350, 0)
         super().__init__(title, options, switch, size, center)
 
         # description
@@ -34,22 +37,24 @@ class SettingsMenu(GeneralMenu):
 
     # setup
     def button_action(self, text: str):
-        if text == 'Keybinds':
+        if text == "Keybinds":
             self.current_description = self.keybinds_description
-        if text == 'Volume':
+        if text == "Volume":
             self.current_description = self.volume_description
-        if text == 'Back':
+        if text == "Back":
             self.keybinds_description.save_data()
             self.volume_description.save_data()
             self.switch_screen(GameState.PAUSE)
-        if text == 'Reset':
+        if text == "Reset":
             self.keybinds_description.reset_keybinds()
 
     # events
     def handle_event(self, event: pygame.event.Event) -> bool:
-        return (super().handle_event(event) or
-                self.current_description.handle_event(event) or
-                self.echap(event))
+        return (
+            super().handle_event(event)
+            or self.current_description.handle_event(event)
+            or self.echap(event)
+        )
 
     def echap(self, event: pygame.event.Event) -> bool:
         if event.type == pygame.KEYDOWN:
@@ -68,4 +73,3 @@ class SettingsMenu(GeneralMenu):
     def update(self, dt: float):
         self.keybinds_description.update_keybinds(dt)
         super().update(dt)
-

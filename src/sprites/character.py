@@ -6,8 +6,12 @@ import pygame
 
 from src import settings
 from src.enums import (
-    FarmingTool, InventoryResource, ItemToUse, EntityState,
-    Layer, StudyGroup
+    FarmingTool,
+    InventoryResource,
+    ItemToUse,
+    EntityState,
+    Layer,
+    StudyGroup,
 )
 from src.sprites.entities.entity import Entity
 from src.sprites.setup import EntityAsset
@@ -23,15 +27,13 @@ class Character(Entity, ABC):
     current_seed: FarmingTool
 
     def __init__(
-            self,
-            pos: settings.Coordinate,
-            assets: EntityAsset,
-            groups: tuple[pygame.sprite.Group, ...],
-            collision_sprites: pygame.sprite.Group,
-            apply_tool: Callable[
-                [FarmingTool, tuple[float, float], Self], None
-            ],
-            z=Layer.MAIN
+        self,
+        pos: settings.Coordinate,
+        assets: EntityAsset,
+        groups: tuple[pygame.sprite.Group, ...],
+        collision_sprites: pygame.sprite.Group,
+        apply_tool: Callable[[FarmingTool, tuple[float, float], Self], None],
+        z=Layer.MAIN,
     ):
         Entity.__init__(
             self,
@@ -39,8 +41,7 @@ class Character(Entity, ABC):
             assets=assets,
             groups=groups,
             collision_sprites=collision_sprites,
-
-            z=z
+            z=z,
         )
 
         # tools
@@ -90,15 +91,16 @@ class Character(Entity, ABC):
                 # before the call to Entity.animate
                 self.state = EntityState.IDLE
             else:
-                if (round(self.frame_index) == len(self._current_ani) - 1
-                        and not self.just_used_tool):
+                if (
+                    round(self.frame_index) == len(self._current_ani) - 1
+                    and not self.just_used_tool
+                ):
                     self.just_used_tool = True
                     self.use_tool(ItemToUse.REGULAR_TOOL)
 
     def use_tool(self, option: ItemToUse):
         self.apply_tool(
-            (self.current_tool, self.current_seed)[option],
-            self.get_target_pos(), self
+            (self.current_tool, self.current_seed)[option], self.get_target_pos(), self
         )
 
     def add_resource(self, resource, amount=1):

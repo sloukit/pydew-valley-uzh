@@ -1,4 +1,5 @@
 """Test suite for the event queue"""
+
 import unittest
 import src.events
 from src.events import _EventDefinition as _EDef
@@ -14,11 +15,19 @@ class TestEventExpansion(unittest.TestCase):
     def setUp(self):
         try:
             self.test_event_type = src.events.create_custom_event_type("TestEventType")
-            self.evt_one_attr = src.events.create_custom_event_type("EvtOneAttr", attr1=int)
-            self.evt_union = src.events.create_custom_event_type("EvtUnion", attr1=IntOrStr)
-            self.evt_optional = src.events.create_custom_event_type("EvtOptional", attr1=int | None)
+            self.evt_one_attr = src.events.create_custom_event_type(
+                "EvtOneAttr", attr1=int
+            )
+            self.evt_union = src.events.create_custom_event_type(
+                "EvtUnion", attr1=IntOrStr
+            )
+            self.evt_optional = src.events.create_custom_event_type(
+                "EvtOptional", attr1=int | None
+            )
         except ValueError:
-            self.test_event_type = src.events.get_event_def_from_name("TestEventType").code
+            self.test_event_type = src.events.get_event_def_from_name(
+                "TestEventType"
+            ).code
             self.evt_one_attr = src.events.get_event_def_from_name("EvtOneAttr").code
             self.evt_union = src.events.get_event_def_from_name("EvtUnion").code
             self.evt_optional = src.events.get_event_def_from_name("EvtOptional").code
@@ -40,13 +49,11 @@ class TestEventExpansion(unittest.TestCase):
             TypeError,
             src.events.post_event,
             self.test_event_type,
-            some_unexpected_attribute=_DUMMY
+            some_unexpected_attribute=_DUMMY,
         )
 
     def test_one_attribute(self):
-        expected_dict = {
-            "attr1": int
-        }
+        expected_dict = {"attr1": int}
         edef = src.events.get_event_def(self.evt_one_attr)
         self.assertDictEqual(edef.attrs, expected_dict)
 
@@ -59,18 +66,11 @@ class TestEventExpansion(unittest.TestCase):
 
     def test_evt_type_one_attr_wrong_type(self):
         self.assertRaises(
-            TypeError,
-            src.events.post_event,
-            self.evt_one_attr,
-            attr1="wrong type"
+            TypeError, src.events.post_event, self.evt_one_attr, attr1="wrong type"
         )
 
     def test_evt_type_one_attr_arg_missing(self):
-        self.assertRaises(
-            TypeError,
-            src.events.post_event,
-            self.evt_one_attr
-        )
+        self.assertRaises(TypeError, src.events.post_event, self.evt_one_attr)
 
     def test_evt_type_one_attr_arg_missing_default_set(self):
         edef = src.events.get_event_def(self.evt_one_attr)
@@ -91,11 +91,7 @@ class TestEventExpansion(unittest.TestCase):
 
     def test_evt_type_one_attr_union_type_tp_not_in_union(self):
         edef = src.events.get_event_def(self.evt_union)
-        self.assertRaises(
-            TypeError,
-            edef,
-            attr1=bytearray(3)
-        )
+        self.assertRaises(TypeError, edef, attr1=bytearray(3))
 
     def test_evt_type_optional_one_attr_no_attr_given(self):
         edef = src.events.get_event_def(self.evt_optional)
@@ -109,8 +105,4 @@ class TestEventExpansion(unittest.TestCase):
 
     def test_evt_type_optional_wrong_type(self):
         edef = src.events.get_event_def(self.evt_optional)
-        self.assertRaises(
-            TypeError,
-            edef,
-            attr1=3.5
-        )
+        self.assertRaises(TypeError, edef, attr1=3.5)

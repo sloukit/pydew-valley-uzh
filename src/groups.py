@@ -51,8 +51,7 @@ class AllSprites(PersistentSpriteGroup):
         self.offset.x = -(target_pos[0] - SCREEN_WIDTH / 2)
         self.offset.y = -(target_pos[1] - SCREEN_HEIGHT / 2)
 
-        sorted_sprites = sorted(self.sprites(),
-                                key=lambda spr: spr.hitbox_rect.bottom)
+        sorted_sprites = sorted(self.sprites(), key=lambda spr: spr.hitbox_rect.bottom)
 
         for layer in Layer:
             for sprite in sorted_sprites:

@@ -20,16 +20,15 @@ def setup_gui():
         support.resource_path("images/ui/dialog_boxes/tiny_down.png")
     ).convert_alpha()
     emote_dialog_box = emote_dialog_box.subsurface(pygame.Rect(8, 8, 32, 32))
-    emote_dialog_box = pygame.transform.scale(
-        emote_dialog_box, (32 * 3, 32 * 3)
-    )
+    emote_dialog_box = pygame.transform.scale(emote_dialog_box, (32 * 3, 32 * 3))
     emotes.EmoteBox.EMOTE_DIALOG_BOX = emote_dialog_box
 
     entity_focus_indicator = pygame.image.load(
         support.resource_path("images/ui/indicators/entity_focused.png")
     ).convert_alpha()
     entity_focus_indicator = pygame.transform.scale(
-        entity_focus_indicator, (entity_focus_indicator.width * 2,
-                                 entity_focus_indicator.height * 2))
+        entity_focus_indicator,
+        (entity_focus_indicator.width * 2, entity_focus_indicator.height * 2),
+    )
     indicators.ENTITY_FOCUSED = entity_focus_indicator
     # endregion

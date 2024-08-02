@@ -21,9 +21,7 @@ class AIData:
     _setup: bool = False
 
     @classmethod
-    def update(
-            cls, pathfinding_matrix: list[list[int]], player: Player
-    ) -> None:
+    def update(cls, pathfinding_matrix: list[list[int]], player: Player) -> None:
         if not cls._setup:
             NPCBehaviourTree.init()
             ChickenBehaviourTree.init()

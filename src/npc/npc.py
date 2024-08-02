@@ -9,7 +9,7 @@ from src.gui.interface.emotes import NPCEmoteManager
 from src.npc.bases.npc_base import NPCBase
 from src.npc.behaviour.npc_behaviour_tree import (
     NPCBehaviourTree,
-    NPCBehaviourTreeContext
+    NPCBehaviourTreeContext,
 )
 from src.overlay.soil import SoilLayer
 from src.settings import Coordinate
@@ -19,16 +19,14 @@ from src.sprites.setup import EntityAsset
 
 class NPC(NPCBase):
     def __init__(
-            self,
-            pos: Coordinate,
-            assets: EntityAsset,
-            groups: tuple[pygame.sprite.Group, ...],
-            collision_sprites: pygame.sprite.Group,
-            apply_tool: Callable[
-                [FarmingTool, tuple[float, float], Character], None
-            ],
-            soil_layer: SoilLayer,
-            emote_manager: NPCEmoteManager
+        self,
+        pos: Coordinate,
+        assets: EntityAsset,
+        groups: tuple[pygame.sprite.Group, ...],
+        collision_sprites: pygame.sprite.Group,
+        apply_tool: Callable[[FarmingTool, tuple[float, float], Character], None],
+        soil_layer: SoilLayer,
+        emote_manager: NPCEmoteManager,
     ):
         self.soil_layer = soil_layer
 
@@ -39,10 +37,8 @@ class NPC(NPCBase):
             assets=assets,
             groups=groups,
             collision_sprites=collision_sprites,
-
             apply_tool=apply_tool,
-
-            z=Layer.MAIN
+            z=Layer.MAIN,
         )
 
         # TODO: Ensure that the NPC always has all needed seeds it needs
@@ -65,4 +61,6 @@ class NPC(NPCBase):
     def update(self, dt):
         super().update(dt)
 
-        self.emote_manager.update_obj(self, (self.rect.centerx - 47, self.rect.centery - 128))
+        self.emote_manager.update_obj(
+            self, (self.rect.centerx - 47, self.rect.centery - 128)
+        )

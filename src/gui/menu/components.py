@@ -83,7 +83,7 @@ class Component:
 
     # draw
     def draw(self, surface):
-        pygame.draw.rect(surface, 'red', self.rect, 0, 4)
+        pygame.draw.rect(surface, "red", self.rect, 0, 4)
 
     # update
     def update_rect(self, x):
@@ -107,7 +107,7 @@ class AbstractButton(Component, ABC):
         self._content = content
         self.content = None
         self._content_rect = None
-        self.color = 'White'
+        self.color = "White"
         self.hover_active = False
 
         self.display_surface = None
@@ -118,7 +118,7 @@ class AbstractButton(Component, ABC):
     def draw_hover(self):
         if self.mouse_hover():
             self.hover_active = True
-            pygame.draw.rect(self.display_surface, 'Black', self.rect, 4, 4)
+            pygame.draw.rect(self.display_surface, "Black", self.rect, 4, 4)
         else:
             self.hover_active = False
 
@@ -139,17 +139,17 @@ class Button(AbstractButton):
         # Force the user to pass a string as content or else raise an error
         if not isinstance(content, str):
             if isinstance(content, pygame.Surface):
-                raise TypeError("Normal buttons can only contain text, use ImageButton"
-                                " if you need to display an image instead")
-            raise TypeError(f"expected a value of type 'str', got '{content.__class__.__name__}'")
+                raise TypeError(
+                    "Normal buttons can only contain text, use ImageButton"
+                    " if you need to display an image instead"
+                )
+            raise TypeError(
+                f"expected a value of type 'str', got '{content.__class__.__name__}'"
+            )
 
         # Setup
         super().__init__(content, rect, font)
-        self.content = font.render(
-            self._content,
-            False,
-            "black"
-        )
+        self.content = font.render(self._content, False, "black")
         self._content_rect = self.content.get_frect(center=self.rect.center)
 
     @property
@@ -165,7 +165,9 @@ class ImageButton(AbstractButton):
         if not isinstance(content, pygame.Surface):
             if isinstance(content, str):
                 raise TypeError("Image buttons cannot contain text, use Button instead")
-            raise TypeError(f"expected a pygame.Surface instance, got '{content.__class__.__name__}'")
+            raise TypeError(
+                f"expected a pygame.Surface instance, got '{content.__class__.__name__}'"
+            )
 
         super().__init__(content, rect)
         self.content = self._content
@@ -173,7 +175,14 @@ class ImageButton(AbstractButton):
 
 
 class KeySetup(Component):
-    def __init__(self, name: str, control: Control, unicode: str, pos: tuple[int, int], image: pygame.Surface):
+    def __init__(
+        self,
+        name: str,
+        control: Control,
+        unicode: str,
+        pos: tuple[int, int],
+        image: pygame.Surface,
+    ):
         # params
         self.name = name
         self.value = control.control_value
@@ -181,9 +190,9 @@ class KeySetup(Component):
         self.unicode = unicode
 
         # design
-        self.font = pygame.font.Font(resource_path('font/LycheeSoda.ttf'), 30)
+        self.font = pygame.font.Font(resource_path("font/LycheeSoda.ttf"), 30)
         self.hover_active = False
-        self.bg_color = 'grey'
+        self.bg_color = "grey"
 
         # rect
         self.pos = pos
@@ -204,15 +213,15 @@ class KeySetup(Component):
 
     # draw
     def draw_key_name(self):
-        text_surf = self.font.render(self.title, False, 'Black')
+        text_surf = self.font.render(self.title, False, "Black")
         midleft = (self.rect.left + 10, self.rect.centery)
         text_rect = text_surf.get_frect(midleft=midleft)
         rect = text_rect.inflate(10, 10)
-        pygame.draw.rect(self.surface, 'White', rect, 0, 4)
+        pygame.draw.rect(self.surface, "White", rect, 0, 4)
         self.surface.blit(text_surf, text_rect)
 
     def draw_symbol(self):
-        text_surf = self.font.render(self.unicode, False, 'White')
+        text_surf = self.font.render(self.unicode, False, "White")
         text_rect = text_surf.get_frect(center=self.symbol_image_rect.center)
         self.surface.blit(self.symbol_image, self.symbol_image_rect)
         self.surface.blit(text_surf, text_rect)
@@ -238,7 +247,7 @@ class Slider:
 
         # sounds
         self.sounds = sounds
-        self.font = pygame.font.Font(resource_path('font/LycheeSoda.ttf'), 30)
+        self.font = pygame.font.Font(resource_path("font/LycheeSoda.ttf"), 30)
 
         # knob
         self.knob_radius = 10
@@ -272,21 +281,21 @@ class Slider:
         return False
 
     def update_volume(self):
-        self.sounds['music'].set_volume(min((self.value / 1000), 0.4))
+        self.sounds["music"].set_volume(min((self.value / 1000), 0.4))
         for key in self.sounds:
-            if key != 'music':
+            if key != "music":
                 self.sounds[key].set_volume((self.value / 100))
 
     # draw
     def draw_value(self):
-        text_surf = self.font.render(str(int(self.value)), False, 'Black')
+        text_surf = self.font.render(str(int(self.value)), False, "Black")
         midtop = (self.rect.centerx, self.rect.bottom + 10)
         text_rect = text_surf.get_frect(midtop=midtop)
         self.surface.blit(text_surf, text_rect)
 
     def draw_knob(self):
-        value = (self.value - self.min_value)
-        diff = (self.max_value - self.min_value)
+        value = self.value - self.min_value
+        diff = self.max_value - self.min_value
         knob_x = self.rect.left + (self.rect.width - 10) * value / diff
         color = (232, 207, 166)
         center = (int(knob_x), self.rect.centery)

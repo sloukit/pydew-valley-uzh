@@ -15,8 +15,12 @@ _SCREEN_CENTER = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
 
 class GeneralMenu(AbstractMenu):
     def __init__(
-            self, title: str, options: list[str], switch: Callable[[GameState], None],
-            size: tuple[int, int], center: vector = None
+        self,
+        title: str,
+        options: list[str],
+        switch: Callable[[GameState], None],
+        size: tuple[int, int],
+        center: vector = None,
     ):
         if center is None:
             center = vector()
@@ -70,9 +74,8 @@ class GeneralMenu(AbstractMenu):
         return False
 
     def button_action(self, text: str):
-        if text == 'Play':
+        if text == "Play":
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
             self.switch_screen(GameState.PLAY)
-        if text == 'Quit':
+        if text == "Quit":
             self.quit_game()
-

@@ -10,11 +10,7 @@ import pytmx
 
 from src import settings
 from src.enums import Direction
-from src.settings import (
-    SCALE_FACTOR,
-    TILE_SIZE,
-    Coordinate
-)
+from src.settings import SCALE_FACTOR, TILE_SIZE, Coordinate
 
 
 def resource_path(relative_path: str):
@@ -34,20 +30,24 @@ def import_font(size: int, font_path: str) -> pygame.font.Font:
 
 def import_image(img_path: str, alpha: bool = True) -> pygame.Surface:
     full_path = resource_path(img_path)
-    surf = pygame.image.load(full_path).convert_alpha(
-    ) if alpha else pygame.image.load(full_path).convert()
+    surf = (
+        pygame.image.load(full_path).convert_alpha()
+        if alpha
+        else pygame.image.load(full_path).convert()
+    )
     return pygame.transform.scale_by(surf, SCALE_FACTOR)
 
 
 def import_folder(fold_path: str) -> list[pygame.Surface]:
     frames = []
     for folder_path, _, file_names in os.walk(resource_path(fold_path)):
-        for file_name in sorted(
-            file_names, key=lambda name: int(
-                name.split('.')[0])):
+        for file_name in sorted(file_names, key=lambda name: int(name.split(".")[0])):
             full_path = os.path.join(folder_path, file_name)
-            frames.append(pygame.transform.scale_by(
-                pygame.image.load(full_path).convert_alpha(), SCALE_FACTOR))
+            frames.append(
+                pygame.transform.scale_by(
+                    pygame.image.load(full_path).convert_alpha(), SCALE_FACTOR
+                )
+            )
     return frames
 
 
@@ -56,8 +56,9 @@ def import_folder_dict(fold_path: str) -> dict[str, pygame.Surface]:
     for folder_path, _, file_names in os.walk(resource_path(fold_path)):
         for file_name in file_names:
             full_path = os.path.join(folder_path, file_name)
-            frames[file_name.split('.')[0]] = pygame.transform.scale_by(
-                pygame.image.load(full_path).convert_alpha(), SCALE_FACTOR)
+            frames[file_name.split(".")[0]] = pygame.transform.scale_by(
+                pygame.image.load(full_path).convert_alpha(), SCALE_FACTOR
+            )
     return frames
 
 
@@ -66,13 +67,13 @@ def tmx_importer(tmx_path: str) -> settings.MapDict:
     for folder_path, _, file_names in os.walk(resource_path(tmx_path)):
         for file_name in file_names:
             full_path = os.path.join(folder_path, file_name)
-            files[file_name.split('.')[0]] = (
-                pytmx.util_pygame.load_pygame(full_path)
-            )
+            files[file_name.split(".")[0]] = pytmx.util_pygame.load_pygame(full_path)
     return files
 
 
-def animation_importer(*ani_path: str, frame_size: int = None, resize: int = None) -> settings.AniFrames:
+def animation_importer(
+    *ani_path: str, frame_size: int = None, resize: int = None
+) -> settings.AniFrames:
     if frame_size is None:
         frame_size = TILE_SIZE
 
@@ -81,31 +82,28 @@ def animation_importer(*ani_path: str, frame_size: int = None, resize: int = Non
         for file_name in file_names:
             full_path = os.path.join(folder_path, file_name)
             surf = pygame.image.load(full_path).convert_alpha()
-            animation_dict[str(file_name.split('.')[0])] = []
+            animation_dict[str(file_name.split(".")[0])] = []
             for col in range(surf.get_width() // frame_size):
-                subsurf_rect = pygame.Rect(col*frame_size, 0, frame_size, frame_size)
+                subsurf_rect = pygame.Rect(col * frame_size, 0, frame_size, frame_size)
                 cutout_surf = surf.subsurface(subsurf_rect)
 
                 if resize:
-                    animation_dict[str(file_name.split('.')[0])].append(
+                    animation_dict[str(file_name.split(".")[0])].append(
                         pygame.transform.scale(cutout_surf, (resize, resize))
                     )
                 else:
-                    animation_dict[str(file_name.split('.')[0])].append(
+                    animation_dict[str(file_name.split(".")[0])].append(
                         pygame.transform.scale_by(cutout_surf, SCALE_FACTOR)
                     )
 
     return animation_dict
 
 
-def sound_importer(
-        *snd_path: str,
-        default_volume: float = 0.5
-        ) -> settings.SoundDict:
+def sound_importer(*snd_path: str, default_volume: float = 0.5) -> settings.SoundDict:
     sounds_dict = {}
 
     for sound_name in os.listdir(resource_path(os.path.join(*snd_path))):
-        key = sound_name.split('.')[0]
+        key = sound_name.split(".")[0]
         value = pygame.mixer.Sound(os.path.join(*snd_path, sound_name))
         value.set_volume(default_volume)
         sounds_dict[key] = value
@@ -113,15 +111,15 @@ def sound_importer(
 
 
 def save_data(data, file_name):
-    folder_path = resource_path('data/settings')
+    folder_path = resource_path("data/settings")
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
-    with open(resource_path('data/settings/' + file_name), 'w') as file:
+    with open(resource_path("data/settings/" + file_name), "w") as file:
         json.dump(data, file, indent=4)
 
 
 def load_data(file_name):
-    with open(resource_path('data/settings/' + file_name), 'r') as file:
+    with open(resource_path("data/settings/" + file_name), "r") as file:
         return json.load(file)
 
 
@@ -155,7 +153,7 @@ def screen_to_tile(pos):
 
 
 def get_flight_matrix(
-        pos: tuple[int, int], radius: int, angle: float = math.pi / 2
+    pos: tuple[int, int], radius: int, angle: float = math.pi / 2
 ) -> list[list[int]]:
     """
     Returns a matrix with the width and height of radius * 2 + 1, with a value
@@ -190,18 +188,12 @@ def get_flight_matrix(
 
     # The exact angle of the position that should be fled from, measured from
     # the centre of the matrix
-    dangerous_angle = math.atan2(
-        (p1[0] - p2[0]),
-        (p1[1] - p2[1])
-    )
+    dangerous_angle = math.atan2((p1[0] - p2[0]), (p1[1] - p2[1]))
 
     for y in range(len(matrix)):
         for x in range(len(matrix[0])):
             # Angle from the centre of the matrix to the currently checked pos
-            current_angle = math.atan2(
-                (p1[0] - x),
-                (p1[1] - y)
-            )
+            current_angle = math.atan2((p1[0] - x), (p1[1] - y))
             # Angular distance of the dangerous angle and the current angle
             distance = dangerous_angle - current_angle
 
@@ -221,29 +213,53 @@ def get_flight_matrix(
 
 
 def draw_aa_line(
-        surface: pygame.Surface,
-        center_pos: tuple[float, float],
-        thickness: int,
-        length: int,
-        deg: float,
-        color: tuple[int, int, int],
+    surface: pygame.Surface,
+    center_pos: tuple[float, float],
+    thickness: int,
+    length: int,
+    deg: float,
+    color: tuple[int, int, int],
 ):
-        ul = (center_pos[0] + (length / 2.) * math.cos(deg) - (thickness / 2.) * math.sin(deg),
-              center_pos[1] + (thickness / 2.) * math.cos(deg) + (length / 2.) * math.sin(deg))
-        ur = (center_pos[0] - (length / 2.) * math.cos(deg) - (thickness / 2.) * math.sin(deg),
-              center_pos[1] + (thickness / 2.) * math.cos(deg) - (length / 2.) * math.sin(deg))
-        bl = (center_pos[0] + (length / 2.) * math.cos(deg) + (thickness / 2.) * math.sin(deg),
-              center_pos[1] - (thickness / 2.) * math.cos(deg) + (length / 2.) * math.sin(deg))
-        br = (center_pos[0] - (length / 2.) * math.cos(deg) + (thickness / 2.) * math.sin(deg),
-              center_pos[1] - (thickness / 2.) * math.cos(deg) - (length / 2.) * math.sin(deg))
+    ul = (
+        center_pos[0]
+        + (length / 2.0) * math.cos(deg)
+        - (thickness / 2.0) * math.sin(deg),
+        center_pos[1]
+        + (thickness / 2.0) * math.cos(deg)
+        + (length / 2.0) * math.sin(deg),
+    )
+    ur = (
+        center_pos[0]
+        - (length / 2.0) * math.cos(deg)
+        - (thickness / 2.0) * math.sin(deg),
+        center_pos[1]
+        + (thickness / 2.0) * math.cos(deg)
+        - (length / 2.0) * math.sin(deg),
+    )
+    bl = (
+        center_pos[0]
+        + (length / 2.0) * math.cos(deg)
+        + (thickness / 2.0) * math.sin(deg),
+        center_pos[1]
+        - (thickness / 2.0) * math.cos(deg)
+        + (length / 2.0) * math.sin(deg),
+    )
+    br = (
+        center_pos[0]
+        - (length / 2.0) * math.cos(deg)
+        + (thickness / 2.0) * math.sin(deg),
+        center_pos[1]
+        - (thickness / 2.0) * math.cos(deg)
+        - (length / 2.0) * math.sin(deg),
+    )
 
-        pygame.gfxdraw.aapolygon(surface, (ul, ur, br, bl), color)
-        pygame.gfxdraw.filled_polygon(surface, (ul, ur, br, bl), color)
+    pygame.gfxdraw.aapolygon(surface, (ul, ur, br, bl), color)
+    pygame.gfxdraw.filled_polygon(surface, (ul, ur, br, bl), color)
 
 
 def get_entity_facing_direction(
-        direction: tuple[float, float] | pygame.math.Vector2,
-        default_value: Direction = Direction.RIGHT
+    direction: tuple[float, float] | pygame.math.Vector2,
+    default_value: Direction = Direction.RIGHT,
 ) -> Direction:
     """
     :param direction: Direction to use.
@@ -259,20 +275,20 @@ def get_entity_facing_direction(
     return default_value
 
 
-def rand_circular_pos(center: Coordinate,
-                      max_radius: float,
-                      min_radius: float) -> Coordinate:
+def rand_circular_pos(
+    center: Coordinate, max_radius: float, min_radius: float
+) -> Coordinate:
     """returns a random position from a circular range"""
     angle = random.random() * 2 * math.pi
     radius = min_radius + ((max_radius - min_radius) * random.random())
     rand_x = center[0] + radius * math.cos(angle)
-    rand_y = center[1] +  radius * math.sin(angle)
+    rand_y = center[1] + radius * math.sin(angle)
     return (rand_x, rand_y)
 
 
 def oscilating_lerp(a: float | int, b: float | int, t: float) -> float:
     """returns a value smoothly iterpolated from a to b and back to a"""
-    angle =  0 + math.pi * t
+    angle = 0 + math.pi * t
     # the sine of this range of angles (0 to pi) gives a value from 0 to 1 to 0
     t = math.sin(angle)
     return pygame.math.lerp(a, b, t)

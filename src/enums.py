@@ -10,18 +10,12 @@ class PlayerState(IntEnum):
 
 class ItemToUse(IntEnum):
     """Both available options for Player.use_tool. If any more have to be added, put them as members of this enum."""
+
     REGULAR_TOOL = 0
     SEED = 1
 
 
-_FT_SERIALISED_STRINGS = (
-    "none",
-    "axe",
-    "hoe",
-    "water",
-    "corn_seed",
-    "tomato_seed"
-)
+_FT_SERIALISED_STRINGS = ("none", "axe", "hoe", "water", "corn_seed", "tomato_seed")
 
 
 class GameState(IntEnum):
@@ -59,11 +53,14 @@ class _SerialisableEnum(IntEnum):
         try:
             return cls(cls._SERIALISABLE_STRINGS.index(val))  # noqa
         except IndexError as exc:
-            raise LookupError(f"serialised string '{val}' does not match any member in enum '{cls.__name__}'") from exc
+            raise LookupError(
+                f"serialised string '{val}' does not match any member in enum '{cls.__name__}'"
+            ) from exc
 
 
 class InventoryResource(_SerialisableEnum):
     """All stored items in the inventory."""
+
     _SERIALISABLE_STRINGS = nonmember(
         (
             "wood",
@@ -74,7 +71,7 @@ class InventoryResource(_SerialisableEnum):
             "corn",
             "tomato",
             "corn_seed",
-            "tomato_seed"
+            "tomato_seed",
         )
     )
 
@@ -116,15 +113,9 @@ class InventoryResource(_SerialisableEnum):
 
 class FarmingTool(_SerialisableEnum):
     """Notably used to distinguish the different farming tools (including seeds) in-code."""
+
     _SERIALISABLE_STRINGS = nonmember(
-        (
-            "none",
-            "axe",
-            "hoe",
-            "water",
-            "corn_seed",
-            "tomato_seed"
-        )
+        ("none", "axe", "hoe", "water", "corn_seed", "tomato_seed")
     )
 
     NONE = 0  # Possible placeholder value if needed somewhere
@@ -135,21 +126,11 @@ class FarmingTool(_SerialisableEnum):
     TOMATO_SEED = 5
 
     _AS_IR = nonmember(
-        {
-            CORN_SEED: InventoryResource.CORN,
-            TOMATO_SEED: InventoryResource.TOMATO
-        }
+        {CORN_SEED: InventoryResource.CORN, TOMATO_SEED: InventoryResource.TOMATO}
     )
 
     # Using frozenset to ensure this cannot change
-    _swinging_tools = nonmember(
-        frozenset(
-            {
-                HOE,
-                AXE
-            }
-        )
-    )
+    _swinging_tools = nonmember(frozenset({HOE, AXE}))
 
     def is_swinging_tool(self):
         return self in self._swinging_tools
@@ -183,26 +164,11 @@ class FarmingTool(_SerialisableEnum):
 
 class SeedType(IntEnum):
 
-    _AS_FTS = nonmember(
-        (
-            FarmingTool.CORN_SEED,
-            FarmingTool.TOMATO_SEED
-        )
-    )
+    _AS_FTS = nonmember((FarmingTool.CORN_SEED, FarmingTool.TOMATO_SEED))
 
-    _AS_IRS = nonmember(
-        (
-            InventoryResource.CORN_SEED,
-            InventoryResource.TOMATO_SEED
-        )
-    )
+    _AS_IRS = nonmember((InventoryResource.CORN_SEED, InventoryResource.TOMATO_SEED))
 
-    _AS_NS_IRS = nonmember(
-        (
-            InventoryResource.CORN,
-            InventoryResource.TOMATO
-        )
-    )
+    _AS_NS_IRS = nonmember((InventoryResource.CORN, InventoryResource.TOMATO))
 
     CORN = 0
     TOMATO = 1
@@ -296,6 +262,7 @@ class Map(StrEnum):
 
 class StudyGroup(IntEnum):
     """The group in which a certain character belongs to."""
+
     NO_GROUP = 0  # Set at the beginning of the game.
     INGROUP = auto()
     OUTGROUP = auto()

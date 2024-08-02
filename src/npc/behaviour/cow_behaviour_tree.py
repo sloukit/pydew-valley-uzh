@@ -22,6 +22,7 @@ class CowBehaviourTree:
     Attributes:
         tree:   Default behaviour tree
     """
+
     tree = None
 
     @classmethod
@@ -29,9 +30,7 @@ class CowBehaviourTree:
         """
         Initialises the behaviour tree.
         """
-        cls.tree = Selector([
-            Action(cls.wander)
-        ])
+        cls.tree = Selector([Action(cls.wander)])
 
     @staticmethod
     def wander(context: CowBehaviourTreeContext) -> bool:
@@ -41,29 +40,30 @@ class CowBehaviourTree:
         """
 
         # current position on the tilemap
-        tile_coord = pygame.Vector2(
-            context.cow.rect.centerx,
-            context.cow.rect.centery
-        ) / SCALED_TILE_SIZE
+        tile_coord = (
+            pygame.Vector2(context.cow.rect.centerx, context.cow.rect.centery)
+            / SCALED_TILE_SIZE
+        )
 
         # To limit the required computing power, Cows currently only try to
         # navigate to 11 random points in their immediate vicinity
         # (5 tile radius)
-        avail_x_coords = list(range(
-            max(0, int(tile_coord.x) - 5),
-            min(int(tile_coord.x) + 5, context.cow.pf_grid.width - 1) + 1
-        ))
+        avail_x_coords = list(
+            range(
+                max(0, int(tile_coord.x) - 5),
+                min(int(tile_coord.x) + 5, context.cow.pf_grid.width - 1) + 1,
+            )
+        )
 
-        avail_y_coords = list(range(
-            max(0, int(tile_coord.y) - 5),
-            min(int(tile_coord.y) + 5, context.cow.pf_grid.height - 1) + 1
-        ))
+        avail_y_coords = list(
+            range(
+                max(0, int(tile_coord.y) - 5),
+                min(int(tile_coord.y) + 5, context.cow.pf_grid.height - 1) + 1,
+            )
+        )
 
         for i in range(min(len(avail_x_coords), len(avail_y_coords))):
-            pos = (
-                random.choice(avail_x_coords),
-                random.choice(avail_y_coords)
-            )
+            pos = (random.choice(avail_x_coords), random.choice(avail_y_coords))
             avail_x_coords.remove(pos[0])
             avail_y_coords.remove(pos[1])
 

@@ -51,9 +51,7 @@ class _Hitbox:
         self._direction_exceptions = {}
         self._exceptions = {}
 
-    def set_direction_exception(
-            self, direction: Direction, rect: pygame.Rect
-    ) -> None:
+    def set_direction_exception(self, direction: Direction, rect: pygame.Rect) -> None:
         """
         Tell the class, in which direction a hitbox should be used that differs
         from the default one.
@@ -63,9 +61,7 @@ class _Hitbox:
         """
         self._direction_exceptions[direction] = rect
 
-    def set_state_exception(
-            self, state: EntityState, rect: pygame.Rect
-    ) -> None:
+    def set_state_exception(self, state: EntityState, rect: pygame.Rect) -> None:
         """
         Tell the class, in which state a hitbox should be used that differs
         from the default one.
@@ -73,7 +69,7 @@ class _Hitbox:
         self._state_exceptions[state] = rect
 
     def set_exception(
-            self, state: EntityState, direction: Direction, rect: pygame.Rect
+        self, state: EntityState, direction: Direction, rect: pygame.Rect
     ) -> None:
         """
         Tell the class, in which state a hitbox should be used that differs
@@ -84,9 +80,7 @@ class _Hitbox:
         """
         self._exceptions[(state, direction)] = rect
 
-    def get_hitbox(
-            self, state: EntityState, direction: Direction
-    ) -> pygame.Rect:
+    def get_hitbox(self, state: EntityState, direction: Direction) -> pygame.Rect:
         state_exception = self._state_exceptions.get(state)
         direction_exception = self._direction_exceptions.get(direction)
         exception = self._exceptions.get((state, direction))
@@ -99,22 +93,27 @@ class _Hitbox:
         return exception
 
     def scale_hitboxes(self, factor: float) -> None:
-        for item in [self._state_exceptions.values(),
-                     self._direction_exceptions.values(),
-                     self._exceptions.values(),
-                     [self.default]]:
+        for item in [
+            self._state_exceptions.values(),
+            self._direction_exceptions.values(),
+            self._exceptions.values(),
+            [self.default],
+        ]:
             for hitbox in item:
                 hitbox.update(
                     hitbox.left * factor,
                     hitbox.top * factor,
                     hitbox.width * factor,
-                    hitbox.height * factor
+                    hitbox.height * factor,
                 )
 
 
 def state_importer(
-        path: str, size: int, state: EntityState, directions: list[Direction],
-        hitbox: _Hitbox
+    path: str,
+    size: int,
+    state: EntityState,
+    directions: list[Direction],
+    hitbox: _Hitbox,
 ) -> dict[Direction, _AniFrames]:
 
     directions_dict = {}
@@ -125,19 +124,12 @@ def state_importer(
         frames = []
 
         for col in range(surf.get_width() // size):
-            subsurface = surf.subsurface(
-                col * size,
-                row * size,
-                size,
-                size
-            )
+            subsurface = surf.subsurface(col * size, row * size, size, size)
             subsurface = pygame.transform.scale_by(subsurface, SCALE_FACTOR)
             frames.append(subsurface)
 
         current_hitbox = hitbox.get_hitbox(state, direction)
-        directions_dict[direction] = _AniFrames(
-            frames, current_hitbox
-        )
+        directions_dict[direction] = _AniFrames(frames, current_hitbox)
 
     if Direction.LEFT in directions and Direction.RIGHT not in directions:
         frames = []
@@ -159,8 +151,7 @@ def state_importer(
 
 
 def entity_importer(
-        path: str, size: int, directions: list[Direction],
-        hitbox: _Hitbox
+    path: str, size: int, directions: list[Direction], hitbox: _Hitbox
 ) -> dict[EntityState, dict[Direction, _AniFrames]]:
     hitbox.scale_hitboxes(SCALE_FACTOR)
     states = {}
@@ -186,40 +177,32 @@ ENTITY_ASSETS.RABBIT: EntityAsset | None = None  # type: ignore
 
 def setup_entity_assets():
     chicken_hitbox = _Hitbox(pygame.Rect(1, 11, 11, 3))
-    chicken_hitbox.set_direction_exception(
-        Direction.LEFT, pygame.Rect(4, 11, 11, 3)
-    )
+    chicken_hitbox.set_direction_exception(Direction.LEFT, pygame.Rect(4, 11, 11, 3))
 
     chicken_asset = entity_importer(
         path=resource_path("images/entities/chicken"),
         size=16,
         directions=[Direction.RIGHT],
-        hitbox=chicken_hitbox
+        hitbox=chicken_hitbox,
     )
 
     ENTITY_ASSETS.CHICKEN = chicken_asset
 
     cow_hitbox = _Hitbox(pygame.Rect(6, 25, 16, 4))
-    cow_hitbox.set_direction_exception(
-        Direction.LEFT, pygame.Rect(10, 25, 16, 4)
-    )
+    cow_hitbox.set_direction_exception(Direction.LEFT, pygame.Rect(10, 25, 16, 4))
 
     cow_asset = entity_importer(
         path=resource_path("images/entities/cow"),
         size=32,
         directions=[Direction.RIGHT],
-        hitbox=cow_hitbox
+        hitbox=cow_hitbox,
     )
 
     ENTITY_ASSETS.COW = cow_asset
 
     rabbit_hitbox = _Hitbox(pygame.Rect(18, 26, 12, 6))
-    rabbit_hitbox.set_direction_exception(
-        Direction.LEFT, pygame.Rect(20, 26, 8, 6)
-    )
-    rabbit_hitbox.set_direction_exception(
-        Direction.RIGHT, pygame.Rect(20, 26, 8, 6)
-    )
+    rabbit_hitbox.set_direction_exception(Direction.LEFT, pygame.Rect(20, 26, 8, 6))
+    rabbit_hitbox.set_direction_exception(Direction.RIGHT, pygame.Rect(20, 26, 8, 6))
     rabbit_hitbox.set_exception(
         EntityState.AXE, Direction.LEFT, pygame.Rect(24, 26, 8, 6)
     )
@@ -231,7 +214,7 @@ def setup_entity_assets():
         path=resource_path("images/characters/rabbit"),
         size=CHAR_TILE_SIZE,
         directions=[Direction.DOWN, Direction.UP, Direction.LEFT],
-        hitbox=rabbit_hitbox
+        hitbox=rabbit_hitbox,
     )
 
     ENTITY_ASSETS.RABBIT = rabbit_asset

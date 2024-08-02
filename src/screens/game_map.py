@@ -4,13 +4,7 @@ from collections.abc import Callable
 from typing import Any
 
 import pygame
-from pytmx import (
-    TiledMap,
-    TiledTileLayer,
-    TiledObjectGroup,
-    TiledObject,
-    TiledElement
-)
+from pytmx import TiledMap, TiledTileLayer, TiledObjectGroup, TiledObject, TiledElement
 
 from src.enums import Layer, FarmingTool, InventoryResource
 from src.groups import AllSprites, PersistentSpriteGroup
@@ -23,8 +17,12 @@ from src.npc.npc import NPC
 from src.npc.setup import AIData
 from src.overlay.soil import SoilLayer
 from src.settings import (
-    SETUP_PATHFINDING, ENABLE_NPCS, TEST_ANIMALS,
-    SCALED_TILE_SIZE, SCALE_FACTOR, TILE_SIZE
+    SETUP_PATHFINDING,
+    ENABLE_NPCS,
+    TEST_ANIMALS,
+    SCALED_TILE_SIZE,
+    SCALE_FACTOR,
+    TILE_SIZE,
 )
 from src.sprites.base import Sprite, AnimatedSprite, CollideableMapObject
 from src.sprites.character import Character
@@ -35,8 +33,7 @@ from src.sprites.setup import ENTITY_ASSETS
 
 
 def _setup_tile_layer(
-        layer: TiledTileLayer,
-        func: Callable[[tuple[int, int], pygame.Surface], None]
+    layer: TiledTileLayer, func: Callable[[tuple[int, int], pygame.Surface], None]
 ):
     """
     Calls func for each tile found in layer
@@ -51,8 +48,7 @@ def _setup_tile_layer(
 
 
 def _setup_object_layer(
-        layer: TiledObjectGroup,
-        func: Callable[[tuple[float, float], TiledObject], Any]
+    layer: TiledObjectGroup, func: Callable[[tuple[float, float], TiledObject], Any]
 ):
     """
     Calls func for each tile found in layer
@@ -70,10 +66,10 @@ def _setup_object_layer(
 
 
 def _get_element_property(
-        element: TiledElement,
-        property_name: str,
-        callback: Callable[[str], Any],
-        default: Any
+    element: TiledElement,
+    property_name: str,
+    callback: Callable[[str], Any],
+    default: Any,
 ) -> Any:
     """
     :param element: Element to retrieve the property value from
@@ -125,6 +121,7 @@ class GameMap:
         npcs: list of all NPCs on the map
         animals: list of all Animals on the map
     """
+
     _tilemap: TiledMap
     _tilemap_size: tuple[int, int]
     _tilemap_scaled_size: tuple[int, int]
@@ -144,33 +141,25 @@ class GameMap:
     animals: list[Animal]
 
     def __init__(
-            self,
-            tilemap: TiledMap,
-
-            # Sprite groups
-            all_sprites: AllSprites,
-            collision_sprites: PersistentSpriteGroup,
-            interaction_sprites: PersistentSpriteGroup,
-            tree_sprites: PersistentSpriteGroup,
-            player_exit_warps: pygame.sprite.Group,
-
-            # Player instance
-            player: Player,
-
-            # Emote manager instances
-            player_emote_manager: PlayerEmoteManager,
-            npc_emote_manager: NPCEmoteManager,
-
-            drops_manager: DropsManager,
-
-            # SoilLayer and Tool applying function for farming NPCs
-            soil_layer: SoilLayer,
-            apply_tool: Callable[
-                [FarmingTool, tuple[float, float], Character], None
-            ],
-
-            # assets
-            frames: dict,
+        self,
+        tilemap: TiledMap,
+        # Sprite groups
+        all_sprites: AllSprites,
+        collision_sprites: PersistentSpriteGroup,
+        interaction_sprites: PersistentSpriteGroup,
+        tree_sprites: PersistentSpriteGroup,
+        player_exit_warps: pygame.sprite.Group,
+        # Player instance
+        player: Player,
+        # Emote manager instances
+        player_emote_manager: PlayerEmoteManager,
+        npc_emote_manager: NPCEmoteManager,
+        drops_manager: DropsManager,
+        # SoilLayer and Tool applying function for farming NPCs
+        soil_layer: SoilLayer,
+        apply_tool: Callable[[FarmingTool, tuple[float, float], Character], None],
+        # assets
+        frames: dict,
     ):
         self._tilemap = tilemap
 
@@ -193,19 +182,17 @@ class GameMap:
 
         self.frames = frames
 
-        self._tilemap_size = (
-            self._tilemap.width,
-            self._tilemap.height
-        )
+        self._tilemap_size = (self._tilemap.width, self._tilemap.height)
         self._tilemap_scaled_size = (
             self._tilemap_size[0] * SCALED_TILE_SIZE,
-            self._tilemap_size[1] * SCALED_TILE_SIZE
+            self._tilemap_size[1] * SCALED_TILE_SIZE,
         )
 
         # pathfinding
         self._pf_matrix = [
             [1 for _ in range(self._tilemap_size[0])]
-            for _ in range(self._tilemap_size[1]) if SETUP_PATHFINDING
+            for _ in range(self._tilemap_size[1])
+            if SETUP_PATHFINDING
         ]
 
         self._map_objects = MapObjects(self._tilemap)
@@ -225,7 +212,7 @@ class GameMap:
                 self._setup_emote_interactions()
 
     def _add_pf_matrix_collision(
-            self, pos: tuple[float, float], size: tuple[float, float]
+        self, pos: tuple[float, float], size: tuple[float, float]
     ):
         """
         Add a collision rect to the pathfinding matrix at the given position.
@@ -252,11 +239,11 @@ class GameMap:
 
     # region tile layer setup methods
     def _setup_base_tile(
-            self,
-            pos: tuple[int, int],
-            surf: pygame.Surface,
-            layer: Layer,
-            groups: tuple[pygame.sprite.Group, ...] | pygame.sprite.Group
+        self,
+        pos: tuple[int, int],
+        surf: pygame.Surface,
+        layer: Layer,
+        groups: tuple[pygame.sprite.Group, ...] | pygame.sprite.Group,
     ):
         """
         Create a new Sprite and add it to the given groups
@@ -270,11 +257,11 @@ class GameMap:
         Sprite(pos, image, z=layer).add(groups)
 
     def _setup_collideable_tile(
-            self,
-            pos: tuple[int, int],
-            surf: pygame.Surface,
-            layer: Layer,
-            groups: tuple[pygame.sprite.Group, ...] | pygame.sprite.Group
+        self,
+        pos: tuple[int, int],
+        surf: pygame.Surface,
+        layer: Layer,
+        groups: tuple[pygame.sprite.Group, ...] | pygame.sprite.Group,
     ):
         """
         Set up a base tile, and add it as collideable Tile to the pathfinding
@@ -285,14 +272,16 @@ class GameMap:
         if SETUP_PATHFINDING:
             self._add_pf_matrix_collision(
                 pos,
-                (int(surf.width / SCALED_TILE_SIZE),
-                 int(surf.height / SCALED_TILE_SIZE))
+                (
+                    int(surf.width / SCALED_TILE_SIZE),
+                    int(surf.height / SCALED_TILE_SIZE),
+                ),
             )
 
     def _setup_water_tile(
-            self,
-            pos: tuple[int, int],
-            groups: tuple[pygame.sprite.Group, ...] | pygame.sprite.Group
+        self,
+        pos: tuple[int, int],
+        groups: tuple[pygame.sprite.Group, ...] | pygame.sprite.Group,
     ):
         """
         Create a new AnimatedSprite and add it to the given groups.
@@ -300,18 +289,19 @@ class GameMap:
         :param pos: Position of Sprite (x, y)
         :param groups: Groups the Sprite should be added to
         """
-        image = self.frames['level']['animations']['water']
+        image = self.frames["level"]["animations"]["water"]
         AnimatedSprite(pos, image, z=Layer.WATER).add(groups)
+
     # endregion
 
     # region object layer setup methods
     def _setup_base_object(
-            self,
-            pos: tuple[int, int],
-            obj: TiledObject,
-            layer: Layer,
-            groups: tuple[pygame.sprite.Group, ...] | pygame.sprite.Group,
-            name: str = None
+        self,
+        pos: tuple[int, int],
+        obj: TiledObject,
+        layer: Layer,
+        groups: tuple[pygame.sprite.Group, ...] | pygame.sprite.Group,
+        name: str = None,
     ):
         """
         Create a new rectangular hitbox and add it to the given groups.
@@ -328,12 +318,12 @@ class GameMap:
         Sprite(pos, image, z=layer, name=name).add(groups)
 
     def _setup_collision_rect(
-            self,
-            pos: tuple[int, int],
-            obj: TiledObject,
-            layer: Layer,
-            groups: tuple[pygame.sprite.Group, ...] | pygame.sprite.Group,
-            name: str = None
+        self,
+        pos: tuple[int, int],
+        obj: TiledObject,
+        layer: Layer,
+        groups: tuple[pygame.sprite.Group, ...] | pygame.sprite.Group,
+        name: str = None,
     ):
         """
         Set up a base object and add it as collideable object to the
@@ -344,36 +334,30 @@ class GameMap:
         Sprite(pos, image, z=layer, name=name).add(groups)
 
         if SETUP_PATHFINDING:
-            self._add_pf_matrix_collision(
-                (obj.x, obj.y), (obj.width, obj.height)
-            )
+            self._add_pf_matrix_collision((obj.x, obj.y), (obj.width, obj.height))
 
     def _setup_collideable_object(
-            self,
-            pos: tuple[int, int],
-            obj: TiledObject,
-            layer: Layer,
-            groups: tuple[pygame.sprite.Group, ...] | pygame.sprite.Group
+        self,
+        pos: tuple[int, int],
+        obj: TiledObject,
+        layer: Layer,
+        groups: tuple[pygame.sprite.Group, ...] | pygame.sprite.Group,
     ):
         """
         Create a new collideable Sprite from the given TiledObject.
         If this map's MapObjects instance doesn't contain this object's GID,
         this method will raise an exception
         """
-        CollideableMapObject(
-            pos, self._map_objects[obj.gid], z=layer
-        ).add(groups)
+        CollideableMapObject(pos, self._map_objects[obj.gid], z=layer).add(groups)
 
         if SETUP_PATHFINDING:
-            self._add_pf_matrix_collision(
-                (obj.x, obj.y), (obj.width, obj.height)
-            )
+            self._add_pf_matrix_collision((obj.x, obj.y), (obj.width, obj.height))
 
     def _setup_tree_object(
-            self,
-            pos: tuple[int, int],
-            obj: TiledObject,
-            groups: tuple[pygame.sprite.Group, ...] | pygame.sprite.Group,
+        self,
+        pos: tuple[int, int],
+        obj: TiledObject,
+        groups: tuple[pygame.sprite.Group, ...] | pygame.sprite.Group,
     ):
         """
         Create a new collideable Sprite from the given TiledObject.
@@ -392,36 +376,27 @@ class GameMap:
                     fruit_type, fruit_frames = None, None
                 else:
                     fruit_type = InventoryResource.from_serialised_string(fruit)
-                    fruit_frames = self.frames['level']['objects'][fruit]
-                stump_frames = self.frames['level']['objects']['stump']
+                    fruit_frames = self.frames["level"]["objects"][fruit]
+                stump_frames = self.frames["level"]["objects"]["stump"]
 
                 tree = Tree(
-                    pos, self._map_objects[obj.gid],
-                    (
-                        self.all_sprites,
-                        self.collision_sprites,
-                        self.tree_sprites
-                    ),
+                    pos,
+                    self._map_objects[obj.gid],
+                    (self.all_sprites, self.collision_sprites, self.tree_sprites),
                     obj.name,
                     fruit_frames,
                     fruit_type,
                     stump_frames,
-                    self.drops_manager
+                    self.drops_manager,
                 )
                 # we need a tree surf without fruits
-                tree.image = self.frames['level']['objects']['tree']
+                tree.image = self.frames["level"]["objects"]["tree"]
                 tree.surf = tree.image
 
         if SETUP_PATHFINDING:
-            self._add_pf_matrix_collision(
-                (obj.x, obj.y), (obj.width, obj.height)
-            )
+            self._add_pf_matrix_collision((obj.x, obj.y), (obj.width, obj.height))
 
-    def _setup_player_warp(
-            self,
-            pos: tuple[int, int],
-            obj: TiledObject
-    ):
+    def _setup_player_warp(self, pos: tuple[int, int], obj: TiledObject):
         """
         Add a new Player warp point.
         The type of the warp will be retrieved from the object's name.
@@ -441,8 +416,9 @@ class GameMap:
         name = obj.name
         if name == "spawnpoint":
             if self.player_spawnpoint:
-                warnings.warn(f"Multiple spawnpoints found "
-                              f"({self.player_spawnpoint}, {pos})")
+                warnings.warn(
+                    f"Multiple spawnpoints found " f"({self.player_spawnpoint}, {pos})"
+                )
             self.player_spawnpoint = pos
         else:
             name = name.split(" ")
@@ -453,26 +429,19 @@ class GameMap:
                     self.player_entry_warps[warp_map] = pos
                 elif warp_type == "to":
                     warp_hitbox = pygame.Surface(
-                        (obj.width * SCALE_FACTOR,
-                         obj.height * SCALE_FACTOR)
+                        (obj.width * SCALE_FACTOR, obj.height * SCALE_FACTOR)
                     )
                     Sprite(
-                        (obj.x * SCALE_FACTOR,
-                         obj.y * SCALE_FACTOR),
+                        (obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR),
                         warp_hitbox,
-                        name=warp_map
+                        name=warp_map,
                     ).add(self.player_exit_warps)
                 else:
-                    warnings.warn(
-                        f"Invalid player warp \"{name}\""
-                    )
+                    warnings.warn(f'Invalid player warp "{name}"')
             else:
-                warnings.warn(f"Invalid player warp \"{name}\"")
+                warnings.warn(f'Invalid player warp "{name}"')
 
-    def _setup_npc(
-            self,
-            pos: tuple[int, int]
-    ):
+    def _setup_npc(self, pos: tuple[int, int]):
         """
         Creates a new NPC sprite at the given position
         """
@@ -486,11 +455,7 @@ class GameMap:
             emote_manager=self.npc_emote_manager,
         )
 
-    def _setup_animal(
-            self,
-            pos: tuple[int, int],
-            obj: TiledObject
-    ):
+    def _setup_animal(self, pos: tuple[int, int], obj: TiledObject):
         """
         Creates a new Animal sprite at the given position.
         The animal type is determined by the object name, objects named
@@ -512,9 +477,8 @@ class GameMap:
                 collision_sprites=self.collision_sprites,
             )
         else:
-            warnings.warn(
-                f"Malformed animal object name \"{obj.name}\" in tilemap"
-            )
+            warnings.warn(f'Malformed animal object name "{obj.name}" in tilemap')
+
     # endregion
 
     def _setup_layers(self):
@@ -535,18 +499,28 @@ class GameMap:
                     _setup_tile_layer(
                         tilemap_layer,
                         lambda pos, image: self._setup_collideable_tile(
-                            pos, image, Layer.MAIN,
-                            (self.all_sprites, self.collision_sprites,)
-                        )
+                            pos,
+                            image,
+                            Layer.MAIN,
+                            (
+                                self.all_sprites,
+                                self.collision_sprites,
+                            ),
+                        ),
                     )
                     continue
                 elif tilemap_layer.name == "Border":
                     _setup_tile_layer(
                         tilemap_layer,
                         lambda pos, image: self._setup_collideable_tile(
-                            pos, image, layer,
-                            (self.all_sprites, self.collision_sprites,)
-                        )
+                            pos,
+                            image,
+                            layer,
+                            (
+                                self.all_sprites,
+                                self.collision_sprites,
+                            ),
+                        ),
                     )
                     continue
 
@@ -556,25 +530,22 @@ class GameMap:
                     element=tilemap_layer,
                     property_name="layer",
                     callback=lambda prop: Layer[prop],
-                    default=Layer.GROUND
+                    default=Layer.GROUND,
                 )
 
                 if layer == Layer.WATER:
                     # tiles on the WATER layer will always be created as water
                     _setup_tile_layer(
                         tilemap_layer,
-                        lambda pos, _: self._setup_water_tile(
-                            pos, self.all_sprites
-                        )
+                        lambda pos, _: self._setup_water_tile(pos, self.all_sprites),
                     )
                 else:
                     # decorative and ground tiles will be created as base tile
                     _setup_tile_layer(
                         tilemap_layer,
                         lambda pos, image: self._setup_base_tile(
-                            pos, image, layer,
-                            self.all_sprites
-                        )
+                            pos, image, layer, self.all_sprites
+                        ),
                     )
 
             elif isinstance(tilemap_layer, TiledObjectGroup):
@@ -582,34 +553,40 @@ class GameMap:
                     _setup_object_layer(
                         tilemap_layer,
                         lambda pos, obj: self._setup_base_object(
-                            pos, obj, Layer.MAIN, self.interaction_sprites,
-                            name=obj.name
-                        )
+                            pos,
+                            obj,
+                            Layer.MAIN,
+                            self.interaction_sprites,
+                            name=obj.name,
+                        ),
                     )
                 elif tilemap_layer.name == "Collisions":
                     _setup_object_layer(
                         tilemap_layer,
                         lambda pos, obj: self._setup_collision_rect(
                             pos, obj, Layer.MAIN, self.collision_sprites
-                        )
+                        ),
                     )
                 elif tilemap_layer.name == "Trees":
                     _setup_object_layer(
                         tilemap_layer,
                         lambda pos, obj: self._setup_tree_object(
-                            pos, obj,
-                            (self.all_sprites, self.collision_sprites,
-                             self.tree_sprites)
-                        )
+                            pos,
+                            obj,
+                            (
+                                self.all_sprites,
+                                self.collision_sprites,
+                                self.tree_sprites,
+                            ),
+                        ),
                     )
                 elif tilemap_layer.name == "Player":
                     _setup_object_layer(
                         tilemap_layer,
-                        lambda pos, obj: self._setup_player_warp(pos, obj)
+                        lambda pos, obj: self._setup_player_warp(pos, obj),
                     )
 
-                    if (not self.player_entry_warps and
-                            not self.player_spawnpoint):
+                    if not self.player_entry_warps and not self.player_spawnpoint:
                         raise InvalidMapError(
                             "No Player warp point could be found in the map's "
                             "Player layer"
@@ -617,40 +594,37 @@ class GameMap:
                 elif tilemap_layer.name == "NPCs":
                     if ENABLE_NPCS:
                         self.npcs = _setup_object_layer(
-                            tilemap_layer,
-                            lambda pos, obj: self._setup_npc(pos)
+                            tilemap_layer, lambda pos, obj: self._setup_npc(pos)
                         )
                     else:
                         continue
                 elif tilemap_layer.name == "Animals":
                     if TEST_ANIMALS:
                         self.animals = _setup_object_layer(
-                            tilemap_layer,
-                            lambda pos, obj: self._setup_animal(pos, obj)
+                            tilemap_layer, lambda pos, obj: self._setup_animal(pos, obj)
                         )
                     else:
                         continue
                 else:
                     # set layer if defined in the TileLayer properties
                     layer = _get_element_property(
-                        tilemap_layer, "layer",
-                        lambda prop: Layer[prop], Layer.MAIN
+                        tilemap_layer, "layer", lambda prop: Layer[prop], Layer.MAIN
                     )
 
                     # decorative objects will be created as collideable object
                     _setup_object_layer(
                         tilemap_layer,
                         lambda pos, obj: self._setup_collideable_object(
-                            pos, obj, layer,
-                            (self.all_sprites, self.collision_sprites)
-                        )
+                            pos, obj, layer, (self.all_sprites, self.collision_sprites)
+                        ),
                     )
 
             else:
                 # This should be the case when an Image or Group layer is found
                 warnings.warn(
                     f"Support for {type(tilemap_layer)} layers is not (yet) "
-                    f"implemented! Layer {tilemap_layer.name} will be skipped")
+                    f"implemented! Layer {tilemap_layer.name} will be skipped"
+                )
 
     def _setup_emote_interactions(self):
         self.player_emote_manager.reset()
@@ -670,9 +644,9 @@ class GameMap:
             npc_to_focus = None
             for npc in self.npcs:
                 current_distance = (
-                    (player_pos[0] - npc.rect.center[0]) ** 2 +
-                    (player_pos[1] - npc.rect.center[1]) ** 2
-                ) ** .5
+                    (player_pos[0] - npc.rect.center[0]) ** 2
+                    + (player_pos[1] - npc.rect.center[1]) ** 2
+                ) ** 0.5
                 if current_distance < distance_to_player:
                     distance_to_player = current_distance
                     npc_to_focus = npc

@@ -79,9 +79,9 @@ class AIBehaviour(AIBehaviourBase, ABC):
             return False
 
         # current NPC position on the tilemap
-        tile_coord = pygame.Vector2(
-            self.rect.centerx, self.rect.centery
-        ) / SCALED_TILE_SIZE
+        tile_coord = (
+            pygame.Vector2(self.rect.centerx, self.rect.centery) / SCALED_TILE_SIZE
+        )
 
         self.pf_state = AIState.MOVING
         self.pf_state_duration = 0
@@ -93,9 +93,7 @@ class AIBehaviour(AIBehaviourBase, ABC):
         except IndexError as e:
             # FIXME: Occurs when NPCs get stuck inside each other at the edge
             #  of the map and one of them gets pushed out of the walkable area
-            warnings.warn(
-                f"NPC is at invalid location {tile_coord}\nFull error: {e}"
-            )
+            warnings.warn(f"NPC is at invalid location {tile_coord}\nFull error: {e}")
             return False
         end = self.pf_grid.node(*[int(i) for i in coord])
 
@@ -107,7 +105,7 @@ class AIBehaviour(AIBehaviourBase, ABC):
         # coordinate, it may turn around quickly once it reaches it, if the
         # second coordinate of the path points in the same direction as where
         # the NPC was just standing.
-        self.pf_path = [(i.x + .5, i.y + .5) for i in path_raw[0][1:]]
+        self.pf_path = [(i.x + 0.5, i.y + 0.5) for i in path_raw[0][1:]]
 
         if not self.pf_path:
             self.abort_path()
@@ -117,9 +115,11 @@ class AIBehaviour(AIBehaviourBase, ABC):
 
     def move(self, dt: float):
         self.hitbox_rect.update(
-            (self.rect.x + self._current_hitbox.x,
-             self.rect.y + self._current_hitbox.y),
-            self._current_hitbox.size
+            (
+                self.rect.x + self._current_hitbox.x,
+                self.rect.y + self._current_hitbox.y,
+            ),
+            self._current_hitbox.size,
         )
 
         if self.pf_state == AIState.IDLE:
@@ -129,9 +129,11 @@ class AIBehaviour(AIBehaviourBase, ABC):
             self.update_moving(dt)
 
         self.rect.update(
-            (self.hitbox_rect.x - self._current_hitbox.x,
-             self.hitbox_rect.y - self._current_hitbox.y),
-            self.rect.size
+            (
+                self.hitbox_rect.x - self._current_hitbox.x,
+                self.hitbox_rect.y - self._current_hitbox.y,
+            ),
+            self.rect.size,
         )
 
     def update_idle(self, dt: float):
@@ -153,7 +155,7 @@ class AIBehaviour(AIBehaviourBase, ABC):
         # current exact NPC position on the tilemap
         current_point = (
             self.rect.centerx / SCALED_TILE_SIZE,
-            self.rect.centery / SCALED_TILE_SIZE
+            self.rect.centery / SCALED_TILE_SIZE,
         )
 
         # remaining distance the NPC moves in the current frame
@@ -176,7 +178,7 @@ class AIBehaviour(AIBehaviourBase, ABC):
             dx = next_point[0] - current_point[0]
             dy = next_point[1] - current_point[1]
 
-            distance = (dx ** 2 + dy ** 2) ** 0.5
+            distance = (dx**2 + dy**2) ** 0.5
 
             if remaining_distance >= distance:
                 # the NPC reaches its current target position in the
@@ -188,7 +190,7 @@ class AIBehaviour(AIBehaviourBase, ABC):
                 # current frame, so it continues to move towards it
                 current_point = (
                     current_point[0] + dx * remaining_distance / distance,
-                    current_point[1] + dy * remaining_distance / distance
+                    current_point[1] + dy * remaining_distance / distance,
                 )
                 remaining_distance = 0
 
@@ -197,15 +199,19 @@ class AIBehaviour(AIBehaviourBase, ABC):
                 #  would face upwards, although it moves much more to the
                 #  left than upwards, as the get_facing_direction method
                 #  favors vertical movement
-                self.direction.update((round(dx / distance),
-                                       round(dy / distance)))
+                self.direction.update((round(dx / distance), round(dy / distance)))
 
-        self.hitbox_rect.update((
-            current_point[0] * SCALED_TILE_SIZE
-            - self.rect.width / 2 + self._current_hitbox.x,
-            current_point[1] * SCALED_TILE_SIZE
-            - self.rect.height / 2 + self._current_hitbox.y
-        ), self.hitbox_rect.size)
+        self.hitbox_rect.update(
+            (
+                current_point[0] * SCALED_TILE_SIZE
+                - self.rect.width / 2
+                + self._current_hitbox.x,
+                current_point[1] * SCALED_TILE_SIZE
+                - self.rect.height / 2
+                + self._current_hitbox.y,
+            ),
+            self.hitbox_rect.size,
+        )
 
         self.check_collision()
 

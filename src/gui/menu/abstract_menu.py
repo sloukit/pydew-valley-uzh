@@ -23,7 +23,7 @@ class AbstractMenu(ABC):
         self.size = size
         self.center = center
         self.buttons_surface = pygame.Surface(size, flags=pygame.SRCALPHA)
-        self.font = pygame.font.Font(resource_path('font/LycheeSoda.ttf'), 30)
+        self.font = pygame.font.Font(resource_path("font/LycheeSoda.ttf"), 30)
         self.display_surface = pygame.display.get_surface()
 
         self.buttons = []
@@ -98,14 +98,14 @@ class AbstractMenu(ABC):
 
     # draw
     def draw_title(self):
-        text_surf = self.font.render(self.title, False, 'Black')
+        text_surf = self.font.render(self.title, False, "Black")
         midtop = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 20)
         text_rect = text_surf.get_frect(midtop=midtop)
 
         bg_rect = pygame.Rect((0, 0), (200, 50))
         bg_rect.center = text_rect.center
 
-        pygame.draw.rect(self.display_surface, 'White', bg_rect, 0, 4)
+        pygame.draw.rect(self.display_surface, "White", bg_rect, 0, 4)
         self.display_surface.blit(text_surf, text_rect)
 
     def draw_buttons(self):
@@ -122,4 +122,3 @@ class AbstractMenu(ABC):
         self.event_loop()
         self.update_buttons(dt)
         self.draw()
-

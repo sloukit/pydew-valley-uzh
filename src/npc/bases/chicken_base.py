@@ -19,13 +19,12 @@ class ChickenBase(Animal, AIBehaviour, ABC):
     pf_finder: ClassVar[AStarFinder | None] = None
 
     def __init__(
-            self,
-            pos: Coordinate,
-            assets: EntityAsset,
-            groups: tuple[pygame.sprite.Group, ...],
-            collision_sprites: pygame.sprite.Group,
-
-            z: int
+        self,
+        pos: Coordinate,
+        assets: EntityAsset,
+        groups: tuple[pygame.sprite.Group, ...],
+        collision_sprites: pygame.sprite.Group,
+        z: int,
     ):
         Animal.__init__(
             self,
@@ -33,8 +32,7 @@ class ChickenBase(Animal, AIBehaviour, ABC):
             assets=assets,
             groups=groups,
             collision_sprites=collision_sprites,
-
-            z=z
+            z=z,
         )
         AIBehaviour.__init__(self)
 

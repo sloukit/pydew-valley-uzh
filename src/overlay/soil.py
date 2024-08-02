@@ -47,7 +47,9 @@ class SoilLayer:
     sounds: SoundDict
     neighbor_directions: list[tuple[int, int]]
 
-    def __init__(self, all_sprites: pygame.sprite.Group, frames: dict, sounds: SoundDict):
+    def __init__(
+        self, all_sprites: pygame.sprite.Group, frames: dict, sounds: SoundDict
+    ):
         self.all_sprites = all_sprites
         self.level_frames = frames
 
@@ -58,8 +60,14 @@ class SoilLayer:
         self.tiles = {}
         self.sounds = sounds
         self.neighbor_directions = [
-            (0, -1), (1, -1), (1, 0), (1, 1),
-            (0, 1), (-1, 1), (-1, 0), (-1, -1)
+            (0, -1),
+            (1, -1),
+            (1, 0),
+            (1, 1),
+            (0, 1),
+            (-1, 1),
+            (-1, 0),
+            (-1, -1),
         ]
 
     def reset(self):

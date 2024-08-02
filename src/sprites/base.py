@@ -8,14 +8,14 @@ from src.settings import SCALE_FACTOR
 
 
 class Sprite(pygame.sprite.Sprite):
-    def __init__(self,
-                 pos: tuple[int | float,
-                            int | float],
-                 surf: pygame.Surface,
-                 groups: tuple[pygame.sprite.Group, ...] | pygame.sprite.Group
-                 = None,
-                 z: int = Layer.MAIN,
-                 name: str | None = None):
+    def __init__(
+        self,
+        pos: tuple[int | float, int | float],
+        surf: pygame.Surface,
+        groups: tuple[pygame.sprite.Group, ...] | pygame.sprite.Group = None,
+        z: int = Layer.MAIN,
+        name: str | None = None,
+    ):
         if groups:
             super().__init__(groups)
         else:
@@ -37,13 +37,12 @@ class CollideableSprite(Sprite, ABC):
 
 class CollideableMapObject(CollideableSprite):
     def __init__(
-            self,
-            pos: tuple[int, int],
-            object_type: MapObjectType,
-            groups: tuple[pygame.sprite.Group, ...] | pygame.sprite.Group
-            = None,
-            z=Layer.MAIN,
-            name=None
+        self,
+        pos: tuple[int, int],
+        object_type: MapObjectType,
+        groups: tuple[pygame.sprite.Group, ...] | pygame.sprite.Group = None,
+        z=Layer.MAIN,
+        name=None,
     ):
         self.object_type = object_type
 

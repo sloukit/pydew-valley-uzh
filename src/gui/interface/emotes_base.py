@@ -30,6 +30,7 @@ class EmoteBoxBase(Sprite, ABC):
 
         timer: Timer triggering the next animation frames
     """
+
     emote: list[pygame.Surface]
     _current_emote_image = pygame.Surface
 

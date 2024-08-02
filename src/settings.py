@@ -26,16 +26,17 @@ SETUP_PATHFINDING = any((ENABLE_NPCS, TEST_ANIMALS))
 
 EMOTE_SIZE = 48
 
-GROW_SPEED = {'corn': 1, 'tomato': 0.7}
+GROW_SPEED = {"corn": 1, "tomato": 0.7}
 
 OVERLAY_POSITIONS = {
-    'tool': (86, 150),
-    'seed': (47, 142),
-    'clock': (SCREEN_WIDTH - 10, 10)}
+    "tool": (86, 150),
+    "seed": (47, 142),
+    "clock": (SCREEN_WIDTH - 10, 10),
+}
 
 APPLE_POS = {
-    'small': [(18, 17), (30, 37), (12, 50), (30, 45), (20, 30), (30, 10)],
-    'default': [(12, 12), (46, 10), (40, 34), (3, 42), (65, 55), (32, 59)]
+    "small": [(18, 17), (30, 37), (12, 50), (30, 45), (20, 30), (30, 10)],
+    "default": [(12, 12), (46, 10), (40, 34), (3, 42), (65, 55), (32, 59)],
 }
 
 CHARS_PER_LINE = 45

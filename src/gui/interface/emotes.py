@@ -7,9 +7,7 @@ import pygame.gfxdraw
 
 from src.enums import Layer
 from src.groups import PersistentSpriteGroup
-from src.gui.interface.emotes_base import (
-    EmoteBoxBase, EmoteManagerBase, EmoteWheelBase
-)
+from src.gui.interface.emotes_base import EmoteBoxBase, EmoteManagerBase, EmoteWheelBase
 from src.settings import EMOTE_SIZE
 from src.support import draw_aa_line
 from src.timer import Timer
@@ -19,20 +17,17 @@ class EmoteBox(EmoteBoxBase):
     EMOTE_DIALOG_BOX = None
 
     def __init__(
-            self,
-            pos: tuple[int, int],
-            emote: list[pygame.Surface],
-            *groups: pygame.sprite.Group
+        self,
+        pos: tuple[int, int],
+        emote: list[pygame.Surface],
+        *groups: pygame.sprite.Group,
     ):
         """
         Displays an emote in a small speech bubble.
         :param pos: Position where the emote should first be drawn
         :param emote: List of all frames of the Emote animation
         """
-        super().__init__(
-            pos, emote[0], groups,
-            z=Layer.EMOTES
-        )
+        super().__init__(pos, emote[0], groups, z=Layer.EMOTES)
 
         self.image = EmoteBox.EMOTE_DIALOG_BOX
 
@@ -54,7 +49,9 @@ class EmoteBox(EmoteBoxBase):
 
         self.timer = Timer(
             self._ani_frame_length * 1000,
-            repeat=True, autostart=False, func=self._ani_next_frame
+            repeat=True,
+            autostart=False,
+            func=self._ani_next_frame,
         )
 
     @property
@@ -80,18 +77,20 @@ class EmoteBox(EmoteBoxBase):
                 func()
             return
 
-        self._current_emote_image = self.emote[
-            self._ani_cframe % self._ani_frame_count
-            ]
+        self._current_emote_image = self.emote[self._ani_cframe % self._ani_frame_count]
 
         # update image
         self.image = EmoteBox.EMOTE_DIALOG_BOX.copy()
-        self.image.blit(self._current_emote_image, (
-            EmoteBox.EMOTE_DIALOG_BOX.width / 2
-            - self._current_emote_image.width / 2,
-            EmoteBox.EMOTE_DIALOG_BOX.height / 2
-            - self._current_emote_image.height / 2 - 8,
-        ))
+        self.image.blit(
+            self._current_emote_image,
+            (
+                EmoteBox.EMOTE_DIALOG_BOX.width / 2
+                - self._current_emote_image.width / 2,
+                EmoteBox.EMOTE_DIALOG_BOX.height / 2
+                - self._current_emote_image.height / 2
+                - 8,
+            ),
+        )
 
     def update(self, *args, **kwargs):
         if not self.timer:
@@ -103,9 +102,7 @@ class EmoteManager(EmoteManagerBase, ABC):
     _emote_boxes: dict[int, EmoteBox]
 
     def __init__(
-            self,
-            emotes: dict[str, list[pygame.Surface]],
-            *groups: pygame.sprite.Group
+        self, emotes: dict[str, list[pygame.Surface]], *groups: pygame.sprite.Group
     ):
         """
         Base class for all EmoteManagers
@@ -135,7 +132,7 @@ class EmoteManager(EmoteManagerBase, ABC):
         """
         if emote not in self.emotes.keys():
             raise KeyError(
-                f"There is no Emote named \"{emote}\". "
+                f'There is no Emote named "{emote}". '
                 f"Available emotes: {list(self.emotes.keys())}"
             )
 
@@ -185,9 +182,7 @@ class EmoteManager(EmoteManagerBase, ABC):
 
 class NPCEmoteManager(EmoteManager):
     def __init__(
-            self,
-            emotes: dict[str, list[pygame.Surface]],
-            *groups: pygame.sprite.Group
+        self, emotes: dict[str, list[pygame.Surface]], *groups: pygame.sprite.Group
     ):
         """
         EmoteManager for all NPCs
@@ -197,9 +192,9 @@ class NPCEmoteManager(EmoteManager):
 
 class EmoteWheel(EmoteWheelBase):
     def __init__(
-            self,
-            emote_manager: EmoteManagerBase,
-            *groups: PersistentSpriteGroup,
+        self,
+        emote_manager: EmoteManagerBase,
+        *groups: PersistentSpriteGroup,
     ):
         """
         The Player's emote selection wheel
@@ -207,8 +202,16 @@ class EmoteWheel(EmoteWheelBase):
         """
         self._emote_manager = emote_manager
 
-        self._emotes = ["cheer_ani", "cool_ani", "furious_ani", "love_ani",
-                        "sad_ani", "sleep_ani", "smile_ani", "wink_ani"]
+        self._emotes = [
+            "cheer_ani",
+            "cool_ani",
+            "furious_ani",
+            "love_ani",
+            "sad_ani",
+            "sleep_ani",
+            "smile_ani",
+            "wink_ani",
+        ]
         self.emote_index = 0
         self._current_emote = self._emotes[self.emote_index]
         self._last_emote_index = None
@@ -222,16 +225,12 @@ class EmoteWheel(EmoteWheelBase):
         self._center = (self._outer_radius + self._inner_radius) / 2
 
         self._image = pygame.Surface(
-            (self._outer_radius * 2, self._outer_radius * 2),
-            flags=pygame.SRCALPHA
+            (self._outer_radius * 2, self._outer_radius * 2), flags=pygame.SRCALPHA
         )
 
         self._setup_image()
 
-        super().__init__(
-            (0, 0), self._image.copy(),
-            z=Layer.TEXT_BOX
-        )
+        super().__init__((0, 0), self._image.copy(), z=Layer.TEXT_BOX)
         for group in groups:
             group.add_persistent(self)
 
@@ -239,14 +238,14 @@ class EmoteWheel(EmoteWheelBase):
 
     def _setup_image(self):
         background_surface = pygame.Surface(
-            (self._outer_radius * 2, self._outer_radius * 2),
-            flags=pygame.SRCALPHA
+            (self._outer_radius * 2, self._outer_radius * 2), flags=pygame.SRCALPHA
         )
         pygame.draw.circle(
-            background_surface, (220, 185, 138),
+            background_surface,
+            (220, 185, 138),
             (self._outer_radius, self._outer_radius),
             self._outer_radius - 2,
-            int(self._outer_radius - self._inner_radius)
+            int(self._outer_radius - self._inner_radius),
         )
         background_surface.set_alpha(self._background_alpha)
 
@@ -262,40 +261,41 @@ class EmoteWheel(EmoteWheelBase):
             # to short, nor to extend beyond the edge of the selector wheel
             center_pos = (
                 self._outer_radius + math.cos(deg) * (self._center - 2),
-                self._outer_radius + math.sin(deg) * (self._center - 2)
+                self._outer_radius + math.sin(deg) * (self._center - 2),
             )
             length = self._outer_radius - self._inner_radius - 2
 
             draw_aa_line(
-                self._image, center_pos, thickness, length, deg,
-                (170, 121, 89)
+                self._image, center_pos, thickness, length, deg, (170, 121, 89)
             )
 
             # increase degree by half the distance to the next emote,
             #  to get the center of the current emote in the selector wheel
-            deg = math.pi * 2 * (i + .5) / len(self._emotes) - math.pi / 2
+            deg = math.pi * 2 * (i + 0.5) / len(self._emotes) - math.pi / 2
 
             # blit first frame of the emote as preview onto the selector wheel
             self._image.blit(
                 self._emote_manager.emotes[self._emotes[i]][0],
-                (self._outer_radius - EMOTE_SIZE / 2
-                 + math.cos(deg) * self._center,
-                 self._outer_radius - EMOTE_SIZE / 2
-                 + math.sin(deg) * self._center)
+                (
+                    self._outer_radius - EMOTE_SIZE / 2 + math.cos(deg) * self._center,
+                    self._outer_radius - EMOTE_SIZE / 2 + math.sin(deg) * self._center,
+                ),
             )
 
         # draw emote wheel outlines
         pygame.draw.aacircle(
-            self._image, (170, 121, 89),
+            self._image,
+            (170, 121, 89),
             (self._outer_radius, self._outer_radius),
             self._inner_radius,
-            self._emote_separator_width
+            self._emote_separator_width,
         )
         pygame.draw.aacircle(
-            self._image, (170, 121, 89),
+            self._image,
+            (170, 121, 89),
             (self._outer_radius, self._outer_radius),
             self._outer_radius - 1,
-            self._emote_separator_width
+            self._emote_separator_width,
         )
 
     @property
@@ -305,8 +305,10 @@ class EmoteWheel(EmoteWheelBase):
     @pos.setter
     def pos(self, value: tuple[float, float]):
         self._pos = value
-        self.rect.update((self._pos[0] - self.rect.width / 2,
-                          self._pos[1] - self.rect.height / 2), self.rect.size)
+        self.rect.update(
+            (self._pos[0] - self.rect.width / 2, self._pos[1] - self.rect.height / 2),
+            self.rect.size,
+        )
 
     @property
     def visible(self):
@@ -340,39 +342,47 @@ class EmoteWheel(EmoteWheelBase):
 
         # center_pos and length have to be slightly adjusted to be neither to
         # short, nor to extend beyond the edge of the selector wheel
-        center_pos = (self._outer_radius + math.cos(deg) * (self._center - 3),
-                      self._outer_radius + math.sin(deg) * (self._center - 3))
+        center_pos = (
+            self._outer_radius + math.cos(deg) * (self._center - 3),
+            self._outer_radius + math.sin(deg) * (self._center - 3),
+        )
         thickness = self._selected_emote_separator_width
         length = self._outer_radius - self._inner_radius + 5
 
-        draw_aa_line(
-            self.image, center_pos, thickness, length, deg, (243, 229, 194)
-        )
+        draw_aa_line(self.image, center_pos, thickness, length, deg, (243, 229, 194))
 
         deg = math.pi * 2 * (current_emote_index + 1) / 8 - math.pi / 2
-        center_pos = (self._outer_radius + math.cos(deg) * (self._center - 3),
-                      self._outer_radius + math.sin(deg) * (self._center - 3))
-
-        draw_aa_line(
-            self.image, center_pos, thickness, length, deg, (243, 229, 194)
+        center_pos = (
+            self._outer_radius + math.cos(deg) * (self._center - 3),
+            self._outer_radius + math.sin(deg) * (self._center - 3),
         )
+
+        draw_aa_line(self.image, center_pos, thickness, length, deg, (243, 229, 194))
 
         start_deg = math.pi * 2 * -current_emote_index / 8 + math.pi / 4
         stop_deg = math.pi * 2 * (-current_emote_index + 1) / 8 + math.pi / 4
 
         pygame.draw.arc(
-            self.image, (243, 229, 194),
+            self.image,
+            (243, 229, 194),
             (0, 0, self._outer_radius * 2, self._outer_radius * 2),
-            start_deg, stop_deg, thickness
+            start_deg,
+            stop_deg,
+            thickness,
         )
 
         pygame.draw.arc(
-            self.image, (243, 229, 194),
-            (self._outer_radius - self._inner_radius - 1,
-             self._outer_radius - self._inner_radius - 1,
-             self._inner_radius * 2 + 2,
-             self._inner_radius * 2 + 2
-             ), start_deg, stop_deg, thickness
+            self.image,
+            (243, 229, 194),
+            (
+                self._outer_radius - self._inner_radius - 1,
+                self._outer_radius - self._inner_radius - 1,
+                self._inner_radius * 2 + 2,
+                self._inner_radius * 2 + 2,
+            ),
+            start_deg,
+            stop_deg,
+            thickness,
         )
 
 
@@ -384,9 +394,7 @@ class PlayerEmoteManager(EmoteManager):
     __on_emote_wheel_closed_funcs: list[Callable[[], None]]
 
     def __init__(
-            self,
-            emotes: dict[str, list[pygame.Surface]],
-            *groups: PersistentSpriteGroup
+        self, emotes: dict[str, list[pygame.Surface]], *groups: PersistentSpriteGroup
     ):
         super().__init__(emotes, *groups)
 

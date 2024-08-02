@@ -105,10 +105,7 @@ class Controls(Control, Enum):
         member._control_as_dict()
         :return: A dictionary representation of all Controls members.
         """
-        return {
-            i.name: cls[i.name]._control_as_dict()
-            for i in cls
-        }
+        return {i.name: cls[i.name]._control_as_dict() for i in cls}
 
     @classmethod
     def from_dict(cls, d: dict[str, dict[str, str | int]]):
@@ -124,9 +121,7 @@ class Controls(Control, Enum):
                 cls[control_key]._control_from_dict(control_value)
 
     @classmethod
-    def load_default_keybind(
-            cls, control: Self, keybinds: dict[str, int] = None
-    ):
+    def load_default_keybind(cls, control: Self, keybinds: dict[str, int] = None):
         """
         Loads a singular Control.value of the given Controls member from the
         supplied keybinds dictionary. The name of the given Controls member
@@ -155,7 +150,7 @@ class Controls(Control, Enum):
     def all_controls(cls) -> Generator[Control, None, None]:
         """:return: A generator which yields all Controls members."""
         return (getattr(cls, i.name) for i in cls)
-    
+
     @classmethod
     def length(cls) -> int:
         return len(list(cls.all_controls()))

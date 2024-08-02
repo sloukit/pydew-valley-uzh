@@ -7,10 +7,7 @@ from src.settings import Coordinate, SCALE_FACTOR
 from src.sprites.base import Sprite
 from src.timer import Timer
 from src.enums import InventoryResource, Layer
-from src.support import (generate_particle_surf,
-                         oscilating_lerp,
-                         rand_circular_pos
-)
+from src.support import generate_particle_surf, oscilating_lerp, rand_circular_pos
 
 
 class DropsManager:
@@ -27,31 +24,37 @@ class DropsManager:
         for _ in range(amount):
             name = drop_type.as_serialised_string()
             surf = self.drop_frames[name]
-            Drop(pos, surf, (self.all_sprites, self.drops_group),
-                 self.player, drop_type, name=name+" drop")
+            Drop(
+                pos,
+                surf,
+                (self.all_sprites, self.drops_group),
+                self.player,
+                drop_type,
+                name=name + " drop",
+            )
 
     def check_collisions(self):
         if not self.player:
             return
         for drop in self.drops_group:
-            if self.player.hitbox_rect.colliderect(drop.hitbox_rect)\
-                and drop.on_ground:
+            if self.player.hitbox_rect.colliderect(drop.hitbox_rect) and drop.on_ground:
                 drop.kill()
-                sound = random.choice(['pop0', 'pop1', 'pop2'])
+                sound = random.choice(["pop0", "pop1", "pop2"])
                 self.player.add_resource(drop.drop_type, sound=sound)
 
     def update(self):
         self.check_collisions()
 
+
 # TODO: find an efficient approach for collisions
 # drops shouldnt go into collision sprites
 class Drop(Sprite):
-    def __init__(self, pos, surf, groups,
-                 player, drop_type,
-                 name="test"):
+    def __init__(self, pos, surf, groups, player, drop_type, name="test"):
         super().__init__(pos, surf, groups, name=name)
-        self.hitbox_rect.inflate_ip(-surf.get_width() * 0.15 * SCALE_FACTOR,
-                                 -surf.get_height() * 0.15 * SCALE_FACTOR)
+        self.hitbox_rect.inflate_ip(
+            -surf.get_width() * 0.15 * SCALE_FACTOR,
+            -surf.get_height() * 0.15 * SCALE_FACTOR,
+        )
         # identity
         self.name = name
         self.drop_type = drop_type
@@ -66,7 +69,8 @@ class Drop(Sprite):
         # item_pos is the same as pos but will have an offest on the y axies
         self.item_pos = pygame.Vector2(pos)
         self.target_pos = pygame.Vector2(
-            rand_circular_pos(pos, self.max_radius, self.min_radius))
+            rand_circular_pos(pos, self.max_radius, self.min_radius)
+        )
         # bounce pos is 70% of the distance to the target pos
         self.bounce_pos = self.item_pos.lerp(self.target_pos, 0.7)
 
@@ -81,20 +85,19 @@ class Drop(Sprite):
 
         # modifying values based on distance
         distance = self.throw_pos.distance_to(self.target_pos)
-        limiter = (1 - distance/self.max_radius) * 0.8
+        limiter = (1 - distance / self.max_radius) * 0.8
         self.max_height -= self.max_height * limiter
         self.bounce_max_height -= self.bounce_max_height * limiter
         self.speed -= self.speed * limiter
         self.after_bounce_speed -= self.after_bounce_speed * limiter
 
         # state
-        self.bounced = False    # will be true after the first bounce
+        self.bounced = False  # will be true after the first bounce
         self.on_ground = False  # will be true after reaching the target_pos
         self.suprise_jump = False
 
         # timers
-        self.suprise_jump_timer = Timer(random.randint(5000, 13000),
-                                        autostart=True)
+        self.suprise_jump_timer = Timer(random.randint(5000, 13000), autostart=True)
         self.jump_dur_timer = Timer(1900)
 
         # groups
@@ -113,8 +116,8 @@ class Drop(Sprite):
 
         # hovering
         self.hover_height = 13  # resambles a radius
-        self.hover_speed = 140   # rate of change in angle
-        self.hover_angle = 0    # to make the drop hover on the y axies
+        self.hover_speed = 140  # rate of change in angle
+        self.hover_angle = 0  # to make the drop hover on the y axies
 
     def bounce_to(self, start_pos, target_pos, speed, max_height):
         # calculating stuff
@@ -132,22 +135,23 @@ class Drop(Sprite):
     def move(self, dt):
         if not self.bounced:
             # go to bounce position
-            self.bounced = self.bounce_to(self.throw_pos,
-                                          self.bounce_pos,
-                                          self.speed * dt,
-                                          self.max_height)
+            self.bounced = self.bounce_to(
+                self.throw_pos, self.bounce_pos, self.speed * dt, self.max_height
+            )
         elif not self.on_ground:
             # go to target position
-            self.on_ground = self.bounce_to(self.bounce_pos,
-                                            self.target_pos,
-                                            self.after_bounce_speed * dt,
-                                            self.bounce_max_height)
+            self.on_ground = self.bounce_to(
+                self.bounce_pos,
+                self.target_pos,
+                self.after_bounce_speed * dt,
+                self.bounce_max_height,
+            )
         else:
             # move toward the player
             target = pygame.Vector2(self.player.hitbox_rect.center)
             distance = target.distance_to(self.pos)
             if distance < self.pull_radius:
-                t = (1 - distance/self.pull_radius)**1.5  # ease-in
+                t = (1 - distance / self.pull_radius) ** 1.5  # ease-in
                 speed = pygame.math.lerp(0, self.pull_speed, t)
                 self.item_pos.move_towards_ip(target, speed * dt)
                 # update stuff
@@ -180,37 +184,39 @@ class Drop(Sprite):
     def collision_check(self):
         pass
 
-    def draw(self,screen, camera_offset):
+    def draw(self, screen, camera_offset):
         super().draw(screen, camera_offset)
         if not self.debug:
             return
-        pygame.draw.circle(screen, 'cyan',
-                           self.throw_pos + camera_offset, self.max_radius, 1)
-        pygame.draw.circle(screen, 'cyan',
-                           self.throw_pos + camera_offset, self.min_radius, 1)
-        pygame.draw.circle(screen, 'brown',
-                           self.target_pos + camera_offset, 3)
-        pygame.draw.circle(screen, 'red',
-                           self.bounce_pos + camera_offset, 3)
-        pygame.draw.circle(screen, 'pink',
-                           self.item_pos + camera_offset, 3)
-        pygame.draw.rect(screen, 'white',
-                         (self.hitbox_rect.move(*camera_offset)), 1)
-        pygame.draw.rect(screen, 'gray',
-                         (self.player.hitbox_rect.move(*camera_offset)), 1)
-        pygame.draw.circle(screen, 'black',
-                           self.pos + camera_offset, 3)
-        pygame.draw.circle(screen, 'yellow',
-                           self.player.hitbox_rect.center + camera_offset,
-                           3)
-        pygame.draw.circle(screen, 'yellow',
-                           self.player.hitbox_rect.center + camera_offset,
-                           self.pull_radius, 1)
+        pygame.draw.circle(
+            screen, "cyan", self.throw_pos + camera_offset, self.max_radius, 1
+        )
+        pygame.draw.circle(
+            screen, "cyan", self.throw_pos + camera_offset, self.min_radius, 1
+        )
+        pygame.draw.circle(screen, "brown", self.target_pos + camera_offset, 3)
+        pygame.draw.circle(screen, "red", self.bounce_pos + camera_offset, 3)
+        pygame.draw.circle(screen, "pink", self.item_pos + camera_offset, 3)
+        pygame.draw.rect(screen, "white", (self.hitbox_rect.move(*camera_offset)), 1)
+        pygame.draw.rect(
+            screen, "gray", (self.player.hitbox_rect.move(*camera_offset)), 1
+        )
+        pygame.draw.circle(screen, "black", self.pos + camera_offset, 3)
+        pygame.draw.circle(
+            screen, "yellow", self.player.hitbox_rect.center + camera_offset, 3
+        )
+        pygame.draw.circle(
+            screen,
+            "yellow",
+            self.player.hitbox_rect.center + camera_offset,
+            self.pull_radius,
+            1,
+        )
 
     @override
     def kill(self):
-            super().kill()
-            self.shadow.kill()
+        super().kill()
+        self.shadow.kill()
 
     def update(self, dt):
         self.move(dt)
@@ -225,29 +231,29 @@ class Drop(Sprite):
 
 class DropShadow(Sprite):
     def __init__(self, drop: Drop):
-        surf = pygame.Surface((drop.rect.width*0.85,
-                               drop.rect.height*0.55), pygame.SRCALPHA)
+        surf = pygame.Surface(
+            (drop.rect.width * 0.85, drop.rect.height * 0.55), pygame.SRCALPHA
+        )
         surf.set_colorkey((0, 0, 0))
         rect = surf.get_frect(topleft=(0, 0))
         pygame.draw.ellipse(surf, (1, 1, 1, 35), rect)
-        super().__init__(drop.pos, surf,
-                         groups=(drop.all_sprites,),
-                         z=Layer.PLANT)
+        super().__init__(drop.pos, surf, groups=(drop.all_sprites,), z=Layer.PLANT)
         self.drop = drop
 
     def update(self, dt):
         # follow the drop
         self.rect.centerx = self.drop.pos[0]
-        self.rect.centery = self.drop.pos[1] + self.drop.rect.width/2
+        self.rect.centery = self.drop.pos[1] + self.drop.rect.width / 2
 
         # change size depending on how far the drop is from the groud
         max_size = self.surf.get_size()
         dist_from_floor = self.drop.pos.distance_to(self.drop.rect.center)
         max_dist = self.drop.max_height
-        normalized_dist = 1 - dist_from_floor/max_dist
+        normalized_dist = 1 - dist_from_floor / max_dist
         if dist_from_floor <= max_dist:
             width = self.surf.width * normalized_dist
             height = self.surf.height * normalized_dist
             self.image = pygame.transform.scale(self.surf, (width, height))
-            self.rect = self.image.get_frect(center=(self.drop.pos[0],
-                        self.drop.pos[1] + self.drop.rect.width/2))
+            self.rect = self.image.get_frect(
+                center=(self.drop.pos[0], self.drop.pos[1] + self.drop.rect.width / 2)
+            )
