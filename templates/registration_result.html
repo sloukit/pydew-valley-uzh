@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Registration Result</title>
+   </head>
+   <body>
+      <h1>{{ response['message'] }}</h1>
+      {% if response['email'] %}
+      <p>Email: {{ response['email'] }}</p>
+      <p>Token: {{ response['token'] }}</p>
+      {% endif %}
+   </body>
+</html>

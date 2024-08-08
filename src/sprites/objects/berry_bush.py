@@ -52,7 +52,9 @@ class BerryBush(CollideableMapObject):
                 if random.randint(0, 10) < 4:
                     x = pos[0] + self.rect.left
                     y = pos[1] + self.rect.top
-                    self.fruit_sprites.add(Sprite((x, y), self.fruit_surf, (), Layer.FRUIT))
+                    self.fruit_sprites.add(
+                        Sprite((x, y), self.fruit_surf, (), Layer.FRUIT)
+                    )
 
     def update(self, dt):
         self.timer.update()

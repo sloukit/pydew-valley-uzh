@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Result</title>
+   </head>
+   <body>
+      <h1>{{ message }}</h1>
+      {% if email %}
+      <p>Email: {{ email }}</p>
+      {% endif %}
+      {% if token %}
+      <p>Token: {{ token }}</p>
+      {% endif %}
+      {% if access_token %}
+      <p>Access Token: {{ access_token }}</p>
+      {% endif %}
+   </body>
+</html>
