@@ -93,8 +93,9 @@ class Controls(Control, Enum):
     PLANT = (pygame.BUTTON_RIGHT, "Plant Seed")
     INTERACT = (pygame.K_SPACE, "Interact")
     INVENTORY = (pygame.K_i, "Open Inventory")
+    DEBUG_QUAKE = (pygame.K_m, "Start Earthquake Effect")
     EMOTE_WHEEL = (pygame.K_e, "Toggle Emote Wheel")
-    SHOW_HITBOXES = (pygame.K_h, "Show Hitboxes")
+    DEBUG_SHOW_HITBOXES = (pygame.K_h, "Show Hitboxes")
     SHOW_DIALOG = (pygame.K_t, "Show Dialog")
     ADVANCE_DIALOG = (pygame.K_SPACE, "Advance Dialog")
 

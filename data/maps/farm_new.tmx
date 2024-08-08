@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="80" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="24" nextobjectid="346">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="80" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="24" nextobjectid="346">
  <tileset firstgid="1" source="../tilesets/grass_tileset.tsx"/>
  <tileset firstgid="78" source="../tilesets/Interaction.tsx"/>
  <tileset firstgid="80" source="../tilesets/fence_tileset.tsx"/>
@@ -718,8 +718,8 @@
   <object id="2" name="from forest" x="872" y="584">
    <point/>
   </object>
-  <object id="364" name="to forest" x="848" y="624" width="48" height="16"/>
-  <object id="365" name="to town" x="368" y="624" width="48" height="16"/>
+  <object id="364" name="to forest" x="848" y="638" width="48" height="16"/>
+  <object id="365" name="to town" x="368" y="638" width="48" height="16"/>
   <object id="367" name="spawnpoint" x="624" y="512">
    <point/>
   </object>

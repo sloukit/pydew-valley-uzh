@@ -131,7 +131,7 @@ class TextBox(Sprite):
         ]
         self.image.fblits(blit_list)
 
-    def draw(self, display_surface: pygame.Surface, offset: pygame.Vector2):
+    def draw(self, display_surface: pygame.Surface, rect: pygame.Rect):
         display_surface.blit(self.image, self.rect)
 
 

@@ -212,7 +212,7 @@ class Entity(CollideableSprite, ABC):
         self.get_state()
         self.get_facing_direction()
 
-    def update(self, dt: float):
+    def _do_common_update_ops(self):
         self._prepare_for_update()
 
         if self.focused_indicator:
@@ -223,6 +223,15 @@ class Entity(CollideableSprite, ABC):
                 ),
                 self.focused_indicator.rect.size,
             )
+
+    def update(self, dt: float):
+        self._do_common_update_ops()
         self.move(dt)
+        self.animate(dt)
+        self.image = self._current_frame
+
+    def update_blocked(self, dt):
+        """Only used when cutscenes are run, and entities are not meant to move."""
+        self._do_common_update_ops()
         self.animate(dt)
         self.image = self._current_frame

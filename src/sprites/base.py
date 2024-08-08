@@ -27,8 +27,10 @@ class Sprite(pygame.sprite.Sprite):
         self.name = name
         self.hitbox_rect = self.rect.copy()
 
-    def draw(self, display_surface, offset):
-        display_surface.blit(self.image, self.rect.topleft + offset)
+    def draw(self, *args):
+        display_surface = args[0]
+        rect = args[1]
+        display_surface.blit(self.image, rect)
 
 
 class CollideableSprite(Sprite, ABC):

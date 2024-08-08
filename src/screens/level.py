@@ -5,8 +5,13 @@ from random import randint
 
 import pygame
 
+from src.camera import Camera
+from src.camera.camera_target import CameraTarget
+from src.camera.quaker import Quaker
+from src.camera.zoom_manager import ZoomManager
 from src.enums import FarmingTool, GameState, Map
-from src.events import DIALOG_ADVANCE, DIALOG_SHOW, post_event
+from src.events import DIALOG_ADVANCE, DIALOG_SHOW, START_QUAKE, post_event
+from src.exceptions import GameMapWarning
 from src.groups import AllSprites, PersistentSpriteGroup
 from src.gui.interface.emotes import NPCEmoteManager, PlayerEmoteManager
 from src.gui.scene_animation import SceneAnimation
@@ -30,6 +35,8 @@ from src.sprites.entities.player import Player
 from src.sprites.particle import ParticleSprite
 from src.sprites.setup import ENTITY_ASSETS
 from src.support import load_data, map_coords_to_tile, resource_path
+
+_TO_PLAYER_SPEED_INCREASE_THRESHOLD = 200
 
 
 class Level:
@@ -89,10 +96,12 @@ class Level:
         self.switch_screen = switch
 
         # cutscene
-        target_points = [(100, 100), (200, 200), (300, 100), (800, 900)]
-        speeds = [100, 150, 200]  # Different speeds for each segment
-        pauses = [0, 1, 0.5, 2]  # Pauses at each point in seconds
-        self.cut_scene_animation = SceneAnimation(target_points, speeds, pauses)
+        # target_points = [(100, 100), (200, 200), (300, 100), (800, 900)]
+        # speeds = [100, 150, 200]  # Different speeds for each segment
+        # pauses = [0, 1, 0.5, 2]  # Pauses at each point in seconds
+        self.cutscene_animation = SceneAnimation([CameraTarget.get_null_target()])
+
+        self.zoom_manager = ZoomManager()
 
         # assets
         self.font = pygame.font.Font(resource_path("font/LycheeSoda.ttf"), 30)
@@ -109,6 +118,9 @@ class Level:
         self.interaction_sprites = PersistentSpriteGroup()
         self.drop_sprites = pygame.sprite.Group()
         self.player_exit_warps = pygame.sprite.Group()
+
+        self.camera = Camera(0, 0)
+        self.quaker = Quaker(self.camera)
 
         self.soil_layer = SoilLayer(self.all_sprites, self.frames["level"])
 
@@ -170,9 +182,12 @@ class Level:
 
         # clear existing soil_layer
         self.soil_layer.reset()
+        self.quaker.reset()
 
         self.game_map = GameMap(
             tilemap=self.tmx_maps[game_map],
+            scene_ani=self.cutscene_animation,
+            zoom_man=self.zoom_manager,
             all_sprites=self.all_sprites,
             collision_sprites=self.collision_sprites,
             interaction_sprites=self.interaction_sprites,
@@ -189,6 +204,8 @@ class Level:
             frames=self.frames,
         )
 
+        self.camera.change_size(*self.game_map.size)
+
         player_spawn = None
 
         # search for player entry warp depending on which map they came from
@@ -197,7 +214,8 @@ class Level:
             if not player_spawn:
                 warnings.warn(
                     f'No valid entry warp found for "{game_map}" '
-                    f'from: "{self.current_map}"'
+                    f'from: "{self.current_map}"',
+                    GameMapWarning,
                 )
 
         # use default spawnpoint if no origin map is specified,
@@ -206,15 +224,33 @@ class Level:
             if self.game_map.player_spawnpoint:
                 player_spawn = self.game_map.player_spawnpoint
             else:
-                warnings.warn(f"No default spawnpoint found on {game_map}")
+                warnings.warn(
+                    f"No default spawnpoint found on {game_map}", GameMapWarning
+                )
                 # fallback to the first player entry warp
                 player_spawn = next(iter(self.game_map.player_entry_warps.values()))
 
         self.player.teleport(player_spawn)
 
+        if self.cutscene_animation.targets:
+            last_target = self.cutscene_animation.targets[-1]
+            last_targ_pos = pygame.Vector2(last_target.pos)
+            center = pygame.Vector2(self.player.rect.center)
+            movement = center - last_targ_pos
+            speed = (
+                max(round(movement.length()) // _TO_PLAYER_SPEED_INCREASE_THRESHOLD, 2)
+                * 100
+            )
+            self.cutscene_animation.targets.append(
+                CameraTarget(
+                    self.player.rect.center, len(self.cutscene_animation.targets), speed
+                )
+            )
+
         self.rain.set_floor_size(self.game_map.get_size())
 
         self.current_map = game_map
+        self.cutscene_animation.start()
 
     def activate_music(self):
         volume = 0.1
@@ -299,7 +335,7 @@ class Level:
                     collided_interactions[0].hit(self.player)
 
     def handle_event(self, event: pygame.event.Event) -> bool:
-        hitbox_key = self.player.controls.SHOW_HITBOXES.control_value
+        hitbox_key = self.player.controls.DEBUG_SHOW_HITBOXES.control_value
         dialog_key = self.player.controls.SHOW_DIALOG.control_value
         advance_dialog_key = self.player.controls.ADVANCE_DIALOG.control_value
 
@@ -316,12 +352,14 @@ class Level:
             if event.key == advance_dialog_key:
                 post_event(DIALOG_ADVANCE)
                 return True
+        if event.type == START_QUAKE:
+            self.quaker.start(event.duration)
 
         return False
 
     def get_camera_center(self):
-        if self.cut_scene_animation:
-            return self.cut_scene_animation.get_current_position()
+        if self.cutscene_animation:
+            return self.cutscene_animation.get_current_position()
 
         return self.player.rect.center
 
@@ -434,11 +472,12 @@ class Level:
         current_time = self.sky.get_time()
         self.overlay.display(current_time)
 
-    def draw(self, dt):
+    def draw(self, dt: float, move_things: bool):
         self.display_surface.fill((130, 168, 132))
-        camera_center = self.get_camera_center()
-        self.all_sprites.draw(camera_center)
-        self.sky.display(dt)
+        self.all_sprites.draw(self.camera)
+        self.zoom_manager.apply_zoom()
+        if move_things:
+            self.sky.display(dt)
         self.draw_overlay()
         self.day_transition.draw()
         self.map_transition.draw()
@@ -448,22 +487,35 @@ class Level:
         if self.raining:
             self.rain.update()
 
-    def update_cut_scene(self, dt):
-        if self.cut_scene_animation:
-            self.cut_scene_animation.update(dt)
-            if self.cut_scene_animation.is_finished:
-                self.cut_scene_animation = None
+    def update_cutscene(self, dt):
+        if self.cutscene_animation.active:
+            self.cutscene_animation.update(dt)
 
-    def update(self, dt: float):
+    def update(self, dt: float, move_things: bool = True):
         # update
         self.check_map_exit()
         self.update_rain()
         self.day_transition.update()
         self.map_transition.update()
-        self.all_sprites.update(dt)
-        self.drops_manager.update()
-        self.update_cut_scene(dt)
-
+        if move_things:
+            if self.cutscene_animation.active:
+                self.all_sprites.update_blocked(dt)
+            else:
+                self.all_sprites.update(dt)
+            self.drops_manager.update()
+            self.update_cutscene(dt)
+            self.quaker.update_quake(dt)
+            self.camera.update(
+                self.cutscene_animation
+                if self.cutscene_animation.active
+                else self.player
+            )
+            self.zoom_manager.update(
+                self.cutscene_animation
+                if self.cutscene_animation.active
+                else self.player,
+                dt,
+            )
         # draw
-        self.draw(dt)
+        self.draw(dt, move_things)
         self.draw_hitboxes()

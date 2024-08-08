@@ -96,7 +96,7 @@ class Tree(CollideableMapObject):
             fruit.image = generate_particle_surf(fruit.image)
         self.timer.activate()
 
-    def draw(self, display_surface, offset):
-        super().draw(display_surface, offset)
+    def draw(self, display_surface, rect, cam):
+        super().draw(display_surface, rect)
         for fruit in self.fruit_sprites:
-            fruit.draw(display_surface, offset)
+            fruit.draw(display_surface, cam.apply(fruit))

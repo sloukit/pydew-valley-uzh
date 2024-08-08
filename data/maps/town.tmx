@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="70" height="55" tilewidth="16" tileheight="16" infinite="0" nextlayerid="23" nextobjectid="531">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="70" height="55" tilewidth="16" tileheight="16" infinite="0" nextlayerid="24" nextobjectid="531">
  <tileset firstgid="1" source="../tilesets/grass_tileset.tsx"/>
  <tileset firstgid="78" source="../tilesets/fence_tileset.tsx"/>
  <tileset firstgid="94" source="../tilesets/Stone_Path.tsx"/>
@@ -1063,8 +1063,8 @@
   <object id="486" name="from bathhouse" x="840" y="712">
    <point/>
   </object>
-  <object id="531" name="to farm_new" x="576" y="0" width="48" height="16"/>
-  <object id="532" name="to forest" x="1104" y="304" width="16" height="64"/>
+  <object id="531" name="to farm_new" x="576" y="-14" width="48" height="16"/>
+  <object id="532" name="to forest" x="1118" y="304" width="16" height="64"/>
   <object id="542" name="spawnpoint" x="327.818" y="691.091">
    <point/>
   </object>

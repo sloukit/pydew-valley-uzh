@@ -185,31 +185,32 @@ class Drop(Sprite):
     def collision_check(self):
         pass
 
-    def draw(self, screen, camera_offset):
-        super().draw(screen, camera_offset)
+    def draw(self, *args):
+        screen, rect = args[:2]
+        super().draw(screen, rect)
         if not self.debug:
             return
         pygame.draw.circle(
-            screen, "cyan", self.throw_pos + camera_offset, self.max_radius, 1
+            screen, "cyan", self.throw_pos + rect.topleft, self.max_radius, 1
         )
         pygame.draw.circle(
-            screen, "cyan", self.throw_pos + camera_offset, self.min_radius, 1
+            screen, "cyan", self.throw_pos + rect.topleft, self.min_radius, 1
         )
-        pygame.draw.circle(screen, "brown", self.target_pos + camera_offset, 3)
-        pygame.draw.circle(screen, "red", self.bounce_pos + camera_offset, 3)
-        pygame.draw.circle(screen, "pink", self.item_pos + camera_offset, 3)
-        pygame.draw.rect(screen, "white", (self.hitbox_rect.move(*camera_offset)), 1)
+        pygame.draw.circle(screen, "brown", self.target_pos + rect.topleft, 3)
+        pygame.draw.circle(screen, "red", self.bounce_pos + rect.topleft, 3)
+        pygame.draw.circle(screen, "pink", self.item_pos + rect.topleft, 3)
+        pygame.draw.rect(screen, "white", (self.hitbox_rect.move(*rect.topleft)), 1)
         pygame.draw.rect(
-            screen, "gray", (self.player.hitbox_rect.move(*camera_offset)), 1
+            screen, "gray", (self.player.hitbox_rect.move(*rect.topleft)), 1
         )
-        pygame.draw.circle(screen, "black", self.pos + camera_offset, 3)
+        pygame.draw.circle(screen, "black", self.pos + rect.topleft, 3)
         pygame.draw.circle(
-            screen, "yellow", self.player.hitbox_rect.center + camera_offset, 3
+            screen, "yellow", self.player.hitbox_rect.center + rect.topleft, 3
         )
         pygame.draw.circle(
             screen,
             "yellow",
-            self.player.hitbox_rect.center + camera_offset,
+            self.player.hitbox_rect.center + rect.topleft,
             self.pull_radius,
             1,
         )

@@ -203,15 +203,16 @@ class Game:
 
             self.event_loop()
 
-            self.level.update(dt)
+            self.level.update(dt, self.current_state == GameState.PLAY)
 
             if self.game_paused():
                 self.menus[self.current_state].update(dt)
 
-            self.all_sprites.update(dt)
-            self.all_sprites.draw(
-                (self.display_surface.width / 2, self.display_surface.height / 2)
-            )
+            if self.level.cutscene_animation.active:
+                self.all_sprites.update_blocked(dt)
+            else:
+                self.all_sprites.update(dt)
+            self.all_sprites.draw(self.level.camera)
 
             pygame.display.update()
 

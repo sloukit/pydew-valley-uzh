@@ -1,7 +1,7 @@
 import pygame
 
+from src.camera import Camera
 from src.enums import Layer
-from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH, Coordinate
 
 
 class PersistentSpriteGroup(pygame.sprite.Group):
@@ -47,13 +47,14 @@ class AllSprites(PersistentSpriteGroup):
         self.offset = pygame.Vector2()
         self.cam_surf = pygame.Surface(self.display_surface.get_size())
 
-    def draw(self, target_pos: Coordinate):
-        self.offset.x = -(target_pos[0] - SCREEN_WIDTH / 2)
-        self.offset.y = -(target_pos[1] - SCREEN_HEIGHT / 2)
+    def update_blocked(self, dt: float):
+        for sprite in self:
+            getattr(sprite, "update_blocked", sprite.update)(dt)
 
+    def draw(self, camera: Camera):
         sorted_sprites = sorted(self.sprites(), key=lambda spr: spr.hitbox_rect.bottom)
 
         for layer in Layer:
             for sprite in sorted_sprites:
                 if sprite.z == layer:
-                    sprite.draw(self.display_surface, self.offset)
+                    sprite.draw(self.display_surface, camera.apply(sprite), camera)
