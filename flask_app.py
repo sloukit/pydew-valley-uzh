@@ -4,6 +4,8 @@ I made a simple flask app that creates a SQLAlchemy database that stores simple 
 To make it work locally you have to install quite some modules.
 http://127.0.0.1:5000/
 
+The database is now filed with two user testcases, what you can do is delete the site.db from the data / database directory to test the user creation for yourself
+
 You can adapt the code to use another database to store the user information in.
 """
 
@@ -22,8 +24,16 @@ from flask_migrate import Migrate
 import hashlib
 
 app = Flask(__name__)
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(basedir, 'site.db')}"
+
+# this finds the route to store the database to the data / database directory
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '.'))
+
+db_dir = os.path.join(project_root, 'data', 'database')
+
+if not os.path.exists(db_dir):
+    os.makedirs(db_dir)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(db_dir, 'site.db')}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Configuration
