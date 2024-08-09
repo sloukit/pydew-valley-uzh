@@ -284,3 +284,8 @@ class StudyGroup(IntEnum):
     NO_GROUP = 0  # Set at the beginning of the game.
     INGROUP = auto()
     OUTGROUP = auto()
+
+
+class ClockVersion(IntEnum):
+    ANALOG = 0
+    DIGITAL = auto()
