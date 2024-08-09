@@ -39,6 +39,7 @@ class Control:
     # savestate and cannot be set on initialisation
     click: bool = field(init=False, default=False, metadata={"exclude": True})
     hold: bool = field(init=False, default=False, metadata={"exclude": True})
+    disabled: bool = field(init=False, default=False, metadata={"exclude": True})
 
     def __post_init__(self):
         self._default_value = self.control_value
@@ -96,6 +97,7 @@ class Controls(Control, Enum):
     EMOTE_WHEEL = (pygame.K_e, "Toggle Emote Wheel")
     SHOW_HITBOXES = (pygame.K_h, "Show Hitboxes")
     SHOW_DIALOG = (pygame.K_t, "Show Dialog")
+    SHOW_PF_OVERLAY = (pygame.K_p, "Show Pathfinding")
     ADVANCE_DIALOG = (pygame.K_SPACE, "Advance Dialog")
 
     @classmethod

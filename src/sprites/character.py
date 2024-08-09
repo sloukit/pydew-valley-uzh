@@ -6,6 +6,7 @@ import pygame
 
 from src import settings
 from src.enums import (
+    Direction,
     EntityState,
     FarmingTool,
     InventoryResource,
@@ -44,6 +45,8 @@ class Character(Entity, ABC):
             collision_sprites=collision_sprites,
             z=z,
         )
+
+        self.facing_direction = Direction.DOWN
 
         # tools
         self.current_tool = FarmingTool(FarmingTool.get_first_tool_id())

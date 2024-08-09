@@ -16,6 +16,8 @@ from src.overlay.sky import Rain, Sky
 from src.overlay.soil import SoilLayer
 from src.overlay.transition import Transition
 from src.screens.game_map import GameMap
+from src.screens.minigames.base import Minigame
+from src.screens.minigames.cow_herding import CowHerding, CowHerdingState
 from src.settings import (
     GAME_MAP,
     SCALED_TILE_SIZE,
@@ -43,6 +45,8 @@ class Level:
     tmx_maps: MapDict
     current_map: Map | None
     game_map: GameMap | None
+
+    minigame: Minigame | None
 
     # sprite groups
     all_sprites: AllSprites
@@ -141,13 +145,6 @@ class Level:
         self.rain = Rain(self.all_sprites, self.frames["level"])
         self.raining = False
 
-        self.load_map(GAME_MAP)
-        self.map_transition = Transition(
-            lambda: self.switch_to_map(self.current_map),
-            self.finish_transition,
-            dur=2400,
-        )
-
         self.activate_music()
 
         # day night cycle
@@ -157,6 +154,19 @@ class Level:
         # overlays
         self.overlay = Overlay(self.player, frames["overlay"])
         self.show_hitbox_active = False
+        self.show_pf_overlay = False
+        self.setup_pf_overlay()
+
+        # minigame
+        self.minigame = None
+
+        # map
+        self.load_map(GAME_MAP)
+        self.map_transition = Transition(
+            lambda: self.switch_to_map(self.current_map),
+            self.finish_transition,
+            dur=2400,
+        )
 
     def load_map(self, game_map: Map, from_map: str = None):
         # prepare level state for new map
@@ -192,7 +202,7 @@ class Level:
         player_spawn = None
 
         # search for player entry warp depending on which map they came from
-        if from_map:
+        if from_map and not game_map == Map.MINIGAME:
             player_spawn = self.game_map.player_entry_warps.get(from_map)
             if not player_spawn:
                 warnings.warn(
@@ -215,6 +225,27 @@ class Level:
         self.rain.set_floor_size(self.game_map.get_size())
 
         self.current_map = game_map
+
+        if game_map == Map.MINIGAME:
+            self.minigame = CowHerding(
+                CowHerdingState(
+                    all_sprites=self.all_sprites,
+                    collision_sprites=self.collision_sprites,
+                    player=self.player,
+                    game_map=self.game_map,
+                    overlay=self.overlay,
+                    get_camera_center=self.get_camera_center,
+                    sounds=self.sounds,
+                )
+            )
+
+            @self.minigame.on_finish
+            def on_finish():
+                self.minigame = None
+                self.map_transition.reset = partial(self.switch_to_map, Map.TOWN)
+                self.start_map_transition()
+
+            self.minigame.start()
 
     def activate_music(self):
         volume = 0.1
@@ -301,7 +332,12 @@ class Level:
     def handle_event(self, event: pygame.event.Event) -> bool:
         hitbox_key = self.player.controls.SHOW_HITBOXES.control_value
         dialog_key = self.player.controls.SHOW_DIALOG.control_value
+        pf_overlay_key = self.player.controls.SHOW_PF_OVERLAY.control_value
         advance_dialog_key = self.player.controls.ADVANCE_DIALOG.control_value
+
+        if self.minigame and self.minigame.running:
+            if self.minigame.handle_event(event):
+                return True
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
@@ -315,6 +351,9 @@ class Level:
                 return True
             if event.key == advance_dialog_key:
                 post_event(DIALOG_ADVANCE)
+                return True
+            if event.key == pf_overlay_key:
+                self.show_pf_overlay = not self.show_pf_overlay
                 return True
 
         return False
@@ -379,35 +418,12 @@ class Level:
                     return
 
     # draw
+    # region debug-overlays
     def draw_hitboxes(self):
         if self.show_hitbox_active:
             offset = pygame.Vector2(0, 0)
             offset.x = -(self.get_camera_center()[0] - SCREEN_WIDTH / 2)
             offset.y = -(self.get_camera_center()[1] - SCREEN_HEIGHT / 2)
-
-            if AIData.setup:
-                for y in range(len(AIData.Matrix)):
-                    for x in range(len(AIData.Matrix[y])):
-                        if not AIData.Matrix[y][x]:
-                            surf = pygame.Surface(
-                                (SCALED_TILE_SIZE, SCALED_TILE_SIZE), pygame.SRCALPHA
-                            )
-                            surf.fill((255, 128, 128))
-                            pygame.draw.rect(
-                                surf,
-                                (0, 0, 0),
-                                (0, 0, SCALED_TILE_SIZE, SCALED_TILE_SIZE),
-                                2,
-                            )
-                            surf.set_alpha(92)
-
-                            self.display_surface.blit(
-                                surf,
-                                (
-                                    x * SCALED_TILE_SIZE + offset.x,
-                                    y * SCALED_TILE_SIZE + offset.y,
-                                ),
-                            )
 
             for sprite in self.collision_sprites:
                 rect = sprite.rect.copy()
@@ -430,6 +446,63 @@ class Level:
                     self.display_surface, "blue", drop.hitbox_rect.move(*offset), 2
                 )
 
+    def setup_pf_overlay(self):
+        self.pf_overlay_non_walkable = pygame.Surface(
+            (SCALED_TILE_SIZE, SCALED_TILE_SIZE), pygame.SRCALPHA
+        )
+        self.pf_overlay_non_walkable.fill((255, 128, 128))
+        pygame.draw.rect(
+            self.pf_overlay_non_walkable,
+            (0, 0, 0),
+            (0, 0, SCALED_TILE_SIZE, SCALED_TILE_SIZE),
+            2,
+        )
+        self.pf_overlay_non_walkable.set_alpha(92)
+
+    def draw_pf_overlay(self):
+        if self.show_pf_overlay:
+            offset = pygame.Vector2(0, 0)
+            offset.x = -(self.get_camera_center()[0] - SCREEN_WIDTH / 2)
+            offset.y = -(self.get_camera_center()[1] - SCREEN_HEIGHT / 2)
+
+            if AIData.setup:
+                for y in range(len(AIData.Matrix)):
+                    for x in range(len(AIData.Matrix[y])):
+                        if not AIData.Matrix[y][x]:
+                            self.display_surface.blit(
+                                self.pf_overlay_non_walkable,
+                                (
+                                    x * SCALED_TILE_SIZE + offset.x,
+                                    y * SCALED_TILE_SIZE + offset.y,
+                                ),
+                            )
+
+            for npe in self.game_map.animals + self.game_map.npcs:
+                if npe.pf_path:
+                    offset = pygame.Vector2(0, 0)
+                    offset.x = -(self.player.rect.centerx - SCREEN_WIDTH / 2)
+                    offset.y = -(self.player.rect.centery - SCREEN_HEIGHT / 2)
+                    for i in range(len(npe.pf_path)):
+                        start_pos = (
+                            (npe.pf_path[i][0]) * SCALED_TILE_SIZE + offset.x,
+                            (npe.pf_path[i][1]) * SCALED_TILE_SIZE + offset.y,
+                        )
+                        if i == 0:
+                            end_pos = (
+                                npe.hitbox_rect.centerx + offset.x,
+                                npe.hitbox_rect.centery + offset.y,
+                            )
+                        else:
+                            end_pos = (
+                                (npe.pf_path[i - 1][0]) * SCALED_TILE_SIZE + offset.x,
+                                (npe.pf_path[i - 1][1]) * SCALED_TILE_SIZE + offset.y,
+                            )
+                        pygame.draw.aaline(
+                            self.display_surface, (0, 0, 0), start_pos, end_pos
+                        )
+
+    # endregion
+
     def draw_overlay(self):
         current_time = self.sky.get_time()
         self.overlay.display(current_time)
@@ -439,7 +512,16 @@ class Level:
         camera_center = self.get_camera_center()
         self.all_sprites.draw(camera_center)
         self.sky.display(dt)
+
+        # overlays
+        self.draw_pf_overlay()
+        self.draw_hitboxes()
         self.draw_overlay()
+
+        if self.minigame and self.minigame.running:
+            self.minigame.draw()
+
+        # transitions
         self.day_transition.draw()
         self.map_transition.draw()
 
@@ -457,6 +539,10 @@ class Level:
     def update(self, dt: float):
         # update
         self.check_map_exit()
+
+        if self.minigame and self.minigame.running:
+            self.minigame.update(dt)
+
         self.update_rain()
         self.day_transition.update()
         self.map_transition.update()
@@ -464,6 +550,4 @@ class Level:
         self.drops_manager.update()
         self.update_cut_scene(dt)
 
-        # draw
         self.draw(dt)
-        self.draw_hitboxes()

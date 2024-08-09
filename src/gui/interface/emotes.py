@@ -5,6 +5,7 @@ from collections.abc import Callable
 import pygame
 import pygame.gfxdraw
 
+from src.colors import SL_ORANGE_BRIGHT, SL_ORANGE_BRIGHTEST, SL_ORANGE_DARK
 from src.enums import Layer
 from src.groups import PersistentSpriteGroup
 from src.gui.interface.emotes_base import EmoteBoxBase, EmoteManagerBase, EmoteWheelBase
@@ -242,7 +243,7 @@ class EmoteWheel(EmoteWheelBase):
         )
         pygame.draw.circle(
             background_surface,
-            (220, 185, 138),
+            SL_ORANGE_BRIGHT,
             (self._outer_radius, self._outer_radius),
             self._outer_radius - 2,
             int(self._outer_radius - self._inner_radius),
@@ -266,7 +267,7 @@ class EmoteWheel(EmoteWheelBase):
             length = self._outer_radius - self._inner_radius - 2
 
             draw_aa_line(
-                self._image, center_pos, thickness, length, deg, (170, 121, 89)
+                self._image, center_pos, thickness, length, deg, SL_ORANGE_DARK
             )
 
             # increase degree by half the distance to the next emote,
@@ -285,14 +286,14 @@ class EmoteWheel(EmoteWheelBase):
         # draw emote wheel outlines
         pygame.draw.aacircle(
             self._image,
-            (170, 121, 89),
+            SL_ORANGE_DARK,
             (self._outer_radius, self._outer_radius),
             self._inner_radius,
             self._emote_separator_width,
         )
         pygame.draw.aacircle(
             self._image,
-            (170, 121, 89),
+            SL_ORANGE_DARK,
             (self._outer_radius, self._outer_radius),
             self._outer_radius - 1,
             self._emote_separator_width,
@@ -349,7 +350,9 @@ class EmoteWheel(EmoteWheelBase):
         thickness = self._selected_emote_separator_width
         length = self._outer_radius - self._inner_radius + 5
 
-        draw_aa_line(self.image, center_pos, thickness, length, deg, (243, 229, 194))
+        draw_aa_line(
+            self.image, center_pos, thickness, length, deg, SL_ORANGE_BRIGHTEST
+        )
 
         deg = math.pi * 2 * (current_emote_index + 1) / 8 - math.pi / 2
         center_pos = (
@@ -357,14 +360,16 @@ class EmoteWheel(EmoteWheelBase):
             self._outer_radius + math.sin(deg) * (self._center - 3),
         )
 
-        draw_aa_line(self.image, center_pos, thickness, length, deg, (243, 229, 194))
+        draw_aa_line(
+            self.image, center_pos, thickness, length, deg, SL_ORANGE_BRIGHTEST
+        )
 
         start_deg = math.pi * 2 * -current_emote_index / 8 + math.pi / 4
         stop_deg = math.pi * 2 * (-current_emote_index + 1) / 8 + math.pi / 4
 
         pygame.draw.arc(
             self.image,
-            (243, 229, 194),
+            SL_ORANGE_BRIGHTEST,
             (0, 0, self._outer_radius * 2, self._outer_radius * 2),
             start_deg,
             stop_deg,
@@ -373,7 +378,7 @@ class EmoteWheel(EmoteWheelBase):
 
         pygame.draw.arc(
             self.image,
-            (243, 229, 194),
+            SL_ORANGE_BRIGHTEST,
             (
                 self._outer_radius - self._inner_radius - 1,
                 self._outer_radius - self._inner_radius - 1,

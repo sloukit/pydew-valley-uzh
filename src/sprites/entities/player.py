@@ -175,6 +175,9 @@ class Player(Character):
         mouse_pressed = pygame.mouse.get_pressed()
 
         for control in self.controls.all_controls():
+            if control.disabled:
+                continue
+
             is_mouse_event = control.control_value in (1, 2, 3)
 
             if is_mouse_event:
@@ -290,16 +293,6 @@ class Player(Character):
                 self.hitbox_rect.x - self._current_hitbox.x,
                 self.hitbox_rect.y - self._current_hitbox.y,
             ),
-            self.rect.size,
-        )
-
-    def teleport(self, pos: tuple[float, float]):
-        """
-        Moves the Player rect directly to the specified point without checking
-        for collision
-        """
-        self.rect.update(
-            (pos[0] - self.rect.width / 2, pos[1] - self.rect.height / 2),
             self.rect.size,
         )
 

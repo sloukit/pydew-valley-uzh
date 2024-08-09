@@ -3,9 +3,12 @@ import math
 import os
 import random
 import sys
+import warnings
 from collections.abc import Generator
+from dataclasses import dataclass
 
 import pygame
+import pygame.freetype
 import pygame.gfxdraw
 import pytmx
 
@@ -27,6 +30,10 @@ def resource_path(relative_path: str):
 # Might be changed later on if we use pygame.freetype instead
 def import_font(size: int, font_path: str) -> pygame.font.Font:
     return pygame.font.Font(resource_path(font_path), size)
+
+
+def import_freetype_font(size: int, font_path: str) -> pygame.font.Font:
+    return pygame.freetype.Font(resource_path(font_path), size)
 
 
 def import_image(img_path: str, alpha: bool = True) -> pygame.Surface:
@@ -153,9 +160,20 @@ def screen_to_tile(pos):
     return pos[0] // tile_size, pos[1] // tile_size
 
 
+@dataclass
+class WeightedCoordinate:
+    x: int
+    y: int
+
+    weight: float = 0
+
+    def __repr__(self):
+        return f"({self.x}x, {self.y}y, {self.weight:.2f}w)"
+
+
 def get_flight_matrix(
-    pos: tuple[int, int], radius: int, angle: float = math.pi / 2
-) -> list[list[int]]:
+    pos: tuple[int, int], radius: int
+) -> list[list[WeightedCoordinate]]:
     """
     Returns a matrix with the width and height of radius * 2 + 1, with a value
     of 1 if the matrix position can be fled to and 0 if not.
@@ -164,15 +182,9 @@ def get_flight_matrix(
     relative to the start position, but does not have to be within the
     matrix coordinates.
 
-    TODO: Could be optimised so that instead of a matrix with integer / boolean
-     values a matrix with the weight of each possible position is returned, of
-     which the walkable position with the greatest weight is then fled to.
-
     :param pos: Position of the object that should be fled from
     :param radius: Radius / distance of the flight vector.
                    The returned matrix has a width and height of radius * 2 + 1
-    :param angle: Angle of the flight vector (measured in radians)
-                  Default: PI / 2 (90°)
     :return: Matrix with positions that can be fled to
     """
 
@@ -181,11 +193,9 @@ def get_flight_matrix(
     p1 = (radius, radius)
     p2 = (pos[0] + radius, pos[1] + radius)
 
-    matrix = [[0 for _ in range(diameter)] for _ in range(diameter)]
-
-    # For further calculations the angle gets inverted and divided by two
-    # Can probably be optimised
-    angle = math.pi - angle / 2
+    matrix = [
+        [WeightedCoordinate(x, y) for x in range(diameter)] for y in range(diameter)
+    ]
 
     # The exact angle of the position that should be fled from, measured from
     # the centre of the matrix
@@ -205,12 +215,26 @@ def get_flight_matrix(
             elif distance_ < -math.pi:
                 distance_ = distance_ + (math.pi * 2)
 
-            if -angle < distance_ < angle:
-                matrix[y][x] = 0
-            else:
-                matrix[y][x] = 1
+            matrix[y][x].weight = ((p2[0] - x) ** 2 + (p2[1] - y) ** 2) ** 0.5
+            matrix[y][x].weight *= abs(distance_ / math.pi)
+
+    matrix[radius][radius].weight = float("inf")
 
     return matrix
+
+
+def get_sorted_flight_vectors(
+    pos: tuple[int, int], radius: int
+) -> list[WeightedCoordinate]:
+    flight_matrix = get_flight_matrix(pos, radius)
+
+    x = []
+    for row in flight_matrix:
+        for col in row:
+            x.append(col)
+
+    for coord in sorted(x, key=lambda i: i.weight):
+        yield coord
 
 
 def draw_aa_line(
@@ -269,10 +293,10 @@ def get_entity_facing_direction(
     """
     # prioritizes vertical animations, flip if statements to get horizontal
     # ones
-    if direction[0]:
-        return Direction.RIGHT if direction[0] > 0 else Direction.LEFT
     if direction[1]:
         return Direction.DOWN if direction[1] > 0 else Direction.UP
+    if direction[0]:
+        return Direction.RIGHT if direction[0] > 0 else Direction.LEFT
     return default_value
 
 
@@ -322,3 +346,59 @@ def near_tiles(
 
 def distance(pos1, pos2):
     return ((pos1[0] - pos2[0]) ** 2 + (pos1[1] - pos2[1]) ** 2) ** 0.5
+
+
+def get_outline(
+    surface: pygame.Surface,
+    outline_color: tuple[int, int, int] = (0, 0, 0),
+    resize: bool = False,
+) -> pygame.Surface:
+    mask = pygame.mask.from_surface(surface)
+    colorkey = (255, 255, 255)
+    colorkey = colorkey if outline_color != colorkey else (0, 0, 0)
+    mask_surf = mask.to_surface(setcolor=outline_color, unsetcolor=colorkey)
+    mask_surf.set_colorkey(colorkey)
+
+    if resize:
+        outline = pygame.Surface(
+            (surface.get_width() + 2, surface.get_height() + 2), pygame.SRCALPHA
+        )
+        outline.blit(mask_surf, (2, 1))
+        outline.blit(mask_surf, (0, 1))
+        outline.blit(mask_surf, (1, 2))
+        outline.blit(mask_surf, (1, 0))
+        outline.blit(surface, (1, 1))
+    else:
+        outline = pygame.Surface(surface.get_size(), pygame.SRCALPHA)
+        outline.blit(mask_surf, (1, 0))
+        outline.blit(mask_surf, (-1, 0))
+        outline.blit(mask_surf, (0, 1))
+        outline.blit(mask_surf, (0, -1))
+        outline.blit(surface, (0, 0))
+    return outline
+
+
+def add_pf_matrix_collision(
+    pf_matrix: list[list[int]], pos: tuple[float, float], size: tuple[float, float]
+):
+    """
+    Add a collision rect to the pathfinding matrix at the given position.
+    The given position will be the topleft corner of the rectangle.
+    The values given to this method should equal to the values as defined
+    in Tiled (scaled up by TILE_SIZE, not scaled up by SCALE_FACTOR)
+    :param pos: position of collision rect (x, y) (rounded-down)
+    :param size: size of collision rect (width, height) (rounded-up)
+    """
+    tile_x = int(pos[0] / TILE_SIZE)
+    tile_y = int(pos[1] / TILE_SIZE)
+    tile_w = math.ceil((pos[0] + size[0]) / TILE_SIZE) - tile_x
+    tile_h = math.ceil((pos[1] + size[1]) / TILE_SIZE) - tile_y
+
+    for w in range(tile_w):
+        for h in range(tile_h):
+            try:
+                pf_matrix[tile_y + h][tile_x + w] = 0
+            except IndexError as e:
+                warnings.warn(
+                    f"Failed adding non-walkable Tile to pathfinding matrix: {e}"
+                )

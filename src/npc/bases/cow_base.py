@@ -46,5 +46,5 @@ class CowBase(Animal, AIBehaviour, ABC):
         self.speed = 150
 
     @abstractmethod
-    def flee_from_pos(self, pos: tuple[int, int]) -> bool:
+    def flee_from_pos(self, pos: tuple[int, int], pf_grid: Grid = None) -> bool:
         pass

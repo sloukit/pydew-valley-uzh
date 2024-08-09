@@ -4,6 +4,7 @@ import pygame
 from pygame.math import Vector2 as vector
 from pygame.mouse import get_pos as mouse_pos
 
+from src.colors import SL_ORANGE_BRIGHT, SL_ORANGE_BRIGHTER, SL_ORANGE_BRIGHTEST
 from src.controls import Control
 from src.support import resource_path
 
@@ -293,17 +294,17 @@ class Slider:
         value = self.value - self.min_value
         diff = self.max_value - self.min_value
         knob_x = self.rect.left + (self.rect.width - 10) * value / diff
-        color = (232, 207, 166)
+        color = SL_ORANGE_BRIGHTER
         center = (int(knob_x), self.rect.centery)
         pygame.draw.circle(self.surface, color, center, self.knob_radius)
 
     def draw_rect(self):
         # border
-        border_color = (220, 185, 138)
+        border_color = SL_ORANGE_BRIGHT
         pygame.draw.rect(self.surface, border_color, self.rect, 0, 4)
 
         # bg
-        bg_color = (243, 229, 194)
+        bg_color = SL_ORANGE_BRIGHTEST
         rect = self.rect.inflate(-4, -4)
         pygame.draw.rect(self.surface, bg_color, rect, 0, 4)
 

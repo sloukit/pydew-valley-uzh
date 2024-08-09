@@ -80,7 +80,6 @@ def walk_to_pos(
 
 def wander(context: NPCIndividualContext) -> bool:
     """
-
     Makes the NPC wander to a random location in a 5 tile radius.
     :return: True if path has successfully been created, otherwise False
     """
@@ -88,8 +87,10 @@ def wander(context: NPCIndividualContext) -> bool:
     # current NPC position on the tilemap
     tile_coord = context.npc.get_tile_pos()
 
-    for pos in near_tiles(tile_coord, 3, shuffle=True):
+    for pos in near_tiles(tile_coord, 5, shuffle=True):
         if context.npc.create_path_to_tile(pos):
+            if len(context.npc.pf_path) > 5:
+                context.npc.pf_path = context.npc.pf_path[:5]
             return True
 
     return False
@@ -126,11 +127,15 @@ def harvest_plant(context: NPCIndividualContext) -> bool:
 
     tile_coord = context.npc.get_tile_pos()
 
+    loop_count = 0
     for pos in near_tiles(tile_coord, radius, shuffle=True):
         if pos in soil_layer.harvestable_tiles:
             path_created = walk_to_pos(context, pos)
             if path_created:
                 return True
+            loop_count += 1
+            if loop_count > 5:
+                break
 
     return False
 
@@ -197,13 +202,18 @@ def create_new_farmland(context: NPCIndividualContext) -> bool:
         context.npc.tool_index = context.npc.current_tool.value - 1
         context.npc.frame_index = 0
 
+    loop_count = 0
     for pos in order:
         path_created = walk_to_pos(
             context, w_coords[pos][1], on_path_completion=on_path_completion
         )
         if path_created:
             return True
+        loop_count += 1
+        if loop_count > 5:
+            break
 
+    loop_count = 0
     for pos in sorted(
         context.npc.soil_layer.untilled_tiles,
         key=lambda tile: distance(tile, tile_coord),
@@ -211,6 +221,9 @@ def create_new_farmland(context: NPCIndividualContext) -> bool:
         path_created = walk_to_pos(context, pos, on_path_completion=on_path_completion)
         if path_created:
             return True
+        loop_count += 1
+        if loop_count > 5:
+            break
 
     return False
 
@@ -297,6 +310,9 @@ def plant_adjacent_or_random_seed(context: NPCIndividualContext) -> bool:
         )
         context.npc.use_tool(ItemToUse.SEED)
 
+    # FIXME: Since path generation has a high performance impact the maximum loop count
+    #  is limited to 10. Removing this can cause the game to stutter
+    loop_count = 0
     for pos in near_tiles(tile_coord, radius, shuffle=True):
         if pos in soil_layer.unplanted_tiles:
             path_created = walk_to_pos(
@@ -304,13 +320,20 @@ def plant_adjacent_or_random_seed(context: NPCIndividualContext) -> bool:
             )
             if path_created:
                 return True
+            loop_count += 1
+            if loop_count > 5:
+                break
 
+    loop_count = 0
     for pos in sorted(
         soil_layer.unplanted_tiles, key=lambda tile: distance(tile, tile_coord)
     ):
         path_created = walk_to_pos(context, pos, on_path_completion=on_path_completion)
         if path_created:
             return True
+        loop_count += 1
+        if loop_count > 5:
+            break
 
     return False
 
@@ -336,6 +359,7 @@ def water_farmland(context: NPCIndividualContext) -> bool:
         context.npc.tool_index = context.npc.current_tool.value - 1
         context.npc.frame_index = 0
 
+    loop_count = 0
     for pos in near_tiles(tile_coord, radius):
         if pos in soil_layer.unwatered_tiles:
             path_created = walk_to_pos(
@@ -343,13 +367,20 @@ def water_farmland(context: NPCIndividualContext) -> bool:
             )
             if path_created:
                 return True
+            loop_count += 1
+            if loop_count > 5:
+                break
 
+    loop_count = 0
     for pos in sorted(
         soil_layer.unwatered_tiles, key=lambda tile: distance(tile, tile_coord)
     ):
         path_created = walk_to_pos(context, pos, on_path_completion=on_path_completion)
         if path_created:
             return True
+        loop_count += 1
+        if loop_count > 5:
+            break
 
     return False
 

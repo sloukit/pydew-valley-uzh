@@ -62,7 +62,7 @@ class AIBehaviourBase(Entity, ABC):
         pass
 
     @abstractmethod
-    def create_path_to_tile(self, coord: tuple[int, int]) -> bool:
+    def create_path_to_tile(self, coord: tuple[int, int], pf_grid: Grid) -> bool:
         pass
 
     @abstractmethod

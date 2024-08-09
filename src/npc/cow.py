@@ -1,13 +1,12 @@
-import math
-
 import pygame
+from pathfinding.core.grid import Grid
 
 from src.enums import Layer
 from src.npc.bases.cow_base import CowBase
 from src.npc.behaviour.cow_behaviour_tree import CowIndividualContext
 from src.settings import Coordinate
 from src.sprites.setup import EntityAsset
-from src.support import get_flight_matrix, near_tiles
+from src.support import get_sorted_flight_vectors
 
 
 class Cow(CowBase):
@@ -35,11 +34,15 @@ class Cow(CowBase):
         self.speed = 150
         self.fleeing = False
 
-    def flee_from_pos(self, pos: tuple[int, int]) -> bool:
+    def flee_from_pos(self, pos: tuple[int, int], pf_grid: Grid = None) -> bool:
         """
         Aborts the current path of the cow and makes it flee into the opposite
         direction of the given position.
+        FIXME: When a Cow is locked in a position they can't flee from, they'll still
+         check every path if it is possible, decreasing the frame rate by quite a bit
         :param pos: Position on the Tilemap that should be fled from
+        :param pf_grid: (Optional) pathfinding grid to use. Defaults to self.pf_grid
+        :return: Whether the path has successfully been created.
         """
         if not self.fleeing:
             self.abort_path()
@@ -50,35 +53,16 @@ class Cow(CowBase):
             # current NPC position on the tilemap
             tile_coord = self.get_tile_pos()
 
-            flight_radius = 5
-
-            flight_matrix = get_flight_matrix(
+            flight_vectors = get_sorted_flight_vectors(
                 pos=(tile_coord[0] - pos[0], tile_coord[1] - pos[1]),
                 radius=5,
-                # Further decreasing the angle value might make the cow's
-                #  behaviour more predictable, but puts it at a higher risk of
-                #  not finding any walkable area in the given angle, and thus
-                #  leading to the cow fleeing in a random direction instead
-                angle=math.pi / 4,
             )
 
-            for x, y in near_tiles(
-                (flight_radius, flight_radius), flight_radius, shuffle=True
-            ):
-                x_pos = x - flight_radius
-                y_pos = y - flight_radius
-                if not flight_matrix[y_pos][x_pos]:
-                    continue
-                x_coord = tile_coord[0] + x_pos
-                y_coord = tile_coord[1] + y_pos
-                if self.pf_grid.walkable(x_coord, y_coord):
-                    if self.create_path_to_tile((x_coord, y_coord)):
-                        return True
-
-            for x, y in near_tiles(
-                (tile_coord[0], tile_coord[1]), flight_radius, shuffle=True
-            ):
-                if self.pf_grid.walkable(x, y):
-                    if self.create_path_to_tile((x, y)):
-                        return True
+            for coordinate in flight_vectors:
+                x_coord = tile_coord[0] + coordinate.x - 5
+                y_coord = tile_coord[1] + coordinate.y - 5
+                if self.create_path_to_tile((x_coord, y_coord), pf_grid=pf_grid):
+                    if len(self.pf_path) > 5:
+                        self.pf_path = self.pf_path[:5]
+                    return True
         return False

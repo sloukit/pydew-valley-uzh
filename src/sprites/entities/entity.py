@@ -138,8 +138,8 @@ class Entity(CollideableSprite, ABC):
 
     def get_tile_pos(self) -> tuple[int, int]:
         return (
-            int(self.rect.centerx / SCALED_TILE_SIZE),
-            int(self.rect.centery / SCALED_TILE_SIZE),
+            int(self.hitbox_rect.centerx / SCALED_TILE_SIZE),
+            int(self.hitbox_rect.centery / SCALED_TILE_SIZE),
         )
 
     def focus(self):
@@ -153,6 +153,15 @@ class Entity(CollideableSprite, ABC):
         if self.focused_indicator:
             self.focused_indicator.kill()
             self.focused_indicator = None
+
+    def teleport(self, pos: tuple[float, float]):
+        """
+        Moves the Entity rect directly to the specified point
+        """
+        self.rect.update(
+            (pos[0] - self.rect.width / 2, pos[1] - self.rect.height / 2),
+            self.rect.size,
+        )
 
     @abstractmethod
     def move(self, dt: float):

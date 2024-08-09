@@ -261,11 +261,20 @@
  </tile>
  <tile id="65">
   <image source="../../images/objects/seaweed_1.png" width="14" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="1" y="3" width="12" height="12"/>
+  </objectgroup>
  </tile>
  <tile id="66">
   <image source="../../images/objects/seaweed_0.png" width="13" height="13"/>
+  <objectgroup draworder="index" id="3">
+   <object id="2" x="1" y="4" width="11" height="8"/>
+  </objectgroup>
  </tile>
  <tile id="67">
   <image source="../../images/objects/sign.png" width="14" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="5" y="10" width="4" height="5"/>
+  </objectgroup>
  </tile>
 </tileset>
