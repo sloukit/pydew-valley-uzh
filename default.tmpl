@@ -388,11 +388,11 @@ height="1px"
             <div id="info" class="trinfo"></div>
 
             <iframe id="iframe" class="framed" name="iframe"
-width="470px" height="90%"
-allowtransparency="true"
-style="z-index: 10;"
-style="background: #FFFFFF;"
-frameborder="1"
+                width="470px" height="90%"
+                allowtransparency="true"
+                style="z-index: 10;"
+                style="background: #FFFFFF;"
+                frameborder="1"
                 allowfullscreen="true"
                 webkitallowfullscreen="true"
                 msallowfullscreen="true"
@@ -421,6 +421,7 @@ frameborder="1"
     async function custom_onload(debug_hidden) {
         // this is called before anything python is loaded
         // make your js customization here
+        console.log("JSDEBUG: custom_onload()", "debug_hidden?=", debug_hidden)
         console.log(__FILE__, "custom_onload")
 
         pyconsole.hidden = debug_hidden
@@ -432,12 +433,14 @@ frameborder="1"
     }
 
     function custom_prerun(){
+        console.log("JSDEBUG: custom_prerun()")
         // no python main and no (MEMFS + VFS) yet.
         console.log(__FILE__, "custom_prerun")
 
     }
 
     function custom_postrun(){
+        console.log("JSDEBUG: custom_posrtun()")
         // python main and no VFS filesystem yet.
         console.log(__FILE__, "custom_postrun")
 
@@ -452,6 +455,7 @@ frameborder="1"
     }
 
     function debug() {
+        console.log("JSDEBUG: debug()")
         // allow to gain access to dev tools from js console
         // but only on desktop. difficult to reach when in iframe
         python.config.debug = true
@@ -461,10 +465,12 @@ frameborder="1"
     }
 
     function info_inline(data){
+        console.log("info_inline()", data)
         document.getElementById("info").innerHTML = data
     }
 
     function info_online(url) {
+        console.log("JSDEBUG: info_online()", url)
         // display info about current APK
         fetch( url /*, options */)
             .then((response) => response.text())
@@ -477,6 +483,7 @@ frameborder="1"
     }
 
     function frame_online(url) {
+        console.log("JSDEBUG: frame_online()", url)
         window.frames["iframe"].location = url;
     }
 
