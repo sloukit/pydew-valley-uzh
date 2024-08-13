@@ -1,6 +1,11 @@
+import logging
+LOG = logging.getLogger(__name__)
+
 import pygame  # noqa
 import pygame.freetype
+LOG.info('Importing pytmx...')
 import pytmx
+LOG.info('pytmx imported.')
 
 from src.enums import Map
 from src.import_checks import *  # noqa: F403

@@ -4,7 +4,11 @@ from collections.abc import Callable
 from typing import Any
 
 import pygame
+import logging
+LOG = logging.getLogger(__name__)
+LOG.info('Importing pytmx...')
 from pytmx import TiledElement, TiledMap, TiledObject, TiledObjectGroup, TiledTileLayer
+LOG.info('pytmx imported.')
 
 from src.enums import FarmingTool, InventoryResource, Layer
 from src.groups import AllSprites, PersistentSpriteGroup

@@ -3,7 +3,8 @@ from abc import ABC
 from collections.abc import Callable
 
 import pygame
-import pygame.gfxdraw
+import pygame.draw
+# import pygame.gfxdraw
 
 from src.enums import Layer
 from src.groups import PersistentSpriteGroup
@@ -283,14 +284,16 @@ class EmoteWheel(EmoteWheelBase):
             )
 
         # draw emote wheel outlines
-        pygame.draw.aacircle(
+        # pygame.draw.aacircle(
+        pygame.draw.circle(
             self._image,
             (170, 121, 89),
             (self._outer_radius, self._outer_radius),
             self._inner_radius,
             self._emote_separator_width,
         )
-        pygame.draw.aacircle(
+        # pygame.draw.aacircle(
+        pygame.draw.circle(
             self._image,
             (170, 121, 89),
             (self._outer_radius, self._outer_radius),

@@ -2,7 +2,11 @@ from collections.abc import Callable
 from random import choice
 
 import pygame
+import logging
+LOG = logging.getLogger(__name__)
+LOG.info('Importing pytmx...')
 from pytmx import TiledTileLayer
+LOG.info('pytmx imported.')
 
 from src.enums import FarmingTool, InventoryResource, Layer, SeedType
 from src.settings import SCALED_TILE_SIZE

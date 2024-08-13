@@ -1,6 +1,6 @@
 import json
 
-from jsmin import jsmin
+# from jsmin import jsmin
 
 from src.enums import FarmingTool, InventoryResource, StudyGroup
 from src.settings import GogglesStatus
@@ -77,4 +77,4 @@ def save(
 
 def load_savefile():
     with open(resource_path("data/save.json"), "r") as file:
-        return json.loads(jsmin(file.read()), object_hook=decoder_object_hook)
+        return json.loads(file.read(), object_hook=decoder_object_hook)

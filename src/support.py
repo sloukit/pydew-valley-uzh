@@ -6,8 +6,13 @@ import sys
 from collections.abc import Generator
 
 import pygame
-import pygame.gfxdraw
+# import pygame.gfxdraw
+import pygame.draw
+import logging
+LOG = logging.getLogger(__name__)
+LOG.info('Importing pytmx...')
 import pytmx
+LOG.info('pytmx imported.')
 
 from src import settings
 from src.enums import Direction
@@ -64,11 +69,14 @@ def import_folder_dict(fold_path: str) -> dict[str, pygame.Surface]:
 
 
 def tmx_importer(tmx_path: str) -> settings.MapDict:
+    LOG.info('tmx_importer()')
     files = {}
     for folder_path, _, file_names in os.walk(resource_path(tmx_path)):
         for file_name in file_names:
             full_path = os.path.join(folder_path, file_name)
+            LOG.info('tmx_importer(): running load_pygame')
             files[file_name.split(".")[0]] = pytmx.util_pygame.load_pygame(full_path)
+            LOG.info('tmx_importer(): running load_pygame -> DONE')
     return files
 
 
@@ -254,8 +262,21 @@ def draw_aa_line(
         - (length / 2.0) * math.sin(deg),
     )
 
-    pygame.gfxdraw.aapolygon(surface, (ul, ur, br, bl), color)
-    pygame.gfxdraw.filled_polygon(surface, (ul, ur, br, bl), color)
+    # pygame.gfxdraw.aapolygon(surface, (ul, ur, br, bl), color)
+    pygame.draw.aalines(
+        surface=surface,
+        color=color,
+        closed=True,
+        points=(ul, ur, br, bl),
+    )
+    # pygame.gfxdraw.filled_polygon(surface, (ul, ur, br, bl), color)
+    # equivalent to pygame.gfxdraw.filled_polygon:
+    pygame.draw.polygon(
+        surface=surface,
+        color=color,
+        points=(ul, ur, br, bl),
+        width=0,  # width=0 -> filled
+    )
 
 
 def get_entity_facing_direction(

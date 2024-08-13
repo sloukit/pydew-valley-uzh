@@ -1,6 +1,6 @@
 {
   "test":[
-    ["A character", "BLAH BLAH BLAH"], //Single-line text example
-    ["A character", "Insightful text here, or something. I mean, what the heck should I say?"] //Text wrapping function test
+    ["A character", "BLAH BLAH BLAH"],
+    ["A character", "Insightful text here, or something. I mean, what the heck should I say?"] 
   ]
 }

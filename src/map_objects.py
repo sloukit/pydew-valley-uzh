@@ -1,7 +1,11 @@
 from dataclasses import dataclass
 
 import pygame
+import logging
+LOG = logging.getLogger(__name__)
+LOG.info('Importing pytmx...')
 from pytmx import TiledMap
+LOG.info('pytmx imported.')
 
 from src.settings import SCALE_FACTOR
 

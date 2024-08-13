@@ -3,7 +3,7 @@ import textwrap
 from operator import attrgetter
 
 import pygame
-from jsmin import jsmin  # JSON minifier function (removes comments, notably)
+# from jsmin import jsmin  # JSON minifier function (removes comments, notably)
 
 from src.enums import Layer
 from src.settings import CHARS_PER_LINE, SCREEN_HEIGHT, SCREEN_WIDTH, TB_SIZE
@@ -36,11 +36,12 @@ class TextBox(Sprite):
         end = txt_surf.subsurface(cls._TXT_SURF_EXTREMITIES[1])
         txt_part_top = 64
         blit_list = [
-            (start, pygame.Rect(0, txt_part_top, *start.size)),
-            (end, pygame.Rect(373, txt_part_top, *end.size)),
+            # (start, pygame.Rect(0, txt_part_top, *start.size)),
+            (start, pygame.Rect(0, txt_part_top, *start.get_size())),
+            (end, pygame.Rect(373, txt_part_top, *end.get_size())),
             *(
-                (regular, pygame.Rect(x, txt_part_top, *regular.size))
-                for x in range(start.width, 373)
+                (regular, pygame.Rect(x, txt_part_top, *regular.get_size()))
+                for x in range(start.get_width(), 373)
             ),
             (cname_surf, cls._CNAME_SURF_RECT),
         ]
@@ -149,7 +150,7 @@ class DialogueManager:
         # while purging the raw file content from its comments.
         with open(resource_path("data/dialogues.json"), "r") as dialogue_file:
             self.dialogues: dict[str, list[list[str, str]]] = json.loads(
-                jsmin(dialogue_file.read())
+                dialogue_file.read()
             )
         self._tb_list: list[TextBox] = []
         self._msg_index: int = 0
