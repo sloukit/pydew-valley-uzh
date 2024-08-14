@@ -21,6 +21,8 @@ from src.settings import SCALE_FACTOR, SCALED_TILE_SIZE, TILE_SIZE, Coordinate
 
 def resource_path(relative_path: str):
     """Get absolute path to resource, works for dev and for PyInstaller"""
+    if sys.platform in ('emscripten','wasi'):
+        return relative_path
     relative_path = relative_path.replace("/", os.sep)
     try:
         base_path = sys._MEIPASS  # noqa
