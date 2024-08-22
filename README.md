@@ -77,6 +77,8 @@ This section is continuously updated.
 - [fortwoone](https://github.com/fortwoone), Game Developer & Quality Analyst
 - [richkdev](https://github.com/richkdev), Game Developer & Quality Analyst
 - [pmp-p](https://github.com/pmp-p), Game Developer & Quality Analyst
+- [Daniel Look](https://github.com/MrTup1), Game Developer & Quality Analyst
+- [Minaam Zubair](https://github.com/goatmanking), Game Developer & Quality Analyst
 - [bydariogamer](https://github.com/bydariogamer), Game Developer
 - [Brody Epstein](https://github.com/Eskimo396), Game Developer
 - [Danilo Saiu](https://github.com/ultimateownsz), Game Developer
