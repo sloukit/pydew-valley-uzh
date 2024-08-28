@@ -100,6 +100,7 @@ class Controls(Control, Enum):
     SHOW_PF_OVERLAY = (pygame.K_p, "Show Pathfinding")
     SHOW_DIALOG = (pygame.K_t, "Show Dialog")
     ADVANCE_DIALOG = (pygame.K_SPACE, "Advance Dialog")
+    DEDUG_PLAYER_TASK = (pygame.K_b, "Show Player Task")
 
     @classmethod
     def as_dict(cls) -> dict[str, dict[str, str | int]]:

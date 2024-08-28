@@ -38,6 +38,7 @@ class GameState(IntEnum):
     # saves and then sets its current state back to PLAY
     SAVE_AND_RESUME = 9
     INVENTORY = 10
+    PLAYER_TASK = 11
 
 
 # NOTE : DO NOT pay attention to anything the IDE might complain about in this class, as the enum generation mechanisms

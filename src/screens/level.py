@@ -11,7 +11,7 @@ from src.camera.camera_target import CameraTarget
 from src.camera.quaker import Quaker
 from src.camera.zoom_manager import ZoomManager
 from src.enums import FarmingTool, GameState, Map
-from src.events import DIALOG_ADVANCE, DIALOG_SHOW, START_QUAKE, post_event
+from src.events import DIALOG_ADVANCE, DIALOG_SHOW, START_QUAKE, PLAYER_TASK, post_event
 from src.exceptions import GameMapWarning
 from src.groups import AllSprites, PersistentSpriteGroup
 from src.gui.interface.emotes import NPCEmoteManager, PlayerEmoteManager
@@ -389,6 +389,7 @@ class Level:
         dialog_key = self.player.controls.SHOW_DIALOG.control_value
         pf_overlay_key = self.player.controls.SHOW_PF_OVERLAY.control_value
         advance_dialog_key = self.player.controls.ADVANCE_DIALOG.control_value
+        player_task_key = self.player.controls.DEDUG_PLAYER_TASK.control_value
 
         if self.current_minigame and self.current_minigame.running:
             if self.current_minigame.handle_event(event):
@@ -400,6 +401,9 @@ class Level:
                 return True
             if event.key == hitbox_key:
                 self.show_hitbox_active = not self.show_hitbox_active
+                return True
+            if event.key == player_task_key:
+                self.switch_screen(GameState.PLAYER_TASK)
                 return True
             if event.key == dialog_key:
                 post_event(DIALOG_SHOW, dial="test")
@@ -630,9 +634,11 @@ class Level:
                 else self.player
             )
             self.zoom_manager.update(
-                self.cutscene_animation
-                if self.cutscene_animation.active
-                else self.player,
+                (
+                    self.cutscene_animation
+                    if self.cutscene_animation.active
+                    else self.player
+                ),
                 dt,
             )
             self.decay_health()

@@ -214,3 +214,5 @@ DIALOG_SHOW = create_custom_event_type("DIALOG_SHOW", dial=str)
 DIALOG_ADVANCE = create_custom_event_type("DIALOG_ADVANCE")
 
 START_QUAKE = create_custom_event_type("StartQuake", duration=float)
+
+PLAYER_TASK = create_custom_event_type("PlayerTask")

@@ -4,7 +4,14 @@ import pygame
 from pygame.math import Vector2 as vector
 from pygame.mouse import get_pos as mouse_pos
 
-from src.colors import SL_ORANGE_BRIGHT, SL_ORANGE_BRIGHTER, SL_ORANGE_BRIGHTEST
+from src.colors import (
+    SL_ORANGE_BRIGHT,
+    SL_ORANGE_BRIGHTEST,
+    SL_ORANGE_DARK,
+    SL_ORANGE_DARKER,
+    SL_ORANGE_DARKEST,
+    SL_ORANGE_MEDIUM,
+)
 from src.controls import Control
 from src.support import resource_path
 
@@ -313,3 +320,53 @@ class Slider:
         self.draw_rect()
         self.draw_knob()
         self.draw_value()
+
+
+class EntryField:
+    # background = SL_ORANGE_BRIGHTEST when active, else SL_ORANGE_BRIGHT
+    # border = SL_ORANGE_DARKER when active, else SL_ORANGE_MEDIUM (or SL_ORANGE_DARK)
+    # text = SL_ORANGE_DARKEST
+    def __init__(self, font, pos):
+        self.surface = None
+        self.font = font
+        self.rect = pygame.Rect(pos, (50, 30))
+        self.input_text = ""
+        self.active = False
+        self.bg_color_passive = SL_ORANGE_BRIGHT
+        self.bg_color_active = SL_ORANGE_BRIGHTEST
+        self.border_color_passive = SL_ORANGE_MEDIUM
+        self.border_color_active = SL_ORANGE_DARKER
+
+    def draw_hover(self):
+        if self.rect.collidepoint(pygame.mouse.get_pos()):
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+        else:
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(pygame.mouse.get_pos()):
+                self.active = True
+            else:
+                self.active = False
+            return True
+
+        if self.active:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE:
+                    self.input_text = self.input_text[:-1]
+                else:
+                    self.input_text += event.unicode
+            return True
+        return False
+
+    def draw(self, surf):
+        self.surface = surf
+        self.draw_hover()
+        if self.active:
+            border_color = self.border_color_active
+            text_surf = self.font.render(self.input_text, True, (0, 0, 0))
+            self.surface.blit(text_surf, (self.rect.x + 5, self.rect.y))
+        else:
+            border_color = self.border_color_passive
+        pygame.draw.rect(self.surface, border_color, self.rect, 4, 4)

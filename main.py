@@ -4,7 +4,7 @@ import pygame
 
 from src import support
 from src.enums import GameState
-from src.events import DIALOG_ADVANCE, DIALOG_SHOW, OPEN_INVENTORY
+from src.events import DIALOG_ADVANCE, DIALOG_SHOW, OPEN_INVENTORY, PLAYER_TASK
 from src.groups import AllSprites
 from src.gui.interface.dialog import DialogueManager
 from src.gui.setup import setup_gui
@@ -14,6 +14,7 @@ from src.screens.level import Level
 from src.screens.menu_main import MainMenu
 from src.screens.menu_pause import PauseMenu
 from src.screens.menu_settings import SettingsMenu
+from src.screens.player_task import PlayerTask
 from src.screens.shop import ShopMenu
 from src.settings import (
     EMOTE_SIZE,
@@ -73,6 +74,7 @@ class Game:
 
         self.main_menu = MainMenu(self.switch_state)
         self.pause_menu = PauseMenu(self.switch_state)
+        self.task_menu = PlayerTask(self.switch_state)
         self.settings_menu = SettingsMenu(
             self.switch_state, self.sounds, self.player.controls
         )
@@ -96,6 +98,7 @@ class Game:
             GameState.SETTINGS: self.settings_menu,
             GameState.SHOP: self.shop_menu,
             GameState.INVENTORY: self.inventory_menu,
+            GameState.PLAYER_TASK: self.task_menu,
         }
         self.current_state = GameState.MAIN_MENU
 
@@ -107,6 +110,13 @@ class Game:
             self.current_state = GameState.PLAY
         if self.current_state == GameState.INVENTORY:
             self.inventory_menu.refresh_buttons_content()
+        if self.current_state == GameState.PLAYER_TASK:
+            self.task_menu.draw()
+            self.player.blocked = True
+            self.player.direction.update((0, 0))
+        else:
+            self.player.blocked = False
+
         if self.game_paused():
             self.player.blocked = True
             self.player.direction.update((0, 0))
@@ -186,6 +196,9 @@ class Game:
             sys.exit()
         if event.type == OPEN_INVENTORY:
             self.switch_state(GameState.INVENTORY)
+            return True
+        elif event.type == PLAYER_TASK:
+            self.switch_state(GameState.PLAYER_TASK)
             return True
         elif event.type == DIALOG_SHOW:
             if self.dialogue_manager.showing_dialogue:
