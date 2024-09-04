@@ -30,38 +30,7 @@ class Sky:
         self.color = self.get_color()
 
     def get_color(self):
-        # get time
-        hour, minute = self.game_time.get_time()
-        precise_hour = hour + minute / 60
-
-        # find nearest hours in self.colors
-        color_index = 0
-        for index, color_hour in enumerate(self.colors_hours):
-            if precise_hour < color_hour:
-                color_index = index - 1
-                break
-        else:
-            color_index = -1
-
-        # start and end colors
-        start_color = self.colors_rgb[color_index]
-        end_color = self.colors_rgb[color_index + 1]
-        start_hour = self.colors_hours[color_index]
-        end_hour = self.colors_hours[color_index + 1]
-
-        # just for time intervals like 23:00 - 7:00
-        end_hour += 24 * (end_hour <= start_hour)
-        precise_hour += 24 * (precise_hour < start_hour)
-
-        # calculate color
-        color_perc = (precise_hour - start_hour) / (end_hour - start_hour)
-        color = [255, 255, 255]
-        for index, (start_value, end_value) in enumerate(
-            zip(start_color, end_color, strict=True)
-        ):
-            color[index] = int(color_perc * end_value + (1 - color_perc) * start_value)
-
-        return color
+        return self.colors["12"]
 
     def display(self):
         # draw
