@@ -1,7 +1,6 @@
 import json
 import typing
 
-
 _DOUBLE_SLASH = "//"
 
 

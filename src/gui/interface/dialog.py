@@ -3,12 +3,12 @@ from operator import attrgetter
 
 import pygame
 
+from src import utils
 from src.enums import Layer
 from src.settings import CHARS_PER_LINE, SCREEN_HEIGHT, SCREEN_WIDTH, TB_SIZE
 from src.sprites.base import Sprite
 from src.support import resource_path
 from src.timer import Timer
-from src import utils
 
 
 class TextBox(Sprite):
