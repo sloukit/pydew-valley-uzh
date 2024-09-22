@@ -229,6 +229,21 @@ class Game:
                 self.all_sprites.update(dt)
             self.all_sprites.draw(self.level.camera)
 
+            # Apply blur effect only if the player has goggles equipped
+            if self.player.has_goggles:
+
+                #modify to increase or decrease blur
+                blurscale=2
+                surface = self.display_surface
+                width, height = surface.get_size()
+
+                # Reduce the surface size and rescale back up
+                blurred = pygame.transform.scale(surface, (width // blurscale, height // blurscale))  # Scale down depending on blurscale
+                blurred = pygame.transform.smoothscale(blurred, (width // blurscale, height // blurscale))
+                blurred_surface = pygame.transform.smoothscale(blurred, (width, height))
+                
+                self.display_surface.blit(blurred_surface, (0, 0))
+
             pygame.display.update()
             await asyncio.sleep(0)
 
