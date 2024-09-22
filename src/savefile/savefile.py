@@ -3,11 +3,11 @@ from itertools import chain
 
 import pygame
 
+from src import utils
 from src.enums import FarmingTool, InventoryResource, SeedType, StudyGroup
 from src.savefile.tile_info import PlantInfo, TileInfo
 from src.settings import Coordinate, GogglesStatus
 from src.support import resource_path
-from src import utils
 
 _NONSEED_INVENTORY_DEFAULT_AMOUNT = 20
 _SEED_INVENTORY_DEFAULT_AMOUNT = 5
@@ -60,7 +60,8 @@ def _extract_tile_info(o: dict):
             plant_info_orig = info.get("plant_info")
             if plant_info_orig is not None:
                 new_plant_info = PlantInfo(
-                    SeedType(plant_info_orig["plant_type"], plant_info_orig["age"])
+                    SeedType(plant_info_orig["plant_type"]),
+                    plant_info_orig["age"],
                 )
             else:
                 new_plant_info = None
