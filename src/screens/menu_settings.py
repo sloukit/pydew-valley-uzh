@@ -49,6 +49,7 @@ class SettingsMenu(GeneralMenu):
             self.switch_screen(GameState.PAUSE)
         if text == "Reset":
             self.keybinds_description.reset_keybinds()
+            self.volume_description.reset_volumes()
 
     # events
     def handle_event(self, event: pygame.event.Event) -> bool:

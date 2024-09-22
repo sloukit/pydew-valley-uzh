@@ -40,7 +40,7 @@ from src.sprites.entities.character import Character
 from src.sprites.entities.player import Player
 from src.sprites.particle import ParticleSprite
 from src.sprites.setup import ENTITY_ASSETS
-from src.support import load_data, map_coords_to_tile, resource_path
+from src.support import load_data, map_coords_to_tile, resource_path, save_data
 
 _TO_PLAYER_SPEED_INCREASE_THRESHOLD = 200
 
@@ -301,10 +301,14 @@ class Level:
         volume = 0.1
         try:
             sound_data = load_data("volume.json")
-            volume = sound_data["music"]
-            # sfx = sound_data['sfx']
         except FileNotFoundError:
-            pass
+            sound_data = {
+                "music": 50,
+                "sfx": 50,
+            }
+            save_data(sound_data, "volume.json")
+        volume = sound_data["music"]
+        # sfx = sound_data['sfx']
         self.sounds["music"].set_volume(min((volume / 1000), 0.4))
         self.sounds["music"].play(-1)
 

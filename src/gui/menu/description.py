@@ -346,6 +346,10 @@ class VolumeDescription(Description):
             or self.sfx_slider.handle_event(event)
         )
 
+    def reset_volumes(self):
+        self.sound_slider.set_value(50)
+        self.sfx_slider.set_value(50)
+
     def update_music(self, value):
         self.sounds["music"].set_volume(min((value / 1000), 0.4))
 
