@@ -2,9 +2,9 @@
 
 PyDew Valley is a project originally created by ClearCode in Python using pygame-ce.
 
-This expanded version will be used by the [University of Zurich's Department of Psychology](https://www.psychologie.uzh.ch/en.html) in an experimental study in psychology. For more details on the game levels, please [click here](https://docs.google.com/spreadsheets/d/1NAssjrPN4mv3kBC3e5YmJcYkJZLU7450cFR9EhCbfgE/edit?gid=374591304#gid=374591304). This project is due for completion on September 1st, 2024.
+This expanded version will be used by the [University of Zurich's Department of Psychology](https://www.psychologie.uzh.ch/en.html) in an experimental study in psychology. For more details on this project, see our [FAQ](https://docs.google.com/document/d/1nWFzCsxkyT85sHVOxOvO8LtcfNO-VF2tjM4RT23FbYY/edit?usp=sharing). This project is due for completion on November 3rd, 2024.
 
-For more information, please contact s.kittelberger[at]psychologie.uzh.ch.
+For more information, please contact s.kittelberger[at]psychologie.uzh.ch or sophielouki_58747 on Discord 
 
 ## Setup Instructions
 
