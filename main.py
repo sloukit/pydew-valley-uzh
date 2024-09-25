@@ -4,7 +4,7 @@ import pygame
 
 from src import support
 from src.enums import GameState
-from src.events import DIALOG_ADVANCE, DIALOG_SHOW, OPEN_INVENTORY, PLAYER_TASK
+from src.events import DIALOG_ADVANCE, DIALOG_SHOW, OPEN_INVENTORY
 from src.groups import AllSprites
 from src.gui.interface.dialog import DialogueManager
 from src.gui.setup import setup_gui
@@ -110,13 +110,8 @@ class Game:
             self.current_state = GameState.PLAY
         if self.current_state == GameState.INVENTORY:
             self.inventory_menu.refresh_buttons_content()
-        if self.current_state == GameState.PLAYER_TASK:
-            self.task_menu.draw()
-            self.player.blocked = True
-            self.player.direction.update((0, 0))
-        else:
-            self.player.blocked = False
-
+        # if self.current_state == GameState.PLAYER_TASK:
+        #     pass
         if self.game_paused():
             self.player.blocked = True
             self.player.direction.update((0, 0))
@@ -196,9 +191,6 @@ class Game:
             sys.exit()
         if event.type == OPEN_INVENTORY:
             self.switch_state(GameState.INVENTORY)
-            return True
-        elif event.type == PLAYER_TASK:
-            self.switch_state(GameState.PLAYER_TASK)
             return True
         elif event.type == DIALOG_SHOW:
             if self.dialogue_manager.showing_dialogue:

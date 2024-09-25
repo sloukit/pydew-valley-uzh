@@ -6,6 +6,7 @@ from pygame.mouse import get_pos as mouse_pos
 
 from src.colors import (
     SL_ORANGE_BRIGHT,
+    SL_ORANGE_BRIGHTER,
     SL_ORANGE_BRIGHTEST,
     SL_ORANGE_DARK,
     SL_ORANGE_DARKER,
@@ -323,50 +324,54 @@ class Slider:
 
 
 class EntryField:
-    # background = SL_ORANGE_BRIGHTEST when active, else SL_ORANGE_BRIGHT
-    # border = SL_ORANGE_DARKER when active, else SL_ORANGE_MEDIUM (or SL_ORANGE_DARK)
-    # text = SL_ORANGE_DARKEST
-    def __init__(self, font, pos):
-        self.surface = None
-        self.font = font
+    def __init__(self, surface, pos):
+        self.surface = surface
+        self.font = pygame.font.Font(resource_path("font/LycheeSoda.ttf"), 30)
         self.rect = pygame.Rect(pos, (50, 30))
-        self.input_text = ""
+        self.input_text = "0"
         self.active = False
+        self.hover_active = False
         self.bg_color_passive = SL_ORANGE_BRIGHT
         self.bg_color_active = SL_ORANGE_BRIGHTEST
-        self.border_color_passive = SL_ORANGE_MEDIUM
+        self.border_color_passive = SL_ORANGE_DARK
         self.border_color_active = SL_ORANGE_DARKER
 
+    def mouse_hover(self):
+        return self.rect.collidepoint(mouse_pos())
+
     def draw_hover(self):
-        if self.rect.collidepoint(pygame.mouse.get_pos()):
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+        if self.mouse_hover():
+            self.hover_active = True
         else:
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+            self.hover_active = False
 
     def handle_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.rect.collidepoint(pygame.mouse.get_pos()):
-                self.active = True
-            else:
-                self.active = False
-            return True
+        #if event.type == pygame.TEXTINPUT:
 
-        if self.active:
-            if event.type == pygame.KEYDOWN:
+        if event.type == pygame.KEYDOWN:
+            if self.active:
+                self.draw()
+            # only accept numerical values, limit to two values
                 if event.key == pygame.K_BACKSPACE:
                     self.input_text = self.input_text[:-1]
+                    return True
                 else:
                     self.input_text += event.unicode
-            return True
+                    return True
         return False
 
-    def draw(self, surf):
-        self.surface = surf
+    def draw(self):
         self.draw_hover()
         if self.active:
             border_color = self.border_color_active
-            text_surf = self.font.render(self.input_text, True, (0, 0, 0))
-            self.surface.blit(text_surf, (self.rect.x + 5, self.rect.y))
-        else:
+            bg_color = self.bg_color_active
+        elif not self.active:
             border_color = self.border_color_passive
+            bg_color = self.bg_color_passive
+        pygame.draw.rect(self.surface, bg_color, self.rect, 0, 4)
         pygame.draw.rect(self.surface, border_color, self.rect, 4, 4)
+        text_surf = self.font.render(self.input_text, True, SL_ORANGE_DARK)
+        self.surface.blit(
+            text_surf,
+            (self.rect.x + self.rect.width / 2 - text_surf.width / 2, self.rect.y),
+        )
