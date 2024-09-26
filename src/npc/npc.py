@@ -14,6 +14,9 @@ from src.settings import Coordinate
 from src.sprites.entities.character import Character
 from src.sprites.setup import EntityAsset
 
+from src.timer import Timer
+import time
+
 
 class NPC(NPCBase):
     def __init__(
@@ -48,6 +51,9 @@ class NPC(NPCBase):
         self.soil_area = soil_manager.get_area(self.study_group)
         self.has_necklace = False
         self.has_hat = False
+
+        self.created_time = time.time()
+        self.delay_time_speed = 0.25
 
         # TODO: Ensure that the NPC always has all needed seeds it needs
         #  in its inventory
@@ -84,3 +90,15 @@ class NPC(NPCBase):
         self.emote_manager.update_obj(
             self, (self.rect.centerx - 47, self.rect.centery - 128)
         )
+
+    def set_transparency_asper_sick(self):
+        currTime = time.time()
+        alpha_value = 255 * (currTime/ 100)
+        self.image.set_alpha(alpha_value)
+
+    def set_speed_asper_sick(self):
+        current_time = time.time()
+        if current_time - self.created_time >= self.delay_time_speed:
+            self.speed = self.original_speed * (current_time / 100)
+        
+    
