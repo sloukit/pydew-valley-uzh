@@ -74,7 +74,7 @@ deps = -r{toxinidir}/requirements.txt
 deps =
     {[testenv]deps}
     pytest
-commands = pytest src --doctest-modules
+commands = pytest src --doctest-modules --cov=src
 
 [testenv:format]
 deps = ruff

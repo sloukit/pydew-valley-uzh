@@ -1,11 +1,12 @@
 import json
+from itertools import chain
 
 import pygame
-from jsmin import jsmin
 
+from src import utils
 from src.enums import FarmingTool, InventoryResource, SeedType, StudyGroup
 from src.savefile.tile_info import PlantInfo, TileInfo
-from src.settings import Coordinate, GogglesStatus
+from src.settings import Coordinate, GogglesStatus, HatStatus, NecklaceStatus
 from src.support import resource_path
 
 _NONSEED_INVENTORY_DEFAULT_AMOUNT = 20
@@ -59,7 +60,7 @@ def _extract_tile_info(o: dict):
             plant_info_orig = info.get("plant_info")
             if plant_info_orig is not None:
                 new_plant_info = PlantInfo(
-                    SeedType(plant_info_orig["plant_type"], plant_info_orig["age"])
+                    SeedType(plant_info_orig["plant_type"]), plant_info_orig["age"]
                 )
             else:
                 new_plant_info = None
@@ -81,11 +82,13 @@ def _decoder_object_hook(o):
 
 def _load_internal():
     with open(resource_path("data/save.json"), "r") as file:
-        return json.loads(jsmin(file.read()), object_hook=_decoder_object_hook)
+        return utils.json_loads(file.read(), object_hook=_decoder_object_hook)
 
 
 class SaveFile:
     _has_goggles: GogglesStatus
+    _has_hat: HatStatus
+    _has_necklace: NecklaceStatus
     _study_group: StudyGroup
     _current_tool: FarmingTool
     _current_seed: FarmingTool
@@ -100,6 +103,8 @@ class SaveFile:
         inventory: dict[InventoryResource, int],
         group: StudyGroup,
         goggles_status: GogglesStatus,
+        necklace_status: NecklaceStatus,
+        hat_status: HatStatus,
         money: int = 200,
         soil_data: dict[Coordinate, TileInfo] | None = None,
     ):
@@ -117,6 +122,8 @@ class SaveFile:
         }
         self.study_group = group
         self.has_goggles = goggles_status
+        self.has_necklace = necklace_status
+        self.has_hat = hat_status
         self._soil_data = soil_data or {}
 
     @classmethod
@@ -124,6 +131,8 @@ class SaveFile:
         data = _load_internal()
         data.setdefault("group", StudyGroup.INGROUP)
         data.setdefault("goggles_status", None)
+        data.setdefault("necklace_status", None)
+        data.setdefault("hat_status", True)
         data.setdefault("current_tool", FarmingTool.get_first_tool_id())
         data.setdefault("current_seed", FarmingTool.get_first_seed_id())
         return SaveFile(**data)
@@ -145,6 +154,8 @@ class SaveFile:
                 "current_seed": self.current_seed.as_serialised_string(),
                 "group": self.study_group.value,
                 "goggles_status": self.has_goggles,
+                "necklace_status": self.has_necklace,
+                "hat_status": self.has_hat,
                 "inventory": serialised_inventory,
             }
             if self._soil_data:
@@ -185,9 +196,9 @@ class SaveFile:
     def soil_data(self):
         return self._soil_data
 
-    def set_soil_data(self, tiles: pygame.sprite.Group):
+    def set_soil_data(self, *tile_groups: pygame.sprite.Group):
         new_data = {}
-        for tile in tiles:
+        for tile in chain(*tile_groups):
             if not tile.hoed:
                 continue
             if tile.plant is not None:

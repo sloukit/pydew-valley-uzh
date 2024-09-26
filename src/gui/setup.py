@@ -28,7 +28,10 @@ def setup_gui():
     ).convert_alpha()
     entity_focus_indicator = pygame.transform.scale(
         entity_focus_indicator,
-        (entity_focus_indicator.width * 2, entity_focus_indicator.height * 2),
+        (
+            entity_focus_indicator.get_width() * 2,
+            entity_focus_indicator.get_height() * 2,
+        ),
     )
     indicators.ENTITY_FOCUSED = entity_focus_indicator
     # endregion

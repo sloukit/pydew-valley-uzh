@@ -7,13 +7,13 @@ import pygame  # noqa
 
 from src import support
 from src.controls import Controls
-from src.enums import EntityState, FarmingTool, InventoryResource, ItemToUse, StudyGroup
+from src.enums import FarmingTool, InventoryResource, ItemToUse, StudyGroup
 from src.events import OPEN_INVENTORY, START_QUAKE, post_event
 from src.gui.interface.emotes import PlayerEmoteManager
 from src.npc.bases.npc_base import NPCBase
 from src.savefile import SaveFile
-from src.settings import BATH_STATUS_TIMEOUT, Coordinate, GogglesStatus, SoundDict
-from src.sprites.character import Character
+from src.settings import BATH_STATUS_TIMEOUT, Coordinate, SoundDict
+from src.sprites.entities.character import Character
 from src.sprites.entities.entity import Entity
 from src.sprites.setup import EntityAsset
 
@@ -55,6 +55,7 @@ class Player(Character):
             assets=assets,
             groups=groups,
             collision_sprites=collision_sprites,
+            study_group=StudyGroup.INGROUP,
             apply_tool=apply_tool,
             plant_collision=plant_collision,
         )
@@ -70,7 +71,9 @@ class Player(Character):
         self.interact = interact
         self.bathstat = bathstat
         self.bath_time = bath_time
-        self.has_goggles: GogglesStatus = save_file.has_goggles
+        self.has_goggles = save_file.has_goggles
+        self.has_necklace = save_file.has_necklace
+        self.has_hat = save_file.has_hat
         self.study_group: StudyGroup = save_file.study_group
 
         self.emote_manager = emote_manager
@@ -88,41 +91,6 @@ class Player(Character):
         self.hp = hp
         self.created_time = time.time()
         self.delay_time_speed = 0.25
-
-    def draw(self, *args):
-        display_surface, rect = args[:2]
-        super().draw(display_surface, rect)
-        blit_list = []
-
-        # Render the necklace if the player has it and is in the ingroup
-        is_in_ingroup = self.study_group == StudyGroup.INGROUP
-        if is_in_ingroup:
-            necklace_state = EntityState(f"necklace_{self.state.value}")
-            necklace_ani = self.assets[necklace_state][self.facing_direction]
-            necklace_frame = necklace_ani.get_frame(self.frame_index)
-
-            blit_list.append((necklace_frame, rect))
-
-        # Render the goggles
-        if self.has_goggles:
-            goggles_state = EntityState(f"goggles_{self.state.value}")
-            goggles_ani = self.assets[goggles_state][self.facing_direction]
-            goggles_frame = goggles_ani.get_frame(self.frame_index)
-            blit_list.append((goggles_frame, rect))
-
-        # Render the hat/horn (depending on the group)
-        if is_in_ingroup:
-            hat_state = EntityState(f"hat_{self.state.value}")
-            hat_ani = self.assets[hat_state][self.facing_direction]
-            hat_frame = hat_ani.get_frame(self.frame_index)
-            blit_list.append((hat_frame, rect))
-        elif self.study_group == StudyGroup.OUTGROUP:
-            horn_state = EntityState(f"horn_{self.state.value}")
-            horn_ani = self.assets[horn_state][self.facing_direction]
-            horn_frame = horn_ani.get_frame(self.frame_index)
-            blit_list.append((horn_frame, rect))
-
-        display_surface.fblits(blit_list)
 
     def focus_entity(self, entity: Entity):
         if self.focused_entity:

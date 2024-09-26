@@ -27,9 +27,7 @@ class Sprite(pygame.sprite.Sprite):
         self.name = name
         self.hitbox_rect = self.rect.copy()
 
-    def draw(self, *args):
-        display_surface = args[0]
-        rect = args[1]
+    def draw(self, display_surface: pygame.Surface, rect: pygame.Rect, camera):
         display_surface.blit(self.image, rect)
 
 

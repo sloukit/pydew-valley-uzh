@@ -284,14 +284,14 @@ class EmoteWheel(EmoteWheelBase):
             )
 
         # draw emote wheel outlines
-        pygame.draw.aacircle(
+        pygame.draw.circle(
             self._image,
             SL_ORANGE_DARK,
             (self._outer_radius, self._outer_radius),
             self._inner_radius,
             self._emote_separator_width,
         )
-        pygame.draw.aacircle(
+        pygame.draw.circle(
             self._image,
             SL_ORANGE_DARK,
             (self._outer_radius, self._outer_radius),

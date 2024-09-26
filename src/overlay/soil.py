@@ -4,9 +4,11 @@ from random import choice
 import pygame
 from pytmx import TiledTileLayer
 
-from src.enums import FarmingTool, InventoryResource, Layer, SeedType
+from src.enums import FarmingTool, InventoryResource, Layer, SeedType, StudyGroup
+from src.groups import AllSprites
 from src.settings import SCALED_TILE_SIZE
 from src.sprites.base import Sprite
+from src.sprites.entities.character import Character
 from src.sprites.objects.plant import Plant
 from src.support import tile_to_screen
 
@@ -120,7 +122,7 @@ class Tile(Sprite):
         self._on_watered_funcs.append(func)
 
 
-class SoilLayer:
+class SoilArea:
     all_sprites: pygame.sprite.Group
     level_frames: dict
 
@@ -399,14 +401,6 @@ class SoilLayer:
 
         return False
 
-    def update(self):
-        for tile in self.tiles.values():
-            if tile.plant:
-                tile.plant.grow()
-            tile.watered = False
-            for sprite in self.water_sprites:
-                sprite.kill()
-
     def determine_tile_type(self, pos):
         x, y = pos
         tile_above = self.tiles.get((x, y - 1))
@@ -450,3 +444,58 @@ class SoilLayer:
         if all((hoed_left, hoed_right, hoed_below)) and not hoed_above:
             return "lrt"
         return "o"
+
+
+class SoilManager:
+    all_sprites: AllSprites
+    frames: dict
+
+    _areas: dict[StudyGroup, SoilArea | None]
+
+    def __init__(self, all_sprites: AllSprites, frames: dict):
+        self.all_sprites = all_sprites
+        self.frames = frames
+
+        self._areas = {i: SoilArea(self.all_sprites, self.frames) for i in StudyGroup}
+
+    def get_area(self, study_group: StudyGroup) -> SoilArea:
+        area = self._areas[study_group]
+        return area
+
+    def load_area(
+        self,
+        study_group: StudyGroup,
+        layer: TiledTileLayer,
+        previous_soil_data: dict | None = None,
+    ):
+        self.get_area(study_group).create_soil_tiles(
+            layer, previous_soil_data=previous_soil_data
+        )
+
+    def all_soil_sprites(self):
+        for area in self._areas.values():
+            yield area.soil_sprites
+
+    def hoe(self, character: Character, pos):
+        return self.get_area(character.study_group).hoe(pos)
+
+    def water(self, character: Character, pos):
+        return self.get_area(character.study_group).water(pos)
+
+    def plant(
+        self,
+        character: Character,
+        pos,
+        seed,
+        remove_resource: Callable[[InventoryResource, int], bool],
+    ):
+        return self.get_area(character.study_group).plant(pos, seed, remove_resource)
+
+    def update(self):
+        for area in self._areas.values():
+            for tile in area.tiles.values():
+                if tile.plant:
+                    tile.plant.grow()
+                tile.watered = False
+                for sprite in area.water_sprites:
+                    sprite.kill()

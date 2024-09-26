@@ -185,9 +185,8 @@ class Drop(Sprite):
     def collision_check(self):
         pass
 
-    def draw(self, *args):
-        screen, rect = args[:2]
-        super().draw(screen, rect)
+    def draw(self, screen: pygame.Surface, rect: pygame.Rect, camera):
+        super().draw(screen, rect, camera)
         if not self.debug:
             return
         pygame.draw.circle(

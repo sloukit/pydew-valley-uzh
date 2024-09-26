@@ -267,6 +267,12 @@ class EntityState(StrEnum):
     GOGGLES_WALK = "goggles_walk"
     GOGGLES_WATER = "goggles_water"
 
+    OUTGROUP_AXE = "outgroup_axe"
+    OUTGROUP_HOE = "outgroup_hoe"
+    OUTGROUP_IDLE = "outgroup_idle"
+    OUTGROUP_WALK = "outgroup_walk"
+    OUTGROUP_WATER = "outgroup_water"
+
     HAT_AXE = "hat_axe"
     HAT_HOE = "hat_hoe"
     HAT_IDLE = "hat_idle"

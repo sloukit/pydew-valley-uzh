@@ -74,7 +74,7 @@ class BerryBush(CollideableMapObject):
                 fruit.image = generate_particle_surf(fruit.image)
         self.timer.activate()
 
-    def draw(self, *args):
-        super().draw(*args)
+    def draw(self, display_surface: pygame.Surface, rect: pygame.Rect, camera):
+        super().draw(display_surface, rect, camera)
         for fruit in self.fruit_sprites:
-            fruit.draw(*args)
+            fruit.draw(display_surface, camera.apply(fruit), camera)

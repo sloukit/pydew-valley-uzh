@@ -22,8 +22,11 @@ def pf_grid_temporary_exclude(positions: set[tuple[int, int]], pf_grid: Grid = N
 
     try:
         for x, y in positions:
-            _old_walkable_values[(x, y)] = pf_grid.walkable(x, y)
-            pf_grid.node(x, y).walkable = False
+            try:
+                _old_walkable_values[(x, y)] = pf_grid.walkable(x, y)
+                pf_grid.node(x, y).walkable = False
+            except IndexError:
+                pass
         yield
     finally:
         for x, y in positions:

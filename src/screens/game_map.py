@@ -8,7 +8,14 @@ from pytmx import TiledElement, TiledMap, TiledObject, TiledObjectGroup, TiledTi
 from src.camera.camera_target import CameraTarget
 from src.camera.zoom_area import ZoomArea
 from src.camera.zoom_manager import ZoomManager
-from src.enums import FarmingTool, InventoryResource, Layer, Map, SpecialObjectLayer
+from src.enums import (
+    FarmingTool,
+    InventoryResource,
+    Layer,
+    Map,
+    SpecialObjectLayer,
+    StudyGroup,
+)
 from src.exceptions import GameMapWarning, InvalidMapError
 from src.groups import AllSprites, PersistentSpriteGroup
 from src.gui.interface.emotes import NPCEmoteManager, PlayerEmoteManager
@@ -26,7 +33,7 @@ from src.npc.cow import Cow
 from src.npc.npc import NPC
 from src.npc.setup import AIData
 from src.npc.utils import pf_add_matrix_collision
-from src.overlay.soil import SoilLayer
+from src.overlay.soil import SoilManager
 from src.savefile import SaveFile
 from src.settings import (
     ENABLE_NPCS,
@@ -36,8 +43,8 @@ from src.settings import (
     TEST_ANIMALS,
 )
 from src.sprites.base import AnimatedSprite, CollideableMapObject, Sprite
-from src.sprites.character import Character
 from src.sprites.drops import DropsManager
+from src.sprites.entities.character import Character
 from src.sprites.entities.player import Player
 from src.sprites.objects.berry_bush import BerryBush
 from src.sprites.objects.tree import Tree
@@ -235,7 +242,7 @@ class GameMap:
         npc_emote_manager: NPCEmoteManager,
         drops_manager: DropsManager,
         # SoilLayer and Tool applying function for farming NPCs
-        soil_layer: SoilLayer,
+        soil_manager: SoilManager,
         apply_tool: Callable[[FarmingTool, tuple[float, float], Character], None],
         plant_collision: Callable[[Character], None],
         # assets
@@ -261,7 +268,7 @@ class GameMap:
 
         self.drops_manager = drops_manager
 
-        self.soil_layer = soil_layer
+        self.soil_manager = soil_manager
         self.apply_tool = apply_tool
         self.plant_collision = plant_collision
 
@@ -338,7 +345,7 @@ class GameMap:
             pf_add_matrix_collision(
                 self._pf_matrix,
                 (pos[0] / SCALE_FACTOR, pos[1] / SCALE_FACTOR),
-                surf.size,
+                surf.get_size(),
             )
 
     def _setup_water_tile(
@@ -563,15 +570,40 @@ class GameMap:
     def _setup_npc(self, pos: tuple[int, int], obj: TiledObject, gmap: Map):
         """
         Creates a new NPC sprite at the given position
+
+        TODO: The NPCs study_group attribute currently only limits their farming area,
+         but does not restrict the NPC from moving into another groups farming area.
+         Although this should only happen if every single Tile of the NPCs designated
+         farming area is planted and watered, we should keep this in mind and perhaps
+         actually restrict its movable area, or make sure that a day does not last long
+         enough after a farming area has been fully watered.
         """
+
+        study_group = StudyGroup.NO_GROUP
+        group = obj.properties.get("group")
+        if group is None:
+            warnings.warn(
+                f"NPC with ID {obj.id} has no group assigned to it", GameMapWarning
+            )
+        else:
+            try:
+                study_group = StudyGroup[group]
+            except KeyError:
+                warnings.warn(
+                    f"NPC with ID {obj.id} has an invalid group '{group}' assigned to "
+                    f"it",
+                    GameMapWarning,
+                )
+
         npc = NPC(
             pos=pos,
             assets=ENTITY_ASSETS.RABBIT,
             groups=(self.all_sprites, self.collision_sprites),
             collision_sprites=self.collision_sprites,
+            study_group=study_group,
             apply_tool=self.apply_tool,
             plant_collision=self.plant_collision,
-            soil_layer=self.soil_layer,
+            soil_manager=self.soil_manager,
             emote_manager=self.npc_emote_manager,
             tree_sprites=self.tree_sprites,
         )
@@ -643,9 +675,14 @@ class GameMap:
         for tilemap_layer in self._tilemap.layers:
             if isinstance(tilemap_layer, TiledTileLayer):
                 # create soil layer
-                if tilemap_layer.name == "Farmable":
-                    self.soil_layer.create_soil_tiles(
-                        tilemap_layer, save_file.soil_data
+                if tilemap_layer.name == "farmable_ingroup":
+                    self.soil_manager.load_area(
+                        StudyGroup.INGROUP, tilemap_layer, save_file.soil_data
+                    )
+                    continue
+                elif tilemap_layer.name == "farmable_outgroup":
+                    self.soil_manager.load_area(
+                        StudyGroup.OUTGROUP, tilemap_layer, save_file.soil_data
                     )
                     continue
                 elif tilemap_layer.name == "Border":

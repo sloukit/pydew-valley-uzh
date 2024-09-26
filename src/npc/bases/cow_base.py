@@ -11,7 +11,7 @@ from src.npc.bases.ai_behaviour import AIBehaviour
 from src.npc.bases.animal import Animal
 from src.npc.behaviour.ai_behaviour_tree_base import ContextType
 from src.settings import Coordinate
-from src.sprites.character import Character
+from src.sprites.entities.character import Character
 from src.sprites.setup import EntityAsset
 
 

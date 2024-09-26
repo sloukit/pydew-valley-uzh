@@ -20,7 +20,7 @@ from src.npc.setup import AIData
 from src.overlay.game_time import GameTime
 from src.overlay.overlay import Overlay
 from src.overlay.sky import Rain, Sky
-from src.overlay.soil import SoilLayer
+from src.overlay.soil import SoilManager
 from src.overlay.transition import Transition
 from src.savefile import SaveFile
 from src.screens.game_map import GameMap
@@ -35,12 +35,12 @@ from src.settings import (
     MapDict,
     SoundDict,
 )
-from src.sprites.character import Character
 from src.sprites.drops import DropsManager
+from src.sprites.entities.character import Character
 from src.sprites.entities.player import Player
 from src.sprites.particle import ParticleSprite
 from src.sprites.setup import ENTITY_ASSETS
-from src.support import load_data, map_coords_to_tile, resource_path
+from src.support import load_data, map_coords_to_tile, resource_path, save_data
 
 _TO_PLAYER_SPEED_INCREASE_THRESHOLD = 200
 
@@ -70,7 +70,7 @@ class Level:
     player_exit_warps: pygame.sprite.Group
 
     # farming
-    soil_layer: SoilLayer
+    soil_manager: SoilManager
 
     # emotes
     _emotes: dict
@@ -133,7 +133,7 @@ class Level:
         self.camera = Camera(0, 0)
         self.quaker = Quaker(self.camera)
 
-        self.soil_layer = SoilLayer(self.all_sprites, self.frames["level"])
+        self.soil_manager = SoilManager(self.all_sprites, self.frames["level"])
 
         self._emotes = self.frames["emotes"]
         self.player_emote_manager = PlayerEmoteManager(self._emotes, self.all_sprites)
@@ -221,7 +221,7 @@ class Level:
             player_emote_manager=self.player_emote_manager,
             npc_emote_manager=self.npc_emote_manager,
             drops_manager=self.drops_manager,
-            soil_layer=self.soil_layer,
+            soil_manager=self.soil_manager,
             apply_tool=self.apply_tool,
             plant_collision=self.plant_collision,
             frames=self.frames,
@@ -301,22 +301,25 @@ class Level:
         volume = 0.1
         try:
             sound_data = load_data("volume.json")
-            volume = sound_data["music"]
-            # sfx = sound_data['sfx']
         except FileNotFoundError:
-            pass
+            sound_data = {
+                "music": 50,
+                "sfx": 50,
+            }
+            save_data(sound_data, "volume.json")
+        volume = sound_data["music"]
+        # sfx = sound_data['sfx']
         self.sounds["music"].set_volume(min((volume / 1000), 0.4))
         self.sounds["music"].play(-1)
 
     # plant collision
     def plant_collision(self, character: Character):
-        if self.soil_layer.plant_sprites:
-            for plant in self.soil_layer.plant_sprites:
+        area = self.soil_manager.get_area(character.study_group)
+        if area.plant_sprites:
+            for plant in area.plant_sprites:
                 if plant.rect.colliderect(character.hitbox_rect):
                     x, y = map_coords_to_tile(plant.rect.center)
-                    self.soil_layer.harvest(
-                        (x, y), character.add_resource, self.create_particle
-                    )
+                    area.harvest((x, y), character.add_resource, self.create_particle)
 
     def switch_to_map(self, map_name: Map):
         if self.tmx_maps.get(map_name):
@@ -344,30 +347,32 @@ class Level:
         if isinstance(entity, Player):
             self.sounds[sound].play()
 
-    def apply_tool(self, tool: FarmingTool, pos: tuple[int, int], entity: Character):
+    def apply_tool(self, tool: FarmingTool, pos: tuple[int, int], character: Character):
         match tool:
             case FarmingTool.AXE:
                 for tree in pygame.sprite.spritecollide(
-                    entity,
+                    character,
                     self.tree_sprites,
                     False,
                     lambda spr, tree_spr: spr.axe_hitbox.colliderect(
                         tree_spr.hitbox_rect
                     ),
                 ):
-                    tree.hit(entity)
-                    self._play_playeronly_sound("axe", entity)
+                    tree.hit(character)
+                    self._play_playeronly_sound("axe", character)
             case FarmingTool.HOE:
-                if self.soil_layer.hoe(pos):
-                    self._play_playeronly_sound("hoe", entity)
+                if self.soil_manager.hoe(character, pos):
+                    self._play_playeronly_sound("hoe", character)
             case FarmingTool.WATERING_CAN:
-                self.soil_layer.water(pos)
-                self._play_playeronly_sound("water", entity)
+                self.soil_manager.water(character, pos)
+                self._play_playeronly_sound("water", character)
             case _:  # All seeds
-                if self.soil_layer.plant(pos, tool, entity.remove_resource):
-                    self._play_playeronly_sound("plant", entity)
+                if self.soil_manager.plant(
+                    character, pos, tool, character.remove_resource
+                ):
+                    self._play_playeronly_sound("plant", character)
                 else:
-                    self._play_playeronly_sound("cant_plant", entity)
+                    self._play_playeronly_sound("cant_plant", character)
 
     def interact(self):
         collided_interactions = pygame.sprite.spritecollide(
@@ -442,10 +447,10 @@ class Level:
 
         # plants + soil
         if self.current_map == Map.NEW_FARM:
-            self.soil_layer.update()
+            self.soil_manager.update()
 
         self.raining = randint(0, 10) > 7
-        self.soil_layer.raining = self.raining
+        self.soil_manager.raining = self.raining
 
         # apples on the trees
 
@@ -463,7 +468,7 @@ class Level:
 
         # sky
         self.sky.start_color = [255, 255, 255]
-        self.sky.set_time(6, 0)  # set to 0600 hours upon sleeping
+        self.game_time.set_time(6, 0)  # set to 0600 hours upon sleeping
 
     def start_map_transition(self):
         self.map_transition.activate()
@@ -473,12 +478,7 @@ class Level:
         if self.player.hp > 10:
             if not self.player.bathstat and not self.player.has_goggles:
                 self.overlay.health_bar.apply_damage(HEALTH_DECAY_VALUE)
-            elif (
-                not self.player.bathstat
-                and self.player.has_goggles
-                or self.player.bathstat
-                and not self.player.has_goggles
-            ):
+            elif not self.player.has_goggles and self.player.bathstat:
                 self.overlay.health_bar.apply_damage((HEALTH_DECAY_VALUE / 2))
 
     def check_map_exit(self):

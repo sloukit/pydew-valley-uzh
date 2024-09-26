@@ -19,6 +19,11 @@ from src.settings import SCALE_FACTOR, SCALED_TILE_SIZE, TILE_SIZE, Coordinate
 def resource_path(relative_path: str):
     """Get absolute path to resource, works for dev and for PyInstaller"""
     relative_path = relative_path.replace("/", os.sep)
+
+    # Needed for pygbag runtime environment compatibility:
+    if sys.platform in ("emscripten", "wasm"):
+        return relative_path
+
     try:
         base_path = sys._MEIPASS  # noqa
     except AttributeError:
@@ -278,8 +283,18 @@ def draw_aa_line(
         - (length / 2.0) * math.sin(deg),
     )
 
-    pygame.gfxdraw.aapolygon(surface, (ul, ur, br, bl), color)
-    pygame.gfxdraw.filled_polygon(surface, (ul, ur, br, bl), color)
+    pygame.draw.aalines(
+        surface=surface,
+        color=color,
+        closed=True,
+        points=(ul, ur, br, bl),
+    )
+    pygame.draw.polygon(
+        surface=surface,
+        color=color,
+        points=(ul, ur, br, bl),
+        width=0,  # width=0 -> filled
+    )
 
 
 def get_entity_facing_direction(

@@ -8,6 +8,7 @@ from pathfinding.core.grid import Grid
 
 from src.controls import Controls
 from src.enums import Direction
+from src.exceptions import MinigameSetupError
 from src.groups import PersistentSpriteGroup
 from src.npc.behaviour.cow_behaviour_tree import CowConditionalBehaviourTree
 from src.npc.cow import Cow
@@ -16,7 +17,6 @@ from src.npc.utils import pf_add_matrix_collision
 from src.overlay.overlay import Overlay
 from src.screens.game_map import GameMap
 from src.screens.minigames.base import Minigame, MinigameState
-from src.exceptions import MinigameSetupError
 from src.screens.minigames.cow_herding_behaviour import (
     CowHerdingBehaviourTree,
     CowHerdingContext,

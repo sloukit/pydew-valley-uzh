@@ -1,3 +1,12 @@
+# /// script
+# dependencies = [
+#  "pygame-ce",
+#  "pytmx",
+#  "pathfinding",
+# ]
+# ///
+
+import asyncio
 import sys
 
 import pygame
@@ -105,7 +114,7 @@ class Game:
     def switch_state(self, state: GameState):
         self.current_state = state
         if self.current_state == GameState.SAVE_AND_RESUME:
-            self.save_file.set_soil_data(self.level.soil_layer.soil_sprites)
+            self.save_file.set_soil_data(*self.level.soil_manager.all_soil_sprites())
             self.level.player.save()
             self.current_state = GameState.PLAY
         if self.current_state == GameState.INVENTORY:
@@ -208,7 +217,7 @@ class Game:
             return True
         return False
 
-    def run(self):
+    async def run(self):
         while self.running:
             dt = self.clock.tick() / 1000
 
@@ -225,9 +234,28 @@ class Game:
                 self.all_sprites.update(dt)
             self.all_sprites.draw(self.level.camera)
 
+            # Apply blur effect only if the player has goggles equipped
+            if self.player.has_goggles and self.current_state == GameState.PLAY:
+                # Modify blurscale to increase or decrease blur
+                blurscale = 4
+                surface = self.display_surface
+                width, height = surface.get_size()
+
+                # Reduce the surface size and rescale back up for blurring
+                blurred = pygame.transform.scale(
+                    surface, (width // blurscale, height // blurscale)
+                )
+                blurred = pygame.transform.smoothscale(
+                    blurred, (width // blurscale, height // blurscale)
+                )
+                blurred_surface = pygame.transform.smoothscale(blurred, (width, height))
+
+                self.display_surface.blit(blurred_surface, (0, 0))
+
             pygame.display.update()
+            await asyncio.sleep(0)
 
 
 if __name__ == "__main__":
     game = Game()
-    game.run()
+    asyncio.run(game.run())
