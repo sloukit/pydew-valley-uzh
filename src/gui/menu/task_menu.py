@@ -15,7 +15,7 @@ from src.screens.minigames.gui import (
 )
 from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH, SoundDict
 from src.support import get_outline, import_freetype_font
-from src.colors import (SL_ORANGE_BRIGHTEST)
+from src.colors import SL_ORANGE_BRIGHTEST
 
 
 class TaskMenu(AbstractMenu):
@@ -45,6 +45,7 @@ class TaskMenu(AbstractMenu):
         )
 
     def draw_entry_fields(self, surface):
+        # magic numbers should go -> add offset from topleft of taskbox?
         entry1 = EntryField(surface, (755, 223))
         entry2 = EntryField(surface, (755, 257))
         entry3 = EntryField(surface, (755, 291))
@@ -52,14 +53,13 @@ class TaskMenu(AbstractMenu):
         for entry_box in self.entry_boxes:
             entry_box.draw()
 
-
     def draw_task(self):
         box_center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 3)
         button_top_margin = 32
         button_area_height = self.confirm_button.rect.height + button_top_margin
 
         text = Text(
-            TextChunk("You have received 12 blue eggs!", self.font_text),
+            TextChunk("You have received 12 candy bars!", self.font_text),
             Linebreak(),
             TextChunk("Distribute them:", self.font_text),
             Linebreak((0, 18)),
@@ -116,10 +116,9 @@ class TaskMenu(AbstractMenu):
                 return self.active_entry.handle_event(event)
             return super().handle_event(event)
             print(self.active_entry.active)
-            #return (super().click(event) or self.handle_event(event))
+            # return (super().click(event) or self.handle_event(event))
             #     self.active_entry.handle_event(event)
             #     return True
-
 
         return False
 
