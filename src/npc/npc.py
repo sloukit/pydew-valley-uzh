@@ -10,7 +10,7 @@ from src.gui.interface.emotes import NPCEmoteManager
 from src.npc.bases.npc_base import NPCBase
 from src.npc.behaviour.npc_behaviour_tree import NPCIndividualContext
 from src.overlay.soil import SoilManager
-from src.settings import Coordinate
+from src.settings import Coordinate, HEALTH_DECAY_VALUE
 from src.sprites.entities.character import Character
 from src.sprites.setup import EntityAsset
 
@@ -52,6 +52,8 @@ class NPC(NPCBase):
         self.has_necklace = False
         self.has_hat = False
 
+        self.speed = 250
+        self.original_speed = 250
         self.created_time = time.time()
         self.delay_time_speed = 0.25
 
@@ -85,6 +87,8 @@ class NPC(NPCBase):
             self.has_hat = False
 
     def update(self, dt):
+        self.set_transparency_asper_sick()
+        self.set_speed_asper_sick()
         super().update(dt)
 
         self.emote_manager.update_obj(
@@ -93,12 +97,16 @@ class NPC(NPCBase):
 
     def set_transparency_asper_sick(self):
         currTime = time.time()
-        alpha_value = 255 * (currTime/ 100)
-        self.image.set_alpha(alpha_value)
+        elapsed_t = currTime - self.created_time
+        #print("elasped: ",elapsed_t)
+        alpha_v = 255 - (elapsed_t * HEALTH_DECAY_VALUE*100)
+        self.image.set_alpha(alpha_v)
+        print("npc t: ",alpha_v)##debug
+        #print(elapsed_t*HEALTH_DECAY_VALUE)##debug
 
     def set_speed_asper_sick(self):
-        current_time = time.time()
-        if current_time - self.created_time >= self.delay_time_speed:
-            self.speed = self.original_speed * (current_time / 100)
-        
-    
+        cTime = time.time()
+        elapsedTime = cTime- self.created_time
+        if elapsedTime >= self.delay_time_speed:
+            self.speed = self.original_speed - (elapsedTime * HEALTH_DECAY_VALUE*100)
+            print("npc speed: ",self.speed)##debug
