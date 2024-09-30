@@ -253,6 +253,8 @@ _OPPOSITES = (
 class EntityState(StrEnum):
     IDLE = "idle"
     WALK = "walk"
+    IDLEGHOST = "idleghost"
+
 
     AXE = "axe"
     HOE = "hoe"

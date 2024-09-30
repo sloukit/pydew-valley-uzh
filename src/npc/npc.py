@@ -16,7 +16,7 @@ from src.sprites.setup import EntityAsset
 
 from src.timer import Timer
 import time
-
+from src.support import import_image
 
 class NPC(NPCBase):
     def __init__(
@@ -101,12 +101,16 @@ class NPC(NPCBase):
         #print("elasped: ",elapsed_t)
         alpha_v = 255 - (elapsed_t * HEALTH_DECAY_VALUE*100)
         self.image.set_alpha(alpha_v)
-        print("npc t: ",alpha_v)##debug
+        #print("npc t: ",alpha_v)##debug
         #print(elapsed_t*HEALTH_DECAY_VALUE)##debug
+        if alpha_v <= 0:
+            img = import_image(f"images/characters/rabbit/idleghost.png")
+            print("npc is dead")##debug
+            
 
     def set_speed_asper_sick(self):
         cTime = time.time()
         elapsedTime = cTime- self.created_time
         if elapsedTime >= self.delay_time_speed:
             self.speed = self.original_speed - (elapsedTime * HEALTH_DECAY_VALUE*100)
-            print("npc speed: ",self.speed)##debug
+            #print("npc speed: ",self.speed)##debug

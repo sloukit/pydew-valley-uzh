@@ -263,11 +263,11 @@ class Player(Character):
         current_time = time.time()
         if current_time - self.created_time >= self.delay_time_speed:
             self.speed = self.original_speed * (self.hp / 100)
-            print("player speed: ",self.speed)##debug
+            #print("player speed: ",self.speed)##debug
     def set_transparency_asper_health(self):
         alpha_value = 255 * (self.hp / 100)
         self.image.set_alpha(alpha_value)
-        print("player t: ",alpha_value)##debug
+        #print("player t: ",alpha_value)##debug
         #print("player hp: ",self.hp)##debug
 
     def check_bath_bool(self):
