@@ -14,8 +14,9 @@ from src.overlay.soil import SoilManager
 from src.settings import HEALTH_DECAY_VALUE, Coordinate
 from src.sprites.entities.character import Character
 from src.sprites.setup import EntityAsset
-from src.support import import_image
-from src.timer import Timer
+
+# from src.support import import_image
+# from src.timer import Timer
 
 
 class NPC(NPCBase):
@@ -104,7 +105,7 @@ class NPC(NPCBase):
         # print("npc t: ",alpha_v)##debug
         # print(elapsed_t*HEALTH_DECAY_VALUE)##debug
         if alpha_v <= 0:
-            #img = import_image(f"images/characters/rabbit/idleghost.png")
+            # img = import_image(f"images/characters/rabbit/idleghost.png")
             print("npc is dead")  ##debug
 
     def set_speed_asper_sick(self):
