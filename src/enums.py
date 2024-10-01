@@ -255,7 +255,6 @@ class EntityState(StrEnum):
     WALK = "walk"
     IDLEGHOST = "idleghost"
 
-
     AXE = "axe"
     HOE = "hoe"
     WATER = "water"
