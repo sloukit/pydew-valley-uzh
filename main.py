@@ -81,7 +81,7 @@ class Game:
 
         # screens
         self.level = Level(
-            self.switch_state, self.tmx_maps, self.frames, self.sounds, self.save_file
+            self.switch_state, self.tmx_maps, self.frames, self.sounds, self.save_file, self.check_current_state
         )
         self.player = self.level.player
 
@@ -124,6 +124,9 @@ class Game:
     def set_token_status(self, status: bool):
         """Update the token status."""
         self.token_status = status
+
+    def check_current_state(self):
+        return self.current_state
 
     def switch_state(self, state: GameState):
         self.current_state = state

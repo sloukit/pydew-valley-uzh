@@ -287,11 +287,8 @@ class InventoryMenu(AbstractMenu):
         )
 
     def handle_event(self, event):
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_i:
-                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-                self.switch_screen(GameState.PLAY)
-        if event.type == pygame.KEYDOWN:
+        if event.type == pygame.KEYUP:
             if event.key == pygame.K_ESCAPE:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-                self.switch_screen(GameState.PAUSE)
+                self.switch_screen(GameState.PLAY)
+                

@@ -101,6 +101,7 @@ class Level:
         frames: dict[str, dict],
         sounds: SoundDict,
         save_file: SaveFile,
+        check_current_state
     ):
         # main setup
         self.display_surface = pygame.display.get_surface()
@@ -200,6 +201,9 @@ class Level:
             self.finish_transition,
             dur=2400,
         )
+
+        # Current state
+        self.check_current_state = check_current_state
 
     def load_map(self, game_map: Map, from_map: str = None):
         # prepare level state for new map
@@ -466,7 +470,7 @@ class Level:
                 return True
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
+            if event.key == pygame.K_ESCAPE and self.check_current_state() == GameState.PLAY:
                 self.switch_screen(GameState.PAUSE)
                 return True
             if event.key == hitbox_key:
