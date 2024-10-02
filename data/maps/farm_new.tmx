@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="80" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="25" nextobjectid="390">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="80" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="26" nextobjectid="398">
  <tileset firstgid="1" source="../tilesets/grass_tileset.tsx"/>
  <tileset firstgid="78" source="../tilesets/Interaction.tsx"/>
  <tileset firstgid="80" source="../tilesets/fence_tileset.tsx"/>
@@ -735,15 +735,24 @@
   </object>
  </objectgroup>
  <objectgroup id="26" name="Animals">
-  <object id="378" name="Chicken" gid="197" x="868" y="150" width="11" height="11"/>
-  <object id="379" name="Chicken" gid="197" x="888" y="190" width="11" height="11"/>
+  <object id="378" name="Chicken" gid="197" x="866.75" y="161.25" width="11" height="11"/>
+  <object id="379" name="Chicken" gid="197" x="887.75" y="196" width="11" height="11"/>
   <object id="380" name="Cow" gid="198" x="755" y="154" width="27" height="17"/>
   <object id="381" name="Cow" gid="198" x="732" y="231" width="27" height="17"/>
   <object id="382" name="Cow" gid="198" x="500" y="236" width="27" height="17"/>
   <object id="383" name="Cow" gid="198" x="468" y="158" width="27" height="17"/>
   <object id="384" name="Chicken" gid="197" x="385" y="153" width="11" height="11"/>
   <object id="385" name="Chicken" gid="197" x="364" y="196" width="11" height="11"/>
+  <object id="390" name="Chicken" gid="197" x="355.5" y="137" width="11" height="11"/>
+  <object id="391" name="Chicken" gid="197" x="402.25" y="250.25" width="11" height="11"/>
+  <object id="392" name="Chicken" gid="197" x="443" y="233" width="11" height="11"/>
+  <object id="393" name="Cow" gid="198" x="366.25" y="225.5" width="27" height="17"/>
+  <object id="394" name="Cow" gid="198" x="875" y="243" width="27" height="17"/>
+  <object id="395" name="Chicken" gid="197" x="845" y="245.25" width="11" height="11"/>
+  <object id="396" name="Chicken" gid="197" x="805.5" y="223.5" width="11" height="11"/>
+  <object id="397" name="Chicken" gid="197" x="901.25" y="148.5" width="11" height="11"/>
  </objectgroup>
+ <objectgroup id="24" name="Barns"/>
  <objectgroup id="24" name="Interactions">
   <object id="8" name="Bed" x="1040" y="112" width="32" height="32"/>
   <object id="7" name="Bed" x="192" y="112" width="32" height="32"/>
@@ -767,7 +776,11 @@
     <property name="label" value="to_forest_down"/>
    </properties>
   </object>
-  <object id="380" name="Outgroup Farm" x="691.219" y="96.2339" width="415.471" height="358.101"/>
+  <object id="380" name="Outgroup Farm" x="693.969" y="118.484" width="415.471" height="358.101"/>
+  <object id="386" name="L_RANGE_BLOCKAGE" x="428.8" y="261" width="56" height="7.5"/>
+  <object id="387" name="L_BARN_BLOCKAGE" x="463.957" y="186" width="32" height="5.93478"/>
+  <object id="388" name="R_RANGE_BLOCKAGE" x="779.364" y="260.795" width="56.9375" height="6.5"/>
+  <object id="389" name="R_BARN_BLOCKAGE" x="768.125" y="185.97" width="32" height="5.93478"/>
  </objectgroup>
  <layer id="25" name="farmable_outgroup" width="80" height="40">
   <data encoding="csv">
@@ -998,7 +1011,7 @@
   <object id="347" x="416" y="194" width="32" height="11"/>
   <object id="346" x="339.5" y="97.5" width="9" height="171.167"/>
   <object id="347" x="349" y="261" width="79.5" height="7.5"/>
-  <object id="349" x="485" y="261" width="97.5" height="7"/>
+  <object id="349" x="485" y="261" width="97.5" height="7.5"/>
   <object id="350" x="565" y="202" width="6.5" height="58.5"/>
   <object id="352" x="260.5" y="470" width="382.5" height="6"/>
   <object id="353" x="162" y="533" width="194.5" height="7"/>

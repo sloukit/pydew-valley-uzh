@@ -14,14 +14,13 @@ class OutgroupMenu(GeneralMenu):
         self,
         player,
         switch_screen: Callable[[str], None],
-        set_token_status: Callable[[bool], None],
     ):
         options = ["Yes", "No"]
         title = "Would you like to join the outgroup?\n(Warning: You cannot go back after switching.)"
         size = (400, 400)
 
         self.player = player
-        super().__init__(title, options, switch_screen, size, set_token_status)
+        super().__init__(title, options, switch_screen, size)
 
     def button_action(self, text):
         if "Yes" in text:

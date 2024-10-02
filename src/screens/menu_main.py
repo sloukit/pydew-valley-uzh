@@ -10,12 +10,11 @@ class MainMenu(GeneralMenu):
     def __init__(
         self,
         switch_screen: Callable[[GameState], None],
-        set_token_status: Callable[[bool], None],
     ):
         options = ["Play", "Quit", "Enter a Token to Play"]
         title = "Main Menu"
         size = (400, 400)
-        super().__init__(title, options, switch_screen, size, set_token_status)
+        super().__init__(title, options, switch_screen, size)
         self.input_active = False
         self.token_input = ""
         self.play_button_enabled = False  # Initialize as False
@@ -42,7 +41,6 @@ class MainMenu(GeneralMenu):
             if self.input_active and event.key == pygame.K_RETURN:
                 if self.validate_token(self.token_input):
                     self.play_button_enabled = True
-                    self.set_token_status(True)
                     self.input_active = False
                 return True
 

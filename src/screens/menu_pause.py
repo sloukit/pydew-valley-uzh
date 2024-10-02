@@ -10,12 +10,11 @@ class PauseMenu(GeneralMenu):
     def __init__(
         self,
         switch_screen: Callable[[GameState], None],
-        set_token_status: Callable[[bool], None],
     ):
         options = ["Resume", "Options", "Save and Resume", "Quit"]
         title = "Pause Menu"
         size = (400, 400)
-        super().__init__(title, options, switch_screen, size, set_token_status)
+        super().__init__(title, options, switch_screen, size)
 
     def button_action(self, text: str):
         if text == "Resume":

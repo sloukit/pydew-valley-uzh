@@ -19,7 +19,6 @@ class GeneralMenu(AbstractMenu):
         options: list[str],
         switch: Callable[[GameState], None],
         size: tuple[int, int],
-        set_token_status: Callable[[bool], None],  # For token status update
         center: vector = None,
     ):
         if center is None:
@@ -43,9 +42,6 @@ class GeneralMenu(AbstractMenu):
         self.cursor_visible = True
         self.cursor_timer = pygame.time.get_ticks()
         self.cursor_interval = 500
-
-        # Callback to update token status in Game
-        self.set_token_status = set_token_status
 
     def draw_input_box(self):
         button_width = 400
@@ -156,7 +152,6 @@ class GeneralMenu(AbstractMenu):
                     if self.validate_token(self.input_text):
                         # Check if the token is valid
                         self.play_button_enabled = True
-                        self.set_token_status(True)
                         self.input_active = False
                         self.remove_button("Enter a Token to Play")
                         self.draw()

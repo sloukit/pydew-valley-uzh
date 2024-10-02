@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="70" height="55" tilewidth="16" tileheight="16" infinite="0" nextlayerid="23" nextobjectid="579">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="70" height="55" tilewidth="16" tileheight="16" infinite="0" nextlayerid="23" nextobjectid="581">
  <tileset firstgid="1" source="../tilesets/grass_tileset.tsx"/>
  <tileset firstgid="78" source="../tilesets/fence_tileset.tsx"/>
  <tileset firstgid="94" source="../tilesets/Stone_Path.tsx"/>
@@ -1085,6 +1085,7 @@
     <property name="label" value="to_trader_up"/>
    </properties>
   </object>
+  <object id="580" name="L_RANGE_BLOCKAGE" x="442.844" y="244.531" width="26.125" height="7.5"/>
  </objectgroup>
  <objectgroup id="12" name="Animals">
   <object id="16" name="Cow" gid="356" x="291" y="226" width="27" height="17"/>
@@ -1265,13 +1266,14 @@
   <object id="531" x="628" y="-1" width="8" height="81"/>
   <object id="532" x="563" y="0.5" width="9.5" height="106.833"/>
   <object id="533" x="533" y="100" width="30.5" height="7.5"/>
-  <object id="534" x="259.5" y="84" width="9.5" height="168.5"/>
+  <object id="534" x="259.5" y="84" width="9.5" height="168.031"/>
   <object id="535" x="268.5" y="84" width="62" height="8.5"/>
-  <object id="536" x="269" y="244.5" width="173.5" height="8"/>
-  <object id="537" x="469" y="244" width="46.6667" height="7.5"/>
-  <object id="538" x="516" y="174" width="8" height="77.5"/>
+  <object id="536" x="269.198" y="244.49" width="173.5" height="7.5"/>
+  <object id="537" x="469.031" y="244.531" width="46.6667" height="7.5"/>
+  <object id="538" x="516" y="174" width="8" height="78.0313"/>
   <object id="559" x="304.5" y="528.25" width="4.5" height="27.25"/>
   <object id="560" x="348.75" y="527.75" width="3.5" height="27.75"/>
   <object id="561" x="309.25" y="546.75" width="39.5" height="6.25"/>
+  <object id="579" x="367.75" y="177.5" width="32" height="11"/>
  </objectgroup>
 </map>
