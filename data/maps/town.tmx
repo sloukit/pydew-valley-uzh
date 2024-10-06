@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="70" height="55" tilewidth="16" tileheight="16" infinite="0" nextlayerid="23" nextobjectid="581">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="70" height="55" tilewidth="16" tileheight="16" infinite="0" nextlayerid="24" nextobjectid="590">
  <tileset firstgid="1" source="../tilesets/grass_tileset.tsx"/>
  <tileset firstgid="78" source="../tilesets/fence_tileset.tsx"/>
  <tileset firstgid="94" source="../tilesets/Stone_Path.tsx"/>
@@ -18,6 +18,7 @@
  <tileset firstgid="780" source="../tilesets/trees_and_bushes.tsx"/>
  <tileset firstgid="857" source="../tilesets/Water_troughs.tsx"/>
  <tileset firstgid="863" source="../tilesets/Chest.tsx"/>
+ <tileset firstgid="953" source="../tilesets/NPCs.tsx"/>
  <layer id="17" name="Water" width="70" height="55">
   <properties>
    <property name="layer" value="WATER"/>
@@ -1113,6 +1114,17 @@
   <object id="546" name="to bathhouse" x="859" y="688" width="26" height="6"/>
   <object id="547" name="to minigame" x="416" y="170" width="32" height="6"/>
   <object id="548" name="to minigame" x="336" y="96" width="192" height="74"/>
+ </objectgroup>
+ <objectgroup id="23" name="NPCs">
+  <object id="581" gid="953" x="438" y="504" width="20" height="21"/>
+  <object id="582" gid="955" x="326" y="746" width="18" height="17"/>
+  <object id="583" gid="953" x="328" y="488" width="20" height="21"/>
+  <object id="584" gid="953" x="421.333" y="546.833" width="20" height="21"/>
+  <object id="585" gid="955" x="215.667" y="655.5" width="18" height="17"/>
+  <object id="586" gid="955" x="237" y="717.5" width="18" height="17"/>
+  <object id="587" gid="955" x="261" y="669.5" width="18" height="17"/>
+  <object id="588" gid="953" x="488" y="456" width="20" height="21"/>
+  <object id="589" gid="953" x="451.333" y="599.5" width="20" height="21"/>
  </objectgroup>
  <layer id="10" name="Border" width="70" height="55">
   <data encoding="csv">
