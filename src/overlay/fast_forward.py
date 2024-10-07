@@ -1,9 +1,8 @@
 import os
-
 import pygame
 
 
-class fast_forward:
+class Fast_forward:
     def __init__(self) -> None:
         self.sprites = []
         for filename in os.listdir("images\\fast_forward"):
@@ -14,9 +13,16 @@ class fast_forward:
                 self.sprites.append(img)
                 self.current_frame = 0
                 self.total_frame = 10
+                self.font = pygame.font.Font("font\\LycheeSoda.ttf", 30)
+                self.text_surface = self.font.render(
+                    "R_Shift to skip", True, (255, 255, 255)
+                )
 
     def draw_overlay(self, display_surface):
         display_surface.blit(self.sprites[self.current_frame], (0, 0))
         self.current_frame += 1
         if self.current_frame >= self.total_frame:
             self.current_frame = 0
+
+    def draw_option(self, display_surface):
+        display_surface.blit(self.text_surface, (1050, 600))
