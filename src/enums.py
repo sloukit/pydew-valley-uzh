@@ -38,7 +38,8 @@ class GameState(IntEnum):
     # saves and then sets its current state back to PLAY
     SAVE_AND_RESUME = 9
     INVENTORY = 10
-    OUTGROUP_MENU = 11
+    ROUND_END = 11
+    OUTGROUP_MENU = 12
 
 
 # NOTE : DO NOT pay attention to anything the IDE might complain about in this class, as the enum generation mechanisms
@@ -49,6 +50,10 @@ class _SerialisableEnum(IntEnum):
     def as_serialised_string(self):
         # We keep that method separate from the actual str dunder, so we can still get the original repr when debugging
         return self._SERIALISABLE_STRINGS[self]  # noqa
+
+    def as_user_friendly_string(self):
+        text = self.as_serialised_string()
+        return text.replace("_", " ")
 
     @classmethod
     def from_serialised_string(cls, val: str):

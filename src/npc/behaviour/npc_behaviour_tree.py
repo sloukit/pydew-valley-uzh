@@ -101,22 +101,22 @@ def will_harvest_plant(context: NPCIndividualContext) -> bool:
 
 def harvest_plant(context: NPCIndividualContext) -> bool:
     """
-    Finds a random harvestable tile in a radius of 5 around the
+    Finds a random harvestable tile in a radius of 10 around the
     NPC, makes the NPC walk to and harvest it.
     :return: True if such a Tile has been found and the NPC successfully
              created a path towards it, otherwise False
     """
-    soil_layer = context.npc.soil_area
-    if not len(soil_layer.harvestable_tiles):
+    harvestable_tiles = context.npc.get_personal_soil_area_tiles("harvestable")
+    if not len(harvestable_tiles):
         return False
 
-    radius = 5
+    radius = 10
 
     tile_coord = context.npc.get_tile_pos()
 
     loop_count = 0
     for pos in near_tiles(tile_coord, radius, shuffle=True):
-        if pos in soil_layer.harvestable_tiles:
+        if pos in harvestable_tiles:
             path_created = walk_to_pos(context, pos)
             if path_created:
                 return True
@@ -132,13 +132,16 @@ def will_create_new_farmland(context: NPCIndividualContext) -> bool:
     :return: True: untilled farmland available AND
     (all other farmland planted and watered OR 1/3), otherwise False
     """
-    soil_layer = context.npc.soil_area
-
-    if not len(soil_layer.untilled_tiles):
+    untilled_tiles = context.npc.get_personal_soil_area_tiles("untilled")
+    if not untilled_tiles:
         return False
 
-    unplanted_farmland_available = len(soil_layer.unplanted_tiles)
-    unwatered_farmland_available = len(soil_layer.unwatered_tiles)
+    unplanted_farmland_available = len(
+        context.npc.get_personal_soil_area_tiles("unplanted")
+    )
+    unwatered_farmland_available = len(
+        context.npc.get_personal_soil_area_tiles("unwatered")
+    )
 
     return (
         unplanted_farmland_available == 0 and unwatered_farmland_available == 0
@@ -147,16 +150,18 @@ def will_create_new_farmland(context: NPCIndividualContext) -> bool:
 
 def create_new_farmland(context: NPCIndividualContext) -> bool:
     """
-    Finds a random untilled but farmable tile, makes the NPC walk to and till
-    it. Will prefer Tiles that are adjacent to already tilled Tiles in 6/7 of
-    all cases. Will prefer Tiles within a 5 tile radius around the NPC.
+    Finds a random untilled but farmable tile, that is adjacent to farmed tiles,
+    makes the NPC walk to and till it.
+    Will prefer Tiles that are adjacent to already tilled Tiles in 6/7 of
+    all cases. Will prefer Tiles within a 10 tile radius around the NPC.
     :return: True if such a Tile has been found and the NPC successfully
              created a path towards it, otherwise False
     """
-    if not len(context.npc.soil_area.untilled_tiles):
+    untilled_tiles = context.npc.get_personal_adjacent_untilled_tiles()
+    if not untilled_tiles:
         return False
 
-    radius = 5
+    radius = 10
 
     # current NPC position on the tilemap
     tile_coord = context.npc.get_tile_pos()
@@ -165,7 +170,7 @@ def create_new_farmland(context: NPCIndividualContext) -> bool:
     coords = []
 
     for pos in near_tiles(tile_coord, radius):
-        if pos in context.npc.soil_area.untilled_tiles:
+        if pos in untilled_tiles:
             if context.npc.soil_area.tiles.get(pos).pf_weight:
                 weighted_coords.append(pos)
             else:
@@ -202,7 +207,7 @@ def create_new_farmland(context: NPCIndividualContext) -> bool:
 
     loop_count = 0
     for pos in sorted(
-        context.npc.soil_area.untilled_tiles,
+        untilled_tiles,
         key=lambda tile: distance(tile, tile_coord),
     ):
         path_created = walk_to_pos(context, pos, on_path_completion=on_path_completion)
@@ -220,12 +225,12 @@ def will_plant_tilled_farmland(context: NPCIndividualContext) -> bool:
     :return: True if unplanted farmland available AND
     (all other farmland watered OR 3/4), otherwise False
     """
-    soil_layer = context.npc.soil_area
-
-    if not len(soil_layer.unplanted_tiles):
+    if not len(context.npc.get_personal_soil_area_tiles("unplanted")):
         return False
 
-    unwatered_farmland_available = len(soil_layer.unwatered_tiles)
+    unwatered_farmland_available = len(
+        context.npc.get_personal_soil_area_tiles("unwatered")
+    )
 
     return unwatered_farmland_available == 0 or random.randint(0, 3) <= 2
 
@@ -233,7 +238,7 @@ def will_plant_tilled_farmland(context: NPCIndividualContext) -> bool:
 def plant_adjacent_or_random_seed(context: NPCIndividualContext) -> bool:
     """
     Finds a random unplanted but tilled tile, makes the NPC walk to and plant
-    a seed on it. Prefers tiles within a 5 tile radius around the NPC.
+    a seed on it. Prefers tiles within a 10 tile radius around the NPC.
     The seed selected is dependent on the respective amount of planted
     seeds from all seed types, as well as the seed types that have been
     planted on tiles adjacent to the randomly selected tile.
@@ -241,11 +246,11 @@ def plant_adjacent_or_random_seed(context: NPCIndividualContext) -> bool:
              created a path towards it, otherwise False
     """
     soil_layer = context.npc.soil_area
-
-    if not len(soil_layer.unplanted_tiles):
+    unplanted_tiles = context.npc.get_personal_soil_area_tiles("unplanted")
+    if not len(unplanted_tiles):
         return False
 
-    radius = 5
+    radius = 10
 
     tile_coord = context.npc.get_tile_pos()
 
@@ -301,7 +306,7 @@ def plant_adjacent_or_random_seed(context: NPCIndividualContext) -> bool:
     #  is limited to 10. Removing this can cause the game to stutter
     loop_count = 0
     for pos in near_tiles(tile_coord, radius, shuffle=True):
-        if pos in soil_layer.unplanted_tiles:
+        if pos in unplanted_tiles:
             path_created = walk_to_pos(
                 context, pos, on_path_completion=on_path_completion
             )
@@ -312,9 +317,7 @@ def plant_adjacent_or_random_seed(context: NPCIndividualContext) -> bool:
                 break
 
     loop_count = 0
-    for pos in sorted(
-        soil_layer.unplanted_tiles, key=lambda tile: distance(tile, tile_coord)
-    ):
+    for pos in sorted(unplanted_tiles, key=lambda tile: distance(tile, tile_coord)):
         path_created = walk_to_pos(context, pos, on_path_completion=on_path_completion)
         if path_created:
             return True
@@ -328,15 +331,15 @@ def plant_adjacent_or_random_seed(context: NPCIndividualContext) -> bool:
 def water_farmland(context: NPCIndividualContext) -> bool:
     """
     Finds a random unwatered but planted tile, makes the NPC walk to and water
-    it. Prefers tiles within a 5 tile radius around the NPC.
+    it. Prefers tiles within a 10 tile radius around the NPC.
     :return: True if such a Tile has been found and the NPC successfully
              created a path towards it, otherwise False
     """
-    soil_layer = context.npc.soil_area
-    if not len(soil_layer.unwatered_tiles):
+    unwatered_tiles = context.npc.get_personal_soil_area_tiles("unwatered")
+    if not len(unwatered_tiles):
         return False
 
-    radius = 5
+    radius = 10
 
     tile_coord = context.npc.get_tile_pos()
 
@@ -348,7 +351,7 @@ def water_farmland(context: NPCIndividualContext) -> bool:
 
     loop_count = 0
     for pos in near_tiles(tile_coord, radius):
-        if pos in soil_layer.unwatered_tiles:
+        if pos in unwatered_tiles:
             path_created = walk_to_pos(
                 context, pos, on_path_completion=on_path_completion
             )
@@ -359,9 +362,7 @@ def water_farmland(context: NPCIndividualContext) -> bool:
                 break
 
     loop_count = 0
-    for pos in sorted(
-        soil_layer.unwatered_tiles, key=lambda tile: distance(tile, tile_coord)
-    ):
+    for pos in sorted(unwatered_tiles, key=lambda tile: distance(tile, tile_coord)):
         path_created = walk_to_pos(context, pos, on_path_completion=on_path_completion)
         if path_created:
             return True

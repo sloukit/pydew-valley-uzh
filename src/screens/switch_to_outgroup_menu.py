@@ -13,7 +13,7 @@ class OutgroupMenu(GeneralMenu):
     def __init__(
         self,
         player,
-        switch_screen: Callable[[str], None],
+        switch_screen: Callable[[GameState], None],
     ):
         options = ["Yes", "No"]
         title = "Would you like to join the outgroup?\n(Warning: You cannot go back after switching.)"

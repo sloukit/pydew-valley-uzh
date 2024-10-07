@@ -463,6 +463,7 @@ class Level:
         dialog_key = self.player.controls.SHOW_DIALOG.control_value
         pf_overlay_key = self.player.controls.SHOW_PF_OVERLAY.control_value
         advance_dialog_key = self.player.controls.ADVANCE_DIALOG.control_value
+        round_end_key = self.player.controls.END_ROUND.control_value
 
         if self.current_minigame and self.current_minigame.running:
             if self.current_minigame.handle_event(event):
@@ -484,6 +485,8 @@ class Level:
             if event.key == pf_overlay_key:
                 self.show_pf_overlay = not self.show_pf_overlay
                 return True
+            if event.key == round_end_key:
+                self.switch_screen(GameState.ROUND_END)
         if event.type == START_QUAKE:
             self.quaker.start(event.duration)
             # debug volcanic atmosphere trigger
