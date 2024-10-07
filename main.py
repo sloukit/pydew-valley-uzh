@@ -7,6 +7,7 @@
 # ///
 
 import asyncio
+import os
 import random
 import sys
 
@@ -18,7 +19,7 @@ from src.events import DIALOG_ADVANCE, DIALOG_SHOW, OPEN_INVENTORY
 from src.groups import AllSprites
 from src.gui.interface.dialog import DialogueManager
 from src.gui.setup import setup_gui
-from src.overlay.fast_forward import fast_forward
+from src.overlay.fast_forward import Fast_forward
 from src.savefile import SaveFile
 from src.screens.inventory import InventoryMenu, prepare_checkmark_for_buttons
 from src.screens.level import Level
@@ -61,15 +62,13 @@ class Game:
         pygame.display.set_caption("Clear Skies")
 
         # frames
-        self.fast_forward = fast_forward()
         self.level_frames: dict | None = None
         self.overlay_frames: dict[str, pygame.Surface] | None = None
         self.cosmetic_frames: dict[str, pygame.Surface] = {}
         self.frames: dict[str, dict] | None = None
         self.previous_frame = ""
-
+        self.fast_forward = Fast_forward()
         # assets
-        self.font = pygame.font.Font("font\\LycheeSoda.ttf", 30)
         self.tmx_maps: MapDict | None = None
 
         self.emotes: AniFrames | None = None
@@ -249,17 +248,19 @@ class Game:
 
     async def run(self):
         pygame.mouse.set_visible(False)
-        mouse = pygame.image.load("images\\overlay\\Cursor.png")
+        mouse = pygame.image.load(os.path.join("images", "overlay", "Cursor.png"))
         is_first_frame = True
         while self.running:
             dt = self.clock.tick() / 1000
-            if self.level.cutscene_animation.active:
-                event = pygame.key.get_pressed()
-                if event[pygame.K_RSHIFT]:
-                    dt *= 5
+
             self.event_loop()
             if not self.game_paused() or is_first_frame:
                 self.level.update(dt, self.current_state == GameState.PLAY)
+                if self.level.cutscene_animation.active:
+                    event = pygame.key.get_pressed()
+                    if event[pygame.K_RSHIFT]:
+                        for _i in range(3):
+                            self.level.update(dt, self.current_state == GameState.PLAY)
 
             if self.game_paused() and not is_first_frame:
                 self.display_surface.blit(self.previous_frame, (0, 0))
@@ -272,14 +273,10 @@ class Game:
 
             if self.level.cutscene_animation.active:
                 self.all_sprites.update_blocked(dt)
-                text_surface = self.font.render(
-                    "R_Shift to skip", True, (255, 255, 255)
-                )
-                self.display_surface.blit(text_surface, (1050, 600))
                 event = pygame.key.get_pressed()
+                self.fast_forward.draw_option(self.display_surface)
                 if event[pygame.K_RSHIFT]:
                     self.fast_forward.draw_overlay(self.display_surface)
-
             else:
                 self.all_sprites.update(dt)
             self.all_sprites.draw(self.level.camera)
@@ -288,6 +285,7 @@ class Game:
             if self.player.has_goggles and self.current_state == GameState.PLAY:
                 surface = pygame.transform.box_blur(self.display_surface, 2)
                 self.display_surface.blit(surface, (0, 0))
+
             self.show_intro_msg()
             mouse_pos = pygame.mouse.get_pos()
             if not self.game_paused() or is_first_frame:
