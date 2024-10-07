@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.0" name="objects" tilewidth="48" tileheight="48" tilecount="63" columns="0">
+<tileset version="1.10" tiledversion="1.11.0" name="objects" tilewidth="48" tileheight="48" tilecount="70" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="9">
   <image source="../../images/objects/flower_0.png" width="9" height="6"/>
@@ -281,9 +281,9 @@
   </objectgroup>
  </tile>
  <tile id="78">
-  <image source="../../images/objects/Signpost_Bathtub_Right.png" width="22" height="25"/>
+  <image source="../../images/objects/Signpost_Bathtub_Right.png" width="21" height="26"/>
   <objectgroup draworder="index" id="3">
-   <object id="2" x="7.06596" y="18.9151" width="4.8954" height="5"/>
+   <object id="2" x="6.13414" y="20.2106" width="4.8954" height="5"/>
   </objectgroup>
  </tile>
  <tile id="79">
@@ -374,6 +374,48 @@
   <image source="../../images/objects/Signpost_Village_Right.png" width="15" height="18"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="4.97669" y="10.1289" width="4.07461" height="6.90273"/>
+  </objectgroup>
+ </tile>
+ <tile id="94">
+  <image source="../../images/objects/Signpost_Bathtub_Down_LSA.png" width="27" height="22"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="15.2796" y="16.1364" width="4.8954" height="5"/>
+  </objectgroup>
+ </tile>
+ <tile id="95">
+  <image source="../../images/objects/Signpost_Farm_Right_Left.png" width="16" height="25"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="6.14451" y="16.9123" width="4.07461" height="6.90273"/>
+  </objectgroup>
+ </tile>
+ <tile id="96">
+  <image source="../../images/objects/Signpost_Farm_Up_RSA.png" width="16" height="18"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="5.0536" y="10.0941" width="4.07461" height="6.90273"/>
+  </objectgroup>
+ </tile>
+ <tile id="97">
+  <image source="../../images/objects/Signpost_Forest_01_Down_RSA.png" width="16" height="18"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="5.0536" y="9.91227" width="4.07461" height="6.90273"/>
+  </objectgroup>
+ </tile>
+ <tile id="98">
+  <image source="../../images/objects/Signpost_Forest_02_Right.png" width="16" height="18"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="5.9627" y="9.27591" width="4.07461" height="6.90273"/>
+  </objectgroup>
+ </tile>
+ <tile id="99">
+  <image source="../../images/objects/Signpost_Village_Down_LSA.png" width="16" height="19"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="6.9627" y="10.9123" width="4.07461" height="6.90273"/>
+  </objectgroup>
+ </tile>
+ <tile id="100">
+  <image source="../../images/objects/Signpost_Village_Down_RSA.png" width="16" height="19"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="5.14451" y="11.2759" width="4.07461" height="6.90273"/>
   </objectgroup>
  </tile>
 </tileset>
