@@ -1,19 +1,20 @@
 import os
+
 import pygame
 
 
 class Fast_forward:
     def __init__(self) -> None:
         self.sprites = []
-        for filename in os.listdir("images\\fast_forward"):
+        for filename in os.listdir("images/fast_forward"):
             if filename.endswith(".png"):
                 img = pygame.image.load(
-                    os.path.join("images\\fast_forward", filename)
+                    os.path.join("images/fast_forward", filename)
                 ).convert_alpha()
                 self.sprites.append(img)
                 self.current_frame = 0
                 self.total_frame = 10
-                self.font = pygame.font.Font("font\\LycheeSoda.ttf", 30)
+                self.font = pygame.font.Font("font/LycheeSoda.ttf", 30)
                 self.text_surface = self.font.render(
                     "R_Shift to skip", True, (255, 255, 255)
                 )
