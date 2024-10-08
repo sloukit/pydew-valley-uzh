@@ -83,7 +83,7 @@ class Game:
 
         self.main_menu = MainMenu(self.switch_state)
         self.pause_menu = PauseMenu(self.switch_state)
-        self.task_menu = PlayerTask(self.switch_state)
+        self.task_menu = PlayerTask(self.switch_state, self.clock)
         self.settings_menu = SettingsMenu(
             self.switch_state, self.sounds, self.player.controls
         )
