@@ -7,7 +7,6 @@
 # ///
 
 import asyncio
-import os
 import random
 import sys
 
