@@ -3,9 +3,9 @@ from typing import Callable
 import pygame
 import pygame.freetype
 
-from src.gui.menu.abstract_menu import AbstractMenu
 from src.enums import GameState
-from src.gui.menu.components import InputField, ArrowButton
+from src.gui.menu.abstract_menu import AbstractMenu
+from src.gui.menu.components import ArrowButton, InputField
 from src.screens.minigames.gui import (
     Linebreak,
     Text,
@@ -14,16 +14,17 @@ from src.screens.minigames.gui import (
     _ReturnButton,
 )
 from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH
-from src.support import get_outline, import_freetype_font, import_font, resource_path
+from src.support import import_font, import_freetype_font
 
 """
 TODO:
 - add image of allocated item somewhere
 - properly draw active InputField
 - save allocations to save_file
+- integrate into level system
 BUGS:
-during one test, health droped when using normal number keys, didn't happen when the num-block
-
+- confirm button doesn't work anymore after merging with origin
+- during one test, health droped when using normal number keys, didn't happen when the num-block
 """
 
 
@@ -196,7 +197,6 @@ class PlayerTask(AbstractMenu):
                     )
 
         if event.type == pygame.KEYDOWN and self.active_input is not None:
-            print(self.active_input)
             if event.key == pygame.K_BACKSPACE:
                 self.allocations[self.active_input] = (
                     self.allocations[self.active_input] // 10

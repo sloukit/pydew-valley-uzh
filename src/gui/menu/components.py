@@ -9,8 +9,6 @@ from src.colors import (
     SL_ORANGE_BRIGHTER,
     SL_ORANGE_BRIGHTEST,
     SL_ORANGE_DARK,
-    SL_ORANGE_DARKER,
-    SL_ORANGE_DARKEST,
     SL_ORANGE_MEDIUM,
 )
 from src.controls import Control
