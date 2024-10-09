@@ -3,7 +3,7 @@ import os
 import pygame
 
 
-class Fast_forward:
+class FastForward:
     def __init__(self) -> None:
         self.sprites = []
         for filename in os.listdir("images/fast_forward"):
