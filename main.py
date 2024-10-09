@@ -18,7 +18,7 @@ from src.events import DIALOG_ADVANCE, DIALOG_SHOW, OPEN_INVENTORY
 from src.groups import AllSprites
 from src.gui.interface.dialog import DialogueManager
 from src.gui.setup import setup_gui
-from src.overlay.fast_forward import Fast_forward
+from src.overlay.fast_forward import FastForward
 from src.savefile import SaveFile
 from src.screens.inventory import InventoryMenu, prepare_checkmark_for_buttons
 from src.screens.level import Level
@@ -66,7 +66,7 @@ class Game:
         self.cosmetic_frames: dict[str, pygame.Surface] = {}
         self.frames: dict[str, dict] | None = None
         self.previous_frame = ""
-        self.fast_forward = Fast_forward()
+        self.fast_forward = FastForward()
         # assets
         self.tmx_maps: MapDict | None = None
 
@@ -254,12 +254,14 @@ class Game:
 
             self.event_loop()
             if not self.game_paused() or is_first_frame:
-                self.level.update(dt, self.current_state == GameState.PLAY)
                 if self.level.cutscene_animation.active:
                     event = pygame.key.get_pressed()
                     if event[pygame.K_RSHIFT]:
-                        for _i in range(3):
-                            self.level.update(dt, self.current_state == GameState.PLAY)
+                        self.level.update(dt * 5, self.current_state == GameState.PLAY)
+                    else:
+                        self.level.update(dt, self.current_state == GameState.PLAY)
+                else:
+                    self.level.update(dt, self.current_state == GameState.PLAY)
 
             if self.game_paused() and not is_first_frame:
                 self.display_surface.blit(self.previous_frame, (0, 0))
