@@ -16,6 +16,9 @@ class Sky:
         self.display_surface = pygame.display.get_surface()
         self.game_time = game_time
         self.full_surf = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.volcanic_surf = pygame.Surface(
+            (SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA
+        )
         # color
         self.colors = {
             "6": (160, 187, 255),
@@ -24,10 +27,13 @@ class Sky:
             "20": (255, 219, 203),
             "22": (38, 101, 189),
         }
+
         self.colors_hours = list(map(int, self.colors.keys()))
         self.colors_rgb = list(self.colors.values())
-
         self.color = self.get_color()
+
+        # volcanic settings
+        self.volcanic_color = (165, 124, 82, 100)
 
     def get_color(self):
         # get time
@@ -63,13 +69,17 @@ class Sky:
 
         return color
 
-    def display(self):
+    def display(self, level):
         # draw
         self.color = self.get_color()
         self.full_surf.fill(self.color)
         self.display_surface.blit(
             self.full_surf, (0, 0), special_flags=pygame.BLEND_RGBA_MULT
         )
+
+        if level >= 7:
+            self.volcanic_surf.fill(self.volcanic_color)
+            self.display_surface.blit(self.volcanic_surf, (0, 0))
 
 
 class Rain:

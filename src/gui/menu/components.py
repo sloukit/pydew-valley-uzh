@@ -124,6 +124,8 @@ class AbstractButton(Component, ABC):
         self._content_rect = None
         self.color: str | tuple[int, int, int] = "White"
         self.hover_active = False
+        # Light gray for disabled buttons
+        self.disabled_color = (200, 200, 200)
 
         self.display_surface = None
 
@@ -145,6 +147,11 @@ class AbstractButton(Component, ABC):
         pygame.draw.rect(self.display_surface, self.color, self.rect, 0, 4)
         self.draw_content()
         self.draw_hover()
+
+    def draw_disabled(self, surface):
+        pygame.draw.rect(surface, self.disabled_color, self.rect)
+        text_surf = self.font.render(self._content, True, "Gray")
+        surface.blit(text_surf, text_surf.get_rect(center=self.rect.center))
 
 
 class Button(AbstractButton):

@@ -73,7 +73,7 @@ class ZoomManager:
             entered_zoom_area = target.rect.collideobjects(
                 self._zoom_areas, key=lambda obj: obj.area
             )
-            if entered_zoom_area is not None:
+            if entered_zoom_area is not None and target.zoom_allowed:
                 self._prepare_zoom_in(entered_zoom_area)
             return
 

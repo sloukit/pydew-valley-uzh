@@ -6,7 +6,14 @@ import pygame
 from src import utils
 from src.enums import FarmingTool, InventoryResource, SeedType, StudyGroup
 from src.savefile.tile_info import PlantInfo, TileInfo
-from src.settings import Coordinate, GogglesStatus, HatStatus, NecklaceStatus
+from src.settings import (
+    Coordinate,
+    GogglesStatus,
+    HatStatus,
+    HornStatus,
+    NecklaceStatus,
+    OutgroupSkinStatus,
+)
 from src.support import resource_path
 
 _NONSEED_INVENTORY_DEFAULT_AMOUNT = 20
@@ -90,6 +97,8 @@ class SaveFile:
     _has_hat: HatStatus
     _has_necklace: NecklaceStatus
     _study_group: StudyGroup
+    _has_horn: HornStatus
+    _has_OutgroupSkin: OutgroupSkinStatus
     _current_tool: FarmingTool
     _current_seed: FarmingTool
     _money: int
@@ -105,6 +114,8 @@ class SaveFile:
         goggles_status: GogglesStatus,
         necklace_status: NecklaceStatus,
         hat_status: HatStatus,
+        horn_status: HornStatus,
+        outgroup_skin_status: OutgroupSkinStatus,
         money: int = 200,
         soil_data: dict[Coordinate, TileInfo] | None = None,
     ):
@@ -124,6 +135,8 @@ class SaveFile:
         self.has_goggles = goggles_status
         self.has_necklace = necklace_status
         self.has_hat = hat_status
+        self.has_horn = horn_status
+        self.has_outgroup_skin = outgroup_skin_status
         self._soil_data = soil_data or {}
 
     @classmethod
@@ -133,6 +146,8 @@ class SaveFile:
         data.setdefault("goggles_status", None)
         data.setdefault("necklace_status", None)
         data.setdefault("hat_status", True)
+        data.setdefault("horn_status", False)
+        data.setdefault("outgroup_skin_status", False)
         data.setdefault("current_tool", FarmingTool.get_first_tool_id())
         data.setdefault("current_seed", FarmingTool.get_first_seed_id())
         return SaveFile(**data)
@@ -156,6 +171,8 @@ class SaveFile:
                 "goggles_status": self.has_goggles,
                 "necklace_status": self.has_necklace,
                 "hat_status": self.has_hat,
+                "horn_status": self.has_horn,
+                "outgroup_skin_status": self.has_outgroup_skin,
                 "inventory": serialised_inventory,
             }
             if self._soil_data:

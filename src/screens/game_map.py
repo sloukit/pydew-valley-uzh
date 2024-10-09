@@ -3,6 +3,7 @@ from collections.abc import Callable
 from typing import Any
 
 import pygame
+from pathfinding.core.grid import Grid
 from pytmx import TiledElement, TiledMap, TiledObject, TiledObjectGroup, TiledTileLayer
 
 from src.camera.camera_target import CameraTarget
@@ -22,10 +23,14 @@ from src.gui.interface.emotes import NPCEmoteManager, PlayerEmoteManager
 from src.gui.scene_animation import SceneAnimation
 from src.map_objects import MapObjects, MapObjectType
 from src.npc.bases.animal import Animal
-from src.npc.behaviour.chicken_behaviour_tree import ChickenBehaviourTree
+from src.npc.behaviour.chicken_behaviour_tree import (
+    ChickenBehaviourTree,
+    ChickenIndividualContext,
+)
 from src.npc.behaviour.cow_behaviour_tree import (
     CowConditionalBehaviourTree,
-    CowContinuousBehaviourTree,
+    # CowContinuousBehaviourTree,
+    CowIndividualContext,
 )
 from src.npc.behaviour.npc_behaviour_tree import NPCBehaviourTree
 from src.npc.chicken import Chicken
@@ -82,6 +87,40 @@ def _setup_object_layer(
         pos = (x, y)
         objects.append(func(pos, obj))
     return objects
+
+
+def _setup_animal_ranges(
+    interaction_sprites: PersistentSpriteGroup, animals: list[Animal]
+) -> None:
+    if AIData.Matrix is None:
+        raise InvalidMapError("AI Pathfinding Matrix is not defined")
+
+    range_matrix_cows = [row.copy() for row in AIData.Matrix]
+    range_matrix_chickens = [row.copy() for row in AIData.Matrix]
+
+    for sprite in interaction_sprites:
+        if sprite.name in ["L_RANGE_BLOCKAGE", "R_RANGE_BLOCKAGE"]:
+            rect = sprite.rect
+            pf_add_matrix_collision(
+                range_matrix_cows,
+                (rect.x / SCALE_FACTOR, rect.y / SCALE_FACTOR),
+                (rect.width / SCALE_FACTOR, rect.height / SCALE_FACTOR),
+            )
+            pf_add_matrix_collision(
+                range_matrix_chickens,
+                (rect.x / SCALE_FACTOR, rect.y / SCALE_FACTOR),
+                (rect.width / SCALE_FACTOR, rect.height / SCALE_FACTOR),
+            )
+        if sprite.name in ["L_BARN_BLOCKAGE", "R_BARN_BLOCKAGE"]:
+            rect = sprite.rect
+            pf_add_matrix_collision(
+                range_matrix_chickens,
+                (rect.x / SCALE_FACTOR, rect.y / SCALE_FACTOR),
+                (rect.width / SCALE_FACTOR, rect.height / SCALE_FACTOR),
+            )
+
+    CowIndividualContext.range_grid = Grid(matrix=range_matrix_cows)
+    ChickenIndividualContext.range_grid = Grid(matrix=range_matrix_chickens)
 
 
 def _setup_camera_layer(layer: TiledObjectGroup):
@@ -304,6 +343,7 @@ class GameMap:
 
             if ENABLE_NPCS:
                 self._setup_emote_interactions()
+                _setup_animal_ranges(self.interaction_sprites, self.animals)
 
     @property
     def size(self):
@@ -385,7 +425,9 @@ class GameMap:
         """
         size = (obj.width * SCALE_FACTOR, obj.height * SCALE_FACTOR)
         image = pygame.Surface(size)
-        Sprite(pos, image, z=layer, name=name).add(groups)
+        Sprite(pos, image, z=layer, name=name, custom_properties=obj.properties).add(
+            groups
+        )
 
     def _setup_collision_rect(
         self,
@@ -622,7 +664,7 @@ class GameMap:
         "Chicken" will create Chickens, objects that are named "Cow" will
         create Cows.
         """
-        animal = None
+        animal: Cow | Chicken | None = None
         if obj.name == "Chicken":
             animal = Chicken(
                 pos=pos,
@@ -639,7 +681,7 @@ class GameMap:
                 collision_sprites=self.collision_sprites,
             )
             animal.conditional_behaviour_tree = CowConditionalBehaviourTree.Wander
-            animal.continuous_behaviour_tree = CowContinuousBehaviourTree.Flee
+            # animal.continuous_behaviour_tree = CowContinuousBehaviourTree.Flee
 
         if animal is not None:
             animal.teleport(pos)

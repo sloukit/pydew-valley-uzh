@@ -111,7 +111,10 @@ class AbstractMenu(ABC):
     def draw_buttons(self):
         self.buttons_surface.fill(pygame.Color(0, 0, 0, 0))
         for button in self.buttons:
-            button.draw(self.display_surface)
+            if button.text == "Play" and not self.play_button_enabled:
+                button.draw_disabled(self.display_surface)
+            else:
+                button.draw(self.display_surface)
         self.display_surface.blit(self.buttons_surface, self.rect.topleft)
 
     def draw(self):

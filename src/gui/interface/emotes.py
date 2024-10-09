@@ -21,6 +21,7 @@ class EmoteBox(EmoteBoxBase):
         self,
         pos: tuple[int, int],
         emote: list[pygame.Surface],
+        duration: int,
         *groups: pygame.sprite.Group,
     ):
         """
@@ -41,7 +42,11 @@ class EmoteBox(EmoteBoxBase):
         self._ani_cframe = -1
         self._ani_frame_length = self._ani_frame_count / 4
         self._ani_length = self._ani_frame_count * 2
-        self._ani_total_frames = int(self._ani_length / self._ani_frame_length)
+        if duration:
+            self._ani_total_frames = duration
+        else:
+            self._ani_total_frames = int(self._ani_length / self._ani_frame_length)
+
         self.ani_finished = False
         self.__on_finish_animation_funcs = []
 
@@ -140,7 +145,10 @@ class EmoteManager(EmoteManagerBase, ABC):
         if self._check_obj(id(obj)):
             self._remove_emote_box(id(obj))
 
-        self[id(obj)] = EmoteBox((0, 0), self.emotes[emote], *self.groups)
+        if emote == "sad_ani":
+            self[id(obj)] = EmoteBox((0, 0), self.emotes[emote], 30, *self.groups)
+        else:
+            self[id(obj)] = EmoteBox((0, 0), self.emotes[emote], *self.groups)
 
         @self[id(obj)].on_finish_animation
         def on_finish_animation():

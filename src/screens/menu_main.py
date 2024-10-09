@@ -7,16 +7,26 @@ from src.gui.menu.general_menu import GeneralMenu
 
 
 class MainMenu(GeneralMenu):
-    def __init__(self, switch_screen: Callable[[GameState], None]):
-        options = ["Play", "Quit"]
+    def __init__(
+        self,
+        switch_screen: Callable[[GameState], None],
+    ):
+        options = ["Play", "Quit", "Enter a Token to Play"]
         title = "Main Menu"
         size = (400, 400)
         super().__init__(title, options, switch_screen, size)
+        self.input_active = False
+        self.token_input = ""
+        self.play_button_enabled = False  # Initialize as False
 
     def button_action(self, text):
-        if text == "Play":
+        if text == "Play" and self.play_button_enabled:
+            # Only allow playing if the token is valid
             self.switch_screen(GameState.PLAY)
-        if text == "Quit":
+        elif text == "Enter a Token to Play":
+            self.input_active = True
+            self.token_input = ""
+        elif text == "Quit":
             self.quit_game()
 
     def handle_event(self, event: pygame.event.Event) -> bool:
@@ -28,8 +38,10 @@ class MainMenu(GeneralMenu):
                 self.quit_game()
                 return True
 
-            if event.key == pygame.K_RETURN:
-                self.switch_screen(GameState.PLAY)
+            if self.input_active and event.key == pygame.K_RETURN:
+                if self.validate_token(self.token_input):
+                    self.play_button_enabled = True
+                    self.input_active = False
                 return True
 
         return False

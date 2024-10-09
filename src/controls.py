@@ -101,6 +101,7 @@ class Controls(Control, Enum):
     SHOW_DIALOG = (pygame.K_t, "Show Dialog")
     ADVANCE_DIALOG = (pygame.K_SPACE, "Advance Dialog")
     DEDUG_PLAYER_TASK = (pygame.K_b, "Show Player Task")
+    END_ROUND = (pygame.K_r, "Skip to End of Round")
 
     @classmethod
     def as_dict(cls) -> dict[str, dict[str, str | int]]:

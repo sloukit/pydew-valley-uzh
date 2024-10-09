@@ -10,7 +10,7 @@ from src.camera import Camera
 from src.camera.camera_target import CameraTarget
 from src.camera.quaker import Quaker
 from src.camera.zoom_manager import ZoomManager
-from src.enums import FarmingTool, GameState, Map
+from src.enums import FarmingTool, GameState, Map, StudyGroup
 from src.events import DIALOG_ADVANCE, DIALOG_SHOW, START_QUAKE, post_event
 from src.exceptions import GameMapWarning
 from src.groups import AllSprites, PersistentSpriteGroup
@@ -35,6 +35,7 @@ from src.settings import (
     MapDict,
     SoundDict,
 )
+from src.sprites.base import Sprite
 from src.sprites.drops import DropsManager
 from src.sprites.entities.character import Character
 from src.sprites.entities.player import Player
@@ -184,6 +185,14 @@ class Level:
         # minigame
         self.current_minigame = None
 
+        # switch to outgroup farm
+        self.outgroup_farm_entered = False
+        self.outgroup_farm_time_entered = None
+        self.outgroup_message_received = False
+        self.start_become_outgroup = False
+        self.start_become_outgroup_time = None
+        self.finish_become_outgroup = False
+
         # map
         self.load_map(GAME_MAP)
         self.map_transition = Transition(
@@ -191,6 +200,9 @@ class Level:
             self.finish_transition,
             dur=2400,
         )
+
+        # level
+        self.current_level = 1
 
     def load_map(self, game_map: Map, from_map: str = None):
         # prepare level state for new map
@@ -329,10 +341,12 @@ class Level:
                 self.overlay.health_bar.apply_health(9999999)
                 self.player.bathstat = True
                 self.player.bath_time = time.time()
+                self.player.emote_manager.show_emote(self.player, "sad_ani")
                 self.load_map(self.current_map, from_map=map_name)
             elif map_name == "bathhouse":
                 # this is to prevent warning in the console
                 self.load_map(self.current_map, from_map=map_name)
+                self.player.emote_manager.show_emote(self.player, "sad_ani")
             else:
                 warnings.warn(f'Error loading map: Map "{map_name}" not found')
 
@@ -381,6 +395,8 @@ class Level:
         if collided_interactions:
             if collided_interactions[0].name == "Bed":
                 self.start_day_transition()
+            if collided_interactions[0].name == "sign":
+                self.show_sign(collided_interactions[0])
             if collided_interactions[0].name == "Trader":
                 self.switch_screen(GameState.SHOP)
             if collided_interactions[0] in self.bush_sprites.sprites():
@@ -389,11 +405,65 @@ class Level:
                 ):
                     collided_interactions[0].hit(self.player)
 
+    def show_sign(self, sign: Sprite) -> None:
+        label_key = sign.custom_properties.get("label", "label_not_available")
+        post_event(DIALOG_SHOW, dial=label_key)
+
+    def check_outgroup_logic(self):
+        collided_with_outgroup_farm = pygame.sprite.spritecollide(
+            self.player,
+            [i for i in self.interaction_sprites if i.name == "Outgroup Farm"],
+            False,
+        )
+
+        # Starts timer for 60 seconds when player is in outgroup farm
+        if collided_with_outgroup_farm:
+            if not self.outgroup_farm_entered:
+                self.outgroup_farm_time_entered = pygame.time.get_ticks()
+                self.outgroup_farm_entered = True
+
+        # Resets the timer when player exits the farm
+        else:
+            self.outgroup_farm_entered = False
+            self.outgroup_farm_time_entered = None
+            self.outgroup_message_received = False
+
+        # If the player is in the farm and 60 seconds (currently 30s) have passed
+        if (
+            self.outgroup_farm_entered
+            and pygame.time.get_ticks() - self.outgroup_farm_time_entered >= 30000
+        ):
+            # Checks if player has already received the message and is not part of the outgroup
+            if (
+                not self.outgroup_message_received
+                and self.player.study_group != StudyGroup.OUTGROUP
+            ):
+                self.outgroup_message_received = True
+                self.switch_screen(GameState.OUTGROUP_MENU)
+
+        # Resets so that message can be displayed again if player exits and reenters farm
+        if not self.outgroup_farm_entered:
+            self.outgroup_message_receieved = False
+
+        # checks 60 seconds and 120 seconds after player joins outgroup to convert appearance
+        if self.player.study_group == StudyGroup.OUTGROUP:
+            if not self.start_become_outgroup:
+                self.start_become_outgroup_time = pygame.time.get_ticks()
+                self.start_become_outgroup = True
+            elif self.finish_become_outgroup:
+                pass
+            elif pygame.time.get_ticks() - self.start_become_outgroup_time > 120000:
+                self.player.has_outgroup_skin = True
+                self.finish_become_outgroup = True
+            elif pygame.time.get_ticks() - self.start_become_outgroup_time > 60000:
+                self.player.has_horn = True
+
     def handle_event(self, event: pygame.event.Event) -> bool:
         hitbox_key = self.player.controls.DEBUG_SHOW_HITBOXES.control_value
         dialog_key = self.player.controls.SHOW_DIALOG.control_value
         pf_overlay_key = self.player.controls.SHOW_PF_OVERLAY.control_value
         advance_dialog_key = self.player.controls.ADVANCE_DIALOG.control_value
+        round_end_key = self.player.controls.END_ROUND.control_value
         player_task_key = self.player.controls.DEDUG_PLAYER_TASK.control_value
 
         if self.current_minigame and self.current_minigame.running:
@@ -419,8 +489,12 @@ class Level:
             if event.key == pf_overlay_key:
                 self.show_pf_overlay = not self.show_pf_overlay
                 return True
+            if event.key == round_end_key:
+                self.switch_screen(GameState.ROUND_END)
         if event.type == START_QUAKE:
             self.quaker.start(event.duration)
+            # debug volcanic atmosphere trigger
+            self.current_level = 7
 
         return False
 
@@ -578,7 +652,7 @@ class Level:
     # endregion
 
     def draw_overlay(self):
-        self.sky.display()
+        self.sky.display(self.current_level)
         self.overlay.display()
 
     def draw(self, dt: float, move_things: bool):
@@ -587,7 +661,7 @@ class Level:
         self.all_sprites.draw(self.camera)
         self.zoom_manager.apply_zoom()
         if move_things:
-            self.sky.display()
+            self.sky.display(self.current_level)
 
         self.draw_pf_overlay()
         self.draw_hitboxes()
@@ -613,6 +687,7 @@ class Level:
         # update
         self.game_time.update()
         self.check_map_exit()
+        self.check_outgroup_logic()
 
         if self.current_minigame and self.current_minigame.running:
             self.current_minigame.update(dt)

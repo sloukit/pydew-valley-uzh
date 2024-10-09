@@ -7,7 +7,10 @@ from src.gui.menu.general_menu import GeneralMenu
 
 
 class PauseMenu(GeneralMenu):
-    def __init__(self, switch_screen: Callable[[GameState], None]):
+    def __init__(
+        self,
+        switch_screen: Callable[[GameState], None],
+    ):
         options = ["Resume", "Options", "Save and Resume", "Quit"]
         title = "Pause Menu"
         size = (400, 400)

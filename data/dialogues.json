@@ -2,5 +2,45 @@
   "test":[
     ["A character", "BLAH BLAH BLAH"], //Single-line text example
     ["A character", "Insightful text here, or something. I mean, what the heck should I say?"] //Text wrapping function test
+  ],
+  "intro_to_ingroup": [
+    ["Ingroup", "Your Ingroup!"]
+  ],
+  "label_not_available":[
+    ["Sign", "label not available"],
+    ["Sign", "check map tmx, Interactions layer, custom property: label"]
+  ],
+  "to_trader_up":[
+    ["Sign", "/\\\t\t\t\t\t\t\t | |  go up to the Trader"]
+  ],
+  "to_farm_up":[
+    ["Sign", "/\\\t\t\t\t\t\t\t | |  go up to the Farm"]
+  ],
+  "to_minigame_up":[
+    ["Sign", "/\\\t\t\t\t\t\t\t | |  go up to the Mini game"]
+  ],
+  "to_bath_down":[
+    ["Sign", "| |\t\t\t\t\t\t\t\\/ go down to the Bathhouse"]
+  ],
+  "to_forest_down":[
+    ["Sign", "| |\t\t\t\t\t\t\t\\/ go down to the Forest"]
+  ],
+  "to_town_down":[
+    ["Sign", "| |\t\t\t\t\t\t\t\\/ go down to the Town"]
+  ],
+  "to_bath_right":[
+    ["Sign", "=> go right to the Bathhouse"]
+  ],
+  "to_forest_right":[
+    ["Sign", "=> go right to the Forest"]
+  ],
+  "to_town_left":[
+    ["Sign", "<= go left to the Town"]
+  ],
+  "to_town":[
+    ["Sign", "<= go left to the 'in group'\t\t\t\t\t=> go right to the Forest\t\t\t\t\t | |\t\t\t\t\t\t\t\\/ go down to the Town"]
+  ],
+  "to_forest":[
+    ["Sign", "=> go right to the 'out group'\t\t\t\t\t<= go left to the Town\t\t\t\t\t | |\t\t\t\t\t\t\t\\/ go down to the Forest"]
   ]
 }

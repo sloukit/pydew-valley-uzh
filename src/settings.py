@@ -12,6 +12,8 @@ type AniFrames = dict[str, list[pygame.Surface]]
 type GogglesStatus = bool | None
 type NecklaceStatus = bool | None
 type HatStatus = bool | None
+type HornStatus = bool | None
+type OutgroupSkinStatus = bool | None
 
 SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720
 TILE_SIZE = 16
@@ -19,10 +21,12 @@ CHAR_TILE_SIZE = 48
 SCALE_FACTOR = 4
 SCALED_TILE_SIZE = TILE_SIZE * SCALE_FACTOR
 
+RANDOM_SEED = 123456789
+
 GAME_MAP = Map.NEW_FARM
 
 ENABLE_NPCS = True
-TEST_ANIMALS = False
+TEST_ANIMALS = True
 
 SETUP_PATHFINDING = any((ENABLE_NPCS, TEST_ANIMALS))
 

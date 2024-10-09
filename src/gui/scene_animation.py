@@ -89,3 +89,6 @@ class SceneAnimation:
 
     def update(self, dt):
         self.animate(dt)
+
+        # check the if the zoom is allowed
+        self.zoom_allowed = self.active

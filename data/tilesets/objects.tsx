@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.0" name="objects" tilewidth="48" tileheight="48" tilecount="46" columns="0">
+<tileset version="1.10" tiledversion="1.11.0" name="objects" tilewidth="48" tileheight="48" tilecount="63" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="9">
   <image source="../../images/objects/flower_0.png" width="9" height="6"/>
@@ -273,5 +273,107 @@
  </tile>
  <tile id="76">
   <image source="../../images/objects/desk.png" width="48" height="30"/>
+ </tile>
+ <tile id="77">
+  <image source="../../images/objects/Signpost_Bathtub_Left.png" width="22" height="25"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="10.0506" y="18.9897" width="4.8954" height="5"/>
+  </objectgroup>
+ </tile>
+ <tile id="78">
+  <image source="../../images/objects/Signpost_Bathtub_Right.png" width="22" height="25"/>
+  <objectgroup draworder="index" id="3">
+   <object id="2" x="7.06596" y="18.9151" width="4.8954" height="5"/>
+  </objectgroup>
+ </tile>
+ <tile id="79">
+  <image source="../../images/objects/Signpost_Emoji_New.png" width="26" height="22"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="4.97668" y="15.9677" width="15.9387" height="5"/>
+  </objectgroup>
+ </tile>
+ <tile id="80">
+  <image source="../../images/objects/Signpost_Farm_Left.png" width="15" height="18"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="5.98401" y="10.1103" width="4.07461" height="6.90273"/>
+  </objectgroup>
+ </tile>
+ <tile id="81">
+  <image source="../../images/objects/Signpost_Farm_Right.png" width="15" height="18"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="4.90207" y="10.0543" width="4.07461" height="6.90273"/>
+  </objectgroup>
+ </tile>
+ <tile id="82">
+  <image source="../../images/objects/Signpost_Forrest_01_Left.png" width="15" height="17"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="5.9094" y="9.04697" width="4.07461" height="6.90273"/>
+  </objectgroup>
+ </tile>
+ <tile id="83">
+  <image source="../../images/objects/Signpost_Forrest_01_Right.png" width="16" height="18"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="5.98401" y="9.15889" width="4.07461" height="6.90273"/>
+  </objectgroup>
+ </tile>
+ <tile id="84">
+  <image source="../../images/objects/Signpost_Forrest_02_Left.png" width="15" height="15"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="5.94671" y="7.06962" width="4.07461" height="6.90273"/>
+  </objectgroup>
+ </tile>
+ <tile id="85">
+  <image source="../../images/objects/Signpost_Forrest_02_Right.png" width="16" height="16"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="6.02132" y="6.995" width="4.07461" height="6.90273"/>
+  </objectgroup>
+ </tile>
+ <tile id="86">
+  <image source="../../images/objects/Signpost_Forrest_03_Left.png" width="15" height="18"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="5.98401" y="10.0916" width="4.07461" height="6.90273"/>
+  </objectgroup>
+ </tile>
+ <tile id="87">
+  <image source="../../images/objects/Signpost_Forrest_03_Right.png" width="15" height="18"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="4.97669" y="10.0543" width="4.07461" height="6.90273"/>
+  </objectgroup>
+ </tile>
+ <tile id="88">
+  <image source="../../images/objects/Signpost_Forrest_RL.png" width="16" height="22"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="6.02132" y="14.1582" width="4.07461" height="6.90273"/>
+  </objectgroup>
+ </tile>
+ <tile id="89">
+  <image source="../../images/objects/Signpost_Left.png" width="15" height="12"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="5.98401" y="4.04764" width="4.07461" height="6.90273"/>
+  </objectgroup>
+ </tile>
+ <tile id="90">
+  <image source="../../images/objects/Signpost_Right.png" width="15" height="12"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="4.90207" y="4.01033" width="4.07461" height="6.90273"/>
+  </objectgroup>
+ </tile>
+ <tile id="91">
+  <image source="../../images/objects/Signpost_RL.png" width="16" height="19"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="6.02132" y="10.987" width="4.07461" height="6.90273"/>
+  </objectgroup>
+ </tile>
+ <tile id="92">
+  <image source="../../images/objects/Signpost_Village_Left.png" width="15" height="18"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="5.9094" y="10.0543" width="4.07461" height="6.90273"/>
+  </objectgroup>
+ </tile>
+ <tile id="93">
+  <image source="../../images/objects/Signpost_Village_Right.png" width="15" height="18"/>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="4.97669" y="10.1289" width="4.07461" height="6.90273"/>
+  </objectgroup>
  </tile>
 </tileset>

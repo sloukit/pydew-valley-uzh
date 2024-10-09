@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 
+from pathfinding.core.grid import Grid
+
 from src.npc.bases.cow_base import CowBase
 from src.npc.behaviour.ai_behaviour_tree_base import (
     Action,
@@ -20,10 +22,11 @@ from src.settings import SCALED_TILE_SIZE
 @dataclass
 class CowIndividualContext(Context):
     cow: CowBase
+    range_grid: Grid = None
 
 
 def wander(context: CowIndividualContext) -> bool:
-    return pf_wander(context.cow)
+    return pf_wander(context.cow, pf_grid=CowIndividualContext.range_grid)
 
 
 # region flee behaviour

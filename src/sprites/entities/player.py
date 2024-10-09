@@ -74,6 +74,8 @@ class Player(Character):
         self.has_goggles = save_file.has_goggles
         self.has_necklace = save_file.has_necklace
         self.has_hat = save_file.has_hat
+        self.has_horn = save_file.has_horn
+        self.has_outgroup_skin = save_file.has_outgroup_skin
         self.study_group: StudyGroup = save_file.study_group
 
         self.emote_manager = emote_manager
@@ -91,6 +93,9 @@ class Player(Character):
         self.hp = hp
         self.created_time = time.time()
         self.delay_time_speed = 0.25
+
+        # check if the zoom is allowed
+        self.zoom_allowed = False
 
     def focus_entity(self, entity: Entity):
         if self.focused_entity:
