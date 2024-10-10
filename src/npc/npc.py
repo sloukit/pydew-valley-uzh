@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import random
+import time
 from typing import Callable
 
 import pygame
@@ -10,9 +11,12 @@ from src.gui.interface.emotes import NPCEmoteManager
 from src.npc.bases.npc_base import NPCBase
 from src.npc.behaviour.npc_behaviour_tree import NPCIndividualContext
 from src.overlay.soil import SoilManager
-from src.settings import Coordinate
+from src.settings import HEALTH_DECAY_VALUE, Coordinate
 from src.sprites.entities.character import Character
 from src.sprites.setup import EntityAsset
+
+# from src.support import import_image
+# from src.timer import Timer
 
 
 class NPC(NPCBase):
@@ -51,6 +55,11 @@ class NPC(NPCBase):
         self.has_hat = False
         self.has_horn = False
         self.has_outgroup_skin = False
+
+        self.speed = 250
+        self.original_speed = 250
+        self.created_time = time.time()
+        self.delay_time_speed = 0.25
 
         # TODO: Ensure that the NPC always has all needed seeds it needs
         #  in its inventory
@@ -148,8 +157,29 @@ class NPC(NPCBase):
             self.has_outgroup_skin = True
 
     def update(self, dt):
+        self.set_transparency_asper_sick()
+        self.set_speed_asper_sick()
         super().update(dt)
 
         self.emote_manager.update_obj(
             self, (self.rect.centerx - 47, self.rect.centery - 128)
         )
+
+    def set_transparency_asper_sick(self):
+        currTime = time.time()
+        elapsed_t = currTime - self.created_time
+        # print("elasped: ",elapsed_t)
+        alpha_v = 255 - (elapsed_t * HEALTH_DECAY_VALUE * 100)
+        self.image.set_alpha(alpha_v)
+        # print("npc t: ",alpha_v)##debug
+        # print(elapsed_t*HEALTH_DECAY_VALUE)##debug
+        if alpha_v <= 0:
+            # img = import_image(f"images/characters/rabbit/idleghost.png")
+            print("npc is dead")  ##debug
+
+    def set_speed_asper_sick(self):
+        cTime = time.time()
+        elapsedTime = cTime - self.created_time
+        if elapsedTime >= self.delay_time_speed:
+            self.speed = self.original_speed - (elapsedTime * HEALTH_DECAY_VALUE * 100)
+            # print("npc speed: ",self.speed)##debug
