@@ -40,6 +40,7 @@ class GameState(IntEnum):
     INVENTORY = 10
     ROUND_END = 11
     OUTGROUP_MENU = 12
+    PLAYER_TASK = 13
 
 
 # NOTE : DO NOT pay attention to anything the IDE might complain about in this class, as the enum generation mechanisms
