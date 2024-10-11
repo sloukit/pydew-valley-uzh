@@ -1,3 +1,4 @@
+import copy
 import time
 import warnings
 from collections.abc import Callable
@@ -142,7 +143,7 @@ class Level:
 
         self.player = Player(
             pos=(0, 0),
-            assets=ENTITY_ASSETS.RABBIT,
+            assets=copy.deepcopy(ENTITY_ASSETS.RABBIT),
             groups=(),
             collision_sprites=self.collision_sprites,
             apply_tool=self.apply_tool,
