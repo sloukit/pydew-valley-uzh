@@ -95,6 +95,7 @@ class Controls(Control, Enum):
     INTERACT = (pygame.K_SPACE, "Interact")
     INVENTORY = (pygame.K_i, "Open Inventory")
     DEBUG_QUAKE = (pygame.K_m, "Start Earthquake Effect")
+    DEBUG_INGROUP_SEQUENCE = (pygame.K_k, "Start Ingroup Sequence")
     EMOTE_WHEEL = (pygame.K_e, "Toggle Emote Wheel")
     DEBUG_SHOW_HITBOXES = (pygame.K_h, "Show Hitboxes")
     SHOW_PF_OVERLAY = (pygame.K_p, "Show Pathfinding")

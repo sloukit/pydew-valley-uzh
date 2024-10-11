@@ -32,6 +32,7 @@ from src.settings import (
     SCALED_TILE_SIZE,
     SCREEN_HEIGHT,
     SCREEN_WIDTH,
+    TILE_SIZE,
     MapDict,
     SoundDict,
 )
@@ -79,7 +80,7 @@ class Level:
     npc_emote_manager: NPCEmoteManager
 
     player: Player
-
+    prev_player_pos: tuple[int, int]
     # weather
     sky: Sky
     rain: Rain
@@ -112,6 +113,7 @@ class Level:
         # speeds = [100, 150, 200]  # Different speeds for each segment
         # pauses = [0, 1, 0.5, 2]  # Pauses at each point in seconds
         self.cutscene_animation = SceneAnimation([CameraTarget.get_null_target()])
+        self.ingroup_animation = SceneAnimation([CameraTarget.get_null_target()])
 
         self.zoom_manager = ZoomManager()
 
@@ -155,6 +157,7 @@ class Level:
             bath_time=0,
             save_file=self.save_file,
         )
+        self.prev_player_pos = (0, 0)
         self.all_sprites.add_persistent(self.player)
         self.collision_sprites.add_persistent(self.player)
 
@@ -222,6 +225,7 @@ class Level:
             selected_map=game_map,
             tilemap=self.tmx_maps[game_map],
             scene_ani=self.cutscene_animation,
+            ingroup_ani=self.ingroup_animation,
             zoom_man=self.zoom_manager,
             all_sprites=self.all_sprites,
             collision_sprites=self.collision_sprites,
@@ -286,7 +290,8 @@ class Level:
         self.rain.set_floor_size(self.game_map.get_size())
 
         self.current_map = game_map
-        self.cutscene_animation.start()
+        # TODO: revert
+        # self.cutscene_animation.start()
 
         if game_map == Map.MINIGAME:
             self.current_minigame = CowHerding(
@@ -464,6 +469,7 @@ class Level:
         pf_overlay_key = self.player.controls.SHOW_PF_OVERLAY.control_value
         advance_dialog_key = self.player.controls.ADVANCE_DIALOG.control_value
         round_end_key = self.player.controls.END_ROUND.control_value
+        debug_ingroup_sequence_key = self.player.controls.DEBUG_INGROUP_SEQUENCE.control_value
 
         if self.current_minigame and self.current_minigame.running:
             if self.current_minigame.handle_event(event):
@@ -487,6 +493,9 @@ class Level:
                 return True
             if event.key == round_end_key:
                 self.switch_screen(GameState.ROUND_END)
+            if event.key == debug_ingroup_sequence_key:
+                self.start_ingroup_sequence()
+                return True
         if event.type == START_QUAKE:
             self.quaker.start(event.duration)
             # debug volcanic atmosphere trigger
@@ -494,9 +503,49 @@ class Level:
 
         return False
 
+    def start_ingroup_sequence(self):
+        print("Start ingroup scripted sequence")
+        if self.ingroup_animation.targets:
+            self.ingroup_animation.is_end_condition_met = self.end_ingroup_sequence
+            self.prev_player_pos = self.player.rect.center
+            meeting_pos = self.ingroup_animation.targets[0].pos
+            # move player to the meeting point and make him face to the east (right)
+            self.player.teleport(meeting_pos)
+            self.player.direction =  pygame.Vector2(1, 0)
+            # spread all ingroup npc in half-circle of 2 * SCALED_TILE_SIZE diameter
+            # from north to south clockwise
+            # and make them face the player in the center
+            npcs = [npc for npc in self.game_map.npcs if npc.study_group == StudyGroup.INGROUP]
+            distance = pygame.Vector2(0, -2 * SCALED_TILE_SIZE)
+            rot_by = (180) / (len(npcs) - 1)
+            angle = 0
+            for npc in npcs:
+                new_pos = meeting_pos + distance.rotate(angle)
+                npc.direction = -distance.rotate(angle)
+                npc.teleport(new_pos)
+                angle += rot_by
+            self.ingroup_animation.reset()
+            self.ingroup_animation.start()
+            # self.player
+            post_event(DIALOG_SHOW, dial="scripted_sequence_receive_necklace")
+
+    def end_ingroup_sequence(self) -> bool:
+        # prevent the scripted sequence from ending
+        # while dialog is still opened
+        if self.player.blocked:
+            return False
+        print("End of ingroup scripted sequence")
+        self.player.teleport(self.prev_player_pos)
+        # self.player.has_hat = True
+        self.player.has_necklace = True
+
+        return True
+
     def get_camera_center(self):
         if self.cutscene_animation:
             return self.cutscene_animation.get_current_position()
+        elif self.ingroup_animation:
+            return self.ingroup_animation.get_current_position()
 
         return self.player.rect.center
 
@@ -678,6 +727,8 @@ class Level:
     def update_cutscene(self, dt):
         if self.cutscene_animation.active:
             self.cutscene_animation.update(dt)
+        elif self.ingroup_animation.active:
+            self.ingroup_animation.update(dt)
 
     def update(self, dt: float, move_things: bool = True):
         # update
@@ -692,23 +743,21 @@ class Level:
         self.day_transition.update()
         self.map_transition.update()
         if move_things:
-            if self.cutscene_animation.active:
+            if self.cutscene_animation.active or self.ingroup_animation.active:
                 self.all_sprites.update_blocked(dt)
             else:
                 self.all_sprites.update(dt)
             self.drops_manager.update()
             self.update_cutscene(dt)
             self.quaker.update_quake(dt)
-            self.camera.update(
-                self.cutscene_animation
-                if self.cutscene_animation.active
-                else self.player
-            )
-            self.zoom_manager.update(
-                self.cutscene_animation
-                if self.cutscene_animation.active
-                else self.player,
-                dt,
-            )
+
+            if self.cutscene_animation.active:
+                target = self.cutscene_animation
+            elif self.ingroup_animation.active:
+                target = self.ingroup_animation
+            else:
+                target = self.player
+            self.camera.update(target)
+            self.zoom_manager.update(target, dt)
             self.decay_health()
         self.draw(dt, move_things)

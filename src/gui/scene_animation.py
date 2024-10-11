@@ -1,5 +1,5 @@
 import time
-from typing import Iterable
+from typing import Callable, Iterable
 
 import pygame
 
@@ -16,6 +16,7 @@ class SceneAnimation:
         self.rect.center = self.current_pos
         self.active = False
         self.pause_start_time = None
+        self.is_end_condition_met: Callable[[], bool] = lambda: True
 
     def get_current_position(self):
         return self.current_pos
@@ -84,8 +85,10 @@ class SceneAnimation:
         if self.has_more_targets():
             self.move_towards_target(dt)
         else:
-            self.active = False
-            self.reset()
+            # do not end the animation until the condition is met
+            if self.is_end_condition_met():
+                self.active = False
+                self.reset()
 
     def update(self, dt):
         self.animate(dt)

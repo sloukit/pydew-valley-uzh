@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="80" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="26" nextobjectid="402">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="80" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="28" nextobjectid="406">
  <tileset firstgid="1" source="../tilesets/grass_tileset.tsx"/>
  <tileset firstgid="78" source="../tilesets/Interaction.tsx"/>
  <tileset firstgid="80" source="../tilesets/fence_tileset.tsx"/>
@@ -876,27 +876,58 @@
   </properties>
   <object id="382" name="CAMTARGET_0" x="624.333" y="514">
    <properties>
+    <property name="animation_name" value="intro"/>
     <property name="targ_id" type="int" value="0"/>
    </properties>
    <point/>
   </object>
   <object id="383" name="CAMTARGET_1" x="386.667" y="377">
    <properties>
+    <property name="animation_name" value="intro"/>
     <property name="targ_id" type="int" value="1"/>
    </properties>
    <point/>
   </object>
   <object id="388" name="CAMTARGET_2" x="473.667" y="196.333">
    <properties>
+    <property name="animation_name" value="intro"/>
     <property name="targ_id" type="int" value="2"/>
    </properties>
    <point/>
   </object>
   <object id="389" name="CAMTARGET_3" x="232" y="181">
    <properties>
+    <property name="animation_name" value="intro"/>
     <property name="targ_id" type="int" value="3"/>
    </properties>
    <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="26" name="Ingroup Sequence Targets">
+  <object id="403" name="SEQTARGET_0" x="230.333" y="298.333">
+   <properties>
+    <property name="animation_name" value="scripted_sequence"/>
+    <property name="pause" type="float" value="3"/>
+    <property name="speed" type="float" value="0.25"/>
+    <property name="targ_id" type="int" value="0"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="405" name="SEQTARGET_1" x="230.33" y="298.33">
+   <properties>
+    <property name="animation_name" value="scripted_sequence"/>
+    <property name="pause" type="float" value="1"/>
+    <property name="targ_id" type="int" value="1"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="27" name="Zoom Areas">
+  <object id="404" name="ZAREA1" x="204.833" y="270.333" width="47" height="57">
+   <properties>
+    <property name="factor" type="float" value="0.5"/>
+    <property name="speed" type="float" value="1"/>
+   </properties>
   </object>
  </objectgroup>
  <objectgroup id="25" name="NPCs">

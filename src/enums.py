@@ -322,6 +322,7 @@ class SpecialObjectLayer(StrEnum):
     NPCS = "NPCs"
     ANIMALS = "Animals"
     CAMERA_TARGETS = "Camera Targets"
+    INGROUP_SEQUENCE_TARGETS = "Ingroup Sequence Targets"
     ZOOM_AREAS = "Zoom Areas"
     MINIGAME = "Minigame"
 

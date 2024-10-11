@@ -266,6 +266,7 @@ class GameMap:
         tilemap: TiledMap,
         save_file: SaveFile,
         scene_ani: SceneAnimation,
+        ingroup_ani: SceneAnimation,
         zoom_man: ZoomManager,
         # Sprite groups
         all_sprites: AllSprites,
@@ -336,7 +337,7 @@ class GameMap:
         self.npcs = []
         self.animals = []
 
-        self._setup_layers(save_file, selected_map, scene_ani, zoom_man)
+        self._setup_layers(save_file, selected_map, scene_ani, ingroup_ani, zoom_man)
 
         if SETUP_PATHFINDING:
             AIData.update(self._pf_matrix, self.player, [*self.npcs, *self.animals])
@@ -709,6 +710,7 @@ class GameMap:
         save_file: SaveFile,
         gmap: Map,
         scene_ani: SceneAnimation,
+        ingroup_ani: SceneAnimation,
         zoom_man: ZoomManager,
     ):
         """
@@ -721,6 +723,9 @@ class GameMap:
         # doesn't have any camera targets
         scene_ani.reset()
         scene_ani.clear()
+
+        ingroup_ani.reset()
+        ingroup_ani.clear()
 
         # Clearing the zoom manager in advance, in case no zoom areas exist for the current map
         zoom_man.clear()
@@ -828,6 +833,8 @@ class GameMap:
                         )
                     case SpecialObjectLayer.CAMERA_TARGETS:
                         scene_ani.set_target_points(_setup_camera_layer(tilemap_layer))
+                    case SpecialObjectLayer.INGROUP_SEQUENCE_TARGETS:
+                        ingroup_ani.set_target_points(_setup_camera_layer(tilemap_layer))
                     case SpecialObjectLayer.ZOOM_AREAS:
                         zoom_man.set_zoom_areas(_setup_zoom_layer(tilemap_layer))
                     case _:

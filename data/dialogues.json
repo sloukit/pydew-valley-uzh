@@ -6,6 +6,14 @@
   "intro_to_ingroup": [
     ["Ingroup", "Your Ingroup!"]
   ],
+  "scripted_sequence_receive_hat": [
+    ["Special event!", "We gather her for a special occasion"],
+    ["Special event!", "You have received a hat!"]
+  ],
+  "scripted_sequence_receive_necklace": [
+    ["Special event!", "We gather her for a special occasion"],
+    ["Special event!", "You have received a necklace!"]
+  ],
   "label_not_available":[
     ["Sign", "label not available"],
     ["Sign", "check map tmx, Interactions layer, custom property: label"]
