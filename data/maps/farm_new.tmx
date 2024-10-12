@@ -902,11 +902,9 @@
    </properties>
    <point/>
   </object>
- </objectgroup>
- <objectgroup id="26" name="Ingroup Sequence Targets">
   <object id="403" name="SEQTARGET_0" x="230.333" y="298.333">
    <properties>
-    <property name="animation_name" value="scripted_sequence"/>
+    <property name="animation_name" value="ingroup_gathering"/>
     <property name="pause" type="float" value="3"/>
     <property name="speed" type="float" value="0.25"/>
     <property name="targ_id" type="int" value="0"/>
@@ -915,7 +913,7 @@
   </object>
   <object id="405" name="SEQTARGET_1" x="230.33" y="298.33">
    <properties>
-    <property name="animation_name" value="scripted_sequence"/>
+    <property name="animation_name" value="ingroup_gathering"/>
     <property name="pause" type="float" value="1"/>
     <property name="targ_id" type="int" value="1"/>
    </properties>

@@ -6,13 +6,17 @@
   "intro_to_ingroup": [
     ["Ingroup", "Your Ingroup!"]
   ],
-  "scripted_sequence_receive_hat": [
+  "scripted_sequence_player_receives_hat": [
     ["Special event!", "We gather her for a special occasion"],
     ["Special event!", "You have received a hat!"]
   ],
-  "scripted_sequence_receive_necklace": [
+  "scripted_sequence_player_receives_necklace": [
     ["Special event!", "We gather her for a special occasion"],
     ["Special event!", "You have received a necklace!"]
+  ],
+  "scripted_sequence_npc_receives_necklace": [
+    ["Special event!", "We gather her for a special occasion"],
+    ["Special event!", "Our group member received a necklace!"]
   ],
   "label_not_available":[
     ["Sign", "label not available"],
