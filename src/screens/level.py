@@ -1,9 +1,9 @@
 import copy
+import random
 import time
 import warnings
 from collections.abc import Callable
 from functools import partial
-from random import randint
 
 import pygame
 
@@ -613,7 +613,7 @@ class Level:
         if self.current_map == Map.NEW_FARM:
             self.soil_manager.update()
 
-        self.raining = randint(0, 10) > 7
+        self.raining = random.randint(0, 10) > 7
         self.soil_manager.raining = self.raining
 
         # apples on the trees
