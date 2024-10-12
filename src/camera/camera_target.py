@@ -29,7 +29,7 @@ class CameraTarget:
 
     @property
     def animation_name(self):
-        """The name of particular animation sequence."""
+        """The name of particular animation sequence loaded from 'animation_name' object property in Tiled. SceneAnimation identifies different animations by grouping them by this field."""
         return self._animation_name
 
     @property

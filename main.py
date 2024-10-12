@@ -256,7 +256,7 @@ class Game:
             if not self.game_paused() or is_first_frame:
                 if self.level.cutscene_animation.active:
                     event = pygame.key.get_pressed()
-                    if event[pygame.K_RSHIFT] and self.current_state == GameState.PLAY:
+                    if event[pygame.K_RSHIFT]:
                         self.level.update(dt * 5, self.current_state == GameState.PLAY)
                     else:
                         self.level.update(dt, self.current_state == GameState.PLAY)
