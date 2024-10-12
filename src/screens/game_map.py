@@ -41,6 +41,7 @@ from src.npc.utils import pf_add_matrix_collision
 from src.overlay.soil import SoilManager
 from src.savefile import SaveFile
 from src.settings import (
+    DEFAULT_ANIMATION_NAME,
     ENABLE_NPCS,
     SCALE_FACTOR,
     SCALED_TILE_SIZE,
@@ -127,11 +128,19 @@ def _setup_camera_layer(layer: TiledObjectGroup):
     # BEWARE! THIS FUNCTION IS A GENERATOR!
     # DO NOT TRY TO USE THIS AS A LIST!
     """Sets up all camera targets for a cutscene using the layer objects."""
-    targs = sorted(layer, key=lambda targ: targ.properties["targ_id"])
+
+    targs = sorted(
+        layer,
+        key=lambda targ: (
+            targ.properties.get("animation_name", DEFAULT_ANIMATION_NAME),
+            targ.properties["targ_id"],
+        ),
+    )
     for target in targs:
         target_props = target.properties
 
-        speed_and_pause = {}
+        custom_properties = {}
+        animation_name = target_props.get("animation_name")
         speed = target_props.get("speed")
         pause = target_props.get("pause")
 
@@ -143,15 +152,17 @@ def _setup_camera_layer(layer: TiledObjectGroup):
         # inside this additional keyword argument dictionary
         # or else when generating the CameraTarget object
         # Python will raise TypeErrors for unexpected arguments)
+        if animation_name is not None:
+            custom_properties["_animation_name"] = animation_name
         if speed is not None:
-            speed_and_pause["_speed"] = speed
+            custom_properties["_speed"] = speed
         if pause is not None:
-            speed_and_pause["_pause"] = pause
+            custom_properties["_pause"] = pause
 
         yield CameraTarget(
             (target.x * SCALE_FACTOR, target.y * SCALE_FACTOR),
             target_props["targ_id"],
-            **speed_and_pause,
+            **custom_properties,
         )
 
 

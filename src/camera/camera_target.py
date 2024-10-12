@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass, field
 
-from src.settings import Coordinate
+from src.settings import DEFAULT_ANIMATION_NAME, Coordinate
 
 
 @dataclass
@@ -11,6 +11,7 @@ class CameraTarget:
 
     _pos: Coordinate
     _targ_id: int
+    _animation_name: str = field(default=DEFAULT_ANIMATION_NAME)
     _speed: int = field(default=200)
     _pause: float = field(default=0)
 
@@ -25,6 +26,11 @@ class CameraTarget:
 
     def __iter__(self):
         return iter(self._pos)
+
+    @property
+    def animation_name(self):
+        """The name of particular animation sequence loaded from 'animation_name' object property in Tiled. SceneAnimation identifies different animations by grouping them by this field."""
+        return self._animation_name
 
     @property
     def speed(self):
@@ -53,4 +59,4 @@ class CameraTarget:
         return _NULL_TARGET
 
 
-_NULL_TARGET = CameraTarget((0, 0), 0, 1, 0)
+_NULL_TARGET = CameraTarget((0, 0), 0, DEFAULT_ANIMATION_NAME, 1, 0)
