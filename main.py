@@ -274,10 +274,11 @@ class Game:
 
             if self.level.cutscene_animation.active:
                 self.all_sprites.update_blocked(dt)
-                event = pygame.key.get_pressed()
-                self.fast_forward.draw_option(self.display_surface)
-                if event[pygame.K_RSHIFT]:
-                    self.fast_forward.draw_overlay(self.display_surface)
+                if self.current_state == GameState.PLAY:
+                    event = pygame.key.get_pressed()
+                    self.fast_forward.draw_option(self.display_surface)
+                    if event[pygame.K_RSHIFT]:
+                        self.fast_forward.draw_overlay(self.display_surface)
             else:
                 self.all_sprites.update(dt)
             self.all_sprites.draw(self.level.camera)

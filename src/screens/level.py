@@ -1,4 +1,6 @@
+
 import copy
+import random
 import time
 import warnings
 from collections.abc import Callable
@@ -11,7 +13,7 @@ from src.camera import Camera
 from src.camera.camera_target import CameraTarget
 from src.camera.quaker import Quaker
 from src.camera.zoom_manager import ZoomManager
-from src.enums import FarmingTool, GameState, Map, StudyGroup
+from src.enums import FarmingTool, GameState, Map, ScriptedSequenceType, StudyGroup
 from src.events import DIALOG_ADVANCE, DIALOG_SHOW, START_QUAKE, post_event
 from src.exceptions import GameMapWarning
 from src.groups import AllSprites, PersistentSpriteGroup
@@ -28,6 +30,7 @@ from src.screens.game_map import GameMap
 from src.screens.minigames.base import Minigame
 from src.screens.minigames.cow_herding import CowHerding, CowHerdingState
 from src.settings import (
+    DEFAULT_ANIMATION_NAME,
     GAME_MAP,
     HEALTH_DECAY_VALUE,
     SCALED_TILE_SIZE,
@@ -80,7 +83,7 @@ class Level:
     npc_emote_manager: NPCEmoteManager
 
     player: Player
-
+    prev_player_pos: tuple[int, int]
     # weather
     sky: Sky
     rain: Rain
@@ -94,6 +97,8 @@ class Level:
     # overlay
     overlay: Overlay
     show_hitbox_active: bool
+
+    intro_shown: dict[str, bool]
 
     def __init__(
         self,
@@ -113,6 +118,7 @@ class Level:
         # speeds = [100, 150, 200]  # Different speeds for each segment
         # pauses = [0, 1, 0.5, 2]  # Pauses at each point in seconds
         self.cutscene_animation = SceneAnimation([CameraTarget.get_null_target()])
+        self.intro_shown = {}
 
         self.zoom_manager = ZoomManager()
 
@@ -156,6 +162,7 @@ class Level:
             bath_time=0,
             save_file=self.save_file,
         )
+        self.prev_player_pos = (0, 0)
         self.all_sprites.add_persistent(self.player)
         self.collision_sprites.add_persistent(self.player)
 
@@ -269,8 +276,11 @@ class Level:
 
         self.player.teleport(player_spawn)
 
-        if self.cutscene_animation.targets:
-            last_target = self.cutscene_animation.targets[-1]
+        if self.cutscene_animation.has_animation_name(DEFAULT_ANIMATION_NAME):
+            def_animation_targets = self.cutscene_animation.animations[
+                DEFAULT_ANIMATION_NAME
+            ]
+            last_target = def_animation_targets[-1]
             last_targ_pos = pygame.Vector2(last_target.pos)
             center = pygame.Vector2(self.player.rect.center)
             movement = center - last_targ_pos
@@ -278,16 +288,19 @@ class Level:
                 max(round(movement.length()) // _TO_PLAYER_SPEED_INCREASE_THRESHOLD, 2)
                 * 100
             )
-            self.cutscene_animation.targets.append(
-                CameraTarget(
-                    self.player.rect.center, len(self.cutscene_animation.targets), speed
-                )
+            def_animation_targets.append(
+                CameraTarget(self.player.rect.center, len(def_animation_targets), speed)
             )
 
+            self.cutscene_animation.set_current_animation(DEFAULT_ANIMATION_NAME)
         self.rain.set_floor_size(self.game_map.get_size())
 
         self.current_map = game_map
-        self.cutscene_animation.start()
+
+        # show intro scripted sequence only once
+        if not self.intro_shown.get(game_map, False):
+            self.intro_shown[game_map] = True
+            self.cutscene_animation.start()
 
         if game_map == Map.MINIGAME:
             self.current_minigame = CowHerding(
@@ -465,6 +478,15 @@ class Level:
         pf_overlay_key = self.player.controls.SHOW_PF_OVERLAY.control_value
         advance_dialog_key = self.player.controls.ADVANCE_DIALOG.control_value
         round_end_key = self.player.controls.END_ROUND.control_value
+        debug_player_receives_hat = (
+            self.player.controls.DEBUG_PLAYER_RECEIVES_HAT.control_value
+        )
+        debug_player_receives_necklace = (
+            self.player.controls.DEBUG_PLAYER_RECEIVES_NECKLACE.control_value
+        )
+        debug_npc_receives_necklace = (
+            self.player.controls.DEBUG_NPC_RECEIVES_NECKLACE.control_value
+        )
 
         if self.current_minigame and self.current_minigame.running:
             if self.current_minigame.handle_event(event):
@@ -488,12 +510,85 @@ class Level:
                 return True
             if event.key == round_end_key:
                 self.switch_screen(GameState.ROUND_END)
+            if event.key == debug_player_receives_hat:
+                self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_HAT)
+                return True
+            if event.key == debug_player_receives_necklace:
+                self.start_scripted_sequence(
+                    ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE
+                )
+                return True
+            if event.key == debug_npc_receives_necklace:
+                self.start_scripted_sequence(ScriptedSequenceType.NPC_RECEIVES_NECKLACE)
+                return True
         if event.type == START_QUAKE:
             self.quaker.start(event.duration)
             # debug volcanic atmosphere trigger
             self.current_level = 7
 
         return False
+
+    def start_scripted_sequence(self, sequence_type: ScriptedSequenceType):
+        if self.cutscene_animation.has_animation_name("ingroup_gathering"):
+            npcs = [
+                npc
+                for npc in self.game_map.npcs
+                if npc.study_group == StudyGroup.INGROUP
+            ]
+            if sequence_type == ScriptedSequenceType.NPC_RECEIVES_NECKLACE:
+                npc = random.choice(npcs)
+                npcs.remove(npc)
+                npcs.append(self.player)
+            else:
+                npc = self.player
+            self.cutscene_animation.set_current_animation("ingroup_gathering")
+            self.cutscene_animation.is_end_condition_met = partial(
+                self.end_scripted_sequence, sequence_type, npc
+            )
+            self.prev_player_pos = self.player.rect.center
+            meeting_pos = self.cutscene_animation.targets[0].pos
+            # move player other npc to the meeting point and make him face to the east (right)
+            npc.teleport(meeting_pos)
+            npc.direction = pygame.Vector2(1, 0)
+            # spread all ingroup npc in half-circle of 2 * SCALED_TILE_SIZE diameter
+            # from north to south clockwise
+            # and make them face the player in the center
+            distance = pygame.Vector2(0, -2 * SCALED_TILE_SIZE)
+            rot_by = (180) / (len(npcs) - 1)
+            angle = 0
+            for npc in npcs:
+                new_pos = meeting_pos + distance.rotate(angle)
+                npc.abort_path()
+                npc.direction = -distance.rotate(angle)
+                npc.teleport(new_pos)
+                angle += rot_by
+            self.cutscene_animation.reset()
+            self.cutscene_animation.start()
+
+            dialog_name = f"scripted_sequence_{sequence_type.value}"
+            post_event(DIALOG_SHOW, dial=dialog_name)
+
+    def end_scripted_sequence(
+        self, sequence_type: ScriptedSequenceType, npc: Character
+    ) -> bool:
+        # prevent the scripted sequence from ending
+        # while dialog is still opened
+        if self.player.blocked:
+            return False
+
+        self.player.teleport(self.prev_player_pos)
+
+        if sequence_type == ScriptedSequenceType.PLAYER_RECEIVES_HAT:
+            npc.has_hat = True
+        elif sequence_type == ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE:
+            npc.has_necklace = True
+        elif sequence_type == ScriptedSequenceType.NPC_RECEIVES_NECKLACE:
+            npc.has_necklace = True
+
+        self.cutscene_animation.set_current_animation(DEFAULT_ANIMATION_NAME)
+        self.cutscene_animation.is_end_condition_met = lambda: True
+
+        return True
 
     def get_camera_center(self):
         if self.cutscene_animation:
@@ -700,16 +795,12 @@ class Level:
             self.drops_manager.update()
             self.update_cutscene(dt)
             self.quaker.update_quake(dt)
-            self.camera.update(
-                self.cutscene_animation
-                if self.cutscene_animation.active
-                else self.player
-            )
-            self.zoom_manager.update(
-                self.cutscene_animation
-                if self.cutscene_animation.active
-                else self.player,
-                dt,
-            )
+
+            if self.cutscene_animation.active:
+                target = self.cutscene_animation
+            else:
+                target = self.player
+            self.camera.update(target)
+            self.zoom_manager.update(target, dt)
             self.decay_health()
         self.draw(dt, move_things)
