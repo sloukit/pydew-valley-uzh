@@ -247,7 +247,7 @@ class Game:
 
     async def run(self):
         pygame.mouse.set_visible(False)
-        mouse = pygame.image.load(support.resource_path("images/overlay/Cursor.png"))
+        mouse = pygame.image.load(support.resource_path("images/overlay/cursor.png"))
         is_first_frame = True
         while self.running:
             dt = self.clock.tick() / 1000
