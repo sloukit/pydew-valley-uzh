@@ -84,7 +84,12 @@ class Game:
 
         # screens
         self.level = Level(
-            self.switch_state, self.tmx_maps, self.frames, self.sounds, self.save_file
+            self.switch_state,
+            self.tmx_maps,
+            self.frames,
+            self.sounds,
+            self.save_file,
+            self.clock,
         )
         self.player = self.level.player
 
