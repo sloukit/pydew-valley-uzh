@@ -5,7 +5,7 @@ from typing import Callable
 
 import pygame
 
-from src.enums import FarmingTool, InventoryResource, Layer, StudyGroup
+from src.enums import EntityState, FarmingTool, InventoryResource, Layer, StudyGroup
 from src.gui.interface.emotes import NPCEmoteManager
 from src.npc.bases.npc_base import NPCBase
 from src.npc.behaviour.npc_behaviour_tree import NPCIndividualContext
@@ -13,6 +13,7 @@ from src.overlay.soil import SoilManager
 from src.settings import Coordinate
 from src.sprites.entities.character import Character
 from src.sprites.setup import EntityAsset
+from src.timer import Timer
 
 
 class NPC(NPCBase):
@@ -44,7 +45,6 @@ class NPC(NPCBase):
             behaviour_tree_context=NPCIndividualContext(self),
             z=Layer.MAIN,
         )
-
         self.start_tile_pos = self.get_tile_pos()  # capture the NPC start position
         self.soil_area = soil_manager.get_area(self.study_group)
         self.has_necklace = False
@@ -67,6 +67,22 @@ class NPC(NPCBase):
         }
 
         self.assign_outfit_ingroup()
+
+        # NPC health / sickness / death
+        self.probability_to_get_sick = (
+            0.3 if self.has_goggles else 0.6
+        ) < random.random()
+        # set a timer to get the NPC sick after a random time
+        self.sick_timer = Timer(
+            random.randint(5, 20) * 1000,
+            autostart=True,
+            func=self.get_sick,
+        )
+        self.is_sick = False
+        self.is_dead = False
+        self.hp = 100
+        # how fast the NPC dies after getting sick
+        self.die_rate = random.randint(35, 75)
 
     def get_personal_soil_area_tiles(self, tile_type: str) -> list[tuple[int, int]]:
         """
@@ -147,9 +163,56 @@ class NPC(NPCBase):
             self.has_horn = True
             self.has_outgroup_skin = True
 
+    # NPC sickness
+    def get_sick(self):
+        # if wearing goggles, the probability of getting sick is halved
+        self.is_sick = self.probability_to_get_sick < random.random()
+
+    def die(self):
+        self.is_dead = True
+        self.has_necklace = False
+        self.has_hat = False
+        self.has_horn = False
+
+        # set "dead" image, this could be a tombstone or a dead body, for example
+        if self.study_group == StudyGroup.OUTGROUP:
+            skin_state = EntityState(f"outgroup_{self.state.value}")
+            self.image = self.assets[skin_state][self.facing_direction].get_frame(0)
+        else:
+            self.image = self.assets[self.state][self.facing_direction].get_frame(0)
+        self.image.set_alpha(130)
+        self.image = pygame.transform.rotate(self.image, 90)
+
+        # remove from collision sprites so doesn't prevent farming or block other characters
+        self.remove(self.collision_sprites)
+
+    def manage_sickness(self, dt):
+        # if NPC is not sick yet, check if it gets sick
+        if self.sick_timer.active:
+            self.sick_timer.update()
+        elif self.is_sick and not self.is_dead:
+            # if NPC is sick, decrease health, speed and alpha
+            self.hp -= int(self.die_rate * dt)
+            self.speed = self.hp
+            self.image_alpha = 30 + int(150 * (self.hp / 100))
+            self.image.set_alpha(self.image_alpha)
+            if self.hp <= 0:
+                self.die()
+
     def update(self, dt):
+        self.manage_sickness(dt)
+        if self.is_dead:
+            return
         super().update(dt)
 
         self.emote_manager.update_obj(
             self, (self.rect.centerx - 47, self.rect.centery - 128)
         )
+
+    def draw(self, display_surface: pygame.Surface, rect: pygame.Rect, camera):
+        if self.is_dead:
+            # display only the dead NPC image if dead
+            display_surface.blit(self.image, rect)
+            return
+
+        super().draw(display_surface, rect, camera)
