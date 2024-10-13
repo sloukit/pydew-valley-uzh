@@ -105,6 +105,7 @@ class Level:
         frames: dict[str, dict],
         sounds: SoundDict,
         save_file: SaveFile,
+        clock: pygame.time.Clock,
     ):
         # main setup
         self.display_surface = pygame.display.get_surface()
@@ -183,7 +184,7 @@ class Level:
         self.current_day = 0
 
         # overlays
-        self.overlay = Overlay(self.player, frames["overlay"], self.game_time)
+        self.overlay = Overlay(self.player, frames["overlay"], self.game_time, clock)
         self.show_hitbox_active = False
         self.show_pf_overlay = False
         self.setup_pf_overlay()

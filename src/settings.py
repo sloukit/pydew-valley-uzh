@@ -38,6 +38,7 @@ OVERLAY_POSITIONS = {
     "tool": (86, 150),
     "seed": (47, 142),
     "clock": (SCREEN_WIDTH - 10, 10),
+    "FPS": (SCREEN_WIDTH - 10, SCREEN_HEIGHT - 10),
 }
 
 APPLE_POS = {
