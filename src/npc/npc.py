@@ -209,6 +209,16 @@ class NPC(NPCBase):
             self, (self.rect.centerx - 47, self.rect.centery - 128)
         )
 
+    def update_blocked(self, dt):
+        """the scripted sequence needs to display emote box even when NPC is blocked"""
+        if self.is_dead:
+            return
+        super().update_blocked(dt)
+
+        self.emote_manager.update_obj(
+            self, (self.rect.centerx - 47, self.rect.centery - 128)
+        )
+
     def draw(self, display_surface: pygame.Surface, rect: pygame.Rect, camera):
         if self.is_dead:
             # display only the dead NPC image if dead

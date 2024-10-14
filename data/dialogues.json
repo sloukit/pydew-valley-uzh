@@ -18,6 +18,16 @@
     ["Special event!", "We gather her for a special occasion"],
     ["Special event!", "Our group member received a necklace!"]
   ],
+"scripted_sequence_decide_tomato_or_corn": [
+    ["Group gathering", "We gather her to decide what to buy at the market"],
+    ["Group gathering", "Everyone needs to vote one of the items:\t - tomato\n\t\t\t\t\t\t\t - corn"]
+  ],
+  "scripted_sequence_buy_tomato": [
+    ["Group gathering", "The group has decided to buy tomato!"]
+  ],
+  "scripted_sequence_buy_corn": [
+    ["Group gathering", "The group has decided to buy corn!"]
+  ],
   "label_not_available":[
     ["Sign", "label not available"],
     ["Sign", "check map tmx, Interactions layer, custom property: label"]

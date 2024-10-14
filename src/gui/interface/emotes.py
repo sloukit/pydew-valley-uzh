@@ -203,6 +203,7 @@ class EmoteWheel(EmoteWheelBase):
     def __init__(
         self,
         emote_manager: EmoteManagerBase,
+        emotes_list: list[str],
         *groups: PersistentSpriteGroup,
     ):
         """
@@ -211,17 +212,9 @@ class EmoteWheel(EmoteWheelBase):
         """
         self._emote_manager = emote_manager
 
-        self._emotes = [
-            "cheer_ani",
-            "cool_ani",
-            "furious_ani",
-            "love_ani",
-            "sad_ani",
-            "sleep_ani",
-            "smile_ani",
-            "wink_ani",
-        ]
+        self._emotes = emotes_list
         self.emote_index = 0
+        self.emotes_count = len(self._emotes)
         self._current_emote = self._emotes[self.emote_index]
         self._last_emote_index = None
 
@@ -340,14 +333,14 @@ class EmoteWheel(EmoteWheelBase):
             return
 
         self._last_emote_index = self.emote_index
-        self._current_emote = self._emotes[self.emote_index % 8]
+        self._current_emote = self._emotes[self.emote_index % self.emotes_count]
 
         self.image = self._image.copy()
 
-        current_emote_index = self.emote_index % 8
+        current_emote_index = self.emote_index % self.emotes_count
 
         # draw thicker and brighter lines around the currently selected emote
-        deg = math.pi * 2 * current_emote_index / 8 - math.pi / 2
+        deg = math.pi * 2 * current_emote_index / self.emotes_count - math.pi / 2
 
         # center_pos and length have to be slightly adjusted to be neither to
         # short, nor to extend beyond the edge of the selector wheel
@@ -362,7 +355,9 @@ class EmoteWheel(EmoteWheelBase):
             self.image, center_pos, thickness, length, deg, SL_ORANGE_BRIGHTEST
         )
 
-        deg = math.pi * 2 * (current_emote_index + 1) / 8 - math.pi / 2
+        deg = (
+            math.pi * 2 * (current_emote_index + 1) / self.emotes_count
+        ) - math.pi / 2
         center_pos = (
             self._outer_radius + math.cos(deg) * (self._center - 3),
             self._outer_radius + math.sin(deg) * (self._center - 3),
@@ -372,15 +367,19 @@ class EmoteWheel(EmoteWheelBase):
             self.image, center_pos, thickness, length, deg, SL_ORANGE_BRIGHTEST
         )
 
-        start_deg = math.pi * 2 * -current_emote_index / 8 + math.pi / 4
-        stop_deg = math.pi * 2 * (-current_emote_index + 1) / 8 + math.pi / 4
+        start_deg = (
+            -(math.pi * 2 * current_emote_index / self.emotes_count) + math.pi / 2
+        )
+        stop_deg = (
+            -(math.pi * 2 * (current_emote_index + 1) / self.emotes_count) + math.pi / 2
+        )
 
         pygame.draw.arc(
             self.image,
             SL_ORANGE_BRIGHTEST,
             (0, 0, self._outer_radius * 2, self._outer_radius * 2),
-            start_deg,
             stop_deg,
+            start_deg,
             thickness,
         )
 
@@ -393,8 +392,8 @@ class EmoteWheel(EmoteWheelBase):
                 self._inner_radius * 2 + 2,
                 self._inner_radius * 2 + 2,
             ),
-            start_deg,
             stop_deg,
+            start_deg,
             thickness,
         )
 
@@ -407,11 +406,14 @@ class PlayerEmoteManager(EmoteManager):
     __on_emote_wheel_closed_funcs: list[Callable[[], None]]
 
     def __init__(
-        self, emotes: dict[str, list[pygame.Surface]], *groups: PersistentSpriteGroup
+        self,
+        emotes: dict[str, list[pygame.Surface]],
+        emotes_list: list[str],
+        *groups: PersistentSpriteGroup,
     ):
         super().__init__(emotes, *groups)
 
-        self.emote_wheel = EmoteWheel(self, *groups)
+        self.emote_wheel = EmoteWheel(self, emotes_list, *groups)
 
         self.reset()
 
