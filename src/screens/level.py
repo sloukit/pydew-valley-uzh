@@ -202,7 +202,7 @@ class Level:
         )
 
         # level
-        self.current_level = 1
+        self.current_level = 3
 
     def load_map(self, game_map: Map, from_map: str = None):
         # prepare level state for new map

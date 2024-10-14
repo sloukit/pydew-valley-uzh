@@ -92,7 +92,7 @@ class Game:
         self.token_status = False
         self.main_menu = MainMenu(self.switch_state)
         self.pause_menu = PauseMenu(self.switch_state)
-        self.task_menu = PlayerTask(self.switch_state, self.clock)
+        self.task_menu = PlayerTask(self.switch_state, self.level)
         self.settings_menu = SettingsMenu(
             self.switch_state, self.sounds, self.player.controls
         )
@@ -142,8 +142,6 @@ class Game:
             self.current_state = GameState.PLAY
         if self.current_state == GameState.INVENTORY:
             self.inventory_menu.refresh_buttons_content()
-        # if self.current_state == GameState.PLAYER_TASK:
-        #     pass
         if self.current_state == GameState.ROUND_END:
             self.round_menu.reset_menu()
             self.round_menu.generate_items()

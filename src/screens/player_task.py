@@ -3,7 +3,7 @@ from typing import Callable
 import pygame
 import pygame.freetype
 
-from src.enums import GameState
+from src.enums import GameState, InventoryResource
 from src.gui.menu.abstract_menu import AbstractMenu
 from src.gui.menu.components import ArrowButton, InputField
 from src.screens.minigames.gui import (
@@ -18,10 +18,9 @@ from src.support import import_font, import_freetype_font
 
 """
 TODO:
-- add image of allocated item somewhere
 - properly draw active InputField
-- save allocations to save_file
-- integrate into level system
+- save allocations to save_file?
+- in player.py, make "_ALLOCATION_ITEM_DEFAULT_AMOUNT" actually work. Does it have something to do with Enums?
 BUGS:
 - confirm button doesn't work anymore after merging with origin
 - during one test, health droped when using normal number keys, didn't happen when the num-block
@@ -31,7 +30,7 @@ BUGS:
 class PlayerTask(AbstractMenu):
     """Run the item allocation task."""
 
-    def __init__(self, switch_screen: Callable[[], None], clock: pygame.time.Clock):
+    def __init__(self, switch_screen: Callable[[], None], level):
         super().__init__(title="Task", size=(SCREEN_WIDTH, SCREEN_HEIGHT))
         self.display_surface: pygame.Surface = pygame.display.get_surface()
         self.title_font: pygame.freetype.Font = import_freetype_font(
@@ -46,6 +45,11 @@ class PlayerTask(AbstractMenu):
         self.buttons = []
         self.button_setup()
 
+        self.level = level
+        self.allocation_item: tuple[str, pygame.surface.Surface] = (
+            self.determine_allocation_item()
+        )
+
         self.arrow_buttons: list[list[ArrowButton]] = []
         self.input_fields: list[InputField] = []
         self.allocations: list[int] = [0, 0, 0]
@@ -53,6 +57,19 @@ class PlayerTask(AbstractMenu):
         self.min_allocation: int = 0
         self.total_items: int = 15
         self.active_input: int | None = None
+
+    def determine_allocation_item(self):
+        self.allocation_item_name: str = None
+        self.allocation_item_img: pygame.surface.Surface = None
+        if self.level.current_level == 3 or self.level.current_level == 6:
+            self.allocation_item_name = "candy bar"
+            self.allocation_item_img = self.level.frames["level"]["objects"][
+                "candy_bar"
+            ]
+        else:
+            self.allocation_item_name = "blanket"
+            self.allocation_item_img = self.level.frames["level"]["objects"]["blanket"]
+        return self.allocation_item_name, self.allocation_item_img
 
     def draw_title(self) -> None:
         text = Text(
@@ -68,27 +85,27 @@ class PlayerTask(AbstractMenu):
 
     def draw_allocation_buttons(self) -> None:
         self.input_fields = [
-            InputField(self.display_surface, (745, 200), self.input_field_font),
-            InputField(self.display_surface, (745, 250), self.input_field_font),
-            InputField(self.display_surface, (745, 300), self.input_field_font),
+            InputField(self.display_surface, (755, 210), self.input_field_font),
+            InputField(self.display_surface, (755, 260), self.input_field_font),
+            InputField(self.display_surface, (755, 310), self.input_field_font),
         ]
         self.arrow_buttons = [
             [
-                ArrowButton("up", pygame.Rect(800, 200, 30, 20), self.input_field_font),
+                ArrowButton("up", pygame.Rect(805, 210, 30, 20), self.input_field_font),
                 ArrowButton(
-                    "down", pygame.Rect(800, 220, 30, 20), self.input_field_font
+                    "down", pygame.Rect(805, 230, 30, 20), self.input_field_font
                 ),
             ],
             [
-                ArrowButton("up", pygame.Rect(800, 250, 30, 20), self.input_field_font),
+                ArrowButton("up", pygame.Rect(805, 260, 30, 20), self.input_field_font),
                 ArrowButton(
-                    "down", pygame.Rect(800, 270, 30, 20), self.input_field_font
+                    "down", pygame.Rect(805, 280, 30, 20), self.input_field_font
                 ),
             ],
             [
-                ArrowButton("up", pygame.Rect(800, 300, 30, 20), self.input_field_font),
+                ArrowButton("up", pygame.Rect(805, 310, 30, 20), self.input_field_font),
                 ArrowButton(
-                    "down", pygame.Rect(800, 320, 30, 20), self.input_field_font
+                    "down", pygame.Rect(805, 330, 30, 20), self.input_field_font
                 ),
             ],
         ]
@@ -128,10 +145,13 @@ class PlayerTask(AbstractMenu):
         box_center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 3)
         button_top_margin = 32
         button_area_height = self.confirm_button.rect.height + button_top_margin
+        allocation_img = pygame.transform.scale(self.allocation_item[1], (60, 60))
 
         text = Text(
+            Linebreak((0, 18)),
             TextChunk(
-                f"You have received {self.max_allocation} candy bars!", self.text_font
+                f"You have received {self.max_allocation} {self.allocation_item[0]}s!",
+                self.text_font,
             ),
             Linebreak(),
             TextChunk("Distribute them:", self.text_font),
@@ -164,12 +184,22 @@ class PlayerTask(AbstractMenu):
                 box_center[1] - self.confirm_button.rect.height + box_size[1] / 2,
             )
         )
+        self.display_surface.blit(
+            allocation_img,
+            (
+                SCREEN_WIDTH / 2 - allocation_img.get_width() / 2,
+                SCREEN_HEIGHT / 3 * 0.28,
+            ),
+        )
 
     def button_action(self, name: str) -> None:
         if (
             name == self.confirm_button.text
             and sum(self.allocations) == self.total_items
         ):
+            self.level.player.add_resource(
+                InventoryResource.CANDY_BAR, amount=self.allocations[0]
+            )
             self.switch_screen(GameState.PLAY)
 
     def button_setup(self) -> None:
