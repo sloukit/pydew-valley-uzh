@@ -1,5 +1,4 @@
 import os
-
 import pygame
 
 
@@ -16,7 +15,7 @@ class FastForward:
                 self.total_frame = 10
                 self.font = pygame.font.Font("font/LycheeSoda.ttf", 30)
                 self.text_surface = self.font.render(
-                    "R_Shift to skip", True, (255, 255, 255)
+                    "R_Shift to Fast Forward", True, (255, 255, 255)
                 )
 
     def draw_overlay(self, display_surface):
@@ -26,4 +25,4 @@ class FastForward:
             self.current_frame = 0
 
     def draw_option(self, display_surface):
-        display_surface.blit(self.text_surface, (1050, 600))
+        display_surface.blit(self.text_surface, (980, 600))
