@@ -612,8 +612,11 @@ class Level:
     ) -> bool:
         # prevent the scripted sequence from ending
         # while dialog is still opened, unless it's DECIDE_TOMATO_OR_CORN with opened EmoteWheel
-        if (self.player.blocked and self.player_emote_manager.emote_wheel.visible and
-                not sequence_type == ScriptedSequenceType.DECIDE_TOMATO_OR_CORN) or not self.game_map:
+        if (
+            self.player.blocked
+            and self.player_emote_manager.emote_wheel.visible
+            and not sequence_type == ScriptedSequenceType.DECIDE_TOMATO_OR_CORN
+        ) or not self.game_map:
             return False
 
         if sequence_type == ScriptedSequenceType.PLAYER_RECEIVES_HAT:
