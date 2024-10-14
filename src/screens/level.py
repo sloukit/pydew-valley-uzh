@@ -105,6 +105,7 @@ class Level:
         frames: dict[str, dict],
         sounds: SoundDict,
         save_file: SaveFile,
+        clock: pygame.time.Clock,
     ):
         # main setup
         self.display_surface = pygame.display.get_surface()
@@ -183,7 +184,7 @@ class Level:
         self.current_day = 0
 
         # overlays
-        self.overlay = Overlay(self.player, frames["overlay"], self.game_time)
+        self.overlay = Overlay(self.player, frames["overlay"], self.game_time, clock)
         self.show_hitbox_active = False
         self.show_pf_overlay = False
         self.setup_pf_overlay()
@@ -534,30 +535,37 @@ class Level:
                 if npc.study_group == StudyGroup.INGROUP
             ]
             if sequence_type == ScriptedSequenceType.NPC_RECEIVES_NECKLACE:
-                npc = random.choice(npcs)
-                npcs.remove(npc)
+                npc_in_center = random.choice(npcs)
+                npcs.remove(npc_in_center)
                 npcs.append(self.player)
             else:
-                npc = self.player
+                npc_in_center = self.player
             self.cutscene_animation.set_current_animation("ingroup_gathering")
             self.cutscene_animation.is_end_condition_met = partial(
-                self.end_scripted_sequence, sequence_type, npc
+                self.end_scripted_sequence, sequence_type, npc_in_center
             )
             self.prev_player_pos = self.player.rect.center
             meeting_pos = self.cutscene_animation.targets[0].pos
-            # move player other npc to the meeting point and make him face to the east (right)
-            npc.teleport(meeting_pos)
-            npc.direction = pygame.Vector2(1, 0)
+            # move player other npc_in_center to the meeting point and make him face to the east (right)
+            npc_in_center.teleport(meeting_pos)
+            # npc_in_center.direction = pygame.Vector2(1, 0)
+            npc_in_center.direction.update((1, 0))
+            npc_in_center.get_facing_direction()
+            npc_in_center.direction.update((0, 0))
+
             # spread all ingroup npc in half-circle of 2 * SCALED_TILE_SIZE diameter
             # from north to south clockwise
             # and make them face the player in the center
             distance = pygame.Vector2(0, -2 * SCALED_TILE_SIZE)
             rot_by = (180) / (len(npcs) - 1)
             angle = 0
+
             for npc in npcs:
                 new_pos = meeting_pos + distance.rotate(angle)
-                npc.abort_path()
-                npc.direction = -distance.rotate(angle)
+                npc.direction.update(-distance.rotate(angle))
+                npc.get_facing_direction()
+                npc.direction.update((0, 0))
+
                 npc.teleport(new_pos)
                 angle += rot_by
             self.cutscene_animation.reset()

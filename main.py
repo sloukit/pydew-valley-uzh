@@ -84,7 +84,12 @@ class Game:
 
         # screens
         self.level = Level(
-            self.switch_state, self.tmx_maps, self.frames, self.sounds, self.save_file
+            self.switch_state,
+            self.tmx_maps,
+            self.frames,
+            self.sounds,
+            self.save_file,
+            self.clock,
         )
         self.player = self.level.player
 
@@ -247,7 +252,7 @@ class Game:
 
     async def run(self):
         pygame.mouse.set_visible(False)
-        mouse = pygame.image.load(support.resource_path("images/overlay/Cursor.png"))
+        mouse = pygame.image.load(support.resource_path("images/overlay/cursor.png"))
         is_first_frame = True
         while self.running:
             dt = self.clock.tick() / 1000

@@ -3,12 +3,15 @@ import pygame
 from src.enums import ClockVersion
 from src.gui.health_bar import HealthProgressBar
 from src.overlay.clock import Clock
+from src.overlay.fps import FPS
 from src.overlay.game_time import GameTime
 from src.settings import OVERLAY_POSITIONS
 
 
 class Overlay:
-    def __init__(self, entity, overlay_frames, game_time: GameTime):
+    def __init__(
+        self, entity, overlay_frames, game_time: GameTime, clock: pygame.time.Clock
+    ):
         # general setup
         self.display_surface = pygame.display.get_surface()
         self.player = entity
@@ -22,6 +25,7 @@ class Overlay:
         self.health_bar = HealthProgressBar(100)
 
         self.clock = Clock(game_time, ClockVersion.DIGITAL)
+        self.FPS = FPS(clock)
 
     def display(self):
         if not self.visible:
@@ -38,6 +42,7 @@ class Overlay:
         self.display_surface.blit(tool_surf, tool_rect)
 
         self.clock.display()
+        self.FPS.display()
 
         # health bar
         self.health_bar.draw(self.display_surface)

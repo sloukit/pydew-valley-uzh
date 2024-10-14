@@ -148,7 +148,7 @@ class EmoteManager(EmoteManagerBase, ABC):
         if emote == "sad_ani":
             self[id(obj)] = EmoteBox((0, 0), self.emotes[emote], 30, *self.groups)
         else:
-            self[id(obj)] = EmoteBox((0, 0), self.emotes[emote], *self.groups)
+            self[id(obj)] = EmoteBox((0, 0), self.emotes[emote], 15, *self.groups)
 
         @self[id(obj)].on_finish_animation
         def on_finish_animation():
