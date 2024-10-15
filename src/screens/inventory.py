@@ -130,6 +130,9 @@ class InventoryMenu(AbstractMenu):
         if ir.is_fruit():
             btn_name = ir.as_serialised_string()
             img = self.obj_frames[btn_name]
+        elif ir.is_allocation_item():
+            btn_name = ir.as_serialised_string()
+            img = pygame.transform.scale(self.obj_frames[btn_name], (64, 64))
         else:
             btn_name = self._IR_TO_OVERLAY_IMG[ir]
             img = self.overlay_frames[btn_name]

@@ -26,6 +26,7 @@ from src.screens.menu_main import MainMenu
 from src.screens.menu_pause import PauseMenu
 from src.screens.menu_round_end import RoundMenu
 from src.screens.menu_settings import SettingsMenu
+from src.screens.player_task import PlayerTask
 from src.screens.shop import ShopMenu
 from src.screens.switch_to_outgroup_menu import OutgroupMenu
 from src.settings import (
@@ -96,6 +97,7 @@ class Game:
         self.token_status = False
         self.main_menu = MainMenu(self.switch_state)
         self.pause_menu = PauseMenu(self.switch_state)
+        self.task_menu = PlayerTask(self.switch_state, self.level)
         self.settings_menu = SettingsMenu(
             self.switch_state, self.sounds, self.player.controls
         )
@@ -128,6 +130,7 @@ class Game:
             GameState.SETTINGS: self.settings_menu,
             GameState.SHOP: self.shop_menu,
             GameState.INVENTORY: self.inventory_menu,
+            GameState.PLAYER_TASK: self.task_menu,
             GameState.ROUND_END: self.round_menu,
             GameState.OUTGROUP_MENU: self.outgroup_menu,
         }

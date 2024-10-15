@@ -103,6 +103,7 @@ class Controls(Control, Enum):
     SHOW_PF_OVERLAY = (pygame.K_p, "Show Pathfinding")
     SHOW_DIALOG = (pygame.K_t, "Show Dialog")
     ADVANCE_DIALOG = (pygame.K_SPACE, "Advance Dialog")
+    DEDUG_PLAYER_TASK = (pygame.K_b, "Show Player Task")
     END_ROUND = (pygame.K_r, "Skip to End of Round")
 
     @classmethod

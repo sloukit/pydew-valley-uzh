@@ -209,7 +209,7 @@ class Level:
         )
 
         # level
-        self.current_level = 1
+        self.current_level = 3
 
     def load_map(self, game_map: Map, from_map: str = None):
         # prepare level state for new map
@@ -477,6 +477,7 @@ class Level:
         pf_overlay_key = self.player.controls.SHOW_PF_OVERLAY.control_value
         advance_dialog_key = self.player.controls.ADVANCE_DIALOG.control_value
         round_end_key = self.player.controls.END_ROUND.control_value
+        player_task_key = self.player.controls.DEDUG_PLAYER_TASK.control_value
         debug_player_receives_hat = (
             self.player.controls.DEBUG_PLAYER_RECEIVES_HAT.control_value
         )
@@ -497,6 +498,9 @@ class Level:
                 return True
             if event.key == hitbox_key:
                 self.show_hitbox_active = not self.show_hitbox_active
+                return True
+            if event.key == player_task_key:
+                self.switch_screen(GameState.PLAYER_TASK)
                 return True
             if event.key == dialog_key:
                 post_event(DIALOG_SHOW, dial="test")
@@ -802,11 +806,20 @@ class Level:
             self.update_cutscene(dt)
             self.quaker.update_quake(dt)
 
-            if self.cutscene_animation.active:
-                target = self.cutscene_animation
-            else:
-                target = self.player
-            self.camera.update(target)
-            self.zoom_manager.update(target, dt)
+            self.camera.update(
+                self.cutscene_animation
+                if self.cutscene_animation.active
+                else self.player
+            )
+
+            self.zoom_manager.update(
+                (
+                    self.cutscene_animation
+                    if self.cutscene_animation.active
+                    else self.player
+                ),
+                dt,
+            )
+
             self.decay_health()
         self.draw(dt, move_things)

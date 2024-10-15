@@ -40,6 +40,7 @@ class GameState(IntEnum):
     INVENTORY = 10
     ROUND_END = 11
     OUTGROUP_MENU = 12
+    PLAYER_TASK = 13
 
 
 # NOTE : DO NOT pay attention to anything the IDE might complain about in this class, as the enum generation mechanisms
@@ -83,6 +84,8 @@ class InventoryResource(_SerialisableEnum):
             "orange",
             "peach",
             "pear",
+            "blanket",
+            "candy_bar",
             "corn",
             "tomato",
             "corn_seed",
@@ -117,10 +120,12 @@ class InventoryResource(_SerialisableEnum):
     ORANGE = 5
     PEACH = 6
     PEAR = 7
-    CORN = 8
-    TOMATO = 9
-    CORN_SEED = 10
-    TOMATO_SEED = 11
+    BLANKET = 8
+    CANDY_BAR = 9
+    CORN = 10
+    TOMATO = 11
+    CORN_SEED = 12
+    TOMATO_SEED = 13
 
     def get_worth(self):
         return self._ITEM_WORTHS[self]  # noqa
@@ -130,6 +135,9 @@ class InventoryResource(_SerialisableEnum):
 
     def is_fruit(self):
         return self.APPLE <= self <= self.PEAR
+
+    def is_allocation_item(self):
+        return self.BLANKET <= self <= self.CANDY_BAR
 
 
 class FarmingTool(_SerialisableEnum):
