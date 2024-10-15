@@ -478,10 +478,15 @@ class Level:
         advance_dialog_key = self.player.controls.ADVANCE_DIALOG.control_value
         round_end_key = self.player.controls.END_ROUND.control_value
         player_task_key = self.player.controls.DEDUG_PLAYER_TASK.control_value
-        debug_player_receives_hat = self.player.controls.DEBUG_PLAYER_RECEIVES_HAT.control_value
-        debug_player_receives_necklace = self.player.controls.DEBUG_PLAYER_RECEIVES_NECKLACE.control_value
-        debug_npc_receives_necklace = self.player.controls.DEBUG_NPC_RECEIVES_NECKLACE.control_value
-
+        debug_player_receives_hat = (
+            self.player.controls.DEBUG_PLAYER_RECEIVES_HAT.control_value
+        )
+        debug_player_receives_necklace = (
+            self.player.controls.DEBUG_PLAYER_RECEIVES_NECKLACE.control_value
+        )
+        debug_npc_receives_necklace = (
+            self.player.controls.DEBUG_NPC_RECEIVES_NECKLACE.control_value
+        )
 
         if self.current_minigame and self.current_minigame.running:
             if self.current_minigame.handle_event(event):
@@ -806,7 +811,7 @@ class Level:
                 if self.cutscene_animation.active
                 else self.player
             )
-            
+
             self.zoom_manager.update(
                 (
                     self.cutscene_animation
