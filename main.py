@@ -85,7 +85,12 @@ class Game:
 
         # screens
         self.level = Level(
-            self.switch_state, self.tmx_maps, self.frames, self.sounds, self.save_file
+            self.switch_state,
+            self.tmx_maps,
+            self.frames,
+            self.sounds,
+            self.save_file,
+            self.clock,
         )
         self.player = self.level.player
 
@@ -250,7 +255,7 @@ class Game:
 
     async def run(self):
         pygame.mouse.set_visible(False)
-        mouse = pygame.image.load(support.resource_path("images/overlay/Cursor.png"))
+        mouse = pygame.image.load(support.resource_path("images/overlay/cursor.png"))
         is_first_frame = True
         while self.running:
             dt = self.clock.tick() / 1000
@@ -277,10 +282,11 @@ class Game:
 
             if self.level.cutscene_animation.active:
                 self.all_sprites.update_blocked(dt)
-                event = pygame.key.get_pressed()
-                self.fast_forward.draw_option(self.display_surface)
-                if event[pygame.K_RSHIFT]:
-                    self.fast_forward.draw_overlay(self.display_surface)
+                if self.current_state == GameState.PLAY:
+                    event = pygame.key.get_pressed()
+                    self.fast_forward.draw_option(self.display_surface)
+                    if event[pygame.K_RSHIFT]:
+                        self.fast_forward.draw_overlay(self.display_surface)
             else:
                 self.all_sprites.update(dt)
             self.all_sprites.draw(self.level.camera)

@@ -272,7 +272,7 @@ class Player(Character):
             self.speed = self.original_speed * (self.hp / 100)
 
     def set_transparency_asper_health(self):
-        alpha_value = 255 * (self.hp / 100)
+        alpha_value = int(255 * (self.hp / 100))
         self.image.set_alpha(alpha_value)
 
     def check_bath_bool(self):

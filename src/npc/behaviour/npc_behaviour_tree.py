@@ -499,6 +499,21 @@ def chop_tree(context: NPCIndividualContext) -> bool:
 # endregion
 
 
+# region do nothing
+def will_do_nothing(context: NPCIndividualContext) -> bool:
+    """
+    Certain types of NPCs do not perform any actions.
+    """
+    return True
+
+
+def do_nothing(context: NPCIndividualContext) -> bool:
+    return True
+
+
+# endregion
+
+
 # region behaviour trees
 class NPCBehaviourTree(NodeWrapper, Enum):
     Farming = Selector(
@@ -523,6 +538,11 @@ class NPCBehaviourTree(NodeWrapper, Enum):
     Woodcutting = Selector(
         Sequence(Condition(will_cut_wood), Selector(Action(chop_tree))),
         Action(wander),
+    )
+
+    DoNothing = Selector(
+        Sequence(Condition(will_do_nothing), Selector(Action(do_nothing))),
+        Action(do_nothing),
     )
 
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="70" height="55" tilewidth="16" tileheight="16" infinite="0" nextlayerid="23" nextobjectid="589">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="70" height="55" tilewidth="16" tileheight="16" infinite="0" nextlayerid="24" nextobjectid="600">
  <tileset firstgid="1" source="../tilesets/grass_tileset.tsx"/>
  <tileset firstgid="78" source="../tilesets/fence_tileset.tsx"/>
  <tileset firstgid="94" source="../tilesets/Stone_Path.tsx"/>
@@ -18,6 +18,7 @@
  <tileset firstgid="787" source="../tilesets/trees_and_bushes.tsx"/>
  <tileset firstgid="864" source="../tilesets/Water_troughs.tsx"/>
  <tileset firstgid="870" source="../tilesets/Chest.tsx"/>
+ <tileset firstgid="960" source="../tilesets/NPCs.tsx"/>
  <layer id="17" name="Water" width="70" height="55">
   <properties>
    <property name="layer" value="WATER"/>
@@ -1283,5 +1284,15 @@
   <object id="560" x="348.75" y="527.75" width="3.5" height="27.75"/>
   <object id="561" x="309.25" y="546.75" width="39.5" height="6.25"/>
   <object id="579" x="367.75" y="177.5" width="32" height="11"/>
+ </objectgroup>
+ <objectgroup id="23" name="NPCs">
+  <object id="589" gid="960" x="320" y="496" width="20" height="21"/>
+  <object id="590" gid="960" x="506" y="496" width="20" height="21"/>
+  <object id="591" gid="960" x="324" y="467" width="20" height="21"/>
+  <object id="592" gid="960" x="420" y="516" width="20" height="21"/>
+  <object id="594" gid="962" x="240" y="660" width="18" height="17"/>
+  <object id="595" gid="962" x="270.333" y="689.5" width="18" height="17"/>
+  <object id="596" gid="962" x="348" y="660" width="18" height="17"/>
+  <object id="599" gid="962" x="383" y="655" width="18" height="17"/>
  </objectgroup>
 </map>

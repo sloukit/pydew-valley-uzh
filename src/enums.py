@@ -353,3 +353,9 @@ class StudyGroup(IntEnum):
 class ClockVersion(IntEnum):
     ANALOG = 0
     DIGITAL = auto()
+
+
+class ScriptedSequenceType(StrEnum):
+    PLAYER_RECEIVES_HAT = "player_receives_hat"
+    PLAYER_RECEIVES_NECKLACE = "player_receives_necklace"
+    NPC_RECEIVES_NECKLACE = "npc_receives_necklace"

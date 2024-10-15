@@ -54,6 +54,7 @@ class Character(Entity, ABC):
         self.has_goggles = None
 
         self.facing_direction = Direction.DOWN
+        self.image_alpha = 255
 
         # tools
         self.current_tool = FarmingTool(FarmingTool.get_first_tool_id())
@@ -127,42 +128,51 @@ class Character(Entity, ABC):
         return False
 
     def draw(self, display_surface: pygame.Surface, rect: pygame.Rect, camera):
-        super().draw(display_surface, rect, camera)
+        # super().draw(display_surface, rect, camera)
         blit_list = []
 
         # Render the necklace if the character has it and is in the ingroup
         is_in_ingroup = self.study_group == StudyGroup.INGROUP
-        if is_in_ingroup:
-            necklace_state = EntityState(f"necklace_{self.state.value}")
-            necklace_ani = self.assets[necklace_state][self.facing_direction]
-            necklace_frame = necklace_ani.get_frame(self.frame_index)
 
-            blit_list.append((necklace_frame, rect))
+        if is_in_ingroup:
+            super().draw(display_surface, rect, camera)
+            if self.has_necklace:
+                necklace_state = EntityState(f"necklace_{self.state.value}")
+                necklace_ani = self.assets[necklace_state][self.facing_direction]
+                necklace_frame = necklace_ani.get_frame(self.frame_index)
+                necklace_frame.set_alpha(self.image_alpha)
+                blit_list.append((necklace_frame, rect))
 
         # Render the goggles
         if self.has_goggles:
             goggles_state = EntityState(f"goggles_{self.state.value}")
             goggles_ani = self.assets[goggles_state][self.facing_direction]
             goggles_frame = goggles_ani.get_frame(self.frame_index)
+            goggles_frame.set_alpha(self.image_alpha)
             blit_list.append((goggles_frame, rect))
 
         # Render the hat/horn (depending on the group)
         if is_in_ingroup:
-            hat_state = EntityState(f"hat_{self.state.value}")
-            hat_ani = self.assets[hat_state][self.facing_direction]
-            hat_frame = hat_ani.get_frame(self.frame_index)
-            blit_list.append((hat_frame, rect))
+            if self.has_hat:
+                hat_state = EntityState(f"hat_{self.state.value}")
+                hat_ani = self.assets[hat_state][self.facing_direction]
+                hat_frame = hat_ani.get_frame(self.frame_index)
+                # hat_frame.set_alpha(self.image_alpha)  # hat is always visible, looks silly otherwise
+                blit_list.append((hat_frame, rect))
+
         elif self.study_group == StudyGroup.OUTGROUP:
             if self.has_outgroup_skin:
                 skin_state = EntityState(f"outgroup_{self.state.value}")
                 skin_ani = self.assets[skin_state][self.facing_direction]
                 skin_frame = skin_ani.get_frame(self.frame_index)
+                skin_frame.set_alpha(self.image_alpha)
                 blit_list.append((skin_frame, rect))
 
             if self.has_horn:
                 horn_state = EntityState(f"horn_{self.state.value}")
                 horn_ani = self.assets[horn_state][self.facing_direction]
                 horn_frame = horn_ani.get_frame(self.frame_index)
+                horn_frame.set_alpha(self.image_alpha)
                 blit_list.append((horn_frame, rect))
 
         display_surface.fblits(blit_list)

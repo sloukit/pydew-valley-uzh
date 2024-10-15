@@ -1,3 +1,4 @@
+import copy
 import warnings
 from collections.abc import Callable
 from typing import Any
@@ -41,6 +42,7 @@ from src.npc.utils import pf_add_matrix_collision
 from src.overlay.soil import SoilManager
 from src.savefile import SaveFile
 from src.settings import (
+    DEFAULT_ANIMATION_NAME,
     ENABLE_NPCS,
     SCALE_FACTOR,
     SCALED_TILE_SIZE,
@@ -127,11 +129,19 @@ def _setup_camera_layer(layer: TiledObjectGroup):
     # BEWARE! THIS FUNCTION IS A GENERATOR!
     # DO NOT TRY TO USE THIS AS A LIST!
     """Sets up all camera targets for a cutscene using the layer objects."""
-    targs = sorted(layer, key=lambda targ: targ.properties["targ_id"])
+
+    targs = sorted(
+        layer,
+        key=lambda targ: (
+            targ.properties.get("animation_name", DEFAULT_ANIMATION_NAME),
+            targ.properties["targ_id"],
+        ),
+    )
     for target in targs:
         target_props = target.properties
 
-        speed_and_pause = {}
+        custom_properties = {}
+        animation_name = target_props.get("animation_name")
         speed = target_props.get("speed")
         pause = target_props.get("pause")
 
@@ -143,15 +153,17 @@ def _setup_camera_layer(layer: TiledObjectGroup):
         # inside this additional keyword argument dictionary
         # or else when generating the CameraTarget object
         # Python will raise TypeErrors for unexpected arguments)
+        if animation_name is not None:
+            custom_properties["_animation_name"] = animation_name
         if speed is not None:
-            speed_and_pause["_speed"] = speed
+            custom_properties["_speed"] = speed
         if pause is not None:
-            speed_and_pause["_pause"] = pause
+            custom_properties["_pause"] = pause
 
         yield CameraTarget(
             (target.x * SCALE_FACTOR, target.y * SCALE_FACTOR),
             target_props["targ_id"],
-            **speed_and_pause,
+            **custom_properties,
         )
 
 
@@ -639,7 +651,7 @@ class GameMap:
 
         npc = NPC(
             pos=pos,
-            assets=ENTITY_ASSETS.RABBIT,
+            assets=copy.deepcopy(ENTITY_ASSETS.RABBIT),
             groups=(self.all_sprites, self.collision_sprites),
             collision_sprites=self.collision_sprites,
             study_group=study_group,
@@ -650,9 +662,20 @@ class GameMap:
             tree_sprites=self.tree_sprites,
         )
         npc.teleport(pos)
+
+        # Ingroup NPCs wearing only the hat and no necklace should not be able to walk on the forest and town map, only on the farming map
+        no_walking_npc = (
+            gmap != Map.FARM
+            and npc.study_group == StudyGroup.INGROUP
+            and not npc.has_necklace
+            and npc.has_hat
+        )
+
         behaviour = obj.properties.get("behaviour")
         if behaviour != "Woodcutting" and gmap == Map.NEW_FARM:
             npc.conditional_behaviour_tree = NPCBehaviourTree.Farming
+        elif no_walking_npc:
+            npc.conditional_behaviour_tree = NPCBehaviourTree.DoNothing
         else:
             npc.conditional_behaviour_tree = NPCBehaviourTree.Woodcutting
         return npc
