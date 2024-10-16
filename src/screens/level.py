@@ -611,12 +611,7 @@ class Level:
         self, sequence_type: ScriptedSequenceType, npc: NPC | Player
     ) -> bool:
         # prevent the scripted sequence from ending
-        # while dialog is still opened, unless it's DECIDE_TOMATO_OR_CORN with opened EmoteWheel
-        if (
-            self.player.blocked
-            and self.player_emote_manager.emote_wheel.visible
-            and not sequence_type == ScriptedSequenceType.DECIDE_TOMATO_OR_CORN
-        ) or not self.game_map:
+        if self.player.blocked or not self.game_map:
             return False
 
         if sequence_type == ScriptedSequenceType.PLAYER_RECEIVES_HAT:
@@ -650,7 +645,7 @@ class Level:
             self.game_map.player_emote_manager = self.player_emote_manager
             self.game_map._setup_emote_interactions()
             # show EmoteWheel
-            self.player.blocked = True
+            # self.player.blocked = True
             self.player_emote_manager.toggle_emote_wheel()
             # still block the Scripted Sequence from finishing, until user makes selection
         else:
@@ -659,7 +654,7 @@ class Level:
                 return
             else:
                 # Player has voted
-                self.player.blocked = False
+                # self.player.blocked = False
                 total_votes = 1
                 # how many Characters voted for the first option
                 first_item_votes = 0
