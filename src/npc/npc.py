@@ -30,7 +30,6 @@ class NPC(NPCBase):
         emote_manager: NPCEmoteManager,
         tree_sprites: pygame.sprite.Group,
     ):
-        self.emote_manager = emote_manager
 
         self.tree_sprites = tree_sprites
 
@@ -44,6 +43,7 @@ class NPC(NPCBase):
             plant_collision=plant_collision,
             behaviour_tree_context=NPCIndividualContext(self),
             z=Layer.MAIN,
+            emote_manager = emote_manager,
         )
         self.start_tile_pos = self.get_tile_pos()  # capture the NPC start position
         self.soil_area = soil_manager.get_area(self.study_group)

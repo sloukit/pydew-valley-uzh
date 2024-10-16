@@ -15,6 +15,8 @@ from src.overlay.soil import SoilArea
 from src.settings import Coordinate
 from src.sprites.entities.character import Character
 from src.sprites.setup import EntityAsset
+from src.gui.interface.emotes import NPCEmoteManager
+
 
 
 class NPCBase(Character, AIBehaviour, ABC):
@@ -36,6 +38,7 @@ class NPCBase(Character, AIBehaviour, ABC):
         plant_collision: Callable[[Character], None],
         behaviour_tree_context: ContextType,
         z: int,
+        emote_manager: NPCEmoteManager,
     ):
         Character.__init__(
             self,
@@ -49,5 +52,6 @@ class NPCBase(Character, AIBehaviour, ABC):
             z=z,
         )
         AIBehaviour.__init__(self, behaviour_tree_context=behaviour_tree_context)
+        self.emote_manager = emote_manager
 
         self.speed = 250

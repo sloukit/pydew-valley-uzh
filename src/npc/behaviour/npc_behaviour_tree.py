@@ -514,6 +514,21 @@ def do_nothing(context: NPCIndividualContext) -> bool:
 # endregion
 
 
+# region for cheering
+def will_cheer(context: NPCIndividualContext) -> bool:
+    """
+    1 in 500 chance to cheer instead of nothing
+    :return: 1/500 true | 499/500 false
+    """
+    return random.randint(0, 499) == 0
+
+def cheer(context: NPCIndividualContext) -> bool:
+    context.npc.emote_manager.show_emote(context.npc, "cheer_ani")
+
+
+# endregion
+
+
 # region behaviour trees
 class NPCBehaviourTree(NodeWrapper, Enum):
     Farming = Selector(
@@ -542,6 +557,11 @@ class NPCBehaviourTree(NodeWrapper, Enum):
 
     DoNothing = Selector(
         Sequence(Condition(will_do_nothing), Selector(Action(do_nothing))),
+        Action(do_nothing),
+    )
+
+    Cheer = Selector(
+        Sequence(Condition(will_cheer), Selector(Action(cheer))),
         Action(do_nothing),
     )
 
