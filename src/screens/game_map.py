@@ -11,6 +11,7 @@ from src.camera.camera_target import CameraTarget
 from src.camera.zoom_area import ZoomArea
 from src.camera.zoom_manager import ZoomManager
 from src.enums import (
+    Direction,
     FarmingTool,
     InventoryResource,
     Layer,
@@ -669,13 +670,19 @@ class GameMap:
             and npc.study_group == StudyGroup.INGROUP
             and not npc.has_necklace
             and npc.has_hat
+            and gmap != Map.MINIGAME
         )
+        cheering = gmap == Map.MINIGAME and npc.study_group == StudyGroup.INGROUP
 
         behaviour = obj.properties.get("behaviour")
         if behaviour != "Woodcutting" and gmap == Map.NEW_FARM:
             npc.conditional_behaviour_tree = NPCBehaviourTree.Farming
         elif no_walking_npc:
             npc.conditional_behaviour_tree = NPCBehaviourTree.DoNothing
+        elif cheering:
+            npc.conditional_behaviour_tree = NPCBehaviourTree.Cheer
+            npc.facing_direction = Direction.RIGHT
+            npc.probability_to_get_sick = 1
         else:
             npc.conditional_behaviour_tree = NPCBehaviourTree.Woodcutting
         return npc
