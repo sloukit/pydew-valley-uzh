@@ -11,13 +11,13 @@ from src.camera.camera_target import CameraTarget
 from src.camera.zoom_area import ZoomArea
 from src.camera.zoom_manager import ZoomManager
 from src.enums import (
+    Direction,
     FarmingTool,
     InventoryResource,
     Layer,
     Map,
     SpecialObjectLayer,
     StudyGroup,
-    Direction,
 )
 from src.exceptions import GameMapWarning, InvalidMapError
 from src.groups import AllSprites, PersistentSpriteGroup
@@ -672,7 +672,7 @@ class GameMap:
             and npc.has_hat
             and gmap != Map.MINIGAME
         )
-        cheering = (gmap == Map.MINIGAME and npc.study_group == StudyGroup.INGROUP)
+        cheering = gmap == Map.MINIGAME and npc.study_group == StudyGroup.INGROUP
 
         behaviour = obj.properties.get("behaviour")
         if behaviour != "Woodcutting" and gmap == Map.NEW_FARM:

@@ -9,14 +9,13 @@ from pathfinding.core.grid import Grid
 from pathfinding.finder.a_star import AStarFinder
 
 from src.enums import FarmingTool, StudyGroup
+from src.gui.interface.emotes import NPCEmoteManager
 from src.npc.bases.ai_behaviour import AIBehaviour
 from src.npc.behaviour.ai_behaviour_tree_base import ContextType
 from src.overlay.soil import SoilArea
 from src.settings import Coordinate
 from src.sprites.entities.character import Character
 from src.sprites.setup import EntityAsset
-from src.gui.interface.emotes import NPCEmoteManager
-
 
 
 class NPCBase(Character, AIBehaviour, ABC):

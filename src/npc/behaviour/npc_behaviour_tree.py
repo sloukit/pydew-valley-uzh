@@ -522,6 +522,7 @@ def will_cheer(context: NPCIndividualContext) -> bool:
     """
     return random.randint(0, 499) == 0
 
+
 def cheer(context: NPCIndividualContext) -> bool:
     context.npc.emote_manager.show_emote(context.npc, "cheer_ani")
 
