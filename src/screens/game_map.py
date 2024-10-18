@@ -681,14 +681,14 @@ class GameMap:
                 and npc.has_hat
                 and gmap != Map.MINIGAME
             )
-            or gmap == Map.MINIGAME and obj.name
+            or gmap == Map.MINIGAME
+            and obj.name
             and obj.name == "opponent"
         )
-        if (gmap == Map.MINIGAME and obj.name
-            and obj.name == "opponent"):
-            if(npc.study_group == self.player.study_group):
+        if gmap == Map.MINIGAME and obj.name and obj.name == "opponent":
+            if npc.study_group == self.player.study_group:
                 npc.kill()
-        if(gmap == Map.MINIGAME):
+        if gmap == Map.MINIGAME:
             npc.probability_to_get_sick = 1
 
         cheering = gmap == Map.MINIGAME
@@ -700,9 +700,9 @@ class GameMap:
             npc.conditional_behaviour_tree = NPCBehaviourTree.DoNothing
         elif cheering:
             npc.conditional_behaviour_tree = NPCBehaviourTree.Cheer
-            if(npc.study_group == StudyGroup.INGROUP):
+            if npc.study_group == StudyGroup.INGROUP:
                 npc.facing_direction = Direction.RIGHT
-            if(npc.study_group == StudyGroup.OUTGROUP):
+            if npc.study_group == StudyGroup.OUTGROUP:
                 npc.facing_direction = Direction.LEFT
         else:
             npc.conditional_behaviour_tree = NPCBehaviourTree.Woodcutting
