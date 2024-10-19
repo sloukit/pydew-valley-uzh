@@ -147,7 +147,7 @@ class Player(Character):
 
             if is_mouse_event:
                 is_event_active = mouse_pressed[control.control_value - 1]
-                control.click = is_event_active
+                control.click = is_event_active and not control.hold
                 control.hold = is_event_active
             else:
                 control.click = keys_just_pressed[control.control_value]
