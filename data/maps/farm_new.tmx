@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="80" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="28" nextobjectid="409">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="80" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="28" nextobjectid="411">
  <tileset firstgid="1" source="../tilesets/grass_tileset.tsx"/>
  <tileset firstgid="78" source="../tilesets/Interaction.tsx"/>
  <tileset firstgid="80" source="../tilesets/fence_tileset.tsx"/>
@@ -902,6 +902,14 @@
    </properties>
    <point/>
   </object>
+  <object id="410" name="SEQTARGET_IN_END" x="230.182" y="332.727">
+   <properties>
+    <property name="animation_name" value="ingroup_gathering_end"/>
+    <property name="pause" type="float" value="2"/>
+    <property name="targ_id" type="int" value="0"/>
+   </properties>
+   <point/>
+  </object>
   <object id="405" name="SEQTARGET_IN_1" x="230.33" y="298.33">
    <properties>
     <property name="animation_name" value="ingroup_gathering"/>
@@ -915,6 +923,14 @@
     <property name="animation_name" value="ingroup_gathering"/>
     <property name="pause" type="float" value="1"/>
     <property name="speed" type="float" value="0.25"/>
+    <property name="targ_id" type="int" value="0"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="409" name="SEQTARGET_OUT_END" x="1033.5" y="332.727">
+   <properties>
+    <property name="animation_name" value="outgroup_gathering_end"/>
+    <property name="pause" type="float" value="2"/>
     <property name="targ_id" type="int" value="0"/>
    </properties>
    <point/>

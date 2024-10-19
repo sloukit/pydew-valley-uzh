@@ -547,6 +547,10 @@ class Level:
         return False
 
     def start_scripted_sequence(self, sequence_type: ScriptedSequenceType):
+        # do not start new scripted sequence when one is already running
+        if self.cutscene_animation.active:
+            return
+
         active_group = self.player.study_group
         if active_group == StudyGroup.INGROUP:
             animation_name = "ingroup_gathering"
@@ -611,7 +615,7 @@ class Level:
         self, sequence_type: ScriptedSequenceType, npc: NPC | Player
     ) -> bool:
         # prevent the scripted sequence from ending
-        if self.player.blocked or not self.game_map:
+        if self.player.blocked:
             return False
 
         if sequence_type == ScriptedSequenceType.PLAYER_RECEIVES_HAT:
@@ -630,6 +634,7 @@ class Level:
         return True
 
     def end_scripted_sequence_decide(self, buy_list: list[str]) -> None:
+        # just to make linter happy (game_map could be None)
         if not self.game_map:
             return
 
@@ -685,18 +690,26 @@ class Level:
                 self.game_map.player_emote_manager = self.player_emote_manager
                 self.game_map._setup_emote_interactions()
 
-                # immediately switch to a new dialog with vote results, without ending the Scripted Sequence
+                # immediately switch to a new dialog with vote results
                 dialog_name = f"scripted_sequence_buy_{winner_item}"
                 post_event(DIALOG_SHOW, dial=dialog_name)
-                # but this time the Scripted Sequence condition is different
+                # start ending Scripted Sequence with a new end condition
+                if self.player.study_group == StudyGroup.INGROUP:
+                    animation_name = "ingroup_gathering_end"
+                else:
+                    animation_name = "outgroup_gathering_end"
+
+                self.cutscene_animation.set_current_animation(animation_name)
                 self.cutscene_animation.is_end_condition_met = (
                     self.end_scripted_sequence_decision_result
                 )
+                self.cutscene_animation.reset()
+                self.cutscene_animation.start()
 
     def end_scripted_sequence_decision_result(self) -> bool:
         # prevent the scripted sequence from ending
         # while dialog is still opened
-        if self.player.blocked or not self.game_map:
+        if self.player.blocked:
             return False
 
         self.scripted_sequence_cleanup()
