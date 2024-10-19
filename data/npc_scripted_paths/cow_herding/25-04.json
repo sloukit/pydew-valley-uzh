@@ -1,0 +1,270 @@
+{
+  "random_seed": 1729362347.1144307,
+  "total_time": 25.04,
+  "paths": {
+    "4": {
+      "waypoints": [
+        {
+          "pos": [
+            22,
+            13
+          ],
+          "speed": 150,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            23,
+            15
+          ],
+          "speed": 150,
+          "waiting_duration": 4.74
+        },
+        {
+          "pos": [
+            25,
+            14
+          ],
+          "speed": 150,
+          "waiting_duration": 2.61
+        },
+        {
+          "pos": [
+            23,
+            16
+          ],
+          "speed": 350,
+          "waiting_duration": 0.0
+        },
+        {
+          "pos": [
+            22,
+            14
+          ],
+          "speed": 350,
+          "waiting_duration": 4.31
+        },
+        {
+          "pos": [
+            25,
+            13
+          ],
+          "speed": 150,
+          "waiting_duration": 4.88
+        },
+        {
+          "pos": [
+            25,
+            11
+          ],
+          "speed": 350,
+          "waiting_duration": 0.57
+        },
+        {
+          "pos": [
+            24,
+            7
+          ],
+          "speed": 350,
+          "waiting_duration": 0.29
+        }
+      ],
+      "start_pos": [
+        1684.0,
+        1084.0
+      ]
+    },
+    "5": {
+      "waypoints": [
+        {
+          "pos": [
+            22,
+            15
+          ],
+          "speed": 150,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            26,
+            18
+          ],
+          "speed": 150,
+          "waiting_duration": 1.93
+        },
+        {
+          "pos": [
+            27,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 1.88
+        },
+        {
+          "pos": [
+            28,
+            13
+          ],
+          "speed": 350,
+          "waiting_duration": 0.85
+        },
+        {
+          "pos": [
+            28,
+            12
+          ],
+          "speed": 350,
+          "waiting_duration": 0.73
+        },
+        {
+          "pos": [
+            27,
+            9
+          ],
+          "speed": 350,
+          "waiting_duration": 0.08
+        },
+        {
+          "pos": [
+            23,
+            7
+          ],
+          "speed": 150,
+          "waiting_duration": 3.98
+        },
+        {
+          "pos": [
+            28,
+            9
+          ],
+          "speed": 150,
+          "waiting_duration": 4.57
+        }
+      ],
+      "start_pos": [
+        1472.0,
+        1212.0
+      ]
+    },
+    "17": {
+      "waypoints": [
+        {
+          "pos": [
+            22,
+            22
+          ],
+          "speed": 250,
+          "waiting_duration": 0.72
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 250,
+          "waiting_duration": 2.8
+        },
+        {
+          "pos": [
+            23,
+            19
+          ],
+          "speed": 250,
+          "waiting_duration": 1.1
+        },
+        {
+          "pos": [
+            26,
+            19
+          ],
+          "speed": 250,
+          "waiting_duration": 0.12
+        },
+        {
+          "pos": [
+            26,
+            15
+          ],
+          "speed": 250,
+          "waiting_duration": 0.58
+        },
+        {
+          "pos": [
+            26,
+            12
+          ],
+          "speed": 250,
+          "waiting_duration": 0.28
+        },
+        {
+          "pos": [
+            26,
+            15
+          ],
+          "speed": 250,
+          "waiting_duration": 1.77
+        },
+        {
+          "pos": [
+            26,
+            17
+          ],
+          "speed": 250,
+          "waiting_duration": 0.27
+        },
+        {
+          "pos": [
+            26,
+            18
+          ],
+          "speed": 250,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            21,
+            18
+          ],
+          "speed": 250,
+          "waiting_duration": 1.26
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 250,
+          "waiting_duration": 2.46
+        },
+        {
+          "pos": [
+            22,
+            15
+          ],
+          "speed": 250,
+          "waiting_duration": 2.92
+        },
+        {
+          "pos": [
+            25,
+            15
+          ],
+          "speed": 250,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            25,
+            12
+          ],
+          "speed": 250,
+          "waiting_duration": 0.01
+        }
+      ],
+      "start_pos": [
+        1600.0,
+        1472.0
+      ]
+    }
+  }
+}

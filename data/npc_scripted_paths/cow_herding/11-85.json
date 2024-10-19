@@ -1,0 +1,854 @@
+{
+  "random_seed": 1729367392.8212729,
+  "total_time": 11.85,
+  "paths": {
+    "4": {
+      "waypoints": [
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 150,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.0
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.02
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            17
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            23,
+            14
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            25,
+            12
+          ],
+          "speed": 350,
+          "waiting_duration": 0.2
+        },
+        {
+          "pos": [
+            25,
+            10
+          ],
+          "speed": 350,
+          "waiting_duration": 0.41
+        },
+        {
+          "pos": [
+            29,
+            8
+          ],
+          "speed": 150,
+          "waiting_duration": 4.57
+        }
+      ],
+      "start_pos": [
+        1684.0,
+        1084.0
+      ]
+    },
+    "5": {
+      "waypoints": [
+        {
+          "pos": [
+            22,
+            21
+          ],
+          "speed": 150,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            19
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.22
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.06
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            22,
+            18
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            24,
+            15
+          ],
+          "speed": 350,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            26,
+            15
+          ],
+          "speed": 350,
+          "waiting_duration": 0.3
+        },
+        {
+          "pos": [
+            28,
+            16
+          ],
+          "speed": 350,
+          "waiting_duration": 0.45
+        },
+        {
+          "pos": [
+            28,
+            15
+          ],
+          "speed": 350,
+          "waiting_duration": 3.27
+        },
+        {
+          "pos": [
+            28,
+            14
+          ],
+          "speed": 350,
+          "waiting_duration": 1.99
+        },
+        {
+          "pos": [
+            28,
+            12
+          ],
+          "speed": 350,
+          "waiting_duration": 0.55
+        },
+        {
+          "pos": [
+            26,
+            8
+          ],
+          "speed": 350,
+          "waiting_duration": 0.29
+        }
+      ],
+      "start_pos": [
+        1472.0,
+        1212.0
+      ]
+    },
+    "17": {
+      "waypoints": [
+        {
+          "pos": [
+            21,
+            23
+          ],
+          "speed": 250,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            21,
+            18
+          ],
+          "speed": 250,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            23,
+            15
+          ],
+          "speed": 250,
+          "waiting_duration": 0.01
+        },
+        {
+          "pos": [
+            25,
+            12
+          ],
+          "speed": 250,
+          "waiting_duration": 0.04
+        },
+        {
+          "pos": [
+            25,
+            15
+          ],
+          "speed": 250,
+          "waiting_duration": 0.3
+        },
+        {
+          "pos": [
+            25,
+            17
+          ],
+          "speed": 250,
+          "waiting_duration": 0.54
+        },
+        {
+          "pos": [
+            27,
+            17
+          ],
+          "speed": 250,
+          "waiting_duration": 0.6
+        },
+        {
+          "pos": [
+            25,
+            17
+          ],
+          "speed": 250,
+          "waiting_duration": 0.64
+        },
+        {
+          "pos": [
+            27,
+            16
+          ],
+          "speed": 250,
+          "waiting_duration": 0.25
+        },
+        {
+          "pos": [
+            27,
+            14
+          ],
+          "speed": 250,
+          "waiting_duration": 0.39
+        },
+        {
+          "pos": [
+            27,
+            11
+          ],
+          "speed": 250,
+          "waiting_duration": 0.01
+        }
+      ],
+      "start_pos": [
+        1600.0,
+        1472.0
+      ]
+    }
+  }
+}

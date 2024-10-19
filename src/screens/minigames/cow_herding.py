@@ -1,3 +1,5 @@
+import glob
+import random
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Type
@@ -188,8 +190,10 @@ class CowHerding(Minigame):
         self._player_side = CowHerdingSideState("L", self._state.player)
         self._opponent_side = CowHerdingSideState("R", opponent)
 
+        script_path = resource_path("data/npc_scripted_paths/cow_herding/")
+
         self._opponent_side_script = CowHerdingScriptedPath.from_file(
-            "data/npc_scripted_paths/cow_herding/example.json"
+            random.choice(glob.glob(glob.escape(script_path) + "*.json"))
         )
 
         self._ani_cd_start = 5
@@ -332,14 +336,6 @@ class CowHerding(Minigame):
                     side.cows_herded_in += 1
                     if side == self._player_side:
                         self._state.sounds["success"].play()
-                    elif side == self._opponent_side:
-                        if self._opponent_side.finished:
-                            print(
-                                f"Opponent finished in {self._minigame_time:.2f}s "
-                                f"(compared to "
-                                f"{self._opponent_side_script.total_time:.2f}s "
-                                f"measured on script creation)"
-                            )
 
     def handle_event(self, event: pygame.Event):
         if self._complete:
