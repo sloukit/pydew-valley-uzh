@@ -251,30 +251,30 @@ class KeybindsDescription(Description):
     @staticmethod
     def get_path(keydown: int):
         if keydown == pygame.BUTTON_LEFT:
-            return resource_path("images/keys/lclick.png")
+            return resource_path("images/ui/keys/lclick.png")
         if keydown == pygame.BUTTON_RIGHT:
-            return resource_path("images/keys/rclick.png")
+            return resource_path("images/ui/keys/rclick.png")
 
         special_keys = {
-            pygame.K_SPACE: "images/keys/space.png",
-            pygame.K_LCTRL: "images/keys/lctrl.png",
-            pygame.K_LEFT: "images/keys/left.png",
-            pygame.K_UP: "images/keys/up.png",
-            pygame.K_DOWN: "images/keys/down.png",
-            pygame.K_RIGHT: "images/keys/right.png",
-            pygame.K_RETURN: "images/keys/return.png",
-            pygame.K_TAB: "images/keys/tab.png",
-            pygame.K_LSHIFT: "images/keys/lshift.png",
-            pygame.K_RSHIFT: "images/keys/rshift.png",
-            pygame.K_RCTRL: "images/keys/rctrl.png",
-            pygame.K_LALT: "images/keys/alt.png",
-            pygame.K_RALT: "images/keys/alt.png",
+            pygame.K_SPACE: "images/ui/keys/space.png",
+            pygame.K_LCTRL: "images/ui/keys/lctrl.png",
+            pygame.K_LEFT: "images/ui/keys/left.png",
+            pygame.K_UP: "images/ui/keys/up.png",
+            pygame.K_DOWN: "images/ui/keys/down.png",
+            pygame.K_RIGHT: "images/ui/keys/right.png",
+            pygame.K_RETURN: "images/ui/keys/return.png",
+            pygame.K_TAB: "images/ui/keys/tab.png",
+            pygame.K_LSHIFT: "images/ui/keys/lshift.png",
+            pygame.K_RSHIFT: "images/ui/keys/rshift.png",
+            pygame.K_RCTRL: "images/ui/keys/rctrl.png",
+            pygame.K_LALT: "images/ui/keys/alt.png",
+            pygame.K_RALT: "images/ui/keys/alt.png",
         }
 
         if keydown in special_keys:
             return resource_path(special_keys[keydown])
 
-        return resource_path("images/keys/generic.png")
+        return resource_path("images/ui/keys/generic.png")
 
     @staticmethod
     def value_to_unicode(value: int | None):

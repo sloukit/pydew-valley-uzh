@@ -7,7 +7,6 @@ from src.enums import InventoryResource, Layer
 from src.map_objects import MapObjectType
 from src.settings import APPLE_POS
 from src.sprites.base import CollideableMapObject, Sprite
-from src.sprites.drops import DropsManager
 from src.support import generate_particle_surf
 
 
@@ -21,7 +20,6 @@ class Tree(CollideableMapObject):
         fruit_surf: pygame.Surface | None,
         fruit_type: InventoryResource | None,
         stump_surf: pygame.Surface,
-        drops_manager: DropsManager,
     ):
         super().__init__(
             pos,
@@ -31,7 +29,6 @@ class Tree(CollideableMapObject):
         self.name = name
         self.health = 5
         self.alive = True
-        self.drops_manager = drops_manager
 
         self.timer = timer.Timer(300, func=self.unhit)
         self.was_hit = False
@@ -77,19 +74,10 @@ class Tree(CollideableMapObject):
             return
         self.was_hit = True
         self.health -= 1
-        # remove an fruit
-        # if len(self.fruit_sprites.sprites()) > 0:
-        # random_fruit = random.choice(self.fruit_sprites.sprites())
-        # random_fruit.kill()
-        # entity.add_resource(self.fruit_type)
         if self.health < 0 and self.alive:
-            # entity.add_resource(InventoryResource.WOOD, 5)
-            pos = self.rect.center
-            self.drops_manager.drop(pos, InventoryResource.WOOD, amount=5)
+            entity.add_resource(InventoryResource.WOOD, 5)
             if self.fruit_type:
-                self.drops_manager.drop(
-                    pos, self.fruit_type, amount=len(self.fruit_sprites)
-                )
+                entity.add_resource(self.fruit_type, amount=len(self.fruit_sprites))
 
         self.image = generate_particle_surf(self.image)
         for fruit in self.fruit_sprites:

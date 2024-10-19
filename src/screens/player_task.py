@@ -61,7 +61,7 @@ class PlayerTask(AbstractMenu):
     def determine_allocation_item(self):
         self.allocation_item_name: str = None
         self.allocation_item_img: pygame.surface.Surface = None
-        if self.level.current_level == 3 or self.level.current_level == 6:
+        if self.level.get_round() == 3 or self.level.get_round() == 6:
             self.allocation_item_name = "candy bar"
             self.allocation_item_img = self.level.frames["level"]["objects"][
                 "candy_bar"

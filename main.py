@@ -63,7 +63,7 @@ class Game:
 
         # frames
         self.level_frames: dict | None = None
-        self.overlay_frames: dict[str, pygame.Surface] | None = None
+        self.item_frames: dict[str, pygame.Surface] | None = None
         self.cosmetic_frames: dict[str, pygame.Surface] = {}
         self.frames: dict[str, dict] | None = None
         self.previous_frame = ""
@@ -83,9 +83,16 @@ class Game:
         self.clock = pygame.time.Clock()
         self.load_assets()
 
+        # level info
+        self.ROUND_END_TIME_IN_MINUTES = 15
+        self.round_end_timer = 0.0
+        self.round = 1
+        self.get_round = lambda: self.round
+
         # screens
         self.level = Level(
             self.switch_state,
+            (self.get_round, self.set_round),
             self.tmx_maps,
             self.frames,
             self.sounds,
@@ -109,7 +116,9 @@ class Game:
             self.player.assign_tool,
             self.player.assign_seed,
         )
-        self.round_menu = RoundMenu(self.switch_state, self.player)
+        self.round_menu = RoundMenu(
+            self.switch_state, self.player, self.increment_round
+        )
         self.outgroup_menu = OutgroupMenu(
             self.player,
             self.switch_state,
@@ -118,10 +127,6 @@ class Game:
         # dialog
         self.all_sprites = AllSprites()
         self.dialogue_manager = DialogueManager(self.all_sprites)
-
-        # timer(s)
-        self.round_end_timer = 0.0
-        self.ROUND_END_TIME_IN_MINUTES = 15
 
         # screens
         self.menus = {
@@ -138,6 +143,13 @@ class Game:
 
         # intro to in-group msg.
         self.intro_txt_shown = False
+
+    def set_round(self, round):
+        self.round = round
+
+    def increment_round(self):
+        if self.round < 12:
+            self.round += 1
 
     def switch_state(self, state: GameState):
         self.current_state = state
@@ -165,19 +177,19 @@ class Game:
         )
 
         self.level_frames = {
-            "animations": support.animation_importer("images", "animations"),
-            "soil": support.import_folder_dict("images/soil"),
-            "soil water": support.import_folder_dict("images/soil water"),
-            "tomato": support.import_folder("images/plants/tomato"),
-            "corn": support.import_folder("images/plants/corn"),
+            "animations": support.animation_importer("images", "misc"),
+            "soil": support.import_folder_dict("images/tilesets/soil"),
+            "soil water": support.import_folder_dict("images/tilesets/soil/soil water"),
+            "tomato": support.import_folder("images/tilesets/plants/tomato"),
+            "corn": support.import_folder("images/tilesets/plants/corn"),
             "rain drops": support.import_folder("images/rain/drops"),
             "rain floor": support.import_folder("images/rain/floor"),
             "objects": support.import_folder_dict("images/objects"),
             "drops": support.import_folder_dict("images/drops"),
         }
-        self.overlay_frames = support.import_folder_dict("images/overlay")
+        self.item_frames = support.import_folder_dict("images/objects/items")
         cosmetic_surf = pygame.image.load(
-            support.resource_path("images/cosmetics.png")
+            support.resource_path("images/ui/cosmetics.png")
         ).convert_alpha()
         for cosmetic in _COSMETICS:
             self.cosmetic_frames[cosmetic] = pygame.transform.scale_by(
@@ -187,11 +199,11 @@ class Game:
         self.frames = {
             "emotes": self.emotes,
             "level": self.level_frames,
-            "overlay": self.overlay_frames,
+            "items": self.item_frames,
             "cosmetics": self.cosmetic_frames,
             "checkmark": pygame.transform.scale_by(
                 pygame.image.load(
-                    support.resource_path("images/checkmark.png")
+                    support.resource_path("images/ui/checkmark.png")
                 ).convert_alpha(),
                 4,
             ),
@@ -255,7 +267,7 @@ class Game:
 
     async def run(self):
         pygame.mouse.set_visible(False)
-        mouse = pygame.image.load(support.resource_path("images/overlay/cursor.png"))
+        mouse = pygame.image.load(support.resource_path("images/ui/Cursor.png"))
         is_first_frame = True
         while self.running:
             dt = self.clock.tick() / 1000

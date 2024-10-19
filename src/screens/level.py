@@ -38,7 +38,6 @@ from src.settings import (
     SoundDict,
 )
 from src.sprites.base import Sprite
-from src.sprites.drops import DropsManager
 from src.sprites.entities.character import Character
 from src.sprites.entities.player import Player
 from src.sprites.particle import ParticleSprite
@@ -101,6 +100,7 @@ class Level:
     def __init__(
         self,
         switch: Callable[[GameState], None],
+        get_set_round: tuple[Callable[[], int], Callable[[int], []]],
         tmx_maps: MapDict,
         frames: dict[str, dict],
         sounds: SoundDict,
@@ -165,12 +165,6 @@ class Level:
         self.all_sprites.add_persistent(self.player)
         self.collision_sprites.add_persistent(self.player)
 
-        # drops manager
-        self.drops_manager = DropsManager(
-            self.all_sprites, self.drop_sprites, self.frames["level"]["drops"]
-        )
-        self.drops_manager.player = self.player
-
         # weather
         self.game_time = GameTime()
         self.sky = Sky(self.game_time)
@@ -184,7 +178,7 @@ class Level:
         self.current_day = 0
 
         # overlays
-        self.overlay = Overlay(self.player, frames["overlay"], self.game_time, clock)
+        self.overlay = Overlay(self.player, frames["items"], self.game_time, clock)
         self.show_hitbox_active = False
         self.show_pf_overlay = False
         self.setup_pf_overlay()
@@ -208,8 +202,9 @@ class Level:
             dur=2400,
         )
 
-        # level
-        self.current_level = 3
+        # level interactions
+        self.get_round = get_set_round[0]
+        self.set_round = get_set_round[1]
 
     def load_map(self, game_map: Map, from_map: str = None):
         # prepare level state for new map
@@ -239,7 +234,6 @@ class Level:
             player=self.player,
             player_emote_manager=self.player_emote_manager,
             npc_emote_manager=self.npc_emote_manager,
-            drops_manager=self.drops_manager,
             soil_manager=self.soil_manager,
             apply_tool=self.apply_tool,
             plant_collision=self.plant_collision,
@@ -526,8 +520,8 @@ class Level:
                 return True
         if event.type == START_QUAKE:
             self.quaker.start(event.duration)
-            # debug volcanic atmosphere trigger
-            self.current_level = 7
+            if event.debug:
+                self.set_round(7)
 
         return False
 
@@ -754,7 +748,7 @@ class Level:
     # endregion
 
     def draw_overlay(self):
-        self.sky.display(self.current_level)
+        self.sky.display(self.get_round())
         self.overlay.display()
 
     def draw(self, dt: float, move_things: bool):
@@ -763,7 +757,7 @@ class Level:
         self.all_sprites.draw(self.camera)
         self.zoom_manager.apply_zoom()
         if move_things:
-            self.sky.display(self.current_level)
+            self.sky.display(self.get_round())
 
         self.draw_pf_overlay()
         self.draw_hitboxes()
@@ -802,7 +796,6 @@ class Level:
                 self.all_sprites.update_blocked(dt)
             else:
                 self.all_sprites.update(dt)
-            self.drops_manager.update()
             self.update_cutscene(dt)
             self.quaker.update_quake(dt)
 

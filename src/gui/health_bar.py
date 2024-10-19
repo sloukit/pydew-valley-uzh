@@ -13,7 +13,7 @@ class HealthProgressBar:
         # storing all three cat images
         self.cat_imgs = []
         for i in range(3):
-            img = import_image(f"images/health_bar/health_cat_{i + 1}.png")
+            img = import_image(f"images/ui/health_bar/health_cat_{i + 1}.png")
             img = pygame.transform.scale(
                 img, (img.get_width() * 0.7, img.get_height() * 0.7)
             )
@@ -23,7 +23,7 @@ class HealthProgressBar:
 
         # health bar frame
         self.health_bar = pygame.transform.scale(
-            import_image("images/health_bar/health_bar.png", True),
+            import_image("images/ui/health_bar/health_bar.png", True),
             (70 * SCALE_FACTOR * 0.8, 14 * SCALE_FACTOR * 0.8),
         )
         self.health_bar_rect = self.health_bar.get_rect(topleft=self.pos)

@@ -221,7 +221,7 @@ class Player(Character):
                 post_event(OPEN_INVENTORY)
 
             if self.controls.DEBUG_QUAKE.click:
-                post_event(START_QUAKE, duration=2.0)
+                post_event(START_QUAKE, duration=2.0, debug=True)
 
         # emotes
         if not self.blocked:
