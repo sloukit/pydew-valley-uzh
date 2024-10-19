@@ -101,7 +101,7 @@ class CowHerdingState(MinigameState):
 class CowHerdingSideState:
     """
     Attributes:
-        side: The string prefix of all objects associated with this side ("L" or "R")
+        prefix: The string prefix of all objects associated with this side ("L" or "R")
         contestant: The player or their NPC opponent
         cows: Maps the ID (the entity's object ID on the tilemap) of all cows to the corresponding Cow object
         initial_positions: Maps the ID of all cows to their initial positions as specified on the tilemap
@@ -111,7 +111,7 @@ class CowHerdingSideState:
         finished_time: First time at which all cows were in the barn (-1 if it has not yet occurred)
     """
 
-    side: str
+    prefix: str
     contestant: Player | NPC
     cows: dict[int, Cow] = field(default_factory=dict)
     initial_positions: dict[int, tuple[float, float]] = field(default_factory=dict)
@@ -139,6 +139,12 @@ class CowHerding(Minigame):
 
     scoreboard: _CowHerdingScoreboard
 
+    _player_side: CowHerdingSideState
+    _opponent_side: CowHerdingSideState
+    _opponent_side_script: CowHerdingScriptedPath
+
+    _opponent_id: int
+
     # seconds until the countdown starts
     _ani_cd_start: int
     _ani_cd_ready_up_dur: int
@@ -164,13 +170,6 @@ class CowHerding(Minigame):
         self.overlay = _CowHerdingOverlay()
         self.scoreboard = _CowHerdingScoreboard(self.finish)
 
-        self._ani_cd_start = 5
-        self._ani_cd_ready_up_dur = 2
-        self._ani_cd_dur = 3
-        self._game_start = (
-            self._ani_cd_start + self._ani_cd_ready_up_dur + self._ani_cd_dur
-        )
-
         opponent = NPC(
             pos=(0, 0),
             assets=ENTITY_ASSETS.RABBIT,
@@ -193,6 +192,13 @@ class CowHerding(Minigame):
             "data/npc_scripted_paths/cow_herding/example.json"
         )
 
+        self._ani_cd_start = 5
+        self._ani_cd_ready_up_dur = 2
+        self._ani_cd_dur = 3
+        self._game_start = (
+            self._ani_cd_start + self._ani_cd_ready_up_dur + self._ani_cd_dur
+        )
+
         self._minigame_time = 0
         self._complete = False
 
@@ -207,12 +213,21 @@ class CowHerding(Minigame):
         if value:
             self._state.player.blocked = True
             self._state.player.direction.update((0, 0))
-            self.scoreboard.setup(self._minigame_time, self._player_side.cows_herded_in,
-                                  self._opponent_side_script.total_time)
+            self.scoreboard.setup(
+                self._minigame_time,
+                self._player_side.cows_herded_in,
+                self._opponent_side_script.total_time,
+            )
         else:
             self._state.player.blocked = False
 
         self.__finished = value
+
+    def _side_from_string(self, s: str):
+        if s.startswith(self._player_side.prefix):
+            return self._player_side
+        else:
+            return self._opponent_side
 
     def _setup(self):
         self.contestant_collision_sprites = self._state.collision_sprites.copy()
@@ -235,27 +250,31 @@ class CowHerding(Minigame):
                 )
                 self._state.game_map.animals.append(cow)
                 cow.conditional_behaviour_tree = CowHerdingBehaviourTree.WanderRange
-                if obj.name == "L_COW":
-                    self._player_side.cows[obj.id] = cow
-                    self._player_side.initial_positions[obj.id] = pos
-                elif obj.name == "R_COW":
-                    self._opponent_side.cows[obj.id] = cow
-                    self._opponent_side.initial_positions[obj.id] = pos
+
+                side = self._side_from_string(obj.name)
+                side.cows[obj.id] = cow
+                side.initial_positions[obj.id] = pos
+
             elif "SPAWN" in obj.name:
-                if obj.name == "L_SPAWN":
-                    self._player_side.contestant.teleport(pos)
-                elif obj.name == "R_SPAWN":
-                    self._opponent_side.contestant.teleport(pos)
+                side = self._side_from_string(obj.name)
+                side.contestant.teleport(pos)
+                if side == self._opponent_side:
+                    self._opponent_id = obj.id
             else:
                 colliders[obj.name] = obj
 
-        for side in "L", "R":
-            obj = colliders[side + "_RANGE"]
+        for side_prefix in (self._player_side.prefix, self._opponent_side.prefix):
+            obj = colliders[side_prefix + "_RANGE"]
             pf_add_matrix_collision(
                 barn_matrix, (obj.x, obj.y), (obj.width, obj.height)
             )
 
-            obj = colliders[side + "_BARN_ENTRANCE"]
+            obj = colliders[side_prefix + "_BARN_AREA"]
+            pf_add_matrix_collision(
+                range_matrix, (obj.x, obj.y), (obj.width, obj.height)
+            )
+
+            obj = colliders[side_prefix + "_BARN_ENTRANCE"]
             pf_add_matrix_collision(
                 range_matrix, (obj.x, obj.y), (obj.width, obj.height)
             )
@@ -263,25 +282,10 @@ class CowHerding(Minigame):
             pos = (obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR)
             size = (obj.width * SCALE_FACTOR, obj.height * SCALE_FACTOR)
             image = pygame.Surface(size)
-            if side == "L":
-                self._player_side.barn_entrance_collider = Sprite(
-                    pos, image, name=obj.name
-                )
-                self._player_side.barn_entrance_collider.add(
-                    self.contestant_collision_sprites
-                )
-            else:
-                self._opponent_side.barn_entrance_collider = Sprite(
-                    pos, image, name=obj.name
-                )
-                self._opponent_side.barn_entrance_collider.add(
-                    self.contestant_collision_sprites
-                )
 
-            obj = colliders[side + "_BARN_AREA"]
-            pf_add_matrix_collision(
-                range_matrix, (obj.x, obj.y), (obj.width, obj.height)
-            )
+            side = self._side_from_string(side_prefix)
+            side.barn_entrance_collider = Sprite(pos, image, name=obj.name)
+            side.barn_entrance_collider.add(self.contestant_collision_sprites)
 
         CowHerdingContext.default_grid = AIData.Grid
         CowHerdingContext.barn_grid = Grid(matrix=barn_matrix)
@@ -290,8 +294,8 @@ class CowHerding(Minigame):
     def start(self):
         super().start()
 
-        self._player_side.cows_herded_in = 0
-        self._opponent_side.cows_herded_in = 0
+        for side in (self._player_side, self._opponent_side):
+            side.cows_herded_in = 0
         self._minigame_time = 0
         self._complete = False
 
@@ -314,31 +318,28 @@ class CowHerding(Minigame):
         super().finish()
 
     def check_cows(self):
-        for cow in self._player_side.cows.values():
-            if cow.continuous_behaviour_tree is None:
-                continue
-            if cow.hitbox_rect.colliderect(
-                self._player_side.barn_entrance_collider.rect
-            ):
-                cow.conditional_behaviour_tree = CowHerdingBehaviourTree.WanderBarn
-                cow.continuous_behaviour_tree = None
-                self._state.sounds["success"].play()
-                self._player_side.cows_herded_in += 1
-
-        for cow in self._opponent_side.cows.values():
-            if cow.conditional_behaviour_tree is not None:
-                continue
-            if cow.hitbox_rect.colliderect(
-                self._opponent_side.barn_entrance_collider.rect
-            ):
-                cow.conditional_behaviour_tree = CowHerdingBehaviourTree.WanderBarn
-                cow.continuous_behaviour_tree = None
-                self._opponent_side.cows_herded_in += 1
-                if self._opponent_side.finished:
-                    print(f"Opponent finished in {self._minigame_time:.2f}s "
-                          f"(compared to {self._opponent_side_script.total_time:.2f}s "
-                          f"measured on script creation)"
-                    )
+        for side in (self._player_side, self._opponent_side):
+            for cow in side.cows.values():
+                if side == self._player_side:
+                    if cow.continuous_behaviour_tree is None:
+                        continue
+                elif side == self._opponent_side:
+                    if cow.conditional_behaviour_tree is not None:
+                        continue
+                if cow.hitbox_rect.colliderect(side.barn_entrance_collider.rect):
+                    cow.conditional_behaviour_tree = CowHerdingBehaviourTree.WanderBarn
+                    cow.continuous_behaviour_tree = None
+                    side.cows_herded_in += 1
+                    if side == self._player_side:
+                        self._state.sounds["success"].play()
+                    elif side == self._opponent_side:
+                        if self._opponent_side.finished:
+                            print(
+                                f"Opponent finished in {self._minigame_time:.2f}s "
+                                f"(compared to "
+                                f"{self._opponent_side_script.total_time:.2f}s "
+                                f"measured on script creation)"
+                            )
 
     def handle_event(self, event: pygame.Event):
         if self._complete:
@@ -371,14 +372,11 @@ class CowHerding(Minigame):
         if int(self._ctime - dt) != int(self._ctime):
             # Countdown starts, preparing minigame
             if int(self._ctime) == self._ani_cd_start:
-                for eid, cow in self._player_side.cows.items():
-                    cow.teleport(self._player_side.initial_positions[eid])
-                    cow.conditional_behaviour_tree = None
-                    cow.abort_path()
-                for eid, cow in self._opponent_side.cows.items():
-                    cow.teleport(self._opponent_side.initial_positions[eid])
-                    cow.conditional_behaviour_tree = None
-                    cow.abort_path()
+                for side in (self._player_side, self._opponent_side):
+                    for eid, cow in side.cows.items():
+                        cow.teleport(side.initial_positions[eid])
+                        cow.conditional_behaviour_tree = None
+                        cow.abort_path()
 
             # Countdown counting
             if int(self._ctime) in (
@@ -395,20 +393,22 @@ class CowHerding(Minigame):
                     cow.conditional_behaviour_tree = CowHerdingBehaviourTree.WanderRange
                     cow.continuous_behaviour_tree = CowHerdingBehaviourTree.Flee
                 for eid, cow in self._opponent_side.cows.items():
-                    cow.teleport(self._opponent_side_script.paths[eid].start_pos)
-                    cow.run_script(self._opponent_side_script.paths[eid])
-                opponent_id = 14
-                opponent = self._opponent_side_script.paths[opponent_id]
-                self._opponent_side.contestant.teleport(opponent.start_pos)
-                self._opponent_side.contestant.run_script(opponent)
+                    cow_script = self._opponent_side_script.paths[eid]
+                    cow.teleport(cow_script.start_pos)
+                    cow.run_script(cow_script)
+                opponent_script = self._opponent_side_script.paths[self._opponent_id]
+                self._opponent_side.contestant.teleport(opponent_script.start_pos)
+                self._opponent_side.contestant.run_script(opponent_script)
 
     def draw(self):
         if self._ctime <= self._ani_cd_start:
             self.overlay.draw_description()
         else:
             self.overlay.draw_objective(
-                self._player_side.cows_total, self._player_side.cows_herded_in,
-                self._opponent_side.cows_total, self._opponent_side.cows_herded_in
+                self._player_side.cows_total,
+                self._player_side.cows_herded_in,
+                self._opponent_side.cows_total,
+                self._opponent_side.cows_herded_in,
             )
 
         if self._ani_cd_start < self._ctime < self._game_start + 1:
