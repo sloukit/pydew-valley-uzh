@@ -1,5 +1,5 @@
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Type
 
 import pygame
@@ -7,11 +7,12 @@ import pygame.gfxdraw
 from pathfinding.core.grid import Grid
 
 from src.controls import Controls
-from src.enums import Direction
+from src.enums import Direction, StudyGroup
 from src.exceptions import MinigameSetupError
 from src.groups import PersistentSpriteGroup
-from src.npc.behaviour.cow_behaviour_tree import CowConditionalBehaviourTree
 from src.npc.cow import Cow
+from src.npc.npc import NPC
+from src.npc.path_scripting import AIScriptedPath, Waypoint
 from src.npc.setup import AIData
 from src.npc.utils import pf_add_matrix_collision
 from src.overlay.overlay import Overlay
@@ -29,6 +30,8 @@ from src.settings import SCALE_FACTOR, SoundDict
 from src.sprites.base import Sprite
 from src.sprites.entities.player import Player
 from src.sprites.setup import ENTITY_ASSETS
+from src.support import resource_path
+from src.utils import json_load
 
 
 def _set_player_controls(controls: Type[Controls], value: bool):
@@ -46,6 +49,44 @@ def _set_player_controls(controls: Type[Controls], value: bool):
 
 
 @dataclass
+class CowHerdingScriptedPath:
+    """
+    Contains all paths followed by the entities on the opponent's side
+
+    Attributes:
+        random_seed: Seed used to create the path
+        total_time: Time the opponent should need to herd all his cows into the barn
+        paths: Maps the ID (the entity's object ID on the tilemap) of all controlled entities to their paths
+    """
+
+    random_seed: float
+    total_time: float
+    paths: dict[int, AIScriptedPath]
+
+    @classmethod
+    def from_file(cls, path: str):
+        with open(resource_path(path)) as file:
+            data = json_load(file)
+
+        random_seed = data["random_seed"]
+        total_time = data["total_time"]
+        paths = {}
+        for eid, entity in data["paths"].items():
+            waypoints = []
+            for waypoint in entity["waypoints"]:
+                waypoints.append(
+                    Waypoint(
+                        waypoint["pos"], waypoint["speed"], waypoint["waiting_duration"]
+                    )
+                )
+            paths[int(eid)] = AIScriptedPath(
+                start_pos=entity["start_pos"], waypoints=waypoints
+            )
+
+        return cls(random_seed=random_seed, total_time=total_time, paths=paths)
+
+
+@dataclass
 class CowHerdingState(MinigameState):
     game_map: GameMap
     player: Player
@@ -54,6 +95,38 @@ class CowHerdingState(MinigameState):
     overlay: Overlay
     sounds: SoundDict
     get_camera_center: Callable[[], pygame.Vector2 | tuple[float, float]]
+
+
+@dataclass
+class CowHerdingSideState:
+    """
+    Attributes:
+        side: The string prefix of all objects associated with this side ("L" or "R")
+        contestant: The player or their NPC opponent
+        cows: Maps the ID (the entity's object ID on the tilemap) of all cows to the corresponding Cow object
+        initial_positions: Maps the ID of all cows to their initial positions as specified on the tilemap
+        barn_entrance_collider: Collider separating the inside of the barn from the range
+
+        cows_herded_in: Amount of cows on this side that have already been herded into the barn
+        finished_time: First time at which all cows were in the barn (-1 if it has not yet occurred)
+    """
+
+    side: str
+    contestant: Player | NPC
+    cows: dict[int, Cow] = field(default_factory=dict)
+    initial_positions: dict[int, tuple[float, float]] = field(default_factory=dict)
+    barn_entrance_collider: Sprite = None
+
+    cows_herded_in: int = field(default=0, init=False)
+    finished_time: float = field(default=-1, init=False)
+
+    @property
+    def cows_total(self) -> int:
+        return len(self.cows)
+
+    @property
+    def finished(self) -> bool:
+        return self.cows_herded_in == self.cows_total
 
 
 class CowHerding(Minigame):
@@ -72,19 +145,14 @@ class CowHerding(Minigame):
     _ani_cd_dur: int
     _game_start: int
 
-    _cows: list[Cow]
-    _cows_initial_positions: list[tuple[int, int]]
-    _cows_total: int
-    _cows_herded_in: int
-
     # current minigame time (as seen on the minigame timer)
     _minigame_time: int
 
     # whether the Player has completed the minigame yet
     _complete: bool
 
-    barn_entrance_collider: Sprite
-    player_collision_sprites: PersistentSpriteGroup
+    # collision sprites for the minigame contestants (i.e. the Player and their opponent)
+    contestant_collision_sprites: PersistentSpriteGroup
 
     def __init__(self, state: CowHerdingState):
         super().__init__(state)
@@ -103,10 +171,27 @@ class CowHerding(Minigame):
             self._ani_cd_start + self._ani_cd_ready_up_dur + self._ani_cd_dur
         )
 
-        self._cows = []
-        self._cows_initial_positions = []
-        self._cows_total = 0
-        self._cows_herded_in = 0
+        opponent = NPC(
+            pos=(0, 0),
+            assets=ENTITY_ASSETS.RABBIT,
+            groups=(self._state.all_sprites, self._state.collision_sprites),
+            collision_sprites=self._state.collision_sprites,
+            study_group=StudyGroup.OUTGROUP,
+            apply_tool=lambda _, __, ___: None,
+            plant_collision=lambda _: None,
+            soil_manager=self._state.game_map.soil_manager,
+            emote_manager=self._state.game_map.npc_emote_manager,
+            tree_sprites=pygame.sprite.Group(),
+        )
+        opponent.probability_to_get_sick = 1
+        self._state.game_map.npcs.append(opponent)
+
+        self._player_side = CowHerdingSideState("L", self._state.player)
+        self._opponent_side = CowHerdingSideState("R", opponent)
+
+        self._opponent_side_script = CowHerdingScriptedPath.from_file(
+            "data/npc_scripted_paths/cow_herding/example.json"
+        )
 
         self._minigame_time = 0
         self._complete = False
@@ -122,14 +207,15 @@ class CowHerding(Minigame):
         if value:
             self._state.player.blocked = True
             self._state.player.direction.update((0, 0))
-            self.scoreboard.setup(self._minigame_time, self._cows_herded_in)
+            self.scoreboard.setup(self._minigame_time, self._player_side.cows_herded_in,
+                                  self._opponent_side_script.total_time)
         else:
             self._state.player.blocked = False
 
         self.__finished = value
 
     def _setup(self):
-        self.player_collision_sprites = self._state.collision_sprites.copy()
+        self.contestant_collision_sprites = self._state.collision_sprites.copy()
 
         if AIData.Matrix is None:
             raise MinigameSetupError("AI Pathfinding Matrix is not defined")
@@ -139,8 +225,8 @@ class CowHerding(Minigame):
 
         colliders = {}
         for obj in self._state.game_map.minigame_layer:
+            pos = (obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR)
             if "COW" in obj.name:
-                pos = (obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR)
                 cow = Cow(
                     pos=pos,
                     assets=ENTITY_ASSETS.COW,
@@ -148,40 +234,64 @@ class CowHerding(Minigame):
                     collision_sprites=self._state.collision_sprites,
                 )
                 self._state.game_map.animals.append(cow)
+                cow.conditional_behaviour_tree = CowHerdingBehaviourTree.WanderRange
                 if obj.name == "L_COW":
-                    cow.conditional_behaviour_tree = CowHerdingBehaviourTree.WanderRange
-                    self._cows.append(cow)
-                    self._cows_initial_positions.append(pos)
+                    self._player_side.cows[obj.id] = cow
+                    self._player_side.initial_positions[obj.id] = pos
                 elif obj.name == "R_COW":
-                    cow.conditional_behaviour_tree = CowConditionalBehaviourTree.Wander
+                    self._opponent_side.cows[obj.id] = cow
+                    self._opponent_side.initial_positions[obj.id] = pos
+            elif "SPAWN" in obj.name:
+                if obj.name == "L_SPAWN":
+                    self._player_side.contestant.teleport(pos)
+                elif obj.name == "R_SPAWN":
+                    self._opponent_side.contestant.teleport(pos)
             else:
                 colliders[obj.name] = obj
 
-        obj = colliders["L_RANGE"]
-        pf_add_matrix_collision(barn_matrix, (obj.x, obj.y), (obj.width, obj.height))
+        for side in "L", "R":
+            obj = colliders[side + "_RANGE"]
+            pf_add_matrix_collision(
+                barn_matrix, (obj.x, obj.y), (obj.width, obj.height)
+            )
 
-        obj = colliders["L_BARN_ENTRANCE"]
-        pf_add_matrix_collision(range_matrix, (obj.x, obj.y), (obj.width, obj.height))
+            obj = colliders[side + "_BARN_ENTRANCE"]
+            pf_add_matrix_collision(
+                range_matrix, (obj.x, obj.y), (obj.width, obj.height)
+            )
 
-        pos = (obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR)
-        size = (obj.width * SCALE_FACTOR, obj.height * SCALE_FACTOR)
-        image = pygame.Surface(size)
-        self.barn_entrance_collider = Sprite(pos, image, name=obj.name)
-        self.barn_entrance_collider.add(self.player_collision_sprites)
+            pos = (obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR)
+            size = (obj.width * SCALE_FACTOR, obj.height * SCALE_FACTOR)
+            image = pygame.Surface(size)
+            if side == "L":
+                self._player_side.barn_entrance_collider = Sprite(
+                    pos, image, name=obj.name
+                )
+                self._player_side.barn_entrance_collider.add(
+                    self.contestant_collision_sprites
+                )
+            else:
+                self._opponent_side.barn_entrance_collider = Sprite(
+                    pos, image, name=obj.name
+                )
+                self._opponent_side.barn_entrance_collider.add(
+                    self.contestant_collision_sprites
+                )
 
-        obj = colliders["L_BARN_AREA"]
-        pf_add_matrix_collision(range_matrix, (obj.x, obj.y), (obj.width, obj.height))
+            obj = colliders[side + "_BARN_AREA"]
+            pf_add_matrix_collision(
+                range_matrix, (obj.x, obj.y), (obj.width, obj.height)
+            )
 
         CowHerdingContext.default_grid = AIData.Grid
         CowHerdingContext.barn_grid = Grid(matrix=barn_matrix)
         CowHerdingContext.range_grid = Grid(matrix=range_matrix)
 
-        self._cows_total = len(self._cows)
-
     def start(self):
         super().start()
 
-        self._cows_herded_in = 0
+        self._player_side.cows_herded_in = 0
+        self._opponent_side.cows_herded_in = 0
         self._minigame_time = 0
         self._complete = False
 
@@ -190,7 +300,7 @@ class CowHerding(Minigame):
         self._state.player.facing_direction = Direction.UP
         self._state.player.blocked = True
         self._state.player.direction.update((0, 0))
-        self._state.player.collision_sprites = self.player_collision_sprites
+        self._state.player.collision_sprites = self.contestant_collision_sprites
 
         self._state.overlay.visible = False
 
@@ -204,14 +314,31 @@ class CowHerding(Minigame):
         super().finish()
 
     def check_cows(self):
-        for cow in self._cows:
+        for cow in self._player_side.cows.values():
             if cow.continuous_behaviour_tree is None:
                 continue
-            if cow.hitbox_rect.colliderect(self.barn_entrance_collider.rect):
+            if cow.hitbox_rect.colliderect(
+                self._player_side.barn_entrance_collider.rect
+            ):
                 cow.conditional_behaviour_tree = CowHerdingBehaviourTree.WanderBarn
                 cow.continuous_behaviour_tree = None
                 self._state.sounds["success"].play()
-                self._cows_herded_in += 1
+                self._player_side.cows_herded_in += 1
+
+        for cow in self._opponent_side.cows.values():
+            if cow.conditional_behaviour_tree is not None:
+                continue
+            if cow.hitbox_rect.colliderect(
+                self._opponent_side.barn_entrance_collider.rect
+            ):
+                cow.conditional_behaviour_tree = CowHerdingBehaviourTree.WanderBarn
+                cow.continuous_behaviour_tree = None
+                self._opponent_side.cows_herded_in += 1
+                if self._opponent_side.finished:
+                    print(f"Opponent finished in {self._minigame_time:.2f}s "
+                          f"(compared to {self._opponent_side_script.total_time:.2f}s "
+                          f"measured on script creation)"
+                    )
 
     def handle_event(self, event: pygame.Event):
         if self._complete:
@@ -227,7 +354,7 @@ class CowHerding(Minigame):
 
             if self._game_start < self._ctime:
                 self.check_cows()
-                if self._cows_total == self._cows_herded_in:
+                if self._player_side.finished:
                     self._complete = True
         else:
             self.scoreboard.update(dt)
@@ -244,10 +371,14 @@ class CowHerding(Minigame):
         if int(self._ctime - dt) != int(self._ctime):
             # Countdown starts, preparing minigame
             if int(self._ctime) == self._ani_cd_start:
-                for i in range(len(self._cows)):
-                    self._cows[i].teleport(self._cows_initial_positions[i])
-                    self._cows[i].conditional_behaviour_tree = None
-                    self._cows[i].abort_path()
+                for eid, cow in self._player_side.cows.items():
+                    cow.teleport(self._player_side.initial_positions[eid])
+                    cow.conditional_behaviour_tree = None
+                    cow.abort_path()
+                for eid, cow in self._opponent_side.cows.items():
+                    cow.teleport(self._opponent_side.initial_positions[eid])
+                    cow.conditional_behaviour_tree = None
+                    cow.abort_path()
 
             # Countdown counting
             if int(self._ctime) in (
@@ -260,15 +391,25 @@ class CowHerding(Minigame):
             elif int(self._ctime) == self._game_start:
                 self._state.player.blocked = False
                 self._state.sounds["countdown_end"].play()
-                for cow in self._cows:
+                for cow in self._player_side.cows.values():
                     cow.conditional_behaviour_tree = CowHerdingBehaviourTree.WanderRange
                     cow.continuous_behaviour_tree = CowHerdingBehaviourTree.Flee
+                for eid, cow in self._opponent_side.cows.items():
+                    cow.teleport(self._opponent_side_script.paths[eid].start_pos)
+                    cow.run_script(self._opponent_side_script.paths[eid])
+                opponent_id = 14
+                opponent = self._opponent_side_script.paths[opponent_id]
+                self._opponent_side.contestant.teleport(opponent.start_pos)
+                self._opponent_side.contestant.run_script(opponent)
 
     def draw(self):
         if self._ctime <= self._ani_cd_start:
             self.overlay.draw_description()
         else:
-            self.overlay.draw_objective(self._cows_total, self._cows_herded_in)
+            self.overlay.draw_objective(
+                self._player_side.cows_total, self._player_side.cows_herded_in,
+                self._opponent_side.cows_total, self._opponent_side.cows_herded_in
+            )
 
         if self._ani_cd_start < self._ctime < self._game_start + 1:
             self.overlay.draw_countdown(

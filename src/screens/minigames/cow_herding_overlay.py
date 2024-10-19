@@ -44,7 +44,7 @@ class _CowHerdingScoreboard(AbstractMenu):
         self.font_description = import_freetype_font(24, "font/LycheeSoda.ttf")
         self.font_button = import_freetype_font(32, "font/LycheeSoda.ttf")
 
-    def setup(self, time_needed: float, cows_herded_in: int):
+    def setup(self, time_needed: float, cows_herded_in: int, opp_time: float):
         box_center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
         padding = (16, 24)
 
@@ -61,6 +61,10 @@ class _CowHerdingScoreboard(AbstractMenu):
             Linebreak(),
             TextChunk(f"{time_needed:.2f}", self.font_number),
             TextChunk(" seconds needed", self.font_description),
+            Linebreak(),
+            TextChunk(f"(Hornlinge needed {opp_time:.2f} seconds)", self.font_description),
+            Linebreak(),
+            TextChunk("[cheering group]" if opp_time > time_needed else "[disappointed group]", self.font_description),
             Linebreak(),
             TextChunk(f"{cows_herded_in}", self.font_number),
             TextChunk(" cows herded in", self.font_description),
@@ -254,7 +258,8 @@ class _CowHerdingOverlay:
             ),
         )
 
-    def draw_objective(self, cows_total: int, cows_herded_in: int):
+    def draw_objective(self, own_cows_total: int, own_cows_herded_in: int,
+                       opp_cows_total: int, opp_cows_herded_in: int):
         box_top_right = (SCREEN_WIDTH, 0)
         padding = 12
 
@@ -262,12 +267,20 @@ class _CowHerdingOverlay:
             TextChunk("Objective:", self.font_description),
             Linebreak(),
             TextChunk("Herd the cows into the barn!", self.font_objective),
-            Linebreak(),
+
             Linebreak((0, 32)),
-            TextChunk("Progress:", self.font_objective),
+            TextChunk("Blaukappen (ingroup) progress:", self.font_objective),
             Linebreak(),
             TextChunk(
-                f"({cows_herded_in}/{cows_total}) Cows in the barn",
+                f"({own_cows_herded_in}/{own_cows_total}) Cows in the barn",
+                self.font_objective,
+            ),
+
+            Linebreak((0, 32)),
+            TextChunk("Hornlinge (outgroup) progress:", self.font_objective),
+            Linebreak(),
+            TextChunk(
+                f"({opp_cows_herded_in}/{opp_cows_total}) Cows in the barn",
                 self.font_objective,
             ),
         )

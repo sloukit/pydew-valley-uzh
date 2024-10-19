@@ -2,20 +2,15 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Callable
-from enum import IntEnum
 from typing import ClassVar
 
 from pathfinding.core.grid import Grid
 from pathfinding.finder.a_star import AStarFinder
 
+from src.enums import AIState
 from src.npc.behaviour.ai_behaviour_tree_base import NodeWrapper
+from src.npc.path_scripting import AIScriptedPath
 from src.sprites.entities.entity import Entity
-
-
-# TODO: Refactor NPCState into Entity.state (maybe override Entity.get_state())
-class AIState(IntEnum):
-    IDLE = 0
-    MOVING = 1
 
 
 class AIBehaviourBase(Entity, ABC):
@@ -36,10 +31,14 @@ class AIBehaviourBase(Entity, ABC):
        coordinate tuple, while the first one in the list always being the NPCs
        current target position."""
 
+    _script: AIScriptedPath | None
+
     __on_path_abortion_funcs: list[Callable[[], None]]
     __on_path_completion_funcs: list[Callable[[], None]]
 
     __on_stop_moving_funcs: list[Callable[[], None]]
+
+    __on_script_finish_funcs: list[Callable[[], None]]
 
     @property
     @abstractmethod
