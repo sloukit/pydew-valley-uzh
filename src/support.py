@@ -36,7 +36,7 @@ def import_font(size: int, font_path: str) -> pygame.font.Font:
     return pygame.font.Font(resource_path(font_path), size)
 
 
-def import_freetype_font(size: int, font_path: str) -> pygame.font.Font:
+def import_freetype_font(size: int, font_path: str) -> pygame.freetype.Font:
     return pygame.freetype.Font(resource_path(font_path), size)
 
 

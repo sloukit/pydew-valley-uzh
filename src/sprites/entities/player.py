@@ -19,9 +19,11 @@ from src.sprites.setup import EntityAsset
 
 _NONSEED_INVENTORY_DEFAULT_AMOUNT = 20
 _SEED_INVENTORY_DEFAULT_AMOUNT = 5
+_ALLOCATION_ITEM_DEFAULT_AMOUNT = 0
 _INV_DEFAULT_AMOUNTS = (
     _NONSEED_INVENTORY_DEFAULT_AMOUNT,
     _SEED_INVENTORY_DEFAULT_AMOUNT,
+    _ALLOCATION_ITEM_DEFAULT_AMOUNT,
 )
 
 
@@ -233,7 +235,7 @@ class Player(Character):
                 post_event(OPEN_INVENTORY)
 
             if self.controls.DEBUG_QUAKE.click:
-                post_event(START_QUAKE, duration=2.0)
+                post_event(START_QUAKE, duration=2.0, debug=True)
 
         # emotes
         if not self.blocked:

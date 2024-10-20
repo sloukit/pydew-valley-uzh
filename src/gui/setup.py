@@ -7,7 +7,7 @@ from src.gui.interface import dialog, emotes, indicators
 def setup_gui():
     # region Dialog
     _tb_base = pygame.image.load(
-        support.resource_path("images/textbox.png")
+        support.resource_path("images/ui/textbox.png")
     ).convert_alpha()
     tb_cname_base_surf = _tb_base.subsurface(pygame.Rect(0, 0, 212, 67))
     tb_main_text_base_surf = _tb_base.subsurface(pygame.Rect(0, 74, 391, 202))

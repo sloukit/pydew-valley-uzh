@@ -8,6 +8,10 @@
   "current_seed": "tomato_seed",
   "group": 1,
   "goggles_status": false,
+  "necklace_status": null,
+  "hat_status": true,
+  "horn_status": false,
+  "outgroup_skin_status": false,
   "inventory": {
     "wood": 26,
     "apple": 24,
@@ -22,6 +26,361 @@
   },
   "soil_data": [
     {
+      "watered": true,
+      "pos": [
+        30,
+        22
+      ],
+      "plant_info": {
+        "plant_type": 0,
+        "age": 0
+      }
+    },
+    {
+      "watered": true,
+      "pos": [
+        31,
+        22
+      ],
+      "plant_info": {
+        "plant_type": 0,
+        "age": 0
+      }
+    },
+    {
+      "watered": false,
+      "pos": [
+        32,
+        22
+      ],
+      "plant_info": {
+        "plant_type": 0,
+        "age": 0
+      }
+    },
+    {
+      "watered": false,
+      "pos": [
+        30,
+        23
+      ],
+      "plant_info": null
+    },
+    {
+      "watered": true,
+      "pos": [
+        31,
+        23
+      ],
+      "plant_info": {
+        "plant_type": 1,
+        "age": 0
+      }
+    },
+    {
+      "watered": false,
+      "pos": [
+        32,
+        23
+      ],
+      "plant_info": null
+    },
+    {
+      "watered": false,
+      "pos": [
+        33,
+        23
+      ],
+      "plant_info": null
+    },
+    {
+      "watered": false,
+      "pos": [
+        27,
+        25
+      ],
+      "plant_info": {
+        "plant_type": 1,
+        "age": 0
+      }
+    },
+    {
+      "watered": true,
+      "pos": [
+        28,
+        25
+      ],
+      "plant_info": {
+        "plant_type": 1,
+        "age": 0
+      }
+    },
+    {
+      "watered": true,
+      "pos": [
+        29,
+        25
+      ],
+      "plant_info": {
+        "plant_type": 1,
+        "age": 0
+      }
+    },
+    {
+      "watered": false,
+      "pos": [
+        25,
+        26
+      ],
+      "plant_info": null
+    },
+    {
+      "watered": false,
+      "pos": [
+        26,
+        26
+      ],
+      "plant_info": null
+    },
+    {
+      "watered": false,
+      "pos": [
+        27,
+        26
+      ],
+      "plant_info": null
+    },
+    {
+      "watered": false,
+      "pos": [
+        28,
+        26
+      ],
+      "plant_info": null
+    },
+    {
+      "watered": true,
+      "pos": [
+        29,
+        26
+      ],
+      "plant_info": {
+        "plant_type": 1,
+        "age": 0
+      }
+    },
+    {
+      "watered": true,
+      "pos": [
+        30,
+        26
+      ],
+      "plant_info": {
+        "plant_type": 1,
+        "age": 0
+      }
+    },
+    {
+      "watered": false,
+      "pos": [
+        31,
+        26
+      ],
+      "plant_info": null
+    },
+    {
+      "watered": true,
+      "pos": [
+        30,
+        28
+      ],
+      "plant_info": {
+        "plant_type": 0,
+        "age": 0
+      }
+    },
+    {
+      "watered": true,
+      "pos": [
+        31,
+        28
+      ],
+      "plant_info": {
+        "plant_type": 0,
+        "age": 0
+      }
+    },
+    {
+      "watered": false,
+      "pos": [
+        32,
+        28
+      ],
+      "plant_info": null
+    },
+    {
+      "watered": true,
+      "pos": [
+        49,
+        22
+      ],
+      "plant_info": {
+        "plant_type": 1,
+        "age": 0
+      }
+    },
+    {
+      "watered": false,
+      "pos": [
+        50,
+        22
+      ],
+      "plant_info": {
+        "plant_type": 1,
+        "age": 0
+      }
+    },
+    {
+      "watered": true,
+      "pos": [
+        51,
+        22
+      ],
+      "plant_info": {
+        "plant_type": 1,
+        "age": 0
+      }
+    },
+    {
+      "watered": false,
+      "pos": [
+        52,
+        22
+      ],
+      "plant_info": {
+        "plant_type": 1,
+        "age": 0
+      }
+    },
+    {
+      "watered": true,
+      "pos": [
+        51,
+        23
+      ],
+      "plant_info": {
+        "plant_type": 1,
+        "age": 0
+      }
+    },
+    {
+      "watered": false,
+      "pos": [
+        52,
+        23
+      ],
+      "plant_info": {
+        "plant_type": 1,
+        "age": 0
+      }
+    },
+    {
+      "watered": true,
+      "pos": [
+        53,
+        23
+      ],
+      "plant_info": {
+        "plant_type": 1,
+        "age": 0
+      }
+    },
+    {
+      "watered": false,
+      "pos": [
+        54,
+        23
+      ],
+      "plant_info": {
+        "plant_type": 1,
+        "age": 0
+      }
+    },
+    {
+      "watered": true,
+      "pos": [
+        51,
+        25
+      ],
+      "plant_info": {
+        "plant_type": 0,
+        "age": 0
+      }
+    },
+    {
+      "watered": true,
+      "pos": [
+        52,
+        25
+      ],
+      "plant_info": {
+        "plant_type": 1,
+        "age": 0
+      }
+    },
+    {
+      "watered": false,
+      "pos": [
+        50,
+        26
+      ],
+      "plant_info": {
+        "plant_type": 0,
+        "age": 0
+      }
+    },
+    {
+      "watered": false,
+      "pos": [
+        51,
+        26
+      ],
+      "plant_info": {
+        "plant_type": 0,
+        "age": 0
+      }
+    },
+    {
+      "watered": true,
+      "pos": [
+        52,
+        26
+      ],
+      "plant_info": {
+        "plant_type": 0,
+        "age": 0
+      }
+    },
+    {
+      "watered": true,
+      "pos": [
+        53,
+        26
+      ],
+      "plant_info": {
+        "plant_type": 0,
+        "age": 0
+      }
+    },
+    {
+      "watered": false,
+      "pos": [
+        54,
+        26
+      ],
+      "plant_info": null
+    },
+    {
       "watered": false,
       "pos": [
         61,
@@ -32,7 +391,7 @@
     {
       "watered": false,
       "pos": [
-        59,
+        57,
         28
       ],
       "plant_info": null
@@ -40,19 +399,44 @@
     {
       "watered": true,
       "pos": [
+        58,
+        28
+      ],
+      "plant_info": {
+        "plant_type": 1,
+        "age": 0
+      }
+    },
+    {
+      "watered": true,
+      "pos": [
+        59,
+        28
+      ],
+      "plant_info": {
+        "plant_type": 1,
+        "age": 0
+      }
+    },
+    {
+      "watered": true,
+      "pos": [
         60,
         28
       ],
-      "plant_info": null
+      "plant_info": {
+        "plant_type": 0,
+        "age": 0
+      }
     },
     {
-      "watered": false,
+      "watered": true,
       "pos": [
         61,
         28
       ],
       "plant_info": {
-        "plant_type": 1,
+        "plant_type": 0,
         "age": 0
       }
     }

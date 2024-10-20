@@ -77,6 +77,8 @@ class Character(Entity, ABC):
             InventoryResource.ORANGE: 0,
             InventoryResource.PEACH: 0,
             InventoryResource.PEAR: 0,
+            InventoryResource.BLANKET: 0,
+            InventoryResource.CANDY_BAR: 0,
             InventoryResource.CORN: 0,
             InventoryResource.TOMATO: 0,
             InventoryResource.CORN_SEED: 0,
