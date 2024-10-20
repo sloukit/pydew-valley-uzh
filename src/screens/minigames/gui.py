@@ -107,9 +107,9 @@ class Text:
         max_line_width: int,
     ) -> int:
         if current_line:
-            max_baseline_y = max([chunk.text_rect.y for chunk in current_line])
+            max_baseline_y = max([chunk.font.get_ascent() for chunk in current_line])
             for chunk in current_line:
-                chunk.y += max_baseline_y - chunk.text_rect.y
+                chunk.y += max_baseline_y - chunk.font.get_ascent()
             current_line.clear()
 
         if current_position.x > max_line_width:
@@ -126,8 +126,9 @@ class Text:
 
             if isinstance(text_chunk, TextChunk):
                 current_position.x += text_chunk.width
-                if line_height < text_chunk.height:
-                    line_height = text_chunk.height
+                chunk_line_height = text_chunk.font.get_linesize()
+                if line_height < chunk_line_height:
+                    line_height = chunk_line_height
                 current_line.append(text_chunk)
 
             elif isinstance(text_chunk, Linebreak):
