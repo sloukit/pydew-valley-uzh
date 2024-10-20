@@ -6,7 +6,8 @@ from pytmx import TiledTileLayer
 
 from src.enums import FarmingTool, InventoryResource, Layer, SeedType, StudyGroup
 from src.groups import AllSprites
-from src.settings import SCALED_TILE_SIZE
+from src.savefile.tile_info import TileInfo
+from src.settings import SCALED_TILE_SIZE, Coordinate
 from src.sprites.base import Sprite
 from src.sprites.entities.character import Character
 from src.sprites.objects.plant import Plant
@@ -171,7 +172,7 @@ class SoilArea:
     @raining.setter
     def raining(self, value: bool):
         self._raining = value
-        if self._raining:
+        if self.raining:
             self.water_all()
 
     @property
@@ -271,7 +272,9 @@ class SoilArea:
         for pos, tile in self.tiles.items():
             self.update_tile_image(tile, pos)
 
-    def _prepare_tile_from_saved_data(self, tile, pos, prev_data: dict):
+    def _prepare_tile_from_saved_data(
+        self, tile: Tile, pos, prev_data: dict[Coordinate, TileInfo]
+    ):
         if pos not in prev_data:
             return
         tile_info = prev_data[pos]
@@ -284,6 +287,8 @@ class SoilArea:
             frames = self.level_frames[seed_name]
             plant = Plant(plant_info.plant_type, (), tile, frames)
             plant.add(self.all_sprites, self.plant_sprites)
+            tile.plant = plant
+            plant.age = plant_info.age
 
     def update_tile_image(self, tile, pos):
         for dx, dy in self.neighbor_directions:
@@ -396,10 +401,21 @@ class SoilArea:
 
             # remove plant
             create_particle(tile.plant)
+            tile.plant.kill()
             tile.plant = None
             return True
 
         return False
+
+    def update(self):
+        self.raining = False
+        for tile in self.tiles.values():
+            if tile.watered:
+                if tile.plant:
+                    tile.plant.grow()
+                tile.watered = False
+            for sprite in self.water_sprites:
+                sprite.kill()
 
     def determine_tile_type(self, pos):
         x, y = pos
@@ -458,6 +474,23 @@ class SoilManager:
 
         self._areas = {i: SoilArea(self.all_sprites, self.frames) for i in StudyGroup}
 
+        self.raining = False
+
+    @property
+    def raining(self) -> bool:
+        return self._raining
+
+    @raining.setter
+    def raining(self, value: bool):
+        self._raining = value
+        if self.raining:
+            for area in self.all_areas():
+                area.raining = True
+
+    def all_areas(self):
+        for area in self._areas.values():
+            yield area
+
     def get_area(self, study_group: StudyGroup) -> SoilArea:
         area = self._areas[study_group]
         return area
@@ -473,7 +506,7 @@ class SoilManager:
         )
 
     def all_soil_sprites(self):
-        for area in self._areas.values():
+        for area in self.all_areas():
             yield area.soil_sprites
 
     def hoe(self, character: Character, pos):
@@ -492,10 +525,5 @@ class SoilManager:
         return self.get_area(character.study_group).plant(pos, seed, remove_resource)
 
     def update(self):
-        for area in self._areas.values():
-            for tile in area.tiles.values():
-                if tile.plant:
-                    tile.plant.grow()
-                tile.watered = False
-                for sprite in area.water_sprites:
-                    sprite.kill()
+        for area in self.all_areas():
+            area.update()

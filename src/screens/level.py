@@ -349,8 +349,8 @@ class Level:
         area = self.soil_manager.get_area(character.study_group)
         if area.plant_sprites:
             for plant in area.plant_sprites:
-                if plant.rect.colliderect(character.hitbox_rect):
-                    x, y = map_coords_to_tile(plant.rect.center)
+                if plant.hitbox_rect.colliderect(character.hitbox_rect):
+                    x, y = map_coords_to_tile(plant.hitbox_rect.midbottom)
                     area.harvest((x, y), character.add_resource, self.create_particle)
 
     def switch_to_map(self, map_name: Map):
