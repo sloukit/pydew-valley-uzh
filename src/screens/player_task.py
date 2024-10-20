@@ -1,7 +1,6 @@
 from typing import Callable
 
 import pygame
-import pygame.freetype
 
 from src.enums import GameState, InventoryResource
 from src.gui.menu.abstract_menu import AbstractMenu
@@ -14,7 +13,7 @@ from src.screens.minigames.gui import (
     _ReturnButton,
 )
 from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH
-from src.support import import_font, import_freetype_font
+from src.support import import_font
 
 """
 TODO:
@@ -33,12 +32,8 @@ class PlayerTask(AbstractMenu):
     def __init__(self, switch_screen: Callable[[], None], level):
         super().__init__(title="Task", size=(SCREEN_WIDTH, SCREEN_HEIGHT))
         self.display_surface: pygame.Surface = pygame.display.get_surface()
-        self.title_font: pygame.freetype.Font = import_freetype_font(
-            38, "font/LycheeSoda.ttf"
-        )
-        self.text_font: pygame.freetype.Font = import_freetype_font(
-            32, "font/LycheeSoda.ttf"
-        )
+        self.title_font: pygame.Font = import_font(38, "font/LycheeSoda.ttf")
+        self.text_font: pygame.Font = import_font(32, "font/LycheeSoda.ttf")
         self.input_field_font: pygame.font.Font = import_font(38, "font/LycheeSoda.ttf")
         self.confirm_button_text: str = "Confirm"
         self.switch_screen = switch_screen
@@ -72,10 +67,12 @@ class PlayerTask(AbstractMenu):
         return self.allocation_item_name, self.allocation_item_img
 
     def draw_title(self) -> None:
-        text = Text(
-            Linebreak((0, 12)), TextChunk("Task", self.title_font), Linebreak((0, 12))
+        text = Text(Linebreak((0, 2)), TextChunk("Task", self.title_font))
+        _draw_box(
+            self.display_surface,
+            (SCREEN_WIDTH / 2, 0),
+            (text.surface_rect.width, text.surface_rect.height + 24),
         )
-        _draw_box(self.display_surface, (SCREEN_WIDTH / 2, 0), text.surface_rect.size)
         text_surface = pygame.Surface(text.surface_rect.size, pygame.SRCALPHA)
         text.draw(text_surface)
         self.display_surface.blit(
@@ -117,14 +114,16 @@ class PlayerTask(AbstractMenu):
                 button.draw(self.display_surface)
 
     def draw_info(self) -> None:
+        padding_y = 8
         text = Text(
-            Linebreak((0, 18)),
+            Linebreak((0, padding_y)),
             TextChunk("You have not allocated all of the items yet!", self.text_font),
             Linebreak(),
             TextChunk(
                 f"Items missing: {self.total_items - sum(self.allocations)}",
                 self.text_font,
             ),
+            Linebreak((0, padding_y)),
         )
         _draw_box(
             self.display_surface,
@@ -143,12 +142,11 @@ class PlayerTask(AbstractMenu):
 
     def draw_task_surf(self) -> None:
         box_center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 3)
-        button_top_margin = 32
-        button_area_height = self.confirm_button.rect.height + button_top_margin
+        button_area_height = self.confirm_button.rect.height
         allocation_img = pygame.transform.scale(self.allocation_item[1], (60, 60))
 
         text = Text(
-            Linebreak((0, 18)),
+            Linebreak((0, 12)),
             TextChunk(
                 f"You have received {self.max_allocation} {self.allocation_item[0]}s!",
                 self.text_font,
@@ -161,35 +159,39 @@ class PlayerTask(AbstractMenu):
             TextChunk("Your group's inventory:", self.text_font),
             Linebreak((0, 18)),
             TextChunk("Other group's inventory:", self.text_font),
+            Linebreak((0, 12)),
         )
         box_size = (
             text.surface_rect.width,
-            text.surface_rect.height + button_area_height,
+            text.surface_rect.height + button_area_height + allocation_img.get_height(),
         )
 
         _draw_box(self.display_surface, box_center, box_size)
 
         text_surface = pygame.Surface(text.surface_rect.size, pygame.SRCALPHA)
         text.draw(text_surface)
-        self.display_surface.blit(
-            text_surface,
-            (
-                box_center[0] - text.surface_rect.width / 2,
-                box_center[1] - text.surface_rect.height / 2,
-            ),
-        )
-        self.confirm_button.move(
-            (
-                box_center[0] - self.confirm_button.rect.width / 2,
-                box_center[1] - self.confirm_button.rect.height + box_size[1] / 2,
-            )
-        )
+        current_y = box_center[1] - box_size[1] / 2
         self.display_surface.blit(
             allocation_img,
             (
                 SCREEN_WIDTH / 2 - allocation_img.get_width() / 2,
-                SCREEN_HEIGHT / 3 * 0.28,
+                current_y,
             ),
+        )
+        current_y += allocation_img.get_height()
+        self.display_surface.blit(
+            text_surface,
+            (
+                box_center[0] - text.surface_rect.width / 2,
+                current_y,
+            ),
+        )
+        current_y += text_surface.get_height()
+        self.confirm_button.move(
+            (
+                box_center[0] - self.confirm_button.rect.width / 2,
+                current_y,
+            )
         )
 
     def button_action(self, name: str) -> None:

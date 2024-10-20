@@ -1,5 +1,4 @@
 import pygame  # noqa
-import pygame.freetype
 import pytmx
 
 from src.enums import Map
