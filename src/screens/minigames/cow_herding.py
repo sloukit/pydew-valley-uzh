@@ -7,10 +7,11 @@ import pygame.gfxdraw
 from pathfinding.core.grid import Grid
 
 from src.controls import Controls
-from src.enums import Direction
+from src.enums import Direction, StudyGroup
 from src.exceptions import MinigameSetupError
 from src.groups import PersistentSpriteGroup
 from src.npc.behaviour.cow_behaviour_tree import CowConditionalBehaviourTree
+from src.npc.behaviour.npc_behaviour_tree import NPCBehaviourTree
 from src.npc.cow import Cow
 from src.npc.setup import AIData
 from src.npc.utils import pf_add_matrix_collision
@@ -103,6 +104,7 @@ class CowHerding(Minigame):
             self._ani_cd_start + self._ani_cd_ready_up_dur + self._ani_cd_dur
         )
 
+        self._opponent = None
         self._cows = []
         self._cows_initial_positions = []
         self._cows_total = 0
@@ -138,6 +140,9 @@ class CowHerding(Minigame):
         range_matrix = [row.copy() for row in AIData.Matrix]
 
         colliders = {}
+        for npc in self._state.game_map.npcs:
+            if npc.study_group == StudyGroup.OUTGROUP:
+                self._opponent = npc
         for obj in self._state.game_map.minigame_layer:
             if "COW" in obj.name:
                 pos = (obj.x * SCALE_FACTOR, obj.y * SCALE_FACTOR)
@@ -263,6 +268,7 @@ class CowHerding(Minigame):
                 for cow in self._cows:
                     cow.conditional_behaviour_tree = CowHerdingBehaviourTree.WanderRange
                     cow.continuous_behaviour_tree = CowHerdingBehaviourTree.Flee
+                self._opponent.conditional_behaviour_tree = NPCBehaviourTree.Woodcutting
 
     def draw(self):
         if self._ctime <= self._ani_cd_start:
