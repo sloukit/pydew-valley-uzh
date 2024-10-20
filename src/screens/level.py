@@ -4,6 +4,7 @@ import time
 import warnings
 from collections.abc import Callable
 from functools import partial
+from typing import cast
 
 import pygame
 
@@ -17,6 +18,7 @@ from src.exceptions import GameMapWarning
 from src.groups import AllSprites, PersistentSpriteGroup
 from src.gui.interface.emotes import NPCEmoteManager, PlayerEmoteManager
 from src.gui.scene_animation import SceneAnimation
+from src.npc.npc import NPC
 from src.npc.setup import AIData
 from src.overlay.game_time import GameTime
 from src.overlay.overlay import Overlay
@@ -29,11 +31,13 @@ from src.screens.minigames.base import Minigame
 from src.screens.minigames.cow_herding import CowHerding, CowHerdingState
 from src.settings import (
     DEFAULT_ANIMATION_NAME,
+    EMOTES_LIST,
     GAME_MAP,
     HEALTH_DECAY_VALUE,
     SCALED_TILE_SIZE,
     SCREEN_HEIGHT,
     SCREEN_WIDTH,
+    TOMATO_OR_CORN_LIST,
     MapDict,
     SoundDict,
 )
@@ -77,6 +81,7 @@ class Level:
     # emotes
     _emotes: dict
     player_emote_manager: PlayerEmoteManager
+    backup_emote_mgr: PlayerEmoteManager
     npc_emote_manager: NPCEmoteManager
 
     player: Player
@@ -143,7 +148,15 @@ class Level:
         self.soil_manager = SoilManager(self.all_sprites, self.frames["level"])
 
         self._emotes = self.frames["emotes"]
-        self.player_emote_manager = PlayerEmoteManager(self._emotes, self.all_sprites)
+        # add additional sprites for scripted sequence "decide_tomato_or_corn"
+        # extra sprites are fine, which sprites are actually shown on the wheel depends on emote_list param
+        for frame in TOMATO_OR_CORN_LIST:
+            self._emotes[frame] = [self.frames["overlay"][frame]]
+
+        self.player_emote_manager = PlayerEmoteManager(
+            self._emotes, EMOTES_LIST, self.all_sprites
+        )
+        self.backup_emote_mgr = self.player_emote_manager
         self.npc_emote_manager = NPCEmoteManager(self._emotes, self.all_sprites)
 
         self.player = Player(
@@ -481,6 +494,9 @@ class Level:
         debug_npc_receives_necklace = (
             self.player.controls.DEBUG_NPC_RECEIVES_NECKLACE.control_value
         )
+        debug_decide_tomato_or_corn = (
+            self.player.controls.DEBUG_DECIDE_TOMATO_OR_CORN.control_value
+        )
 
         if self.current_minigame and self.current_minigame.running:
             if self.current_minigame.handle_event(event):
@@ -518,6 +534,9 @@ class Level:
             if event.key == debug_npc_receives_necklace:
                 self.start_scripted_sequence(ScriptedSequenceType.NPC_RECEIVES_NECKLACE)
                 return True
+            if event.key == debug_decide_tomato_or_corn:
+                self.start_scripted_sequence(ScriptedSequenceType.DECIDE_TOMATO_OR_CORN)
+                return True
         if event.type == START_QUAKE:
             self.quaker.start(event.duration)
             if event.debug:
@@ -526,23 +545,38 @@ class Level:
         return False
 
     def start_scripted_sequence(self, sequence_type: ScriptedSequenceType):
-        if self.cutscene_animation.has_animation_name("ingroup_gathering"):
-            npcs = [
-                npc
-                for npc in self.game_map.npcs
-                if npc.study_group == StudyGroup.INGROUP
-            ]
+        # do not start new scripted sequence when one is already running
+        if self.cutscene_animation.active:
+            return
+
+        active_group = self.player.study_group
+        if active_group == StudyGroup.INGROUP:
+            animation_name = "ingroup_gathering"
+        else:
+            animation_name = "outgroup_gathering"
+
+        if self.cutscene_animation.has_animation_name(animation_name):
+            npcs: list[Player | NPC] = []
+            if self.game_map:
+                npcs = [
+                    npc
+                    for npc in self.game_map.npcs
+                    if npc.study_group == active_group and not npc.is_dead
+                ]
             if sequence_type == ScriptedSequenceType.NPC_RECEIVES_NECKLACE:
                 npc_in_center = random.choice(npcs)
                 npcs.remove(npc_in_center)
                 npcs.append(self.player)
             else:
                 npc_in_center = self.player
-            self.cutscene_animation.set_current_animation("ingroup_gathering")
+            self.cutscene_animation.set_current_animation(animation_name)
             self.cutscene_animation.is_end_condition_met = partial(
                 self.end_scripted_sequence, sequence_type, npc_in_center
             )
-            self.prev_player_pos = self.player.rect.center
+            if self.player.rect:
+                self.prev_player_pos = cast(
+                    tuple[int, int], self.player.rect.center
+                )  # else (0, 0)
             meeting_pos = self.cutscene_animation.targets[0].pos
             # move player other npc_in_center to the meeting point and make him face to the east (right)
             npc_in_center.teleport(meeting_pos)
@@ -552,11 +586,14 @@ class Level:
             npc_in_center.direction.update((0, 0))
 
             # spread all ingroup npc in half-circle of 2 * SCALED_TILE_SIZE diameter
-            # from north to south clockwise
+            # from north to south clockwise or counterclockwise (depends on group)
             # and make them face the player in the center
             distance = pygame.Vector2(0, -2 * SCALED_TILE_SIZE)
             rot_by = (180) / (len(npcs) - 1)
-            angle = 0
+            # the outgroup circle is layed out counterclockwise
+            if active_group == StudyGroup.OUTGROUP:
+                rot_by = -rot_by
+            angle = 0.0
 
             for npc in npcs:
                 new_pos = meeting_pos + distance.rotate(angle)
@@ -573,14 +610,11 @@ class Level:
             post_event(DIALOG_SHOW, dial=dialog_name)
 
     def end_scripted_sequence(
-        self, sequence_type: ScriptedSequenceType, npc: Character
+        self, sequence_type: ScriptedSequenceType, npc: NPC | Player
     ) -> bool:
         # prevent the scripted sequence from ending
-        # while dialog is still opened
         if self.player.blocked:
             return False
-
-        self.player.teleport(self.prev_player_pos)
 
         if sequence_type == ScriptedSequenceType.PLAYER_RECEIVES_HAT:
             npc.has_hat = True
@@ -588,11 +622,102 @@ class Level:
             npc.has_necklace = True
         elif sequence_type == ScriptedSequenceType.NPC_RECEIVES_NECKLACE:
             npc.has_necklace = True
+        elif sequence_type == ScriptedSequenceType.DECIDE_TOMATO_OR_CORN:
+            buy_list = TOMATO_OR_CORN_LIST
+            self.end_scripted_sequence_decide(buy_list)
+            return False
 
-        self.cutscene_animation.set_current_animation(DEFAULT_ANIMATION_NAME)
-        self.cutscene_animation.is_end_condition_met = lambda: True
+        self.scripted_sequence_cleanup()
 
         return True
+
+    def end_scripted_sequence_decide(self, buy_list: list[str]) -> None:
+        # just to make linter happy (game_map could be None)
+        if not self.game_map:
+            return
+
+        if buy_list[0] not in self.player_emote_manager.emote_wheel._emotes:
+            # check if emote was already displayed
+            # store current EmoteManager
+            self.backup_emote_mgr = self.player.emote_manager
+            # create and assign new EmoteManager with only 2 options to select from
+            self.player_emote_manager = PlayerEmoteManager(
+                self._emotes, buy_list, self.all_sprites
+            )
+            self.player.emote_manager = self.player_emote_manager
+            self.game_map.player_emote_manager = self.player_emote_manager
+            self.game_map._setup_emote_interactions()
+            # show EmoteWheel
+            # self.player.blocked = True
+            self.player_emote_manager.toggle_emote_wheel()
+            # still block the Scripted Sequence from finishing, until user makes selection
+        else:
+            if self.player_emote_manager.emote_wheel.visible:
+                # EmoteWheel is still displayed, waiting for his vote
+                return
+            else:
+                # Player has voted
+                # self.player.blocked = False
+                total_votes = 1
+                # how many Characters voted for the first option
+                first_item_votes = 0
+                players_vote = self.player_emote_manager.emote_wheel._current_emote
+                if players_vote == buy_list[0]:
+                    first_item_votes += 1
+
+                for npc in self.game_map.npcs:
+                    if npc.study_group == self.player.study_group and not npc.is_dead:
+                        # each NPC needs to vote
+                        total_votes += 1
+                        buy_item = random.choice(buy_list)
+                        if buy_item == buy_list[0]:
+                            first_item_votes += 1
+                        npc.emote_manager.show_emote(npc, buy_item)
+                # check which option has the majority of votes
+                # in case of draw, Player vote decides
+                if first_item_votes == total_votes / 2:
+                    total_votes += 1
+                    if players_vote == buy_list[0]:
+                        first_item_votes += 1
+                winner_item = (
+                    buy_list[0] if first_item_votes > total_votes / 2 else buy_list[1]
+                )
+                # restore backup EmoteManager
+                self.player_emote_manager = self.backup_emote_mgr
+                self.player.emote_manager = self.player_emote_manager
+                self.game_map.player_emote_manager = self.player_emote_manager
+                self.game_map._setup_emote_interactions()
+
+                # immediately switch to a new dialog with vote results
+                dialog_name = f"scripted_sequence_buy_{winner_item}"
+                post_event(DIALOG_SHOW, dial=dialog_name)
+                # start ending Scripted Sequence with a new end condition
+                if self.player.study_group == StudyGroup.INGROUP:
+                    animation_name = "ingroup_gathering_end"
+                else:
+                    animation_name = "outgroup_gathering_end"
+
+                self.cutscene_animation.set_current_animation(animation_name)
+                self.cutscene_animation.is_end_condition_met = (
+                    self.end_scripted_sequence_decision_result
+                )
+                self.cutscene_animation.reset()
+                self.cutscene_animation.start()
+
+    def end_scripted_sequence_decision_result(self) -> bool:
+        # prevent the scripted sequence from ending
+        # while dialog is still opened
+        if self.player.blocked:
+            return False
+
+        self.scripted_sequence_cleanup()
+
+        return True
+
+    def scripted_sequence_cleanup(self):
+        self.player.teleport(self.prev_player_pos)
+        self.cutscene_animation.set_current_animation(DEFAULT_ANIMATION_NAME)
+        self.cutscene_animation.is_end_condition_met = lambda: True
 
     def get_camera_center(self):
         if self.cutscene_animation:

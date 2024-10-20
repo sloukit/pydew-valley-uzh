@@ -98,6 +98,7 @@ class Controls(Control, Enum):
     DEBUG_PLAYER_RECEIVES_HAT = (pygame.K_j, "Player receives hat")
     DEBUG_PLAYER_RECEIVES_NECKLACE = (pygame.K_k, "Player receives necklace")
     DEBUG_NPC_RECEIVES_NECKLACE = (pygame.K_l, "NPC receives necklace")
+    DEBUG_DECIDE_TOMATO_OR_CORN = (pygame.K_u, "Decide: tomato or corn")
     EMOTE_WHEEL = (pygame.K_e, "Toggle Emote Wheel")
     DEBUG_SHOW_HITBOXES = (pygame.K_h, "Show Hitboxes")
     SHOW_PF_OVERLAY = (pygame.K_p, "Show Pathfinding")
