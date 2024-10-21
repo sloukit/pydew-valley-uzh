@@ -13,8 +13,8 @@ import sys
 import pygame
 
 from src import support
-from src.enums import GameState
-from src.events import DIALOG_ADVANCE, DIALOG_SHOW, OPEN_INVENTORY
+from src.enums import CustomCursor, GameState
+from src.events import DIALOG_ADVANCE, DIALOG_SHOW, OPEN_INVENTORY, SET_CURSOR
 from src.groups import AllSprites
 from src.gui.interface.dialog import DialogueManager
 from src.gui.setup import setup_gui
@@ -75,6 +75,10 @@ class Game:
 
         self.font: pygame.font.Font | None = None
         self.sounds: SoundDict | None = None
+
+        self._available_cursors: list[pygame.Surface] = []
+        self._cursor: int = CustomCursor.ARROW
+        self._cursor_img: pygame.Surface | None = None
 
         self.save_file = SaveFile.load()
 
@@ -152,6 +156,7 @@ class Game:
             self.round += 1
 
     def switch_state(self, state: GameState):
+        self.set_cursor(CustomCursor.ARROW)
         self.current_state = state
         if self.current_state == GameState.SAVE_AND_RESUME:
             self.save_file.set_soil_data(*self.level.soil_manager.all_soil_sprites())
@@ -167,6 +172,18 @@ class Game:
             self.player.direction.update((0, 0))
         else:
             self.player.blocked = False
+
+    def set_cursor(self, cursor: CustomCursor, override: bool = False):
+        if self._cursor != cursor:
+            # ensure the cursor does not get switched back to CustomCursor.POINT during
+            # click animation
+            if (
+                self._cursor != CustomCursor.CLICK
+                or cursor != CustomCursor.POINT
+                or override
+            ):
+                self._cursor = cursor
+                self._cursor_img = self._available_cursors[self._cursor]
 
     def load_assets(self):
         self.tmx_maps = support.tmx_importer("data/maps")
@@ -210,6 +227,15 @@ class Game:
         }
         prepare_checkmark_for_buttons(self.frames["checkmark"])
 
+        for member in CustomCursor:
+            cursor = pygame.image.load(
+                support.resource_path(f"images/ui/cursor/{member.value}.png")
+            ).convert_alpha()
+            cursor = pygame.transform.scale_by(cursor, 4)
+            self._available_cursors.append(cursor)
+
+        self._cursor_img = self._available_cursors[CustomCursor.ARROW]
+
         setup_entity_assets()
 
         setup_gui()
@@ -246,7 +272,20 @@ class Game:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        if event.type == OPEN_INVENTORY:
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == pygame.BUTTON_LEFT:
+                if self._cursor == CustomCursor.POINT:
+                    self.set_cursor(CustomCursor.CLICK)
+            return False  # allow UI elements to handle this event as well
+
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if event.button == pygame.BUTTON_LEFT:
+                if self._cursor == CustomCursor.CLICK:
+                    self.set_cursor(CustomCursor.POINT, override=True)
+            return False
+
+        elif event.type == OPEN_INVENTORY:
             self.switch_state(GameState.INVENTORY)
             return True
         elif event.type == DIALOG_SHOW:
@@ -263,11 +302,13 @@ class Game:
                 if not self.dialogue_manager.showing_dialogue:
                     self.player.blocked = False
             return True
+        elif event.type == SET_CURSOR:
+            self.set_cursor(event.cursor)
+            return True
         return False
 
     async def run(self):
         pygame.mouse.set_visible(False)
-        mouse = pygame.image.load(support.resource_path("images/ui/Cursor.png"))
         is_first_frame = True
         while self.running:
             dt = self.clock.tick() / 1000
@@ -312,7 +353,7 @@ class Game:
             mouse_pos = pygame.mouse.get_pos()
             if not self.game_paused() or is_first_frame:
                 self.previous_frame = self.display_surface.copy()
-            self.display_surface.blit(mouse, mouse_pos)
+            self.display_surface.blit(self._cursor_img, mouse_pos)
             is_first_frame = False
             pygame.display.update()
             await asyncio.sleep(0)

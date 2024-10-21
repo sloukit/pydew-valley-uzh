@@ -2,7 +2,8 @@ from typing import Callable
 
 import pygame
 
-from src.enums import GameState, InventoryResource
+from src.enums import CustomCursor, GameState, InventoryResource
+from src.events import SET_CURSOR, post_event
 from src.gui.menu.abstract_menu import AbstractMenu
 from src.gui.menu.components import ArrowButton, InputField
 from src.screens.minigames.gui import (
@@ -256,9 +257,9 @@ class PlayerTask(AbstractMenu):
     def mouse_hover(self) -> None:
         for element in [*self.buttons, *self.input_fields]:
             if element.hover_active:
-                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                post_event(SET_CURSOR, cursor=CustomCursor.POINT)
                 return
-        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+        post_event(SET_CURSOR, cursor=CustomCursor.ARROW)
 
     def draw(self) -> None:
         self._surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)

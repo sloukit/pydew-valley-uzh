@@ -361,3 +361,9 @@ class ScriptedSequenceType(StrEnum):
     PLAYERS_BIRTHDAY = "players_birthday"
     NPC_RECEIVES_NECKLACE = "npc_receives_necklace"
     DECIDE_TOMATO_OR_CORN = "decide_tomato_or_corn"
+
+
+class CustomCursor(IntEnum):
+    ARROW = 0
+    POINT = 1
+    CLICK = 2
