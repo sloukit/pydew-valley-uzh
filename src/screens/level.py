@@ -317,7 +317,6 @@ class Level:
                     collision_sprites=self.collision_sprites,
                     overlay=self.overlay,
                     sounds=self.sounds,
-                    get_camera_center=self.get_camera_center,
                 )
             )
 
@@ -719,11 +718,8 @@ class Level:
         self.cutscene_animation.set_current_animation(DEFAULT_ANIMATION_NAME)
         self.cutscene_animation.is_end_condition_met = lambda: True
 
-    def get_camera_center(self):
-        if self.cutscene_animation:
-            return self.cutscene_animation.get_current_position()
-
-        return self.player.rect.center
+    def get_camera_pos(self):
+        return self.camera.state.topleft
 
     def start_transition(self):
         self.player.blocked = True
@@ -790,9 +786,7 @@ class Level:
     # region debug-overlays
     def draw_hitboxes(self):
         if self.show_hitbox_active:
-            offset = pygame.Vector2(0, 0)
-            offset.x = -(self.get_camera_center()[0] - SCREEN_WIDTH / 2)
-            offset.y = -(self.get_camera_center()[1] - SCREEN_HEIGHT / 2)
+            offset = pygame.Vector2(self.get_camera_pos())
 
             for sprite in self.collision_sprites:
                 rect = sprite.rect.copy()
@@ -830,9 +824,7 @@ class Level:
 
     def draw_pf_overlay(self):
         if self.show_pf_overlay:
-            offset = pygame.Vector2(0, 0)
-            offset.x = -(self.get_camera_center()[0] - SCREEN_WIDTH / 2)
-            offset.y = -(self.get_camera_center()[1] - SCREEN_HEIGHT / 2)
+            offset = pygame.Vector2(self.get_camera_pos())
 
             if AIData.setup:
                 for y in range(len(AIData.Matrix)):

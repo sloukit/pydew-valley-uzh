@@ -53,7 +53,6 @@ class CowHerdingState(MinigameState):
     collision_sprites: PersistentSpriteGroup
     overlay: Overlay
     sounds: SoundDict
-    get_camera_center: Callable[[], pygame.Vector2 | tuple[float, float]]
 
 
 class CowHerding(Minigame):
