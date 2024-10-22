@@ -38,7 +38,7 @@ class RoundMenu(GeneralMenu):
         options = ["continue to next round"]
         size = (400, 400)
         super().__init__(title, options, switch_screen, size)
-        self.background = pygame.Surface(self.display_surface.size)
+        self.background = pygame.Surface(self.display_surface.get_size())
         self.stats_options = [""]
 
         self.textUIs = []
