@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 
 import pygame
-import pygame.freetype
 
 from src.colors import (
     SL_ORANGE_BRIGHT,
@@ -68,12 +67,12 @@ class TextChunk(LayoutRect):
     def __init__(
         self,
         text: str,
-        font: pygame.freetype.Font,
+        font: pygame.Font,
         color: tuple[int, int, int] = SL_ORANGE_BRIGHTEST,
     ):
         self.font = font
         self.text = text
-        self.text_rect = self.font.get_rect(text)
+        self.text_rect = pygame.Rect((0, 0), self.font.size(text))
 
         self.color = color
 
@@ -81,10 +80,10 @@ class TextChunk(LayoutRect):
 
         super().__init__(dimensions)
 
-        self.height = self.font.get_sized_height(self.font.size)
+        self.height = self.font.get_height()
 
     def draw(self):
-        return self.font.render(self.text, fgcolor=self.color)[0]
+        return self.font.render(text=self.text, antialias=True, color=self.color)
 
 
 class Linebreak(LayoutRect):
@@ -108,9 +107,9 @@ class Text:
         max_line_width: int,
     ) -> int:
         if current_line:
-            max_baseline_y = max([chunk.text_rect.y for chunk in current_line])
+            max_baseline_y = max([chunk.font.get_ascent() for chunk in current_line])
             for chunk in current_line:
-                chunk.y += max_baseline_y - chunk.text_rect.y
+                chunk.y += max_baseline_y - chunk.font.get_ascent()
             current_line.clear()
 
         if current_position.x > max_line_width:
@@ -127,8 +126,9 @@ class Text:
 
             if isinstance(text_chunk, TextChunk):
                 current_position.x += text_chunk.width
-                if line_height < text_chunk.height:
-                    line_height = text_chunk.height
+                chunk_line_height = text_chunk.font.get_linesize()
+                if line_height < chunk_line_height:
+                    line_height = chunk_line_height
                 current_line.append(text_chunk)
 
             elif isinstance(text_chunk, Linebreak):

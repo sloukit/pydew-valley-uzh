@@ -152,7 +152,7 @@ class Level:
         # add additional sprites for scripted sequence "decide_tomato_or_corn"
         # extra sprites are fine, which sprites are actually shown on the wheel depends on emote_list param
         for frame in TOMATO_OR_CORN_LIST:
-            self._emotes[frame] = [self.frames["overlay"][frame]]
+            self._emotes[frame] = [self.frames["items"][frame]]
 
         self.player_emote_manager = PlayerEmoteManager(
             self._emotes, EMOTES_LIST, self.all_sprites
@@ -526,6 +526,11 @@ class Level:
         if self.controls.DEBUG_PLAYER_RECEIVES_NECKLACE.click:
             self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE)
 
+        if self.controls.DEBUG_PLAYER_RECEIVES_NECKLACE_BD.click:
+            self.start_scripted_sequence(
+                ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE_BD
+            )
+
         if self.controls.DEBUG_NPC_RECEIVES_NECKLACE.click:
             self.start_scripted_sequence(ScriptedSequenceType.NPC_RECEIVES_NECKLACE)
 
@@ -616,6 +621,8 @@ class Level:
         if sequence_type == ScriptedSequenceType.PLAYER_RECEIVES_HAT:
             npc.has_hat = True
         elif sequence_type == ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE:
+            npc.has_necklace = True
+        elif sequence_type == ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE_BD:
             npc.has_necklace = True
         elif sequence_type == ScriptedSequenceType.NPC_RECEIVES_NECKLACE:
             npc.has_necklace = True

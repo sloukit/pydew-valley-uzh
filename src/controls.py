@@ -102,6 +102,10 @@ class Controls(Control, Enum):
     DEBUG_END_ROUND = (pygame.K_r, "Skip to End of Round")
     DEBUG_PLAYER_RECEIVES_HAT = (pygame.K_j, "Player receives hat")
     DEBUG_PLAYER_RECEIVES_NECKLACE = (pygame.K_k, "Player receives necklace")
+    DEBUG_PLAYER_RECEIVES_NECKLACE_BD = (
+        pygame.K_o,
+        "Player receives necklace for birthday",
+    )
     DEBUG_NPC_RECEIVES_NECKLACE = (pygame.K_l, "NPC receives necklace")
     DEBUG_DECIDE_TOMATO_OR_CORN = (pygame.K_u, "Decide: tomato or corn")
     DEBUG_SHOW_HITBOXES = (pygame.K_h, "Show Hitboxes")
