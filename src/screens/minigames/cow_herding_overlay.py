@@ -2,7 +2,6 @@ import math
 from typing import Callable
 
 import pygame
-import pygame.freetype
 
 from src.colors import SL_ORANGE_BRIGHT, SL_ORANGE_BRIGHTEST
 from src.gui.menu.abstract_menu import AbstractMenu
@@ -14,7 +13,7 @@ from src.screens.minigames.gui import (
     _ReturnButton,
 )
 from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH
-from src.support import get_outline, import_font, import_freetype_font
+from src.support import get_outline, import_font
 
 
 class _CowHerdingScoreboard(AbstractMenu):
@@ -24,10 +23,10 @@ class _CowHerdingScoreboard(AbstractMenu):
 
     _surface: pygame.Surface | None
 
-    font_title: pygame.freetype.Font
-    font_number: pygame.freetype.Font
-    font_description: pygame.freetype.Font
-    font_button: pygame.freetype.Font
+    font_title: pygame.Font
+    font_number: pygame.Font
+    font_description: pygame.Font
+    font_button: pygame.Font
 
     def __init__(self, return_func: Callable[[], None]):
         super().__init__(title="Cow Herding", size=(SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -39,10 +38,10 @@ class _CowHerdingScoreboard(AbstractMenu):
 
         self._surface = None
 
-        self.font_title = import_freetype_font(48, "font/LycheeSoda.ttf")
-        self.font_number = import_freetype_font(36, "font/LycheeSoda.ttf")
-        self.font_description = import_freetype_font(24, "font/LycheeSoda.ttf")
-        self.font_button = import_freetype_font(32, "font/LycheeSoda.ttf")
+        self.font_title = import_font(48, "font/LycheeSoda.ttf")
+        self.font_number = import_font(36, "font/LycheeSoda.ttf")
+        self.font_description = import_font(24, "font/LycheeSoda.ttf")
+        self.font_button = import_font(32, "font/LycheeSoda.ttf")
 
     def setup(self, time_needed: float, cows_herded_in: int):
         box_center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
@@ -136,8 +135,8 @@ class _CowHerdingOverlay:
     font_countdown: pygame.Font
     font_timer: pygame.Font
 
-    font_description: pygame.freetype.Font
-    font_objective: pygame.freetype.Font
+    font_description: pygame.Font
+    font_objective: pygame.Font
 
     timer_chars: dict[str, pygame.Surface]
     timer_char_width: int
@@ -149,8 +148,8 @@ class _CowHerdingOverlay:
         self.font_countdown = import_font(128, "font/LycheeSoda.ttf")
         self.font_timer = import_font(48, "font/LycheeSoda.ttf")
 
-        self.font_description = import_freetype_font(32, "font/LycheeSoda.ttf")
-        self.font_objective = import_freetype_font(24, "font/LycheeSoda.ttf")
+        self.font_description = import_font(32, "font/LycheeSoda.ttf")
+        self.font_objective = import_font(24, "font/LycheeSoda.ttf")
 
         # maps all chars in "01234567890.:" to pygame surfaces rendered with font_timer
         self.timer_chars = {
@@ -233,7 +232,6 @@ class _CowHerdingOverlay:
         box_center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4)
 
         text = Text(
-            Linebreak((0, 18)),
             TextChunk("Cow Herding Minigame", self.font_description),
             Linebreak(),
             Linebreak((0, 24)),
@@ -276,7 +274,7 @@ class _CowHerdingOverlay:
             self.display_surface,
             (
                 box_top_right[0] - text.surface_rect.width / 2,
-                box_top_right[1] + text.surface_rect.height / 2 - padding,
+                box_top_right[1] + text.surface_rect.height / 2,
             ),
             (
                 text.surface_rect.width + padding * 2,
