@@ -358,5 +358,6 @@ class ClockVersion(IntEnum):
 class ScriptedSequenceType(StrEnum):
     PLAYER_RECEIVES_HAT = "player_receives_hat"
     PLAYER_RECEIVES_NECKLACE = "player_receives_necklace"
+    PLAYER_RECEIVES_NECKLACE_BD = "player_receives_necklace_bd"
     NPC_RECEIVES_NECKLACE = "npc_receives_necklace"
     DECIDE_TOMATO_OR_CORN = "decide_tomato_or_corn"
