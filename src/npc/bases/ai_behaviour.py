@@ -6,8 +6,10 @@ from collections.abc import Callable
 import pygame
 from pathfinding.core.grid import Grid
 
-from src.npc.bases.ai_behaviour_base import AIBehaviourBase, AIState
+from src.enums import AIState
+from src.npc.bases.ai_behaviour_base import AIBehaviourBase
 from src.npc.behaviour.ai_behaviour_tree_base import ContextType, NodeWrapper
+from src.npc.path_scripting import AIScriptedPath
 from src.settings import SCALED_TILE_SIZE
 
 
@@ -25,6 +27,8 @@ class AIBehaviour(AIBehaviourBase, ABC):
 
         self.pf_path = []
 
+        self._script = None
+
         self.behaviour_tree_context = behaviour_tree_context
         self.conditional_behaviour_tree = None
         self.continuous_behaviour_tree = None
@@ -33,6 +37,8 @@ class AIBehaviour(AIBehaviourBase, ABC):
         self.__on_path_completion_funcs = []
 
         self.__on_stop_moving_funcs = []
+
+        self.__on_script_finish_funcs = []
 
     @property
     def conditional_behaviour_tree(self):
@@ -81,6 +87,9 @@ class AIBehaviour(AIBehaviourBase, ABC):
         return
 
     def exit_idle(self):
+        if self._script and self._script.running:
+            self._progress_script()
+
         if self.conditional_behaviour_tree is not None:
             self.conditional_behaviour_tree.run(self.behaviour_tree_context)
 
@@ -89,6 +98,9 @@ class AIBehaviour(AIBehaviourBase, ABC):
         return
 
     def stop_moving(self):
+        if self._script and self._script.running:
+            self._progress_script()
+
         for func in self.__on_stop_moving_funcs:
             func()
 
@@ -96,6 +108,42 @@ class AIBehaviour(AIBehaviourBase, ABC):
         self.__on_path_completion_funcs.clear()
         self.__on_stop_moving_funcs.clear()
         return
+
+    def on_script_finish(self, func: Callable[[], None]):
+        self.__on_script_finish_funcs.append(func)
+        return
+
+    def finish_script(self):
+        self._script.running = False
+        self.speed = self._script.previous_speed
+
+        for func in self.__on_script_finish_funcs:
+            func()
+        return
+
+    def run_script(self, script: AIScriptedPath):
+        self._script = script
+        self._script.previous_speed = self.speed
+        self._script.running = True
+        self._progress_script()
+
+    def _progress_script(self):
+        try:
+            waypoint = self._script.waypoints[self._script.index]
+        except IndexError:
+            self.finish_script()
+            return
+
+        if self._script.next_state == AIState.IDLE:
+            if self.pf_state == AIState.MOVING:
+                self.abort_path()
+            self.pf_state_duration = waypoint.waiting_duration
+            self._script.next_state = AIState.MOVING
+        else:
+            self.create_path_to_tile(waypoint.pos)
+            self.speed = waypoint.speed
+            self._script.next_state = AIState.IDLE
+            self._script.index += 1
 
     def create_path_to_tile(self, coord: tuple[int, int], pf_grid: Grid = None) -> bool:
         """
