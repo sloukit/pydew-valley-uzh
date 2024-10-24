@@ -1,5 +1,6 @@
 import json
 import typing
+from typing import TextIO
 
 _DOUBLE_SLASH = "//"
 
@@ -32,3 +33,13 @@ def json_loads(s: str, **kwargs) -> typing.Any:
     Wrapper function for `json.loads`, with custom decoder.
     """
     return json.loads(s, cls=JSONWithCommentsDecoder, **kwargs)
+
+
+def json_load(stream: TextIO, **kwargs) -> typing.Any:
+    """Helper function to decode a JSON file.
+
+    JSON inputs can contain comments beginning with //.
+
+    Wrapper function for `json.load`, with custom decoder.
+    """
+    return json.load(stream, cls=JSONWithCommentsDecoder, **kwargs)
