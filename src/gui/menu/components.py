@@ -253,6 +253,7 @@ class KeySetup(Component):
         unicode: str,
         pos: tuple[int, int],
         image: pygame.Surface,
+        description_slider_rect : pygame.Rect,
     ):
         # params
         self.name = name
@@ -267,7 +268,7 @@ class KeySetup(Component):
 
         # rect
         self.pos = pos
-        self.rect = pygame.Rect(pos, (300, 50))
+        self.rect = pygame.Rect(pos, (description_slider_rect.width - 75, 50))
         self.offset = vector()
         super().__init__(self.rect)
 
