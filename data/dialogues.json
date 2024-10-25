@@ -14,10 +14,9 @@
     ["Special event!", "We gather her for a special occasion"],
     ["Special event!", "You have received a necklace!"]
   ],
-  "scripted_sequence_player_receives_necklace_bd": [
+  "scripted_sequence_players_birthday": [
     ["Special event!", "We gather her for a special occasion"],
-    ["Special event!", "Happy birthday!"],
-    ["Special event!", "You have received a special birthday necklace"]
+    ["Special event!", "We wish you a Happy birthday!"]
   ],
   "scripted_sequence_npc_receives_necklace": [
     ["Special event!", "We gather her for a special occasion"],
