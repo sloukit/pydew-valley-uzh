@@ -98,14 +98,11 @@ class Controls(Control, Enum):
     ADVANCE_DIALOG = (pygame.K_SPACE, "Advance Dialog")
 
     DEBUG_QUAKE = (pygame.K_m, "Start Earthquake Effect")
-    DEDUG_PLAYER_TASK = (pygame.K_b, "Show Player Task")
+    DEBUG_PLAYER_TASK = (pygame.K_b, "Show Player Task")
     DEBUG_END_ROUND = (pygame.K_r, "Skip to End of Round")
     DEBUG_PLAYER_RECEIVES_HAT = (pygame.K_j, "Player receives hat")
     DEBUG_PLAYER_RECEIVES_NECKLACE = (pygame.K_k, "Player receives necklace")
-    DEBUG_PLAYER_RECEIVES_NECKLACE_BD = (
-        pygame.K_o,
-        "Player receives necklace for birthday",
-    )
+    DEBUG_PLAYERS_BIRTHDAY = (pygame.K_o, "Player's birthday")
     DEBUG_NPC_RECEIVES_NECKLACE = (pygame.K_l, "NPC receives necklace")
     DEBUG_DECIDE_TOMATO_OR_CORN = (pygame.K_u, "Decide: tomato or corn")
     DEBUG_SHOW_HITBOXES = (pygame.K_h, "Show Hitboxes")

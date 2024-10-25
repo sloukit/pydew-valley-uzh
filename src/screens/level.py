@@ -514,7 +514,7 @@ class Level:
         if self.controls.DEBUG_QUAKE.click:
             post_event(START_QUAKE, duration=2.0, debug=True)
 
-        if self.controls.DEDUG_PLAYER_TASK.click:
+        if self.controls.DEBUG_PLAYER_TASK.click:
             self.switch_screen(GameState.PLAYER_TASK)
 
         if self.controls.DEBUG_END_ROUND.click:
@@ -526,10 +526,8 @@ class Level:
         if self.controls.DEBUG_PLAYER_RECEIVES_NECKLACE.click:
             self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE)
 
-        if self.controls.DEBUG_PLAYER_RECEIVES_NECKLACE_BD.click:
-            self.start_scripted_sequence(
-                ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE_BD
-            )
+        if self.controls.DEBUG_PLAYERS_BIRTHDAY.click:
+            self.start_scripted_sequence(ScriptedSequenceType.PLAYERS_BIRTHDAY)
 
         if self.controls.DEBUG_NPC_RECEIVES_NECKLACE.click:
             self.start_scripted_sequence(ScriptedSequenceType.NPC_RECEIVES_NECKLACE)
@@ -622,8 +620,8 @@ class Level:
             npc.has_hat = True
         elif sequence_type == ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE:
             npc.has_necklace = True
-        elif sequence_type == ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE_BD:
-            npc.has_necklace = True
+        elif sequence_type == ScriptedSequenceType.PLAYERS_BIRTHDAY:
+            pass
         elif sequence_type == ScriptedSequenceType.NPC_RECEIVES_NECKLACE:
             npc.has_necklace = True
         elif sequence_type == ScriptedSequenceType.DECIDE_TOMATO_OR_CORN:
