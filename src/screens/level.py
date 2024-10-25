@@ -12,6 +12,7 @@ from src.camera import Camera
 from src.camera.camera_target import CameraTarget
 from src.camera.quaker import Quaker
 from src.camera.zoom_manager import ZoomManager
+from src.controls import Controls
 from src.enums import FarmingTool, GameState, Map, ScriptedSequenceType, StudyGroup
 from src.events import DIALOG_ADVANCE, DIALOG_SHOW, START_QUAKE, post_event
 from src.exceptions import GameMapWarning
@@ -159,11 +160,14 @@ class Level:
         self.backup_emote_mgr = self.player_emote_manager
         self.npc_emote_manager = NPCEmoteManager(self._emotes, self.all_sprites)
 
+        self.controls = Controls
+
         self.player = Player(
             pos=(0, 0),
             assets=copy.deepcopy(ENTITY_ASSETS.RABBIT),
             groups=(),
             collision_sprites=self.collision_sprites,
+            controls=self.controls,
             apply_tool=self.apply_tool,
             plant_collision=self.plant_collision,
             interact=self.interact,
@@ -349,8 +353,8 @@ class Level:
         area = self.soil_manager.get_area(character.study_group)
         if area.plant_sprites:
             for plant in area.plant_sprites:
-                if plant.rect.colliderect(character.hitbox_rect):
-                    x, y = map_coords_to_tile(plant.rect.center)
+                if plant.hitbox_rect.colliderect(character.hitbox_rect):
+                    x, y = map_coords_to_tile(plant.hitbox_rect.midbottom)
                     area.harvest((x, y), character.add_resource, self.create_particle)
 
     def switch_to_map(self, map_name: Map):
@@ -479,78 +483,68 @@ class Level:
                 self.player.has_horn = True
 
     def handle_event(self, event: pygame.event.Event) -> bool:
-        hitbox_key = self.player.controls.DEBUG_SHOW_HITBOXES.control_value
-        dialog_key = self.player.controls.SHOW_DIALOG.control_value
-        pf_overlay_key = self.player.controls.SHOW_PF_OVERLAY.control_value
-        advance_dialog_key = self.player.controls.ADVANCE_DIALOG.control_value
-        round_end_key = self.player.controls.END_ROUND.control_value
-        player_task_key = self.player.controls.DEDUG_PLAYER_TASK.control_value
-        debug_player_receives_hat = (
-            self.player.controls.DEBUG_PLAYER_RECEIVES_HAT.control_value
-        )
-        debug_player_receives_necklace = (
-            self.player.controls.DEBUG_PLAYER_RECEIVES_NECKLACE.control_value
-        )
-        debug_player_receives_necklace_bd = (
-            self.player.controls.DEBUG_PLAYER_RECEIVES_NECKLACE_BD.control_value
-        )
-        debug_npc_receives_necklace = (
-            self.player.controls.DEBUG_NPC_RECEIVES_NECKLACE.control_value
-        )
-        debug_decide_tomato_or_corn = (
-            self.player.controls.DEBUG_DECIDE_TOMATO_OR_CORN.control_value
-        )
-
         if self.current_minigame and self.current_minigame.running:
             if self.current_minigame.handle_event(event):
                 return True
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                self.switch_screen(GameState.PAUSE)
-                return True
-            if event.key == hitbox_key:
-                self.show_hitbox_active = not self.show_hitbox_active
-                return True
-            if event.key == player_task_key:
-                self.switch_screen(GameState.PLAYER_TASK)
-                return True
-            if event.key == dialog_key:
-                post_event(DIALOG_SHOW, dial="test")
-                return True
-            if event.key == advance_dialog_key:
-                post_event(DIALOG_ADVANCE)
-                return True
-            if event.key == pf_overlay_key:
-                self.show_pf_overlay = not self.show_pf_overlay
-                return True
-            if event.key == round_end_key:
-                self.switch_screen(GameState.ROUND_END)
-            if event.key == debug_player_receives_hat:
-                self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_HAT)
-                return True
-            if event.key == debug_player_receives_necklace:
-                self.start_scripted_sequence(
-                    ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE
-                )
-                return True
-            if event.key == debug_player_receives_necklace_bd:
-                self.start_scripted_sequence(
-                    ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE_BD
-                )
-                return True
-            if event.key == debug_npc_receives_necklace:
-                self.start_scripted_sequence(ScriptedSequenceType.NPC_RECEIVES_NECKLACE)
-                return True
-            if event.key == debug_decide_tomato_or_corn:
-                self.start_scripted_sequence(ScriptedSequenceType.DECIDE_TOMATO_OR_CORN)
-                return True
         if event.type == START_QUAKE:
             self.quaker.start(event.duration)
             if event.debug:
                 self.set_round(7)
+            return True
+
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                self.switch_screen(GameState.PAUSE)
+                return True
+            self.controls.update_control_state(event.key, True)
+        elif event.type == pygame.KEYUP:
+            self.controls.update_control_state(event.key, False)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            self.controls.update_control_state(event.button, True)
+        elif event.type == pygame.MOUSEBUTTONUP:
+            self.controls.update_control_state(event.button, False)
 
         return False
+
+    def handle_controls(self):
+        if self.controls.ADVANCE_DIALOG.click:
+            post_event(DIALOG_ADVANCE)
+
+        if self.controls.DEBUG_QUAKE.click:
+            post_event(START_QUAKE, duration=2.0, debug=True)
+
+        if self.controls.DEDUG_PLAYER_TASK.click:
+            self.switch_screen(GameState.PLAYER_TASK)
+
+        if self.controls.DEBUG_END_ROUND.click:
+            self.switch_screen(GameState.ROUND_END)
+
+        if self.controls.DEBUG_PLAYER_RECEIVES_HAT.click:
+            self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_HAT)
+
+        if self.controls.DEBUG_PLAYER_RECEIVES_NECKLACE.click:
+            self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE)
+
+        if self.controls.DEBUG_PLAYER_RECEIVES_NECKLACE_BD.click:
+            self.start_scripted_sequence(
+                ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE_BD
+            )
+
+        if self.controls.DEBUG_NPC_RECEIVES_NECKLACE.click:
+            self.start_scripted_sequence(ScriptedSequenceType.NPC_RECEIVES_NECKLACE)
+
+        if self.controls.DEBUG_DECIDE_TOMATO_OR_CORN.click:
+            self.start_scripted_sequence(ScriptedSequenceType.DECIDE_TOMATO_OR_CORN)
+
+        if self.controls.DEBUG_SHOW_HITBOXES.click:
+            self.show_hitbox_active = not self.show_hitbox_active
+
+        if self.controls.DEBUG_SHOW_PF_OVERLAY.click:
+            self.show_pf_overlay = not self.show_pf_overlay
+
+        if self.controls.DEBUG_SHOW_DIALOG.click:
+            post_event(DIALOG_SHOW, dial="test")
 
     def start_scripted_sequence(self, sequence_type: ScriptedSequenceType):
         # do not start new scripted sequence when one is already running
@@ -916,6 +910,8 @@ class Level:
 
     def update(self, dt: float, move_things: bool = True):
         # update
+        self.handle_controls()
+
         self.game_time.update()
         self.check_map_exit()
         self.check_outgroup_logic()
@@ -951,3 +947,6 @@ class Level:
 
             self.decay_health()
         self.draw(dt, move_things)
+
+        for control in self.controls:
+            control.click = False
