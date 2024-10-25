@@ -133,7 +133,9 @@ class KeybindsDescription(Description):
             image = pygame.transform.scale(image, (40, 40))
 
             topleft = (10, 10 + 60 * index)
-            key_setup_button = KeySetup(name, control, unicode, topleft, image)
+            key_setup_button = KeySetup(
+                name, control, unicode, topleft, image, self.description_slider_rect
+            )
             self.keys_group.append(key_setup_button)
 
             index += 1
