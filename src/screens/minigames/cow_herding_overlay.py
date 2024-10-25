@@ -100,26 +100,6 @@ class _CowHerdingScoreboard(AbstractMenu):
         self._return_button = _ReturnButton(self._return_button_text)
         self.buttons.append(self._return_button)
 
-    def handle_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
-            self.pressed_button = self.get_hovered_button()
-            if self.pressed_button:
-                self.pressed_button.start_press_animation()
-                return True
-
-        if event.type == pygame.MOUSEBUTTONUP:
-            if self.pressed_button:
-                self.pressed_button.start_release_animation()
-
-                if self.pressed_button.mouse_hover():
-                    self.button_action(self.pressed_button.text)
-                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-
-                self.pressed_button = None
-                return True
-
-        return False
-
     def draw_title(self):
         self.display_surface.blit(self._surface, (0, 0))
 

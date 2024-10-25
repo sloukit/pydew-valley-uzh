@@ -209,6 +209,9 @@ class PlayerTask(AbstractMenu):
         self.buttons.append(self.confirm_button)
 
     def handle_event(self, event: pygame.event.Event) -> bool:
+        if super().handle_event(event):
+            return True
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             for i, entry_field in enumerate(self.input_fields):
                 if entry_field.mouse_hover():
@@ -240,6 +243,8 @@ class PlayerTask(AbstractMenu):
                 self.allocations[self.active_input] = min(
                     new_value, self.max_allocation
                 )
+            else:
+                return False
             if sum(self.allocations) > self.total_items:
                 self.allocations[self.active_input] -= (
                     sum(self.allocations) - self.total_items

@@ -126,27 +126,18 @@ class GeneralMenu(AbstractMenu):
             generic_button_rect = rect.move(0, button_height + space)
 
     def handle_event(self, event: pygame.event.Event) -> bool:
+        if super().handle_event(event):
+            return True
+
         if event.type == pygame.MOUSEBUTTONDOWN and mouse_buttons()[0]:
             self.pressed_button = self.get_hovered_button()
             if self.input_box.collidepoint(event.pos):
                 self.input_active = True
+                return True
             else:
                 self.input_active = False
-            if self.pressed_button:
-                self.pressed_button.start_press_animation()
-                return True
 
-        if event.type == pygame.MOUSEBUTTONUP:
-            if self.pressed_button:
-                self.pressed_button.start_release_animation()
-                if self.pressed_button.mouse_hover():
-                    self.button_action(self.pressed_button.text)
-                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-
-                self.pressed_button = None
-                return True
-
-        if event.type == pygame.KEYDOWN and self.input_active:
+        elif event.type == pygame.KEYDOWN and self.input_active:
             if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
                 if self.input_text:
                     if self.validate_token(self.input_text):
@@ -160,9 +151,11 @@ class GeneralMenu(AbstractMenu):
                 self.input_text = self.input_text[:-1]
             else:
                 self.input_text += event.unicode
+
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if self.input_box.collidepoint(event.pos) and self.input_active:
                 self.input_active = True
+                return True
             else:
                 self.input_active = False
         return False
