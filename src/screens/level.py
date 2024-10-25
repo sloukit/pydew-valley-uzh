@@ -882,12 +882,14 @@ class Level:
         self.player.hp = self.overlay.health_bar.hp
         self.display_surface.fill((130, 168, 132))
         self.all_sprites.draw(self.camera)
+
+        self.draw_pf_overlay()
+        self.draw_hitboxes()
+
         self.zoom_manager.apply_zoom()
         if move_things:
             self.sky.display(self.get_round())
 
-        self.draw_pf_overlay()
-        self.draw_hitboxes()
         self.draw_overlay()
 
         if self.current_minigame and self.current_minigame.running:
