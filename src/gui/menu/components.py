@@ -253,7 +253,7 @@ class KeySetup(Component):
         unicode: str,
         pos: tuple[int, int],
         image: pygame.Surface,
-        description_slider_rect : pygame.Rect,
+        description_slider_rect: pygame.Rect,
     ):
         # params
         self.name = name
