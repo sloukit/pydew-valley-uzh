@@ -140,6 +140,7 @@ class Game:
             GameState.OUTGROUP_MENU: self.outgroup_menu,
         }
         self.current_state = GameState.MAIN_MENU
+        self.next_state = GameState.MAIN_MENU
 
         # intro to in-group msg.
         self.intro_txt_shown = False
@@ -152,17 +153,17 @@ class Game:
             self.round += 1
 
     def switch_state(self, state: GameState):
-        self.current_state = state
-        if self.current_state == GameState.SAVE_AND_RESUME:
+        self.next_state = state
+        if self.next_state == GameState.SAVE_AND_RESUME:
             self.save_file.set_soil_data(*self.level.soil_manager.all_soil_sprites())
             self.level.player.save()
-            self.current_state = GameState.PLAY
-        if self.current_state == GameState.INVENTORY:
+            self.next_state = GameState.PLAY
+        if self.next_state == GameState.INVENTORY:
             self.inventory_menu.refresh_buttons_content()
-        if self.current_state == GameState.ROUND_END:
+        if self.next_state == GameState.ROUND_END:
             self.round_menu.reset_menu()
             self.round_menu.generate_items()
-        if self.game_paused():
+        if self.game_will_pause():
             self.player.blocked = True
             self.player.direction.update((0, 0))
         else:
@@ -220,7 +221,12 @@ class Game:
         self.font = support.import_font(30, "font/LycheeSoda.ttf")
 
     def game_paused(self):
+        """:return: Whether the game is currently paused"""
         return self.current_state != GameState.PLAY
+
+    def game_will_pause(self):
+        """:return: Whether the game will pause on the next frame"""
+        return not self.game_paused() and self.next_state != GameState.PLAY
 
     def show_intro_msg(self):
         # A Message At The Starting Of The Game Giving Introduction To InGroup.
@@ -310,10 +316,11 @@ class Game:
 
             self.show_intro_msg()
             mouse_pos = pygame.mouse.get_pos()
-            if not self.game_paused() or is_first_frame:
+            if self.game_will_pause() or is_first_frame:
                 self.previous_frame = self.display_surface.copy()
             self.display_surface.blit(mouse, mouse_pos)
             is_first_frame = False
+            self.current_state = self.next_state
             pygame.display.update()
             await asyncio.sleep(0)
 
