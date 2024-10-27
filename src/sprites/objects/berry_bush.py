@@ -3,7 +3,7 @@ import random
 import pygame
 
 from src import timer
-from src.enums import InventoryResource, Layer
+from src.enums import InventoryResource
 from src.map_objects import MapObjectType
 from src.settings import APPLE_POS
 from src.sprites.base import CollideableMapObject, Sprite
@@ -52,9 +52,7 @@ class BerryBush(CollideableMapObject):
                 if random.randint(0, 10) < 4:
                     x = pos[0] + self.rect.left
                     y = pos[1] + self.rect.top
-                    Sprite((x, y), self.fruit_surf, (), Layer.FRUIT).add(
-                        self.fruit_sprites
-                    )
+                    Sprite((x, y), self.fruit_surf, ()).add(self.fruit_sprites)
 
     def update(self, dt):
         self.timer.update()

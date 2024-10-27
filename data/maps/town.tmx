@@ -829,12 +829,7 @@
   <object id="407" gid="848" x="635" y="534.5" width="13" height="12"/>
   <object id="408" gid="848" x="217.5" y="698" width="13" height="12"/>
   <object id="585" gid="423" x="466.182" y="309.455" width="16" height="19"/>
- </objectgroup>
- <objectgroup id="25" name="Decorative_bottom">
-  <properties>
-   <property name="layer" value="GROUND_OBJECTS"/>
-  </properties>
-  <object id="543" gid="387" x="224" y="752" width="48" height="48"/>
+  <object id="543" name="Piknik blanket" gid="387" x="224" y="752" width="48" height="48"/>
  </objectgroup>
  <objectgroup id="20" name="Decorative">
   <object id="19" gid="364" x="233" y="89" width="31" height="36"/>
