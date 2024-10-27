@@ -33,6 +33,9 @@ class Sprite(pygame.sprite.Sprite):
         self.custom_properties: dict[str, Any] = custom_properties or {}
         self.hitbox_rect = self.rect.copy()
 
+        if not hasattr(self, "update_blocked"):
+            self.update_blocked = self.update
+
     @property
     def render_chunk(self):
         return self.__render_chunk
