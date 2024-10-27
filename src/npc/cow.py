@@ -6,6 +6,7 @@ from src.npc.bases.cow_base import CowBase
 from src.npc.behaviour.cow_behaviour_tree import CowIndividualContext
 from src.npc.utils import pf_move_to
 from src.settings import Coordinate
+from src.sprites.chunk_system.collision_chunks import CollisionManager
 from src.sprites.setup import EntityAsset
 from src.support import get_sorted_flight_vectors
 
@@ -16,13 +17,13 @@ class Cow(CowBase):
         pos: Coordinate,
         assets: EntityAsset,
         groups: tuple[pygame.sprite.Group, ...],
-        collision_sprites: pygame.sprite.Group,
+        collision_manager: CollisionManager,
     ):
         super().__init__(
             pos=pos,
             assets=assets,
             groups=groups,
-            collision_sprites=collision_sprites,
+            collision_manager=collision_manager,
             behaviour_tree_context=CowIndividualContext(self),
             z=Layer.MAIN,
         )

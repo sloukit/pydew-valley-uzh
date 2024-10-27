@@ -6,12 +6,13 @@ from src import settings
 from src.enums import Direction, EntityState, Layer
 from src.gui.interface import indicators
 from src.settings import SCALED_TILE_SIZE
-from src.sprites.base import CollideableSprite, Sprite
+from src.sprites.base import MovingSprite, Sprite
+from src.sprites.chunk_system.collision_chunks import CollisionManager
 from src.sprites.setup import EntityAsset
 from src.support import get_entity_facing_direction, screen_to_tile
 
 
-class Entity(CollideableSprite, ABC):
+class Entity(MovingSprite, ABC):
     frames: dict[str, settings.AniFrames]
     frame_index: int
     _current_ani_frame: list[pygame.Surface] | None
@@ -21,14 +22,14 @@ class Entity(CollideableSprite, ABC):
 
     direction: pygame.Vector2
     speed: int
-    collision_sprites: pygame.sprite.Group
+    collision_manager: CollisionManager
 
     def __init__(
         self,
         pos: settings.Coordinate,
         assets: EntityAsset,
         groups: tuple[pygame.sprite.Group, ...],
-        collision_sprites: pygame.sprite.Group,
+        collision_manager: CollisionManager,
         z=Layer.MAIN,
     ):
         self.assets = assets
@@ -57,10 +58,8 @@ class Entity(CollideableSprite, ABC):
         # movement
         self.direction = pygame.Vector2()
         self.speed = 100
-        self.collision_sprites = collision_sprites
+        self.collision_manager = collision_manager
         self.is_colliding = False
-
-        self.last_hitbox_rect = self.hitbox_rect
 
         # Axe hitbox, which allows for independent usage of the axe by any
         # entity (player or NPC)
@@ -168,44 +167,10 @@ class Entity(CollideableSprite, ABC):
         pass
 
     def check_collision(self):
-        """
-        :return: true: Entity collides with a sprite in self.collision_sprites,
-        otherwise false
-        """
-        colliding_rect = None
-
-        for sprite in self.collision_sprites:
-            if sprite is not self:
-                if sprite.hitbox_rect.colliderect(self.hitbox_rect):
-                    colliding_rect = sprite.hitbox_rect
-                    distances_rect = colliding_rect
-
-                    if isinstance(sprite, Entity):
-                        # When colliding with another entity, the hitbox to
-                        # compare to will also reflect its last-frame's state
-                        distances_rect = sprite.last_hitbox_rect
-
-                    # Compares each point of the last-frame's hitbox to the
-                    # hitbox the Entity collided with, to check at which
-                    # direction the collision happened first
-                    distances = (
-                        abs(self.last_hitbox_rect.right - distances_rect.left),
-                        abs(self.last_hitbox_rect.left - distances_rect.right),
-                        abs(self.last_hitbox_rect.bottom - distances_rect.top),
-                        abs(self.last_hitbox_rect.top - distances_rect.bottom),
-                    )
-
-                    shortest_distance = min(distances)
-                    if shortest_distance == distances[0]:
-                        self.hitbox_rect.right = colliding_rect.left
-                    elif shortest_distance == distances[1]:
-                        self.hitbox_rect.left = colliding_rect.right
-                    elif shortest_distance == distances[2]:
-                        self.hitbox_rect.bottom = colliding_rect.top
-                    elif shortest_distance == distances[3]:
-                        self.hitbox_rect.top = colliding_rect.bottom
-
-        self.is_colliding = bool(colliding_rect)
+        if self.last_hitbox_rect == self.hitbox_rect:
+            self.is_colliding = False
+        else:
+            self.is_colliding = self.collision_manager.update_sprite(self)
 
     @abstractmethod
     def animate(self, dt: float):

@@ -1,5 +1,7 @@
 import json
 import typing
+from collections import defaultdict
+from collections.abc import Callable
 
 _DOUBLE_SLASH = "//"
 
@@ -32,3 +34,19 @@ def json_loads(s: str, **kwargs) -> typing.Any:
     Wrapper function for `json.loads`, with custom decoder.
     """
     return json.loads(s, cls=JSONWithCommentsDecoder, **kwargs)
+
+
+_KT = typing.TypeVar("_KT")
+_VT = typing.TypeVar("_VT")
+
+
+class DefaultCallableDict(defaultdict):
+    default_factory: Callable[[_KT], _VT]
+
+    def __init__(self, callback: Callable[[_KT], _VT]):
+        super().__init__(callback)  # noqa
+
+    def __missing__(self, key: _KT):
+        value = self.default_factory(key)
+        self[key] = value
+        return value

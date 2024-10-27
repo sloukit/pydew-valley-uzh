@@ -15,7 +15,6 @@ import pygame
 from src import support
 from src.enums import GameState
 from src.events import DIALOG_ADVANCE, DIALOG_SHOW, OPEN_INVENTORY
-from src.groups import AllSprites
 from src.gui.interface.dialog import DialogueManager
 from src.gui.setup import setup_gui
 from src.overlay.fast_forward import FastForward
@@ -38,6 +37,7 @@ from src.settings import (
     MapDict,
     SoundDict,
 )
+from src.sprites.chunk_system.render_chunks import AllSprites
 from src.sprites.setup import setup_entity_assets
 
 # set random seed. It has to be set first before any other random function is called.
@@ -301,7 +301,7 @@ class Game:
                         self.fast_forward.draw_overlay(self.display_surface)
             else:
                 self.all_sprites.update(dt)
-            self.all_sprites.draw(self.level.camera)
+            self.all_sprites.draw(self.level.camera, self.level.player.rect.center)
 
             # Apply blur effect only if the player has goggles equipped
             if self.player.has_goggles and self.current_state == GameState.PLAY:
