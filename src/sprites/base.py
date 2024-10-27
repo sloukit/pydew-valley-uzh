@@ -14,7 +14,7 @@ class Sprite(pygame.sprite.Sprite):
         pos: tuple[int | float, int | float],
         surf: pygame.Surface,
         groups: tuple[pygame.sprite.Group, ...] | pygame.sprite.Group = None,
-        z: int = Layer.MAIN,
+        z: Layer = Layer.MAIN,
         name: str | None = None,
         custom_properties: dict[str, Any] | None = None,
     ):

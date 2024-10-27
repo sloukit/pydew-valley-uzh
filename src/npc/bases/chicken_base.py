@@ -7,6 +7,7 @@ import pygame
 from pathfinding.core.grid import Grid
 from pathfinding.finder.a_star import AStarFinder
 
+from src.enums import Layer
 from src.npc.bases.ai_behaviour import AIBehaviour
 from src.npc.bases.animal import Animal
 from src.npc.behaviour.ai_behaviour_tree_base import ContextType
@@ -27,7 +28,7 @@ class ChickenBase(Animal, AIBehaviour, ABC):
         groups: tuple[pygame.sprite.Group, ...],
         collision_manager: CollisionManager,
         behaviour_tree_context: ContextType,
-        z: int,
+        z: Layer,
     ):
         Animal.__init__(
             self,
