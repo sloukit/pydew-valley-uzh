@@ -137,8 +137,12 @@ class _CowHerdingOverlay:
             for char in "0123456789.:"
         }
         # ensures that the timer numbers maintain their position by using equal spacing
-        self.timer_char_width = max(char.width for char in self.timer_chars.values())
-        self.timer_char_height = max(char.height for char in self.timer_chars.values())
+        self.timer_char_width = max(
+            char.get_width() for char in self.timer_chars.values()
+        )
+        self.timer_char_height = max(
+            char.get_height() for char in self.timer_chars.values()
+        )
 
     def _render_countdown_text(self, text: str):
         rendered_text = self.font_countdown.render(text, False, SL_ORANGE_BRIGHTEST)
@@ -172,8 +176,8 @@ class _CowHerdingOverlay:
             self.display_surface.blit(
                 rendered_text,
                 (
-                    SCREEN_WIDTH / 2 - rendered_text.width / 2,
-                    SCREEN_HEIGHT / 3 - rendered_text.height / 2,
+                    SCREEN_WIDTH / 2 - rendered_text.get_width() / 2,
+                    SCREEN_HEIGHT / 3 - rendered_text.get_height() / 2,
                 ),
             )
 
@@ -203,8 +207,8 @@ class _CowHerdingOverlay:
         self.display_surface.blit(
             rendered_text,
             (
-                SCREEN_WIDTH / 2 - rendered_text.width / 2,
-                SCREEN_HEIGHT / 3 - rendered_text.height / 2,
+                SCREEN_WIDTH / 2 - rendered_text.get_width() / 2,
+                SCREEN_HEIGHT / 3 - rendered_text.get_height() / 2,
             ),
         )
 
@@ -288,7 +292,7 @@ class _CowHerdingOverlay:
             if char.isdigit():
                 total_length += self.timer_char_width
             else:
-                total_length += self.timer_chars[char].width
+                total_length += self.timer_chars[char].get_width()
 
         _draw_box(
             self.display_surface,
@@ -308,4 +312,4 @@ class _CowHerdingOverlay:
             if char.isdigit():
                 current_length += self.timer_char_width
             else:
-                current_length += self.timer_chars[char].width
+                current_length += self.timer_chars[char].get_width()

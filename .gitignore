@@ -171,3 +171,7 @@ images/characters/rabbit/temp_goggles.png
 images/characters/rabbit/temp_horn.png
 images/characters/rabbit/temp_hat.png
 .ruff_cache
+
+# line_profiler
+profile_*.txt
+profile_*.lprof

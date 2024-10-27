@@ -1,8 +1,5 @@
 import pygame
 
-from src.camera import Camera
-from src.enums import Layer
-
 
 class PersistentSpriteGroup(pygame.sprite.Group):
     _persistent_sprites: list[pygame.sprite.Sprite]
@@ -34,27 +31,3 @@ class PersistentSpriteGroup(pygame.sprite.Group):
         Remove all sprites, including persistent Sprites.
         """
         super().empty()
-
-
-# TODO : we could replace this with pygame.sprite.LayeredUpdates, as that
-#  is a subclass of pygame.sprite.Group that natively supports layers
-
-
-class AllSprites(PersistentSpriteGroup):
-    def __init__(self, *sprites):
-        super().__init__(*sprites)
-        self.display_surface = pygame.display.get_surface()
-        self.offset = pygame.Vector2()
-        self.cam_surf = pygame.Surface(self.display_surface.get_size())
-
-    def update_blocked(self, dt: float):
-        for sprite in self:
-            getattr(sprite, "update_blocked", sprite.update)(dt)
-
-    def draw(self, camera: Camera):
-        sorted_sprites = sorted(self.sprites(), key=lambda spr: spr.hitbox_rect.bottom)
-
-        for layer in Layer:
-            for sprite in sorted_sprites:
-                if sprite.z == layer:
-                    sprite.draw(self.display_surface, camera.apply(sprite), camera)

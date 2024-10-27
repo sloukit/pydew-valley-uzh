@@ -19,7 +19,7 @@ from src.enums import (
     StudyGroup,
 )
 from src.exceptions import GameMapWarning, InvalidMapError
-from src.groups import AllSprites, PersistentSpriteGroup
+from src.groups import PersistentSpriteGroup
 from src.gui.interface.emotes import NPCEmoteManager, PlayerEmoteManager
 from src.gui.scene_animation import SceneAnimation
 from src.map_objects import MapObjects, MapObjectType
@@ -50,6 +50,8 @@ from src.settings import (
     TEST_ANIMALS,
 )
 from src.sprites.base import AnimatedSprite, CollideableMapObject, Sprite
+from src.sprites.chunk_system.collision_chunks import CollisionManager
+from src.sprites.chunk_system.render_chunks import AllSprites
 from src.sprites.entities.character import Character
 from src.sprites.entities.player import Player
 from src.sprites.objects.berry_bush import BerryBush
@@ -280,7 +282,7 @@ class GameMap:
         zoom_man: ZoomManager,
         # Sprite groups
         all_sprites: AllSprites,
-        collision_sprites: PersistentSpriteGroup,
+        collision_manager: CollisionManager,
         interaction_sprites: PersistentSpriteGroup,
         tree_sprites: PersistentSpriteGroup,
         bush_sprites: PersistentSpriteGroup,
@@ -305,7 +307,7 @@ class GameMap:
         self.player_exit_warps = player_exit_warps
 
         self.all_sprites = all_sprites
-        self.collision_sprites = collision_sprites
+        self.collision_manager = collision_manager
         self.interaction_sprites = interaction_sprites
         self.tree_sprites = tree_sprites
         self.bush_sprites = bush_sprites
@@ -474,19 +476,21 @@ class GameMap:
             tree = Tree(
                 pos,
                 object_type,
-                (self.all_sprites, self.collision_sprites, self.tree_sprites),
+                (self.tree_sprites,),
                 obj.name,
                 fruit_frames,
                 fruit_type,
                 stump_frames,
             )
+            self.all_sprites.add(tree)
+            self.collision_manager.add(tree)
             # we need a tree surf without fruits
             tree.image = self.frames["level"]["objects"]["tree"]
             tree.surf = tree.image
         else:
             CollideableMapObject(pos, object_type, z=Layer.MAIN).add(
                 self.all_sprites,
-                self.collision_sprites,
+                self.collision_manager,
             )
 
     def _setup_bush(
@@ -505,8 +509,6 @@ class GameMap:
                 pos,
                 object_type,
                 (
-                    self.all_sprites,
-                    self.collision_sprites,
                     self.bush_sprites,
                     self.interaction_sprites,
                 ),
@@ -514,13 +516,15 @@ class GameMap:
                 fruit_frames,
                 fruit_type,
             )
+            self.all_sprites.add(bush)
+            self.collision_manager.add(bush)
             # we need a bush surf without fruits
             bush.image = self.frames["level"]["objects"]["bush_medium"]
             bush.surf = bush.image
         else:
             CollideableMapObject(pos, object_type, z=Layer.MAIN).add(
                 self.all_sprites,
-                self.collision_sprites,
+                self.collision_manager,
             )
 
     def _setup_map_object(
@@ -551,7 +555,7 @@ class GameMap:
                 if object_type.hitbox is not None:
                     CollideableMapObject(pos, object_type, z=layer).add(
                         self.all_sprites,
-                        self.collision_sprites,
+                        self.collision_manager,
                     )
 
             if SETUP_PATHFINDING:
@@ -647,8 +651,8 @@ class GameMap:
         npc = NPC(
             pos=pos,
             assets=copy.deepcopy(ENTITY_ASSETS.RABBIT),
-            groups=(self.all_sprites, self.collision_sprites),
-            collision_sprites=self.collision_sprites,
+            groups=(),
+            collision_manager=self.collision_manager,
             study_group=study_group,
             apply_tool=self.apply_tool,
             plant_collision=self.plant_collision,
@@ -656,6 +660,8 @@ class GameMap:
             emote_manager=self.npc_emote_manager,
             tree_sprites=self.tree_sprites,
         )
+        self.all_sprites.add(npc)
+        self.collision_manager.add(npc)
         npc.teleport(pos)
 
         # Ingroup NPCs wearing only the hat and no necklace should not be able to walk on the forest and town map, only on the farming map
@@ -687,17 +693,21 @@ class GameMap:
             animal = Chicken(
                 pos=pos,
                 assets=ENTITY_ASSETS.CHICKEN,
-                groups=(self.all_sprites, self.collision_sprites),
-                collision_sprites=self.collision_sprites,
+                groups=(),
+                collision_manager=self.collision_manager,
             )
+            self.all_sprites.add(animal)
+            self.collision_manager.add(animal)
             animal.conditional_behaviour_tree = ChickenBehaviourTree.Wander
         elif obj.name == "Cow":
             animal = Cow(
                 pos=pos,
                 assets=ENTITY_ASSETS.COW,
-                groups=(self.all_sprites, self.collision_sprites),
-                collision_sprites=self.collision_sprites,
+                groups=(),
+                collision_manager=self.collision_manager,
             )
+            self.all_sprites.add(animal)
+            self.collision_manager.add(animal)
             animal.conditional_behaviour_tree = CowConditionalBehaviourTree.Wander
             # animal.continuous_behaviour_tree = CowContinuousBehaviourTree.Flee
 
@@ -751,10 +761,10 @@ class GameMap:
                         lambda pos, image: self._setup_collideable_tile(
                             pos,
                             image,
-                            Layer.BORDER,
+                            Layer.MAIN,
                             (
                                 self.all_sprites,
-                                self.collision_sprites,
+                                self.collision_manager,
                             ),
                         ),
                     )
@@ -806,7 +816,7 @@ class GameMap:
                         _setup_object_layer(
                             tilemap_layer,
                             lambda pos, obj: self._setup_collision_rect(
-                                pos, obj, Layer.MAIN, self.collision_sprites
+                                pos, obj, Layer.MAIN, self.collision_manager
                             ),
                         )
                     case SpecialObjectLayer.PLAYER:

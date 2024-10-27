@@ -13,6 +13,7 @@ from src.gui.interface.emotes import PlayerEmoteManager
 from src.npc.bases.npc_base import NPCBase
 from src.savefile import SaveFile
 from src.settings import BATH_STATUS_TIMEOUT, Coordinate, SoundDict
+from src.sprites.chunk_system.collision_chunks import CollisionManager
 from src.sprites.entities.character import Character
 from src.sprites.entities.entity import Entity
 from src.sprites.setup import EntityAsset
@@ -41,7 +42,7 @@ class Player(Character):
         pos: Coordinate,
         assets: EntityAsset,
         groups: tuple[pygame.sprite.Group, ...],
-        collision_sprites: pygame.sprite.Group,
+        collision_manager: CollisionManager,
         controls: Type[Controls],
         apply_tool: Callable[[FarmingTool, tuple[float, float], Character], None],
         plant_collision: Callable[[Character], None],
@@ -57,7 +58,7 @@ class Player(Character):
             pos=pos,
             assets=assets,
             groups=groups,
-            collision_sprites=collision_sprites,
+            collision_manager=collision_manager,
             study_group=StudyGroup.INGROUP,
             apply_tool=apply_tool,
             plant_collision=plant_collision,

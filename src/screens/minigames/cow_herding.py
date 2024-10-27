@@ -1,4 +1,3 @@
-from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Type
 
@@ -27,6 +26,8 @@ from src.screens.minigames.cow_herding_overlay import (
 )
 from src.settings import SCALE_FACTOR, SoundDict
 from src.sprites.base import Sprite
+from src.sprites.chunk_system.collision_chunks import CollisionManager
+from src.sprites.chunk_system.render_chunks import AllSprites
 from src.sprites.entities.player import Player
 from src.sprites.setup import ENTITY_ASSETS
 
@@ -49,11 +50,10 @@ def _set_player_controls(controls: Type[Controls], value: bool):
 class CowHerdingState(MinigameState):
     game_map: GameMap
     player: Player
-    all_sprites: PersistentSpriteGroup
-    collision_sprites: PersistentSpriteGroup
+    all_sprites: AllSprites
+    collision_manager: CollisionManager
     overlay: Overlay
     sounds: SoundDict
-    get_camera_center: Callable[[], pygame.Vector2 | tuple[float, float]]
 
 
 class CowHerding(Minigame):
@@ -129,7 +129,8 @@ class CowHerding(Minigame):
         self.__finished = value
 
     def _setup(self):
-        self.player_collision_sprites = self._state.collision_sprites.copy()
+        # FIXME: add back player collision
+        # self.player_collision_sprites = self._state.collision_manager.copy()
 
         if AIData.Matrix is None:
             raise MinigameSetupError("AI Pathfinding Matrix is not defined")
@@ -144,9 +145,10 @@ class CowHerding(Minigame):
                 cow = Cow(
                     pos=pos,
                     assets=ENTITY_ASSETS.COW,
-                    groups=(self._state.all_sprites, self._state.collision_sprites),
-                    collision_sprites=self._state.collision_sprites,
+                    groups=(),
+                    collision_manager=self._state.collision_manager,
                 )
+                self._state.all_sprites.add(cow)
                 self._state.game_map.animals.append(cow)
                 if obj.name == "L_COW":
                     cow.conditional_behaviour_tree = CowHerdingBehaviourTree.WanderRange
@@ -167,7 +169,7 @@ class CowHerding(Minigame):
         size = (obj.width * SCALE_FACTOR, obj.height * SCALE_FACTOR)
         image = pygame.Surface(size)
         self.barn_entrance_collider = Sprite(pos, image, name=obj.name)
-        self.barn_entrance_collider.add(self.player_collision_sprites)
+        # self.barn_entrance_collider.add(self.player_collision_sprites)
 
         obj = colliders["L_BARN_AREA"]
         pf_add_matrix_collision(range_matrix, (obj.x, obj.y), (obj.width, obj.height))
@@ -190,14 +192,14 @@ class CowHerding(Minigame):
         self._state.player.facing_direction = Direction.UP
         self._state.player.blocked = True
         self._state.player.direction.update((0, 0))
-        self._state.player.collision_sprites = self.player_collision_sprites
+        # self._state.player.collision_manager = self.player_collision_sprites
 
         self._state.overlay.visible = False
 
     def finish(self):
         _set_player_controls(self.player_controls, False)
         self._state.player.blocked = False
-        self._state.player.collision_sprites = self._state.collision_sprites
+        # self._state.player.collision_manager = self._state.collision_manager
 
         self._state.overlay.visible = True
 

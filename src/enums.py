@@ -308,14 +308,10 @@ class EntityState(StrEnum):
 class Layer(IntEnum):
     WATER = 0
     GROUND = auto()
-    GROUND_OBJECTS = auto()
     SOIL = auto()
     SOIL_WATER = auto()
     RAIN_FLOOR = auto()
-    PLANT = auto()
     MAIN = auto()
-    FRUIT = auto()
-    BORDER = auto()
     RAIN_DROPS = auto()
     PARTICLES = auto()
     EMOTES = auto()

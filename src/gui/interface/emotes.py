@@ -10,6 +10,7 @@ from src.enums import Layer
 from src.groups import PersistentSpriteGroup
 from src.gui.interface.emotes_base import EmoteBoxBase, EmoteManagerBase, EmoteWheelBase
 from src.settings import EMOTE_SIZE
+from src.sprites.chunk_system.render_chunks import AllSprites
 from src.support import draw_aa_line
 from src.timer import Timer
 
@@ -204,7 +205,8 @@ class EmoteWheel(EmoteWheelBase):
         self,
         emote_manager: EmoteManagerBase,
         emotes_list: list[str],
-        *groups: PersistentSpriteGroup,
+        all_sprites: AllSprites,
+        *groups: pygame.sprite.Group,
     ):
         """
         The Player's emote selection wheel
@@ -234,7 +236,10 @@ class EmoteWheel(EmoteWheelBase):
 
         super().__init__((0, 0), self._image.copy(), z=Layer.TEXT_BOX)
         for group in groups:
-            group.add_persistent(self)
+            self.add(group)
+
+        self.all_sprites = all_sprites
+        self.all_sprites.add_persistent(self)
 
         self.visible = False
 
@@ -318,12 +323,14 @@ class EmoteWheel(EmoteWheelBase):
 
     @visible.setter
     def visible(self, value: bool):
+        z = -1
         if value:
-            self.z = Layer.TEXT_BOX
+            z = Layer.TEXT_BOX
             self._visible = True
         else:
-            self.z = -1
             self._visible = False
+
+        self.all_sprites.change_layer(self, z, add_persistent=True)
 
     def toggle_visibility(self):
         self.visible = not self.visible

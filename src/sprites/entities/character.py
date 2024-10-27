@@ -14,6 +14,7 @@ from src.enums import (
     Layer,
     StudyGroup,
 )
+from src.sprites.chunk_system.collision_chunks import CollisionManager
 from src.sprites.entities.entity import Entity
 from src.sprites.setup import EntityAsset
 
@@ -33,7 +34,7 @@ class Character(Entity, ABC):
         pos: settings.Coordinate,
         assets: EntityAsset,
         groups: tuple[pygame.sprite.Group, ...],
-        collision_sprites: pygame.sprite.Group,
+        collision_manager: CollisionManager,
         study_group: StudyGroup,
         apply_tool: Callable[[FarmingTool, tuple[float, float], Self], None],
         plant_collision: Callable[[Self], None],
@@ -44,7 +45,7 @@ class Character(Entity, ABC):
             pos=pos,
             assets=assets,
             groups=groups,
-            collision_sprites=collision_sprites,
+            collision_manager=collision_manager,
             z=z,
         )
 

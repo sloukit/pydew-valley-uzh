@@ -8,11 +8,12 @@ import pygame
 from pathfinding.core.grid import Grid
 from pathfinding.finder.a_star import AStarFinder
 
-from src.enums import FarmingTool, StudyGroup
+from src.enums import FarmingTool, Layer, StudyGroup
 from src.npc.bases.ai_behaviour import AIBehaviour
 from src.npc.behaviour.ai_behaviour_tree_base import ContextType
 from src.overlay.soil import SoilArea
 from src.settings import Coordinate
+from src.sprites.chunk_system.collision_chunks import CollisionManager
 from src.sprites.entities.character import Character
 from src.sprites.setup import EntityAsset
 
@@ -30,19 +31,19 @@ class NPCBase(Character, AIBehaviour, ABC):
         pos: Coordinate,
         assets: EntityAsset,
         groups: tuple[pygame.sprite.Group, ...],
-        collision_sprites: pygame.sprite.Group,
+        collision_manager: CollisionManager,
         study_group: StudyGroup,
         apply_tool: Callable[[FarmingTool, tuple[float, float], Character], None],
         plant_collision: Callable[[Character], None],
         behaviour_tree_context: ContextType,
-        z: int,
+        z: Layer,
     ):
         Character.__init__(
             self,
             pos=pos,
             assets=assets,
             groups=groups,
-            collision_sprites=collision_sprites,
+            collision_manager=collision_manager,
             study_group=study_group,
             apply_tool=apply_tool,
             plant_collision=plant_collision,

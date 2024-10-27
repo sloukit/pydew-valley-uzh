@@ -20,6 +20,23 @@ CHAR_TILE_SIZE = 48
 SCALE_FACTOR = 4
 SCALED_TILE_SIZE = TILE_SIZE * SCALE_FACTOR
 
+# chunk size >= largest sprite size
+# largest obj: piknik blanket (48x48)
+# largest char: rabbit (48x48)
+RENDER_CHUNK_W = 48 * SCALE_FACTOR
+RENDER_CHUNK_H = 48 * SCALE_FACTOR
+
+# +1 as int rounds down,
+# +2 to render objects slightly offscreen - one tile off the screen edge on both sides
+RENDER_CHUNKS_X = int(SCREEN_WIDTH / RENDER_CHUNK_W) + 3
+RENDER_CHUNKS_Y = int(SCREEN_HEIGHT / RENDER_CHUNK_H) + 3
+
+# chunk size >= largest hitbox size
+# largest obj hitbox: tree_fallen_medium (32w) / bed (19h)
+# largest map collider: 32x32
+COLLISION_CHUNK_W = 32 * SCALE_FACTOR
+COLLISION_CHUNK_H = 32 * SCALE_FACTOR
+
 RANDOM_SEED = 123456789
 
 GAME_MAP = Map.NEW_FARM

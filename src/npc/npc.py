@@ -11,6 +11,7 @@ from src.npc.bases.npc_base import NPCBase
 from src.npc.behaviour.npc_behaviour_tree import NPCIndividualContext
 from src.overlay.soil import SoilManager
 from src.settings import Coordinate
+from src.sprites.chunk_system.collision_chunks import CollisionManager
 from src.sprites.entities.character import Character
 from src.sprites.setup import EntityAsset
 from src.timer import Timer
@@ -22,7 +23,7 @@ class NPC(NPCBase):
         pos: Coordinate,
         assets: EntityAsset,
         groups: tuple[pygame.sprite.Group, ...],
-        collision_sprites: pygame.sprite.Group,
+        collision_manager: CollisionManager,
         study_group: StudyGroup,
         apply_tool: Callable[[FarmingTool, tuple[float, float], Character], None],
         plant_collision: Callable[[Character], None],
@@ -38,7 +39,7 @@ class NPC(NPCBase):
             pos=pos,
             assets=assets,
             groups=groups,
-            collision_sprites=collision_sprites,
+            collision_manager=collision_manager,
             study_group=study_group,
             apply_tool=apply_tool,
             plant_collision=plant_collision,
@@ -183,8 +184,9 @@ class NPC(NPCBase):
         self.image.set_alpha(130)
         self.image = pygame.transform.rotate(self.image, 90)
 
+        # FIXME
         # remove from collision sprites so doesn't prevent farming or block other characters
-        self.remove(self.collision_sprites)
+        # self.remove(self.collision_manager)
 
     def manage_sickness(self, dt):
         # if NPC is not sick yet, check if it gets sick

@@ -1,6 +1,6 @@
 from pathfinding.core.diagonal_movement import DiagonalMovement
 from pathfinding.core.grid import Grid
-from pathfinding.finder.a_star import AStarFinder
+from pathfinding.finder.dijkstra import DijkstraFinder
 
 from src.npc.bases.chicken_base import ChickenBase
 from src.npc.bases.cow_base import CowBase
@@ -26,11 +26,11 @@ class AIData:
         moving_collideable_objects: list[Entity] = None,
     ) -> None:
         if not cls.setup:
-            NPCBase.pf_finder = AStarFinder()
-            ChickenBase.pf_finder = AStarFinder(
+            NPCBase.pf_finder = DijkstraFinder()
+            ChickenBase.pf_finder = DijkstraFinder(
                 diagonal_movement=DiagonalMovement.only_when_no_obstacle
             )
-            CowBase.pf_finder = AStarFinder(
+            CowBase.pf_finder = DijkstraFinder(
                 diagonal_movement=DiagonalMovement.only_when_no_obstacle
             )
 

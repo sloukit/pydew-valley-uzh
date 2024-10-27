@@ -5,10 +5,10 @@ import pygame
 from pytmx import TiledTileLayer
 
 from src.enums import FarmingTool, InventoryResource, Layer, SeedType, StudyGroup
-from src.groups import AllSprites
 from src.savefile.tile_info import TileInfo
 from src.settings import SCALED_TILE_SIZE, Coordinate
 from src.sprites.base import Sprite
+from src.sprites.chunk_system.render_chunks import AllSprites
 from src.sprites.entities.character import Character
 from src.sprites.objects.plant import Plant
 from src.support import tile_to_screen
@@ -371,8 +371,9 @@ class SoilArea:
 
             seed_name = seed_type.as_plant_name()
             frames = self.level_frames[seed_name]
-            groups = (self.all_sprites, self.plant_sprites)
+            groups = (self.plant_sprites,)
             tile.plant = Plant(seed_type, groups, tile, frames)
+            self.all_sprites.add(tile.plant)
             return True
 
         return False
