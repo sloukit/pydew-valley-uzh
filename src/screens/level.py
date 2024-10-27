@@ -806,11 +806,17 @@ class Level:
             self.update_cutscene(dt)
             self.quaker.update_quake(dt)
 
-            self.camera.update(
-                self.cutscene_animation
-                if self.cutscene_animation.active
-                else self.player
-            )
+            if self.cutscene_animation.active:
+                target = self.cutscene_animation
+            elif (
+                type(self.current_minigame) is CowHerding
+                and self.current_minigame.running
+            ):
+                target = self.current_minigame.camera_target
+            else:
+                target = self.player
+
+            self.camera.update(target)
 
             self.zoom_manager.update(
                 (

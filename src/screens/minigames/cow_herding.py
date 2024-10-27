@@ -131,10 +131,17 @@ class CowHerdingSideState:
         return self.cows_herded_in == self.cows_total
 
 
+class DummySprite:
+    rect: pygame.FRect
+
+    def __init__(self, rect: pygame.FRect):
+        self.rect = rect
+
+
 class CowHerding(Minigame):
     _state: CowHerdingState
     player_controls: Type[Controls]
-
+    camera_target: DummySprite
     display_surface: pygame.Surface
 
     overlay: _CowHerdingOverlay
@@ -164,7 +171,7 @@ class CowHerding(Minigame):
 
     def __init__(self, state: CowHerdingState):
         super().__init__(state)
-
+        self.camera_target = DummySprite(self._state.player.rect.copy())
         self.player_controls = self._state.player.controls
 
         self.display_surface = pygame.display.get_surface()
@@ -359,6 +366,11 @@ class CowHerding(Minigame):
 
     def update(self, dt: float):
         super().update(dt)
+        if self._state.player.study_group == StudyGroup.INGROUP:
+            offset = 300
+        else:
+            offset = -150
+        self.camera_target.rect = self._state.player.rect.move(offset, 0)
 
         if not self._complete:
             self._minigame_time = self._ctime - self._game_start
