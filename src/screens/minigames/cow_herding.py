@@ -171,7 +171,11 @@ class CowHerding(Minigame):
 
         self.overlay = _CowHerdingOverlay()
         self.scoreboard = _CowHerdingScoreboard(self.finish)
-        opponent_study_group = StudyGroup.OUTGROUP if self._state.player.study_group == StudyGroup.INGROUP else StudyGroup.INGROUP
+        opponent_study_group = (
+            StudyGroup.OUTGROUP
+            if self._state.player.study_group == StudyGroup.INGROUP
+            else StudyGroup.INGROUP
+        )
         opponent = NPC(
             pos=(0, 0),
             assets=ENTITY_ASSETS.RABBIT,
@@ -186,19 +190,21 @@ class CowHerding(Minigame):
         )
         opponent.probability_to_get_sick = 1
         self._state.game_map.npcs.append(opponent)
-        side_map = {
-            StudyGroup.INGROUP: 'L',
-            StudyGroup.OUTGROUP: 'R'
-        }
+        side_map = {StudyGroup.INGROUP: "L", StudyGroup.OUTGROUP: "R"}
 
-        self._player_side = CowHerdingSideState(side_map[self._state.player.study_group], self._state.player)
-        self._opponent_side = CowHerdingSideState(side_map[opponent_study_group], opponent)
-        script_group = {
-            StudyGroup.INGROUP: 'ingroup',
-            StudyGroup.OUTGROUP: 'outgroup'
-        }
+        self._player_side = CowHerdingSideState(
+            side_map[self._state.player.study_group], self._state.player
+        )
+        self._opponent_side = CowHerdingSideState(
+            side_map[opponent_study_group], opponent
+        )
+        script_group = {StudyGroup.INGROUP: "ingroup", StudyGroup.OUTGROUP: "outgroup"}
 
-        script_path = resource_path("data/npc_scripted_paths/cow_herding/" + script_group[opponent_study_group] + "/")
+        script_path = resource_path(
+            "data/npc_scripted_paths/cow_herding/"
+            + script_group[opponent_study_group]
+            + "/"
+        )
 
         self._opponent_side_script = CowHerdingScriptedPath.from_file(
             random.choice(glob.glob(glob.escape(script_path) + "*.json"))
