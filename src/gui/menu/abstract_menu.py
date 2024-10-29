@@ -4,7 +4,8 @@ import pygame
 from pygame.math import Vector2 as vector
 from pygame.mouse import get_pressed as mouse_buttons
 
-from src.events import post_event
+from src.enums import CustomCursor
+from src.events import SET_CURSOR, post_event
 from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH
 from src.support import resource_path
 
@@ -46,9 +47,9 @@ class AbstractMenu(ABC):
     def mouse_hover(self):
         for button in self.buttons:
             if button.hover_active:
-                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                post_event(SET_CURSOR, cursor=CustomCursor.POINT)
                 return
-        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+        post_event(SET_CURSOR, cursor=CustomCursor.ARROW)
 
     @abstractmethod
     def button_setup(self, *args, **kwargs):
@@ -76,7 +77,7 @@ class AbstractMenu(ABC):
 
                 if self.pressed_button.mouse_hover():
                     self.button_action(self.pressed_button.text)
-                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                    post_event(SET_CURSOR, cursor=CustomCursor.ARROW)
 
                 self.pressed_button = None
                 return True
@@ -116,5 +117,6 @@ class AbstractMenu(ABC):
         self.draw_buttons()
 
     def update(self, dt):
+        self.mouse_hover()
         self.update_buttons(dt)
         self.draw()
