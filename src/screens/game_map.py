@@ -11,6 +11,7 @@ from src.camera.camera_target import CameraTarget
 from src.camera.zoom_area import ZoomArea
 from src.camera.zoom_manager import ZoomManager
 from src.enums import (
+    Direction,
     FarmingTool,
     InventoryResource,
     Layer,
@@ -588,7 +589,16 @@ class GameMap:
         :param obj: TiledObject to create the warp from
         """
         name = obj.name
-        if name == "spawnpoint":
+        player_group = self.player.study_group
+        spawnpoint_group = player_group
+        if len(name.split(" ")) == 2:
+            spawnpoint_group = obj.name.split(" ")[1]
+            if spawnpoint_group == "ingroup":
+                spawnpoint_group = StudyGroup.INGROUP
+            if spawnpoint_group == "outgroup":
+                spawnpoint_group = StudyGroup.OUTGROUP
+
+        if "spawnpoint" in name and (player_group == spawnpoint_group):
             if self.player_spawnpoint:
                 warnings.warn(
                     f"Multiple spawnpoints found " f"({self.player_spawnpoint}, {pos})",
@@ -657,20 +667,38 @@ class GameMap:
             tree_sprites=self.tree_sprites,
         )
         npc.teleport(pos)
-
         # Ingroup NPCs wearing only the hat and no necklace should not be able to walk on the forest and town map, only on the farming map
         no_walking_npc = (
-            gmap != Map.FARM
-            and npc.study_group == StudyGroup.INGROUP
-            and not npc.has_necklace
-            and npc.has_hat
+            (
+                gmap != Map.FARM
+                and npc.study_group == StudyGroup.INGROUP
+                and not npc.has_necklace
+                and npc.has_hat
+                and gmap != Map.MINIGAME
+            )
+            or gmap == Map.MINIGAME
+            and obj.name
+            and obj.name == "opponent"
         )
+        if gmap == Map.MINIGAME and obj.name and obj.name == "opponent":
+            if npc.study_group == self.player.study_group:
+                npc.kill()
+        if gmap == Map.MINIGAME:
+            npc.probability_to_get_sick = 1
+
+        cheering = gmap == Map.MINIGAME
 
         behaviour = obj.properties.get("behaviour")
         if behaviour != "Woodcutting" and gmap == Map.NEW_FARM:
             npc.conditional_behaviour_tree = NPCBehaviourTree.Farming
         elif no_walking_npc:
             npc.conditional_behaviour_tree = NPCBehaviourTree.DoNothing
+        elif cheering:
+            npc.conditional_behaviour_tree = NPCBehaviourTree.Cheer
+            if npc.study_group == StudyGroup.INGROUP:
+                npc.facing_direction = Direction.RIGHT
+            if npc.study_group == StudyGroup.OUTGROUP:
+                npc.facing_direction = Direction.LEFT
         else:
             npc.conditional_behaviour_tree = NPCBehaviourTree.Woodcutting
         return npc

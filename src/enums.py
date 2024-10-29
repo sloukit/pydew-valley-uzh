@@ -305,6 +305,12 @@ class EntityState(StrEnum):
     NECKLACE_WATER = "necklace_water"
 
 
+# TODO: Refactor AIState usages to use EntityState
+class AIState(IntEnum):
+    IDLE = 0
+    MOVING = 1
+
+
 class Layer(IntEnum):
     WATER = 0
     GROUND = auto()
