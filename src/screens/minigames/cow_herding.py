@@ -1,6 +1,7 @@
 import glob
 import random
-from collections.abc import Callable
+
+# from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Type
 
