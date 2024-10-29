@@ -46,7 +46,7 @@ def _set_player_controls(controls: Type[Controls], value: bool):
     controls.INVENTORY.disabled = value
     controls.EMOTE_WHEEL.disabled = value
     # overlays are not disabled
-    controls.SHOW_DIALOG.disabled = value
+    controls.DEBUG_SHOW_DIALOG.disabled = value
     controls.ADVANCE_DIALOG.disabled = value
 
 
@@ -96,7 +96,6 @@ class CowHerdingState(MinigameState):
     collision_sprites: PersistentSpriteGroup
     overlay: Overlay
     sounds: SoundDict
-    get_camera_center: Callable[[], pygame.Vector2 | tuple[float, float]]
 
 
 @dataclass

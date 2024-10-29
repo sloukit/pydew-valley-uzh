@@ -4,7 +4,8 @@ import pygame
 from pygame.math import Vector2 as vector
 from pygame.mouse import get_pressed as mouse_buttons
 
-from src.events import post_event
+from src.enums import CustomCursor
+from src.events import SET_CURSOR, post_event
 from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH
 from src.support import resource_path
 
@@ -46,17 +47,17 @@ class AbstractMenu(ABC):
     def mouse_hover(self):
         for button in self.buttons:
             if button.hover_active:
-                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                post_event(SET_CURSOR, cursor=CustomCursor.POINT)
                 return
-        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+        post_event(SET_CURSOR, cursor=CustomCursor.ARROW)
 
     @abstractmethod
     def button_setup(self, *args, **kwargs):
         pass
 
-    @abstractmethod
+    # events
     def handle_event(self, event: pygame.event.Event):
-        pass
+        return self.click(event)
 
     # setup
     def rect_setup(self):
@@ -68,29 +69,23 @@ class AbstractMenu(ABC):
             self.pressed_button = self.get_hovered_button()
             if self.pressed_button:
                 self.pressed_button.start_press_animation()
+                return True
 
-        if event.type == pygame.MOUSEBUTTONUP:
+        elif event.type == pygame.MOUSEBUTTONUP:
             if self.pressed_button:
                 self.pressed_button.start_release_animation()
 
                 if self.pressed_button.mouse_hover():
                     self.button_action(self.pressed_button.text)
-                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                    post_event(SET_CURSOR, cursor=CustomCursor.ARROW)
 
                 self.pressed_button = None
+                return True
+
+        return False
 
     def quit_game(self):
         post_event(pygame.QUIT)
-
-    # events
-    def event_loop(self):
-        self.mouse_hover()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.quit_game()
-
-            self.click(event)
-            self.handle_event(event)
 
     def update_buttons(self, dt):
         for button in self.buttons:
@@ -122,6 +117,6 @@ class AbstractMenu(ABC):
         self.draw_buttons()
 
     def update(self, dt):
-        self.event_loop()
+        self.mouse_hover()
         self.update_buttons(dt)
         self.draw()

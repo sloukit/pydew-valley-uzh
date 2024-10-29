@@ -364,4 +364,12 @@ class ClockVersion(IntEnum):
 class ScriptedSequenceType(StrEnum):
     PLAYER_RECEIVES_HAT = "player_receives_hat"
     PLAYER_RECEIVES_NECKLACE = "player_receives_necklace"
+    PLAYERS_BIRTHDAY = "players_birthday"
     NPC_RECEIVES_NECKLACE = "npc_receives_necklace"
+    DECIDE_TOMATO_OR_CORN = "decide_tomato_or_corn"
+
+
+class CustomCursor(IntEnum):
+    ARROW = 0
+    POINT = 1
+    CLICK = 2

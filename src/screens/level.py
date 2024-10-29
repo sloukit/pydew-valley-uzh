@@ -4,6 +4,7 @@ import time
 import warnings
 from collections.abc import Callable
 from functools import partial
+from typing import cast
 
 import pygame
 
@@ -11,12 +12,14 @@ from src.camera import Camera
 from src.camera.camera_target import CameraTarget
 from src.camera.quaker import Quaker
 from src.camera.zoom_manager import ZoomManager
+from src.controls import Controls
 from src.enums import FarmingTool, GameState, Map, ScriptedSequenceType, StudyGroup
 from src.events import DIALOG_ADVANCE, DIALOG_SHOW, START_QUAKE, post_event
 from src.exceptions import GameMapWarning
 from src.groups import AllSprites, PersistentSpriteGroup
 from src.gui.interface.emotes import NPCEmoteManager, PlayerEmoteManager
 from src.gui.scene_animation import SceneAnimation
+from src.npc.npc import NPC
 from src.npc.setup import AIData
 from src.overlay.game_time import GameTime
 from src.overlay.overlay import Overlay
@@ -29,16 +32,17 @@ from src.screens.minigames.base import Minigame
 from src.screens.minigames.cow_herding import CowHerding, CowHerdingState
 from src.settings import (
     DEFAULT_ANIMATION_NAME,
+    EMOTES_LIST,
     GAME_MAP,
     HEALTH_DECAY_VALUE,
     SCALED_TILE_SIZE,
     SCREEN_HEIGHT,
     SCREEN_WIDTH,
+    TOMATO_OR_CORN_LIST,
     MapDict,
     SoundDict,
 )
 from src.sprites.base import Sprite
-from src.sprites.drops import DropsManager
 from src.sprites.entities.character import Character
 from src.sprites.entities.player import Player
 from src.sprites.particle import ParticleSprite
@@ -78,6 +82,7 @@ class Level:
     # emotes
     _emotes: dict
     player_emote_manager: PlayerEmoteManager
+    backup_emote_mgr: PlayerEmoteManager
     npc_emote_manager: NPCEmoteManager
 
     player: Player
@@ -101,6 +106,7 @@ class Level:
     def __init__(
         self,
         switch: Callable[[GameState], None],
+        get_set_round: tuple[Callable[[], int], Callable[[int], []]],
         tmx_maps: MapDict,
         frames: dict[str, dict],
         sounds: SoundDict,
@@ -143,14 +149,25 @@ class Level:
         self.soil_manager = SoilManager(self.all_sprites, self.frames["level"])
 
         self._emotes = self.frames["emotes"]
-        self.player_emote_manager = PlayerEmoteManager(self._emotes, self.all_sprites)
+        # add additional sprites for scripted sequence "decide_tomato_or_corn"
+        # extra sprites are fine, which sprites are actually shown on the wheel depends on emote_list param
+        for frame in TOMATO_OR_CORN_LIST:
+            self._emotes[frame] = [self.frames["items"][frame]]
+
+        self.player_emote_manager = PlayerEmoteManager(
+            self._emotes, EMOTES_LIST, self.all_sprites
+        )
+        self.backup_emote_mgr = self.player_emote_manager
         self.npc_emote_manager = NPCEmoteManager(self._emotes, self.all_sprites)
+
+        self.controls = Controls
 
         self.player = Player(
             pos=(0, 0),
             assets=copy.deepcopy(ENTITY_ASSETS.RABBIT),
             groups=(),
             collision_sprites=self.collision_sprites,
+            controls=self.controls,
             apply_tool=self.apply_tool,
             plant_collision=self.plant_collision,
             interact=self.interact,
@@ -165,12 +182,6 @@ class Level:
         self.all_sprites.add_persistent(self.player)
         self.collision_sprites.add_persistent(self.player)
 
-        # drops manager
-        self.drops_manager = DropsManager(
-            self.all_sprites, self.drop_sprites, self.frames["level"]["drops"]
-        )
-        self.drops_manager.player = self.player
-
         # weather
         self.game_time = GameTime()
         self.sky = Sky(self.game_time)
@@ -184,7 +195,7 @@ class Level:
         self.current_day = 0
 
         # overlays
-        self.overlay = Overlay(self.player, frames["overlay"], self.game_time, clock)
+        self.overlay = Overlay(self.player, frames["items"], self.game_time, clock)
         self.show_hitbox_active = False
         self.show_pf_overlay = False
         self.setup_pf_overlay()
@@ -208,8 +219,9 @@ class Level:
             dur=2400,
         )
 
-        # level
-        self.current_level = 3
+        # level interactions
+        self.get_round = get_set_round[0]
+        self.set_round = get_set_round[1]
 
     def load_map(self, game_map: Map, from_map: str = None):
         # prepare level state for new map
@@ -239,7 +251,6 @@ class Level:
             player=self.player,
             player_emote_manager=self.player_emote_manager,
             npc_emote_manager=self.npc_emote_manager,
-            drops_manager=self.drops_manager,
             soil_manager=self.soil_manager,
             apply_tool=self.apply_tool,
             plant_collision=self.plant_collision,
@@ -310,7 +321,6 @@ class Level:
                     collision_sprites=self.collision_sprites,
                     overlay=self.overlay,
                     sounds=self.sounds,
-                    get_camera_center=self.get_camera_center,
                 )
             )
 
@@ -342,8 +352,8 @@ class Level:
         area = self.soil_manager.get_area(character.study_group)
         if area.plant_sprites:
             for plant in area.plant_sprites:
-                if plant.rect.colliderect(character.hitbox_rect):
-                    x, y = map_coords_to_tile(plant.rect.center)
+                if plant.hitbox_rect.colliderect(character.hitbox_rect):
+                    x, y = map_coords_to_tile(plant.hitbox_rect.midbottom)
                     area.harvest((x, y), character.add_resource, self.create_particle)
 
     def switch_to_map(self, map_name: Map):
@@ -472,83 +482,100 @@ class Level:
                 self.player.has_horn = True
 
     def handle_event(self, event: pygame.event.Event) -> bool:
-        hitbox_key = self.player.controls.DEBUG_SHOW_HITBOXES.control_value
-        dialog_key = self.player.controls.SHOW_DIALOG.control_value
-        pf_overlay_key = self.player.controls.SHOW_PF_OVERLAY.control_value
-        advance_dialog_key = self.player.controls.ADVANCE_DIALOG.control_value
-        round_end_key = self.player.controls.END_ROUND.control_value
-        player_task_key = self.player.controls.DEDUG_PLAYER_TASK.control_value
-        debug_player_receives_hat = (
-            self.player.controls.DEBUG_PLAYER_RECEIVES_HAT.control_value
-        )
-        debug_player_receives_necklace = (
-            self.player.controls.DEBUG_PLAYER_RECEIVES_NECKLACE.control_value
-        )
-        debug_npc_receives_necklace = (
-            self.player.controls.DEBUG_NPC_RECEIVES_NECKLACE.control_value
-        )
-
         if self.current_minigame and self.current_minigame.running:
             if self.current_minigame.handle_event(event):
                 return True
 
-        if event.type == pygame.KEYDOWN:
+        if event.type == START_QUAKE:
+            self.quaker.start(event.duration)
+            if event.debug:
+                self.set_round(7)
+            return True
+
+        elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.switch_screen(GameState.PAUSE)
                 return True
-            if event.key == hitbox_key:
-                self.show_hitbox_active = not self.show_hitbox_active
-                return True
-            if event.key == player_task_key:
-                self.switch_screen(GameState.PLAYER_TASK)
-                return True
-            if event.key == dialog_key:
-                post_event(DIALOG_SHOW, dial="test")
-                return True
-            if event.key == advance_dialog_key:
-                post_event(DIALOG_ADVANCE)
-                return True
-            if event.key == pf_overlay_key:
-                self.show_pf_overlay = not self.show_pf_overlay
-                return True
-            if event.key == round_end_key:
-                self.switch_screen(GameState.ROUND_END)
-            if event.key == debug_player_receives_hat:
-                self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_HAT)
-                return True
-            if event.key == debug_player_receives_necklace:
-                self.start_scripted_sequence(
-                    ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE
-                )
-                return True
-            if event.key == debug_npc_receives_necklace:
-                self.start_scripted_sequence(ScriptedSequenceType.NPC_RECEIVES_NECKLACE)
-                return True
-        if event.type == START_QUAKE:
-            self.quaker.start(event.duration)
-            # debug volcanic atmosphere trigger
-            self.current_level = 7
+            self.controls.update_control_state(event.key, True)
+        elif event.type == pygame.KEYUP:
+            self.controls.update_control_state(event.key, False)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            self.controls.update_control_state(event.button, True)
+        elif event.type == pygame.MOUSEBUTTONUP:
+            self.controls.update_control_state(event.button, False)
 
         return False
 
+    def handle_controls(self):
+        if self.controls.ADVANCE_DIALOG.click:
+            post_event(DIALOG_ADVANCE)
+
+        if self.controls.DEBUG_QUAKE.click:
+            post_event(START_QUAKE, duration=2.0, debug=True)
+
+        if self.controls.DEBUG_PLAYER_TASK.click:
+            self.switch_screen(GameState.PLAYER_TASK)
+
+        if self.controls.DEBUG_END_ROUND.click:
+            self.switch_screen(GameState.ROUND_END)
+
+        if self.controls.DEBUG_PLAYER_RECEIVES_HAT.click:
+            self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_HAT)
+
+        if self.controls.DEBUG_PLAYER_RECEIVES_NECKLACE.click:
+            self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE)
+
+        if self.controls.DEBUG_PLAYERS_BIRTHDAY.click:
+            self.start_scripted_sequence(ScriptedSequenceType.PLAYERS_BIRTHDAY)
+
+        if self.controls.DEBUG_NPC_RECEIVES_NECKLACE.click:
+            self.start_scripted_sequence(ScriptedSequenceType.NPC_RECEIVES_NECKLACE)
+
+        if self.controls.DEBUG_DECIDE_TOMATO_OR_CORN.click:
+            self.start_scripted_sequence(ScriptedSequenceType.DECIDE_TOMATO_OR_CORN)
+
+        if self.controls.DEBUG_SHOW_HITBOXES.click:
+            self.show_hitbox_active = not self.show_hitbox_active
+
+        if self.controls.DEBUG_SHOW_PF_OVERLAY.click:
+            self.show_pf_overlay = not self.show_pf_overlay
+
+        if self.controls.DEBUG_SHOW_DIALOG.click:
+            post_event(DIALOG_SHOW, dial="test")
+
     def start_scripted_sequence(self, sequence_type: ScriptedSequenceType):
-        if self.cutscene_animation.has_animation_name("ingroup_gathering"):
-            npcs = [
-                npc
-                for npc in self.game_map.npcs
-                if npc.study_group == StudyGroup.INGROUP
-            ]
+        # do not start new scripted sequence when one is already running
+        if self.cutscene_animation.active:
+            return
+
+        active_group = self.player.study_group
+        if active_group == StudyGroup.INGROUP:
+            animation_name = "ingroup_gathering"
+        else:
+            animation_name = "outgroup_gathering"
+
+        if self.cutscene_animation.has_animation_name(animation_name):
+            npcs: list[Player | NPC] = []
+            if self.game_map:
+                npcs = [
+                    npc
+                    for npc in self.game_map.npcs
+                    if npc.study_group == active_group and not npc.is_dead
+                ]
             if sequence_type == ScriptedSequenceType.NPC_RECEIVES_NECKLACE:
                 npc_in_center = random.choice(npcs)
                 npcs.remove(npc_in_center)
                 npcs.append(self.player)
             else:
                 npc_in_center = self.player
-            self.cutscene_animation.set_current_animation("ingroup_gathering")
+            self.cutscene_animation.set_current_animation(animation_name)
             self.cutscene_animation.is_end_condition_met = partial(
                 self.end_scripted_sequence, sequence_type, npc_in_center
             )
-            self.prev_player_pos = self.player.rect.center
+            if self.player.rect:
+                self.prev_player_pos = cast(
+                    tuple[int, int], self.player.rect.center
+                )  # else (0, 0)
             meeting_pos = self.cutscene_animation.targets[0].pos
             # move player other npc_in_center to the meeting point and make him face to the east (right)
             npc_in_center.teleport(meeting_pos)
@@ -558,11 +585,14 @@ class Level:
             npc_in_center.direction.update((0, 0))
 
             # spread all ingroup npc in half-circle of 2 * SCALED_TILE_SIZE diameter
-            # from north to south clockwise
+            # from north to south clockwise or counterclockwise (depends on group)
             # and make them face the player in the center
             distance = pygame.Vector2(0, -2 * SCALED_TILE_SIZE)
             rot_by = (180) / (len(npcs) - 1)
-            angle = 0
+            # the outgroup circle is layed out counterclockwise
+            if active_group == StudyGroup.OUTGROUP:
+                rot_by = -rot_by
+            angle = 0.0
 
             for npc in npcs:
                 new_pos = meeting_pos + distance.rotate(angle)
@@ -579,32 +609,119 @@ class Level:
             post_event(DIALOG_SHOW, dial=dialog_name)
 
     def end_scripted_sequence(
-        self, sequence_type: ScriptedSequenceType, npc: Character
+        self, sequence_type: ScriptedSequenceType, npc: NPC | Player
     ) -> bool:
         # prevent the scripted sequence from ending
-        # while dialog is still opened
         if self.player.blocked:
             return False
-
-        self.player.teleport(self.prev_player_pos)
 
         if sequence_type == ScriptedSequenceType.PLAYER_RECEIVES_HAT:
             npc.has_hat = True
         elif sequence_type == ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE:
             npc.has_necklace = True
+        elif sequence_type == ScriptedSequenceType.PLAYERS_BIRTHDAY:
+            pass
         elif sequence_type == ScriptedSequenceType.NPC_RECEIVES_NECKLACE:
             npc.has_necklace = True
+        elif sequence_type == ScriptedSequenceType.DECIDE_TOMATO_OR_CORN:
+            buy_list = TOMATO_OR_CORN_LIST
+            self.end_scripted_sequence_decide(buy_list)
+            return False
 
-        self.cutscene_animation.set_current_animation(DEFAULT_ANIMATION_NAME)
-        self.cutscene_animation.is_end_condition_met = lambda: True
+        self.scripted_sequence_cleanup()
 
         return True
 
-    def get_camera_center(self):
-        if self.cutscene_animation:
-            return self.cutscene_animation.get_current_position()
+    def end_scripted_sequence_decide(self, buy_list: list[str]) -> None:
+        # just to make linter happy (game_map could be None)
+        if not self.game_map:
+            return
 
-        return self.player.rect.center
+        if buy_list[0] not in self.player_emote_manager.emote_wheel._emotes:
+            # check if emote was already displayed
+            # store current EmoteManager
+            self.backup_emote_mgr = self.player.emote_manager
+            # create and assign new EmoteManager with only 2 options to select from
+            self.player_emote_manager = PlayerEmoteManager(
+                self._emotes, buy_list, self.all_sprites
+            )
+            self.player.emote_manager = self.player_emote_manager
+            self.game_map.player_emote_manager = self.player_emote_manager
+            self.game_map._setup_emote_interactions()
+            # show EmoteWheel
+            # self.player.blocked = True
+            self.player_emote_manager.toggle_emote_wheel()
+            # still block the Scripted Sequence from finishing, until user makes selection
+        else:
+            if self.player_emote_manager.emote_wheel.visible:
+                # EmoteWheel is still displayed, waiting for his vote
+                return
+            else:
+                # Player has voted
+                # self.player.blocked = False
+                total_votes = 1
+                # how many Characters voted for the first option
+                first_item_votes = 0
+                players_vote = self.player_emote_manager.emote_wheel._current_emote
+                if players_vote == buy_list[0]:
+                    first_item_votes += 1
+
+                for npc in self.game_map.npcs:
+                    if npc.study_group == self.player.study_group and not npc.is_dead:
+                        # each NPC needs to vote
+                        total_votes += 1
+                        buy_item = random.choice(buy_list)
+                        if buy_item == buy_list[0]:
+                            first_item_votes += 1
+                        npc.emote_manager.show_emote(npc, buy_item)
+                # check which option has the majority of votes
+                # in case of draw, Player vote decides
+                if first_item_votes == total_votes / 2:
+                    total_votes += 1
+                    if players_vote == buy_list[0]:
+                        first_item_votes += 1
+                winner_item = (
+                    buy_list[0] if first_item_votes > total_votes / 2 else buy_list[1]
+                )
+                # restore backup EmoteManager
+                self.player_emote_manager = self.backup_emote_mgr
+                self.player.emote_manager = self.player_emote_manager
+                self.game_map.player_emote_manager = self.player_emote_manager
+                self.game_map._setup_emote_interactions()
+
+                # immediately switch to a new dialog with vote results
+                dialog_name = f"scripted_sequence_buy_{winner_item}"
+                post_event(DIALOG_SHOW, dial=dialog_name)
+                # start ending Scripted Sequence with a new end condition
+                if self.player.study_group == StudyGroup.INGROUP:
+                    animation_name = "ingroup_gathering_end"
+                else:
+                    animation_name = "outgroup_gathering_end"
+
+                self.cutscene_animation.set_current_animation(animation_name)
+                self.cutscene_animation.is_end_condition_met = (
+                    self.end_scripted_sequence_decision_result
+                )
+                self.cutscene_animation.reset()
+                self.cutscene_animation.start()
+
+    def end_scripted_sequence_decision_result(self) -> bool:
+        # prevent the scripted sequence from ending
+        # while dialog is still opened
+        if self.player.blocked:
+            return False
+
+        self.scripted_sequence_cleanup()
+
+        return True
+
+    def scripted_sequence_cleanup(self):
+        self.player.teleport(self.prev_player_pos)
+        self.cutscene_animation.set_current_animation(DEFAULT_ANIMATION_NAME)
+        self.cutscene_animation.is_end_condition_met = lambda: True
+
+    def get_camera_pos(self):
+        return self.camera.state.topleft
 
     def start_transition(self):
         self.player.blocked = True
@@ -671,9 +788,7 @@ class Level:
     # region debug-overlays
     def draw_hitboxes(self):
         if self.show_hitbox_active:
-            offset = pygame.Vector2(0, 0)
-            offset.x = -(self.get_camera_center()[0] - SCREEN_WIDTH / 2)
-            offset.y = -(self.get_camera_center()[1] - SCREEN_HEIGHT / 2)
+            offset = pygame.Vector2(self.get_camera_pos())
 
             for sprite in self.collision_sprites:
                 rect = sprite.rect.copy()
@@ -711,9 +826,7 @@ class Level:
 
     def draw_pf_overlay(self):
         if self.show_pf_overlay:
-            offset = pygame.Vector2(0, 0)
-            offset.x = -(self.get_camera_center()[0] - SCREEN_WIDTH / 2)
-            offset.y = -(self.get_camera_center()[1] - SCREEN_HEIGHT / 2)
+            offset = pygame.Vector2(self.get_camera_pos())
 
             if AIData.setup:
                 for y in range(len(AIData.Matrix)):
@@ -754,19 +867,21 @@ class Level:
     # endregion
 
     def draw_overlay(self):
-        self.sky.display(self.current_level)
+        self.sky.display(self.get_round())
         self.overlay.display()
 
     def draw(self, dt: float, move_things: bool):
         self.player.hp = self.overlay.health_bar.hp
         self.display_surface.fill((130, 168, 132))
         self.all_sprites.draw(self.camera)
-        self.zoom_manager.apply_zoom()
-        if move_things:
-            self.sky.display(self.current_level)
 
         self.draw_pf_overlay()
         self.draw_hitboxes()
+
+        self.zoom_manager.apply_zoom()
+        if move_things:
+            self.sky.display(self.get_round())
+
         self.draw_overlay()
 
         if self.current_minigame and self.current_minigame.running:
@@ -787,6 +902,8 @@ class Level:
 
     def update(self, dt: float, move_things: bool = True):
         # update
+        self.handle_controls()
+
         self.game_time.update()
         self.check_map_exit()
         self.check_outgroup_logic()
@@ -802,7 +919,6 @@ class Level:
                 self.all_sprites.update_blocked(dt)
             else:
                 self.all_sprites.update(dt)
-            self.drops_manager.update()
             self.update_cutscene(dt)
             self.quaker.update_quake(dt)
 
@@ -829,3 +945,6 @@ class Level:
 
             self.decay_health()
         self.draw(dt, move_things)
+
+        for control in self.controls:
+            control.click = False

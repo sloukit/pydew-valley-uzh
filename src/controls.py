@@ -94,17 +94,34 @@ class Controls(Control, Enum):
     PLANT = (pygame.BUTTON_RIGHT, "Plant Seed")
     INTERACT = (pygame.K_SPACE, "Interact")
     INVENTORY = (pygame.K_i, "Open Inventory")
+    EMOTE_WHEEL = (pygame.K_e, "Toggle Emote Wheel")
+    ADVANCE_DIALOG = (pygame.K_SPACE, "Advance Dialog")
+
     DEBUG_QUAKE = (pygame.K_m, "Start Earthquake Effect")
+    DEBUG_PLAYER_TASK = (pygame.K_b, "Show Player Task")
+    DEBUG_END_ROUND = (pygame.K_r, "Skip to End of Round")
     DEBUG_PLAYER_RECEIVES_HAT = (pygame.K_j, "Player receives hat")
     DEBUG_PLAYER_RECEIVES_NECKLACE = (pygame.K_k, "Player receives necklace")
+    DEBUG_PLAYERS_BIRTHDAY = (pygame.K_o, "Player's birthday")
     DEBUG_NPC_RECEIVES_NECKLACE = (pygame.K_l, "NPC receives necklace")
-    EMOTE_WHEEL = (pygame.K_e, "Toggle Emote Wheel")
+    DEBUG_DECIDE_TOMATO_OR_CORN = (pygame.K_u, "Decide: tomato or corn")
     DEBUG_SHOW_HITBOXES = (pygame.K_h, "Show Hitboxes")
-    SHOW_PF_OVERLAY = (pygame.K_p, "Show Pathfinding")
-    SHOW_DIALOG = (pygame.K_t, "Show Dialog")
-    ADVANCE_DIALOG = (pygame.K_SPACE, "Advance Dialog")
-    DEDUG_PLAYER_TASK = (pygame.K_b, "Show Player Task")
-    END_ROUND = (pygame.K_r, "Skip to End of Round")
+    DEBUG_SHOW_PF_OVERLAY = (pygame.K_p, "Show Pathfinding")
+    DEBUG_SHOW_DIALOG = (pygame.K_t, "Show Dialog")
+
+    @classmethod
+    def get_by_value(cls, control_value: int) -> Generator[Control, None, None]:
+        for i in cls:
+            control = cls[i.name]
+            if control.control_value == control_value:
+                yield control
+
+    @classmethod
+    def update_control_state(cls, control_value: int, control_held: bool):
+        for control in cls.get_by_value(control_value):
+            if not control.disabled:
+                control.click = control_held
+                control.hold = control_held
 
     @classmethod
     def as_dict(cls) -> dict[str, dict[str, str | int]]:

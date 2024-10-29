@@ -51,7 +51,6 @@ from src.settings import (
     TEST_ANIMALS,
 )
 from src.sprites.base import AnimatedSprite, CollideableMapObject, Sprite
-from src.sprites.drops import DropsManager
 from src.sprites.entities.character import Character
 from src.sprites.entities.player import Player
 from src.sprites.objects.berry_bush import BerryBush
@@ -292,7 +291,6 @@ class GameMap:
         # Emote manager instances
         player_emote_manager: PlayerEmoteManager,
         npc_emote_manager: NPCEmoteManager,
-        drops_manager: DropsManager,
         # SoilLayer and Tool applying function for farming NPCs
         soil_manager: SoilManager,
         apply_tool: Callable[[FarmingTool, tuple[float, float], Character], None],
@@ -317,8 +315,6 @@ class GameMap:
 
         self.player_emote_manager = player_emote_manager
         self.npc_emote_manager = npc_emote_manager
-
-        self.drops_manager = drops_manager
 
         self.soil_manager = soil_manager
         self.apply_tool = apply_tool
@@ -484,7 +480,6 @@ class GameMap:
                 fruit_frames,
                 fruit_type,
                 stump_frames,
-                self.drops_manager,
             )
             # we need a tree surf without fruits
             tree.image = self.frames["level"]["objects"]["tree"]

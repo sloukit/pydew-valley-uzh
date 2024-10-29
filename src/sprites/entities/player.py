@@ -42,6 +42,7 @@ class Player(Character):
         assets: EntityAsset,
         groups: tuple[pygame.sprite.Group, ...],
         collision_sprites: pygame.sprite.Group,
+        controls: Type[Controls],
         apply_tool: Callable[[FarmingTool, tuple[float, float], Character], None],
         plant_collision: Callable[[Character], None],
         interact: Callable[[], None],
@@ -64,7 +65,7 @@ class Player(Character):
 
         # movement
         self.save_file = save_file
-        self.controls = Controls
+        self.controls = controls
         self.load_controls()
         self.original_speed = 250
         self.speed = 250
@@ -133,26 +134,6 @@ class Player(Character):
         except FileNotFoundError:
             support.save_data(self.controls.as_dict(), "keybinds.json")
 
-    # controls
-    def update_controls(self):
-        keys_just_pressed = pygame.key.get_just_pressed()
-        keys_pressed = pygame.key.get_pressed()
-        mouse_pressed = pygame.mouse.get_pressed()
-
-        for control in self.controls.all_controls():
-            if control.disabled:
-                continue
-
-            is_mouse_event = control.control_value in (1, 2, 3)
-
-            if is_mouse_event:
-                is_event_active = mouse_pressed[control.control_value - 1]
-                control.click = is_event_active
-                control.hold = is_event_active
-            else:
-                control.click = keys_just_pressed[control.control_value]
-                control.hold = keys_pressed[control.control_value]
-
     def assign_seed(self, seed: str):
         computed_value = FarmingTool.from_serialised_string(seed)
         if not computed_value.is_seed():
@@ -166,7 +147,19 @@ class Player(Character):
         self.current_tool = computed_value
 
     def handle_controls(self):
-        self.update_controls()
+        # the scripted sequence needs the emote_manager to work even when NPC is blocked"""
+        if self.emote_manager.emote_wheel.visible:
+            if self.controls.RIGHT.click:
+                self.emote_manager.emote_wheel.emote_index += 1
+
+            if self.controls.LEFT.click:
+                self.emote_manager.emote_wheel.emote_index -= 1
+
+            if self.controls.USE.click or self.controls.INTERACT.click:
+                self.emote_manager.show_emote(
+                    self, self.emote_manager.emote_wheel._current_emote
+                )
+                self.emote_manager.toggle_emote_wheel()
 
         # movement
         if (
@@ -221,7 +214,7 @@ class Player(Character):
                 post_event(OPEN_INVENTORY)
 
             if self.controls.DEBUG_QUAKE.click:
-                post_event(START_QUAKE, duration=2.0)
+                post_event(START_QUAKE, duration=2.0, debug=True)
 
         # emotes
         if not self.blocked:
@@ -229,19 +222,6 @@ class Player(Character):
                 self.emote_manager.toggle_emote_wheel()
                 if self.emote_manager.emote_wheel.visible:
                     self.direction = pygame.Vector2()
-
-            if self.emote_manager.emote_wheel.visible:
-                if self.controls.RIGHT.click:
-                    self.emote_manager.emote_wheel.emote_index += 1
-
-                if self.controls.LEFT.click:
-                    self.emote_manager.emote_wheel.emote_index -= 1
-
-                if self.controls.USE.click:
-                    self.emote_manager.show_emote(
-                        self, self.emote_manager.emote_wheel._current_emote
-                    )
-                    self.emote_manager.toggle_emote_wheel()
 
     def move(self, dt: float):
         self.hitbox_rect.update(
@@ -308,6 +288,15 @@ class Player(Character):
         self.check_bath_bool()
         self.handle_controls()
         super().update(dt)
+        self.emote_manager.update_obj(
+            self, (self.rect.centerx - 47, self.rect.centery - 128)
+        )
+        self.emote_manager.update_emote_wheel(self.rect.center)
+
+    def update_blocked(self, dt):
+        """the scripted sequence needs to display emote box even when Player is blocked"""
+        self.handle_controls()
+        super().update_blocked(dt)
         self.emote_manager.update_obj(
             self, (self.rect.centerx - 47, self.rect.centery - 128)
         )

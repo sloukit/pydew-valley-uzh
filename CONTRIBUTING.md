@@ -38,7 +38,7 @@ We use [Ruff](https://docs.astral.sh/ruff/) for linting and formatting. Run `pip
 ## Adding new Assets
 
 ### Characters
-All the imports happen in the `Game.load_assets()` method in [main.py](./main.py) and the `Game.character_importer()` method imports the content of [images/characters/](./images/characters/). The name of the subfolder will be a key in the dictionary 
+All the imports happen in the `Game.load_assets()` method in [main.py](./main.py) and the `Game.character_importer()` method imports the content of [images/characters/](images/characters/). The name of the subfolder will be a key in the dictionary 
 and the files within that subfolder should be tileset images with each tile being 48x48. Each of these images will be stored in a sub dictionary attached to the subfolder key; the first row
 should be the up animation, the second one the down animation and the third row the left aimation; animations for the right side will be a flipped copy of the left side.
 If you want to add more character animations just check out the rabbit folder in characters to understand how it works.

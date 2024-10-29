@@ -13,8 +13,8 @@ import sys
 import pygame
 
 from src import support
-from src.enums import GameState
-from src.events import DIALOG_ADVANCE, DIALOG_SHOW, OPEN_INVENTORY
+from src.enums import CustomCursor, GameState
+from src.events import DIALOG_ADVANCE, DIALOG_SHOW, OPEN_INVENTORY, SET_CURSOR
 from src.groups import AllSprites
 from src.gui.interface.dialog import DialogueManager
 from src.gui.setup import setup_gui
@@ -63,7 +63,7 @@ class Game:
 
         # frames
         self.level_frames: dict | None = None
-        self.overlay_frames: dict[str, pygame.Surface] | None = None
+        self.item_frames: dict[str, pygame.Surface] | None = None
         self.cosmetic_frames: dict[str, pygame.Surface] = {}
         self.frames: dict[str, dict] | None = None
         self.previous_frame = ""
@@ -76,6 +76,10 @@ class Game:
         self.font: pygame.font.Font | None = None
         self.sounds: SoundDict | None = None
 
+        self._available_cursors: list[pygame.Surface] = []
+        self._cursor: int = CustomCursor.ARROW
+        self._cursor_img: pygame.Surface | None = None
+
         self.save_file = SaveFile.load()
 
         # main setup
@@ -83,9 +87,16 @@ class Game:
         self.clock = pygame.time.Clock()
         self.load_assets()
 
+        # level info
+        self.ROUND_END_TIME_IN_MINUTES = 15
+        self.round_end_timer = 0.0
+        self.round = 1
+        self.get_round = lambda: self.round
+
         # screens
         self.level = Level(
             self.switch_state,
+            (self.get_round, self.set_round),
             self.tmx_maps,
             self.frames,
             self.sounds,
@@ -109,7 +120,9 @@ class Game:
             self.player.assign_tool,
             self.player.assign_seed,
         )
-        self.round_menu = RoundMenu(self.switch_state, self.player)
+        self.round_menu = RoundMenu(
+            self.switch_state, self.player, self.increment_round
+        )
         self.outgroup_menu = OutgroupMenu(
             self.player,
             self.switch_state,
@@ -118,10 +131,6 @@ class Game:
         # dialog
         self.all_sprites = AllSprites()
         self.dialogue_manager = DialogueManager(self.all_sprites)
-
-        # timer(s)
-        self.round_end_timer = 0.0
-        self.ROUND_END_TIME_IN_MINUTES = 15
 
         # screens
         self.menus = {
@@ -139,7 +148,15 @@ class Game:
         # intro to in-group msg.
         self.intro_txt_shown = False
 
+    def set_round(self, round):
+        self.round = round
+
+    def increment_round(self):
+        if self.round < 12:
+            self.round += 1
+
     def switch_state(self, state: GameState):
+        self.set_cursor(CustomCursor.ARROW)
         self.current_state = state
         if self.current_state == GameState.SAVE_AND_RESUME:
             self.save_file.set_soil_data(*self.level.soil_manager.all_soil_sprites())
@@ -156,6 +173,18 @@ class Game:
         else:
             self.player.blocked = False
 
+    def set_cursor(self, cursor: CustomCursor, override: bool = False):
+        if self._cursor != cursor:
+            # ensure the cursor does not get switched back to CustomCursor.POINT during
+            # click animation
+            if (
+                self._cursor != CustomCursor.CLICK
+                or cursor != CustomCursor.POINT
+                or override
+            ):
+                self._cursor = cursor
+                self._cursor_img = self._available_cursors[self._cursor]
+
     def load_assets(self):
         self.tmx_maps = support.tmx_importer("data/maps")
 
@@ -165,19 +194,19 @@ class Game:
         )
 
         self.level_frames = {
-            "animations": support.animation_importer("images", "animations"),
-            "soil": support.import_folder_dict("images/soil"),
-            "soil water": support.import_folder_dict("images/soil water"),
-            "tomato": support.import_folder("images/plants/tomato"),
-            "corn": support.import_folder("images/plants/corn"),
+            "animations": support.animation_importer("images", "misc"),
+            "soil": support.import_folder_dict("images/tilesets/soil"),
+            "soil water": support.import_folder_dict("images/tilesets/soil/soil water"),
+            "tomato": support.import_folder("images/tilesets/plants/tomato"),
+            "corn": support.import_folder("images/tilesets/plants/corn"),
             "rain drops": support.import_folder("images/rain/drops"),
             "rain floor": support.import_folder("images/rain/floor"),
             "objects": support.import_folder_dict("images/objects"),
             "drops": support.import_folder_dict("images/drops"),
         }
-        self.overlay_frames = support.import_folder_dict("images/overlay")
+        self.item_frames = support.import_folder_dict("images/objects/items")
         cosmetic_surf = pygame.image.load(
-            support.resource_path("images/cosmetics.png")
+            support.resource_path("images/ui/cosmetics.png")
         ).convert_alpha()
         for cosmetic in _COSMETICS:
             self.cosmetic_frames[cosmetic] = pygame.transform.scale_by(
@@ -187,16 +216,25 @@ class Game:
         self.frames = {
             "emotes": self.emotes,
             "level": self.level_frames,
-            "overlay": self.overlay_frames,
+            "items": self.item_frames,
             "cosmetics": self.cosmetic_frames,
             "checkmark": pygame.transform.scale_by(
                 pygame.image.load(
-                    support.resource_path("images/checkmark.png")
+                    support.resource_path("images/ui/checkmark.png")
                 ).convert_alpha(),
                 4,
             ),
         }
         prepare_checkmark_for_buttons(self.frames["checkmark"])
+
+        for member in CustomCursor:
+            cursor = pygame.image.load(
+                support.resource_path(f"images/ui/cursor/{member.value}.png")
+            ).convert_alpha()
+            cursor = pygame.transform.scale_by(cursor, 4)
+            self._available_cursors.append(cursor)
+
+        self._cursor_img = self._available_cursors[CustomCursor.ARROW]
 
         setup_entity_assets()
 
@@ -234,7 +272,20 @@ class Game:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        if event.type == OPEN_INVENTORY:
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == pygame.BUTTON_LEFT:
+                if self._cursor == CustomCursor.POINT:
+                    self.set_cursor(CustomCursor.CLICK)
+            return False  # allow UI elements to handle this event as well
+
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if event.button == pygame.BUTTON_LEFT:
+                if self._cursor == CustomCursor.CLICK:
+                    self.set_cursor(CustomCursor.POINT, override=True)
+            return False
+
+        elif event.type == OPEN_INVENTORY:
             self.switch_state(GameState.INVENTORY)
             return True
         elif event.type == DIALOG_SHOW:
@@ -251,11 +302,13 @@ class Game:
                 if not self.dialogue_manager.showing_dialogue:
                     self.player.blocked = False
             return True
+        elif event.type == SET_CURSOR:
+            self.set_cursor(event.cursor)
+            return True
         return False
 
     async def run(self):
         pygame.mouse.set_visible(False)
-        mouse = pygame.image.load(support.resource_path("images/overlay/cursor.png"))
         is_first_frame = True
         while self.running:
             dt = self.clock.tick() / 1000
@@ -300,7 +353,7 @@ class Game:
             mouse_pos = pygame.mouse.get_pos()
             if not self.game_paused() or is_first_frame:
                 self.previous_frame = self.display_surface.copy()
-            self.display_surface.blit(mouse, mouse_pos)
+            self.display_surface.blit(self._cursor_img, mouse_pos)
             is_first_frame = False
             pygame.display.update()
             await asyncio.sleep(0)

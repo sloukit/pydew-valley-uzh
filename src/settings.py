@@ -1,5 +1,4 @@
 import pygame  # noqa
-import pygame.freetype
 import pytmx
 
 from src.enums import Map
@@ -54,3 +53,19 @@ HEALTH_DECAY_VALUE = 0.002
 BATH_STATUS_TIMEOUT = 30
 
 DEFAULT_ANIMATION_NAME = "intro"
+
+EMOTES_LIST = [
+    "cheer_ani",
+    "cool_ani",
+    "furious_ani",
+    "love_ani",
+    "sad_ani",
+    "sleep_ani",
+    "smile_ani",
+    "wink_ani",
+]
+
+TOMATO_OR_CORN_LIST = [
+    "tomato",
+    "corn",
+]

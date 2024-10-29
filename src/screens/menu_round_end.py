@@ -29,6 +29,7 @@ class RoundMenu(GeneralMenu):
         self,
         switch_screen: Callable[[GameState], None],
         player: Player,
+        increment_round: Callable[[], None],
     ):
         self.player = player
         self.scroll = 0
@@ -37,13 +38,14 @@ class RoundMenu(GeneralMenu):
         options = ["continue to next round"]
         size = (400, 400)
         super().__init__(title, options, switch_screen, size)
-        self.background = pygame.Surface(self.display_surface.size)
+        self.background = pygame.Surface(self.display_surface.get_size())
         self.stats_options = [""]
 
         self.textUIs = []
-        self.reset_menu()
+        self.increment_round = increment_round
 
     def reset_menu(self):
+        self.increment_round()
         self.background.blit(self.display_surface, (0, 0))
         self.scroll = 0
         self.generate_items()
