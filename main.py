@@ -106,9 +106,9 @@ class Game:
         self.player = self.level.player
 
         self.token_status = False
+        self.allocation_task = PlayerTask(self.switch_state, self.round)
         self.main_menu = MainMenu(self.switch_state)
         self.pause_menu = PauseMenu(self.switch_state)
-        self.task_menu = PlayerTask(self.switch_state, self.level)
         self.settings_menu = SettingsMenu(
             self.switch_state, self.sounds, self.player.controls
         )
@@ -139,7 +139,7 @@ class Game:
             GameState.SETTINGS: self.settings_menu,
             GameState.SHOP: self.shop_menu,
             GameState.INVENTORY: self.inventory_menu,
-            GameState.PLAYER_TASK: self.task_menu,
+            GameState.PLAYER_TASK: self.allocation_task,
             GameState.ROUND_END: self.round_menu,
             GameState.OUTGROUP_MENU: self.outgroup_menu,
         }
@@ -167,6 +167,8 @@ class Game:
         if self.current_state == GameState.ROUND_END:
             self.round_menu.reset_menu()
             self.round_menu.generate_items()
+        if self.current_state == GameState.PLAYER_TASK:
+            self.allocation_task.round = self.get_round()
         if self.game_paused():
             self.player.blocked = True
             self.player.direction.update((0, 0))
