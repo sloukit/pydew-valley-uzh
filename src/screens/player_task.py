@@ -2,7 +2,7 @@ from typing import Callable
 
 import pygame
 
-from src.enums import GameState, InventoryResource
+from src.enums import GameState
 from src.gui.menu.abstract_menu import AbstractMenu
 from src.gui.menu.components import ArrowButton, InputField
 from src.screens.minigames.gui import (
@@ -18,18 +18,15 @@ from src.support import import_font
 """
 TODO:
 - properly draw active InputField
-- save allocations to save_file?
-- in player.py, make "_ALLOCATION_ITEM_DEFAULT_AMOUNT" actually work. Does it have something to do with Enums?
-BUGS:
-- confirm button doesn't work anymore after merging with origin
-- during one test, health droped when using normal number keys, didn't happen when the num-block
+- save allocations to save_file
+- determine_allocation_item() needs error handling if level > len(self.allocation_item_names)
 """
 
 
 class PlayerTask(AbstractMenu):
     """Run the item allocation task."""
 
-    def __init__(self, switch_screen: Callable[[], None], level):
+    def __init__(self, switch_screen: Callable[[], None], current_round: int):
         super().__init__(title="Task", size=(SCREEN_WIDTH, SCREEN_HEIGHT))
         self.display_surface: pygame.Surface = pygame.display.get_surface()
         self.title_font: pygame.Font = import_font(38, "font/LycheeSoda.ttf")
@@ -39,32 +36,39 @@ class PlayerTask(AbstractMenu):
         self.switch_screen = switch_screen
         self.buttons = []
         self.button_setup()
+        self.round = current_round
 
-        self.level = level
-        self.allocation_item: tuple[str, pygame.surface.Surface] = (
-            self.determine_allocation_item()
-        )
-
+        self.allocation_items: list[tuple[str, int]] = [
+            ("candy bar", 20),
+            ("blanket", 10),
+            ("glove", 14),
+            ("boot", 8),
+            ("jean", 22),
+            ("shirt", 18),
+            ("rain cape", 6),
+            ("apron", 16),
+            ("water bottle", 24),
+            ("flashlight", 12),
+            ("umbrella", 4),
+            ("mask", 26),
+        ]
+        self.allocation_item: tuple[str, int] | None = None
         self.arrow_buttons: list[list[ArrowButton]] = []
         self.input_fields: list[InputField] = []
-        self.allocations: list[int] = [0, 0, 0]
-        self.max_allocation: int = 15
+        self.allocations: list[int] = [0, 0]
+        self.max_allocation: int | None = None
         self.min_allocation: int = 0
-        self.total_items: int = 15
+        self.total_items: int | None = None
         self.active_input: int | None = None
 
-    def determine_allocation_item(self):
-        self.allocation_item_name: str = None
-        self.allocation_item_img: pygame.surface.Surface = None
-        if self.level.get_round() == 3 or self.level.get_round() == 6:
-            self.allocation_item_name = "candy bar"
-            self.allocation_item_img = self.level.frames["level"]["objects"][
-                "candy_bar"
-            ]
+    def determine_allocation_item(self) -> None:
+        # this could be omitted if the game was set up to not generate a allocation task after lvl 12 in the first place
+        if self.round <= 12:
+            self.allocation_item = self.allocation_items[self.round - 1]
         else:
-            self.allocation_item_name = "blanket"
-            self.allocation_item_img = self.level.frames["level"]["objects"]["blanket"]
-        return self.allocation_item_name, self.allocation_item_img
+            self.allocation_item = self.allocation_items[0]
+        self.max_allocation = self.allocation_item[1]
+        self.total_items = self.allocation_item[1]
 
     def draw_title(self) -> None:
         text = Text(Linebreak((0, 2)), TextChunk("Task", self.title_font))
@@ -83,8 +87,7 @@ class PlayerTask(AbstractMenu):
     def draw_allocation_buttons(self) -> None:
         self.input_fields = [
             InputField(self.display_surface, (755, 210), self.input_field_font),
-            InputField(self.display_surface, (755, 260), self.input_field_font),
-            InputField(self.display_surface, (755, 310), self.input_field_font),
+            InputField(self.display_surface, (755, 265), self.input_field_font),
         ]
         self.arrow_buttons = [
             [
@@ -94,15 +97,9 @@ class PlayerTask(AbstractMenu):
                 ),
             ],
             [
-                ArrowButton("up", pygame.Rect(805, 260, 30, 20), self.input_field_font),
+                ArrowButton("up", pygame.Rect(805, 265, 30, 20), self.input_field_font),
                 ArrowButton(
-                    "down", pygame.Rect(805, 280, 30, 20), self.input_field_font
-                ),
-            ],
-            [
-                ArrowButton("up", pygame.Rect(805, 310, 30, 20), self.input_field_font),
-                ArrowButton(
-                    "down", pygame.Rect(805, 330, 30, 20), self.input_field_font
+                    "down", pygame.Rect(805, 285, 30, 20), self.input_field_font
                 ),
             ],
         ]
@@ -114,13 +111,24 @@ class PlayerTask(AbstractMenu):
                 button.draw(self.display_surface)
 
     def draw_info(self) -> None:
+        not_enough_items: str = "You have not allocated all of the items yet!"
+        too_many_items: str = "You don't have that many items to distribute."
+        missing_items: str = (
+            f"Items missing: {self.total_items - sum(self.allocations)}"
+        )
+        overstock_items: str = f"Take out: {sum(self.allocations) - self.total_items}"
+
+        if sum(self.allocations) < self.total_items:
+            text_parts = not_enough_items, missing_items
+        elif sum(self.allocations) > self.total_items:
+            text_parts = too_many_items, overstock_items
         padding_y = 8
         text = Text(
             Linebreak((0, padding_y)),
-            TextChunk("You have not allocated all of the items yet!", self.text_font),
+            TextChunk(text_parts[0], self.text_font),
             Linebreak(),
             TextChunk(
-                f"Items missing: {self.total_items - sum(self.allocations)}",
+                text_parts[1],
                 self.text_font,
             ),
             Linebreak((0, padding_y)),
@@ -141,9 +149,9 @@ class PlayerTask(AbstractMenu):
         )
 
     def draw_task_surf(self) -> None:
+        self.determine_allocation_item()
         box_center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 3)
         button_area_height = self.confirm_button.rect.height
-        allocation_img = pygame.transform.scale(self.allocation_item[1], (60, 60))
 
         text = Text(
             Linebreak((0, 12)),
@@ -154,16 +162,20 @@ class PlayerTask(AbstractMenu):
             Linebreak(),
             TextChunk("Distribute them:", self.text_font),
             Linebreak((0, 18)),
-            TextChunk("Your own inventory:", self.text_font),
-            Linebreak((0, 18)),
             TextChunk("Your group's inventory:", self.text_font),
             Linebreak((0, 18)),
             TextChunk("Other group's inventory:", self.text_font),
             Linebreak((0, 12)),
         )
+        box_min_width = 400
+        box_width = (
+            box_min_width
+            if box_min_width > text.surface_rect.width
+            else text.surface_rect.width
+        )
         box_size = (
-            text.surface_rect.width,
-            text.surface_rect.height + button_area_height + allocation_img.get_height(),
+            box_width,
+            text.surface_rect.height + button_area_height,
         )
 
         _draw_box(self.display_surface, box_center, box_size)
@@ -171,18 +183,11 @@ class PlayerTask(AbstractMenu):
         text_surface = pygame.Surface(text.surface_rect.size, pygame.SRCALPHA)
         text.draw(text_surface)
         current_y = box_center[1] - box_size[1] / 2
-        self.display_surface.blit(
-            allocation_img,
-            (
-                SCREEN_WIDTH / 2 - allocation_img.get_width() / 2,
-                current_y,
-            ),
-        )
-        current_y += allocation_img.get_height()
+
         self.display_surface.blit(
             text_surface,
             (
-                box_center[0] - text.surface_rect.width / 2,
+                box_center[0] - box_width / 2,
                 current_y,
             ),
         )
@@ -199,9 +204,6 @@ class PlayerTask(AbstractMenu):
             name == self.confirm_button.text
             and sum(self.allocations) == self.total_items
         ):
-            self.level.player.add_resource(
-                InventoryResource.CANDY_BAR, amount=self.allocations[0]
-            )
             self.switch_screen(GameState.PLAY)
 
     def button_setup(self) -> None:
@@ -268,8 +270,8 @@ class PlayerTask(AbstractMenu):
         self.draw_task_surf()
         self.draw_allocation_buttons()
         self.confirm_button.draw(self.display_surface)
-        if sum(self.allocations) < self.total_items:
+        if (
+            sum(self.allocations) < self.total_items
+            or sum(self.allocations) > self.total_items
+        ):
             self.draw_info()
-
-    def update(self, dt: float):
-        super().update(dt)

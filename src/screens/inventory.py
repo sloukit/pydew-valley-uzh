@@ -121,15 +121,8 @@ class InventoryMenu(AbstractMenu):
 
     def _prepare_img_for_ir_button(self, ir: InventoryResource, count: int):
         # , _ ,
-        if ir.is_allocation_item():
-            btn_name = ir.as_serialised_string()
-            if btn_name in self.item_frames.keys():
-                img = pygame.transform.scale(self.item_frames[btn_name], (64, 64))
-            else:
-                img = pygame.transform.scale(self.object_frames[btn_name], (64, 64))
-        else:
-            btn_name = ir.as_serialised_string()
-            img = self.item_frames[btn_name]
+        btn_name = ir.as_serialised_string()
+        img = self.item_frames[btn_name]
         calc_rect = img.get_frect(center=(32, 32))
         calc_img = pygame.Surface((64, 64), pygame.SRCALPHA)
         amount = self.font.render(str(count), False, "black")
