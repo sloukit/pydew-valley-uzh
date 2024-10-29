@@ -5,6 +5,8 @@ from typing import NoReturn, Self, Type, Union
 
 import pygame
 
+from src.enums import CustomCursor
+
 SpecialForm = type(NoReturn)
 
 
@@ -214,3 +216,5 @@ DIALOG_SHOW = create_custom_event_type("DIALOG_SHOW", dial=str)
 DIALOG_ADVANCE = create_custom_event_type("DIALOG_ADVANCE")
 
 START_QUAKE = create_custom_event_type("StartQuake", duration=float, debug=bool)
+
+SET_CURSOR = create_custom_event_type("SET_CURSOR", cursor=CustomCursor)

@@ -1,6 +1,15 @@
 import pygame  # noqa
+
+from src.events import SET_CURSOR, post_event
 from src.gui.menu.abstract_menu import AbstractMenu
-from src.enums import FarmingTool, InventoryResource, GameState, StudyGroup, SeedType
+from src.enums import (
+    FarmingTool,
+    InventoryResource,
+    GameState,
+    StudyGroup,
+    SeedType,
+    CustomCursor,
+)
 from src.gui.menu.components import Button, ImageButton
 from src.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from itertools import chain
@@ -289,11 +298,11 @@ class InventoryMenu(AbstractMenu):
 
         if event.type == pygame.KEYDOWN:
             if event.key == Controls.INVENTORY.control_value:
-                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                post_event(SET_CURSOR, cursor=CustomCursor.ARROW)
                 self.switch_screen(GameState.PLAY)
                 return True
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                post_event(SET_CURSOR, cursor=CustomCursor.ARROW)
                 self.switch_screen(GameState.PAUSE)
                 return True

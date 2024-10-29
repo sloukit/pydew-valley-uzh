@@ -4,7 +4,8 @@ import pygame
 from pygame.math import Vector2 as vector
 from pygame.mouse import get_pressed as mouse_buttons
 
-from src.enums import GameState
+from src.enums import CustomCursor, GameState
+from src.events import SET_CURSOR, post_event
 from src.gui.menu.abstract_menu import AbstractMenu
 from src.gui.menu.components import Button
 from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH
@@ -167,7 +168,7 @@ class GeneralMenu(AbstractMenu):
     def button_action(self, text: str):
         if text == "Play":
             if self.play_button_enabled:
-                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                post_event(SET_CURSOR, cursor=CustomCursor.ARROW)
                 self.switch_screen(GameState.PLAY)
         elif text == "Enter a Token to Play":
             self.input_active = True
