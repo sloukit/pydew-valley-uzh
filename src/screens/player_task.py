@@ -2,7 +2,7 @@ from typing import Callable
 
 import pygame
 
-from src.enums import CustomCursor, GameState, InventoryResource
+from src.enums import CustomCursor, GameState  # InventoryResource
 from src.events import SET_CURSOR, post_event
 from src.gui.menu.abstract_menu import AbstractMenu
 from src.gui.menu.components import ArrowButton, InputField
