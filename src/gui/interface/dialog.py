@@ -71,8 +71,8 @@ class TextBox(Sprite):
 
         super().__init__(
             (
-                SCREEN_WIDTH / 2 - self.image.width / 2,
-                SCREEN_HEIGHT - self.image.height,
+                SCREEN_WIDTH / 2 - self.image.get_width() / 2,
+                SCREEN_HEIGHT - self.image.get_height(),
             ),
             self.image,
             (),
