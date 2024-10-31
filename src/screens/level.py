@@ -364,12 +364,12 @@ class Level:
                 self.overlay.health_bar.apply_health(9999999)
                 self.player.bathstat = True
                 self.player.bath_time = time.time()
-                self.player.emote_manager.show_emote(self.player, "sad_ani")
+                self.player.emote_manager.show_emote(self.player, "sad_sick_ani")
                 self.load_map(self.current_map, from_map=map_name)
             elif map_name == "bathhouse":
                 # this is to prevent warning in the console
                 self.load_map(self.current_map, from_map=map_name)
-                self.player.emote_manager.show_emote(self.player, "sad_ani")
+                self.player.emote_manager.show_emote(self.player, "sad_sick_ani")
             else:
                 warnings.warn(f'Error loading map: Map "{map_name}" not found')
 
