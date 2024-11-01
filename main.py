@@ -348,7 +348,7 @@ class Game:
 
             # Apply blur effect only if the player has goggles equipped
             if self.player.has_goggles and self.current_state == GameState.PLAY:
-                surface = pygame.transform.box_blur(self.display_surface, 2)
+                surface = pygame.transform.box_blur(self.display_surface, 3)
                 self.display_surface.blit(surface, (0, 0))
 
             self.show_intro_msg()
