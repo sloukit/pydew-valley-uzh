@@ -370,12 +370,12 @@ class Level:
                 self.overlay.health_bar.apply_health(9999999)
                 self.player.bathstat = True
                 self.player.bath_time = time.time()
-                self.player.emote_manager.show_emote(self.player, "sad_ani")
+                self.player.emote_manager.show_emote(self.player, "sad_sick_ani")
                 self.load_map(self.current_map, from_map=map_name)
             elif map_name == "bathhouse":
                 # this is to prevent warning in the console
                 self.load_map(self.current_map, from_map=map_name)
-                self.player.emote_manager.show_emote(self.player, "sad_ani")
+                self.player.emote_manager.show_emote(self.player, "sad_sick_ani")
             else:
                 warnings.warn(f'Error loading map: Map "{map_name}" not found')
 
@@ -946,11 +946,17 @@ class Level:
             self.update_cutscene(dt)
             self.quaker.update_quake(dt)
 
-            self.camera.update(
-                self.cutscene_animation
-                if self.cutscene_animation.active
-                else self.player
-            )
+            if self.cutscene_animation.active:
+                target = self.cutscene_animation
+            elif (
+                type(self.current_minigame) is CowHerding
+                and self.current_minigame.running
+            ):
+                target = self.current_minigame.camera_target
+            else:
+                target = self.player
+
+            self.camera.update(target)
 
             self.zoom_manager.update(
                 (

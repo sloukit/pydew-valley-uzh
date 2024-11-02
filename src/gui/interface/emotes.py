@@ -145,7 +145,7 @@ class EmoteManager(EmoteManagerBase, ABC):
         if self._check_obj(id(obj)):
             self._remove_emote_box(id(obj))
 
-        if emote == "sad_ani":
+        if emote == "sad_sick_ani":
             self[id(obj)] = EmoteBox((0, 0), self.emotes[emote], 30, *self.groups)
         else:
             self[id(obj)] = EmoteBox((0, 0), self.emotes[emote], 15, *self.groups)

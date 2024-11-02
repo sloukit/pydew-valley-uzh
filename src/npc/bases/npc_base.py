@@ -9,6 +9,7 @@ from pathfinding.core.grid import Grid
 from pathfinding.finder.a_star import AStarFinder
 
 from src.enums import FarmingTool, StudyGroup
+from src.gui.interface.emotes import NPCEmoteManager
 from src.npc.bases.ai_behaviour import AIBehaviour
 from src.npc.behaviour.ai_behaviour_tree_base import ContextType
 from src.overlay.soil import SoilArea
@@ -36,6 +37,7 @@ class NPCBase(Character, AIBehaviour, ABC):
         plant_collision: Callable[[Character], None],
         behaviour_tree_context: ContextType,
         z: int,
+        emote_manager: NPCEmoteManager,
     ):
         Character.__init__(
             self,
@@ -49,5 +51,6 @@ class NPCBase(Character, AIBehaviour, ABC):
             z=z,
         )
         AIBehaviour.__init__(self, behaviour_tree_context=behaviour_tree_context)
+        self.emote_manager = emote_manager
 
         self.speed = 250
