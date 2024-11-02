@@ -199,6 +199,9 @@ class CowHerding(Minigame):
 
         self._state.overlay.visible = True
 
+        # check if the player achieved task "go to the minigame area and play"
+        self._state.player.minigame_finished = True
+
         super().finish()
 
     def check_cows(self):

@@ -128,7 +128,7 @@ class InventoryResource(_SerialisableEnum):
     TOMATO_SEED = 13
 
     def get_worth(self):
-        return self._ITEM_WORTHS[self]  # noqa
+        return self._ITEM_WORTHS[self - 2]  # noqa
 
     def is_seed(self):
         return self >= self.CORN_SEED

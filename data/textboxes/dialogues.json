@@ -1,29 +1,29 @@
 {
   "test":[
-    ["A character", "BLAH BLAH BLAH"], //Single-line text example
-    ["A character", "Insightful text here, or something. I mean, what the heck should I say?"] //Text wrapping function test
+    ["A character", "BLAH BLAH BLAH"],
+    ["A character", "Insightful text here, or something. I mean, what the heck should I say?"] 
   ],
-  "intro_to_ingroup": [
-    ["Ingroup", "Your Ingroup!"]
+  "intro_to_game": [
+    ["Ingroup", "Welcome to Clear Skies. \t\t ----- You are ingroup ! -----"]
   ],
   "scripted_sequence_player_receives_hat": [
-    ["Special event!", "We gather her for a special occasion"],
+    ["Special event!", "We gather here for a special occasion"],
     ["Special event!", "You have received a hat!"]
   ],
   "scripted_sequence_player_receives_necklace": [
-    ["Special event!", "We gather her for a special occasion"],
+    ["Special event!", "We gather here for a special occasion"],
     ["Special event!", "You have received a necklace!"]
   ],
   "scripted_sequence_players_birthday": [
-    ["Special event!", "We gather her for a special occasion"],
+    ["Special event!", "We gather here for a special occasion"],
     ["Special event!", "We wish you a Happy birthday!"]
   ],
   "scripted_sequence_npc_receives_necklace": [
-    ["Special event!", "We gather her for a special occasion"],
+    ["Special event!", "We gather here for a special occasion"],
     ["Special event!", "Our group member received a necklace!"]
   ],
 "scripted_sequence_decide_tomato_or_corn": [
-    ["Group gathering", "We gather her to decide what to buy at the market"],
+    ["Group gathering", "We gather here to decide what to buy at the market"],
     ["Group gathering", "Everyone needs to vote one of the items:\t - tomato\n\t\t\t\t\t\t\t - corn"]
   ],
   "scripted_sequence_buy_tomato": [
