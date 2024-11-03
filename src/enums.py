@@ -41,6 +41,7 @@ class GameState(IntEnum):
     ROUND_END = 11
     OUTGROUP_MENU = 12
     PLAYER_TASK = 13
+    SELF_ASSESSMENT = 14
 
 
 # NOTE : DO NOT pay attention to anything the IDE might complain about in this class, as the enum generation mechanisms
@@ -366,3 +367,9 @@ class CustomCursor(IntEnum):
     ARROW = 0
     POINT = 1
     CLICK = 2
+
+
+class SelfAssessmentDimension(IntEnum):
+    AROUSAL = 0
+    DOMINANCE = auto()
+    VALENCE = auto()

@@ -519,6 +519,9 @@ class Level:
         if self.controls.DEBUG_END_ROUND.click:
             self.switch_screen(GameState.ROUND_END)
 
+        if self.controls.DEBUG_SELF_ASSESSMENT.click:
+            self.switch_screen(GameState.SELF_ASSESSMENT)
+
         if self.controls.DEBUG_PLAYER_RECEIVES_HAT.click:
             self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_HAT)
 
