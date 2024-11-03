@@ -51,11 +51,11 @@ class AllSprites(PersistentSpriteGroup):
         for sprite in self:
             getattr(sprite, "update_blocked", sprite.update)(dt)
 
-    def draw(self, camera: Camera, game_paused : bool):
+    def draw(self, camera: Camera, game_paused: bool):
         sorted_sprites = sorted(self.sprites(), key=lambda spr: spr.hitbox_rect.bottom)
 
         for layer in Layer:
             for sprite in sorted_sprites:
                 # including game_paused condition to prevent drawing overlaps between tutorial text boxes and other menus
                 if sprite.z == layer and not game_paused:
-                    sprite.draw(self.display_surface, camera.apply(sprite), camera)              
+                    sprite.draw(self.display_surface, camera.apply(sprite), camera)

@@ -107,7 +107,7 @@ class SaveFile:
 
     def __init__(
         self,
-        tutorial_status : bool,
+        tutorial_status: bool,
         current_tool: FarmingTool,
         current_seed: FarmingTool,
         inventory: dict[InventoryResource, int],

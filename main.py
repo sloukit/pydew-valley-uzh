@@ -132,7 +132,9 @@ class Game:
 
         # dialog
         self.all_sprites = AllSprites()
-        self.dialogue_manager = DialogueManager(self.all_sprites, "data/textboxes/dialogues.json")
+        self.dialogue_manager = DialogueManager(
+            self.all_sprites, "data/textboxes/dialogues.json"
+        )
 
         ### dialogue text box positions
         self.msg_left = SCREEN_WIDTH / 2 - TB_SIZE[0] / 2
@@ -264,21 +266,24 @@ class Game:
         # A Message At The Starting Of The Game Giving Introduction To The Game And The InGroup.
         if not self.intro_txt_is_rendering:
             if not self.game_paused():
-                self.dialogue_manager.open_dialogue("intro_to_game", self.msg_left, self.msg_top)
+                self.dialogue_manager.open_dialogue(
+                    "intro_to_game", self.msg_left, self.msg_top
+                )
                 self.intro_txt_is_rendering = True
                 self.intro_txt_rendered = True
         elif not self.level.cutscene_animation.active:
-            if self.dialogue_manager.showing_dialogue: # prepare text box to switch to tutorial
+            if (
+                self.dialogue_manager.showing_dialogue
+            ):  # prepare text box to switch to tutorial
                 if self.intro_txt_rendered:
                     self.dialogue_manager.advance()
                     self.intro_txt_rendered = False
             elif not self.player.save_file.is_tutorial_completed:
                 try:
-                    self.tutorial.dialogue_manager._get_current_tb() # to execute ready() only at the beginning
-                except:
+                    self.tutorial.dialogue_manager._get_current_tb()  # to execute ready() only at the beginning
+                except Exception:
                     self.tutorial.ready()
 
-            
     # events
     def event_loop(self):
         for event in pygame.event.get():
@@ -316,7 +321,9 @@ class Game:
             if self.dialogue_manager.showing_dialogue:
                 pass
             else:
-                self.dialogue_manager.open_dialogue(event.dial, self.msg_left, self.msg_top)
+                self.dialogue_manager.open_dialogue(
+                    event.dial, self.msg_left, self.msg_top
+                )
                 self.player.blocked = True
                 self.player.direction.update((0, 0))
             return True
@@ -370,7 +377,7 @@ class Game:
             else:
                 self.all_sprites.update(dt)
             self.all_sprites.draw(self.level.camera, is_game_paused)
-            
+
             # Apply blur effect only if the player has goggles equipped
             if self.player.has_goggles and self.current_state == GameState.PLAY:
                 surface = pygame.transform.box_blur(self.display_surface, 3)

@@ -5,7 +5,7 @@ import pygame
 
 from src import utils
 from src.enums import Layer
-from src.settings import CHARS_PER_LINE, SCREEN_HEIGHT, SCREEN_WIDTH, TB_SIZE
+from src.settings import CHARS_PER_LINE, TB_SIZE
 from src.sprites.base import Sprite
 from src.support import resource_path
 from src.timer import Timer
@@ -45,7 +45,9 @@ class TextBox(Sprite):
         ]
         cls._TB_IMAGE.fblits(blit_list)
 
-    def __init__(self, character_name: str, text: str, font: pygame.Font, left : int, top : int):
+    def __init__(
+        self, character_name: str, text: str, font: pygame.Font, left: int, top: int
+    ):
         """Create a text box.
 
         :param character_name: The character meant to speak using this text box.
@@ -143,7 +145,7 @@ class DialogueManager:
     """Dialogue manager object.
     This class will store all dialogues and has a method to show a dialogue on-screen."""
 
-    def __init__(self, sprite_group: pygame.sprite.Group, dialogue_file_path : str):
+    def __init__(self, sprite_group: pygame.sprite.Group, dialogue_file_path: str):
         self.spr_grp: pygame.sprite.Group = sprite_group
         # Open the dialogues file and dump all of its content in here,
         # while purging the raw file content from its comments.
@@ -166,7 +168,7 @@ class DialogueManager:
         self._tb_list.clear()
         self._msg_index = 0
 
-    def _create_tb(self, cname: str, txt: str, left : int, top : int):
+    def _create_tb(self, cname: str, txt: str, left: int, top: int):
         self._tb_list.append(TextBox(cname, txt, self.font, left, top))
 
     def _push_current_tb_to_foreground(self):
@@ -179,7 +181,7 @@ class DialogueManager:
     def _get_current_tb(self):
         return self._tb_list[self._msg_index]
 
-    def open_dialogue(self, dial: str, left : int, top : int):
+    def open_dialogue(self, dial: str, left: int, top: int):
         """Opens a text box with the current dialogue ID's first text showed on-screen.
         Does nothing if a text box is already on-screen.
         :param dial: The dialogue ID for which you want to open textboxes on the screen.
