@@ -13,7 +13,7 @@ import sys
 import pygame
 
 from src import support
-from src.enums import CustomCursor, GameState
+from src.enums import CustomCursor, GameState, SelfAssessmentDimension
 from src.events import DIALOG_ADVANCE, DIALOG_SHOW, OPEN_INVENTORY, SET_CURSOR
 from src.groups import AllSprites
 from src.gui.interface.dialog import DialogueManager
@@ -27,6 +27,7 @@ from src.screens.menu_pause import PauseMenu
 from src.screens.menu_round_end import RoundMenu
 from src.screens.menu_settings import SettingsMenu
 from src.screens.player_task import PlayerTask
+from src.screens.self_assessment_menu import SelfAssessmentMenu
 from src.screens.shop import ShopMenu
 from src.screens.switch_to_outgroup_menu import OutgroupMenu
 from src.settings import (
@@ -128,6 +129,15 @@ class Game:
             self.switch_state,
         )
 
+        self.self_assessment_menu = SelfAssessmentMenu(
+            lambda: self.switch_state(GameState.PLAY),
+            (
+                SelfAssessmentDimension.VALENCE,
+                SelfAssessmentDimension.AROUSAL,
+                SelfAssessmentDimension.DOMINANCE,
+            ),
+        )
+
         # dialog
         self.all_sprites = AllSprites()
         self.dialogue_manager = DialogueManager(self.all_sprites)
@@ -142,6 +152,7 @@ class Game:
             GameState.PLAYER_TASK: self.allocation_task,
             GameState.ROUND_END: self.round_menu,
             GameState.OUTGROUP_MENU: self.outgroup_menu,
+            GameState.SELF_ASSESSMENT: self.self_assessment_menu,
         }
         self.current_state = GameState.MAIN_MENU
 
