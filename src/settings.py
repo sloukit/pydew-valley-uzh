@@ -31,6 +31,11 @@ SETUP_PATHFINDING = any((ENABLE_NPCS, TEST_ANIMALS))
 
 EMOTE_SIZE = 48
 
+SAM_BORDER_SIZE = (
+    122,
+    131,
+)  # absolute size of the border around self-assessment manikins
+
 GROW_SPEED = {"corn": 1, "tomato": 0.7}
 
 OVERLAY_POSITIONS = {

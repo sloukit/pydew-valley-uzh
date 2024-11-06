@@ -37,6 +37,7 @@ class Component:
 
     # animation controls
     def start_press_animation(self):
+        self.reset_animation()
         self.animation_active = True
         self.is_press_active = True
 
