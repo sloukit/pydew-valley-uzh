@@ -251,10 +251,10 @@ class Game:
         return self.current_state != GameState.PLAY
 
     def show_intro_msg(self):
-        # A Message At The Starting Of The Game Giving Introduction To InGroup.
+        # A Message At The Starting Of The Game Giving Introduction To Group.
         if not self.intro_txt_shown:
             if not self.game_paused():
-                self.dialogue_manager.open_dialogue(dial="intro_to_ingroup")
+                self.dialogue_manager.open_dialogue(dial="intro")
                 self.intro_txt_shown = True
 
     # events

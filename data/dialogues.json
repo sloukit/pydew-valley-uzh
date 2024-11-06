@@ -3,8 +3,10 @@
     ["A character", "BLAH BLAH BLAH"], //Single-line text example
     ["A character", "Insightful text here, or something. I mean, what the heck should I say?"] //Text wrapping function test
   ],
-  "intro_to_ingroup": [
-    ["Ingroup", "Your Ingroup!"]
+  "intro": [
+    ["Character", "This is your Character!"],
+    ["Group", "This is your Ingroup"],
+    ["Group", "This is your Outgroup"]
   ],
   "scripted_sequence_player_receives_hat": [
     ["Special event!", "We gather her for a special occasion"],
@@ -22,7 +24,7 @@
     ["Special event!", "We gather her for a special occasion"],
     ["Special event!", "Our group member received a necklace!"]
   ],
-"scripted_sequence_decide_tomato_or_corn": [
+  "scripted_sequence_decide_tomato_or_corn": [
     ["Group gathering", "We gather her to decide what to buy at the market"],
     ["Group gathering", "Everyone needs to vote one of the items:\t - tomato\n\t\t\t\t\t\t\t - corn"]
   ],
