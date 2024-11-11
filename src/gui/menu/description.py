@@ -199,9 +199,9 @@ class KeybindsDescription(Description):
                     # Scrolling should not be allowed as keybind
                     return False
                 if self.selection_key.hover(offset):
-                    rpath = resource_path("images/keys/rclick.png")
-                    lpath = resource_path("images/keys/lclick.png")
-                    unknown = resource_path("images/keys/generic.png")
+                    rpath = resource_path("images/ui/keys/rclick.png")
+                    lpath = resource_path("images/ui/keys/lclick.png")
+                    unknown = resource_path("images/ui/keys/generic.png")
                     if event.button == pygame.BUTTON_LEFT:
                         path = lpath
                     elif event.button == pygame.BUTTON_RIGHT:
