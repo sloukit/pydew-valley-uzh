@@ -79,7 +79,7 @@ class ShopMenu:
                 if current_item.is_seed():
                     if self.player.money >= current_item.get_worth():
                         # check if the player achieved task "go to the marketplace and buy or sell "here it is buy" something"
-                        self.player.buyed_selled = True
+                        self.player.bought_sold = True
 
                         self.player.inventory[current_item] += 1
                         self.player.money -= current_item.get_worth()
@@ -87,7 +87,7 @@ class ShopMenu:
                 else:
                     if self.player.inventory[current_item] > 0:
                         # check if the player achieved task "go to the marketplace and buy or sell "here it is sell" something"
-                        self.player.buyed_selled = True
+                        self.player.bought_sold = True
 
                         self.player.inventory[current_item] -= 1
                         self.player.money += current_item.get_worth() // 2

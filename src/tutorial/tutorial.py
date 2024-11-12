@@ -183,7 +183,7 @@ class Tutorial:
             case 6:
                 # check if the player achieved task "go to the marketplace and buy or sell something"
                 if (
-                    self.player.buyed_selled
+                    self.player.bought_sold
                     and not game_paused
                     and self.dialogue_manager._get_current_tb().finished_advancing
                 ):
