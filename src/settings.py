@@ -1,3 +1,4 @@
+import os
 import pygame  # noqa
 import pytmx
 

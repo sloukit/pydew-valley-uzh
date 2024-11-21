@@ -15,6 +15,27 @@ from src.enums import Direction
 from src.settings import SCALE_FACTOR, SCALED_TILE_SIZE, TILE_SIZE, Coordinate
 
 
+def load_translations():
+    game_language = os.environ.get('GAME_LANGUAGE', 'en')
+    path = os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        "data",
+        "translations",
+        f"{game_language}.txt",
+    )
+    with open(path, "r") as file:
+        text = file.read()
+
+    lines = text.splitlines()
+    pairs = [tuple(line.split('=')) for line in lines]
+    return dict(pairs)
+
+
+# Language translations for game text/labels:
+TR = load_translations()
+
+
 def resource_path(relative_path: str):
     """Get absolute path to resource, works for dev and for PyInstaller"""
     relative_path = relative_path.replace("/", os.sep)
