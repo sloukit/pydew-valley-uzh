@@ -13,7 +13,7 @@ FIRST_DATA_COL = 3  # in which column data begins (numeric)
 KEY_COL = "B"  # which column refers to the keys (alphabetical)
 
 # Debugging: False=collects errors; True=aborts on first with stacktrace
-EAGER_FAIL = True
+EAGER_FAIL = False
 
 if len(sys.argv) > 1:
     excel_filepath = sys.argv[1]
@@ -86,7 +86,7 @@ final = levels
 
 
 if errors:
-    print("FAIL - encountered errors in input:")
+    print("\nERROR: failed to validate input format:")
     for e in errors:
         print(f"* {e}")
     exit(1)

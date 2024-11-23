@@ -13,6 +13,9 @@ def parse_cell(key, value: Optional[str]):
     if key.endswith("_list"):
         return _parse_text_list(value)
 
+    if key.endswith("_num"):
+        return _parse_number(value)
+
     if key.endswith("_timestamp"):
         return _parse_timestamps(value)
 
@@ -28,6 +31,16 @@ def _parse_text(value: Optional[str]) -> str:
         return ""
 
     return value.strip()
+
+
+def _parse_number(value: Optional[str | int | float]) -> Optional[int | float]:
+    if value is None:
+        return None
+
+    if isinstance(value, int) or isinstance(value, float):
+        return value
+
+    raise ValueError(f"Cannot interpret '{value}' as number")
 
 
 def _parse_text_list(value: Optional[str]) -> list[str]:
@@ -88,7 +101,7 @@ def _parse_duration(value: str) -> int:
     min_text = value.rstrip("min")
     # print(f"  -> mins: '{mins}'")
 
-    mins = _str_to_num(min_text, f"Invalid duration '{value}'. Must be 'X min'")
+    mins = _str_to_int(min_text, f"Invalid duration '{value}'. Must be 'X min'")
     return 60 * mins
 
 
@@ -131,7 +144,7 @@ def _strip_trailing_brackets(s: Optional[str]) -> Optional[str]:
     return s
 
 
-def _str_to_num(value: str, error_msg: str):
+def _str_to_int(value: str, error_msg: str):
     try:
         return int(value)
     except ValueError:
