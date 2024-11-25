@@ -47,10 +47,7 @@ def _parse_text_list(value: Optional[str]) -> list[str]:
     if value is None:
         return []
 
-    return [
-        _parse_text(s)
-        for s in value.split(sep=',')
-    ]
+    return [_parse_text(s) for s in value.split(sep=",")]
 
 
 def _parse_timestamps(value: str | dt.time) -> list[int]:
@@ -67,7 +64,7 @@ def _parse_timestamps(value: str | dt.time) -> list[int]:
     return [
         _parse_timestamp(ts)
         # Split commas
-        for ts in value.split(sep=',')
+        for ts in value.split(sep=",")
     ]
 
 
@@ -77,7 +74,9 @@ def _parse_timestamp(value: str) -> int:
         parsed_time = dt.datetime.strptime(value, "%M:%S").time()
         return _to_seconds(parsed_time)
     except ValueError:
-        raise ValueError(f"Invalid timestamp '{value}'. Allowed format is MM:SS (e.g., 05:04 or 5:04).")
+        raise ValueError(
+            f"Invalid timestamp '{value}'. Allowed format is MM:SS (e.g., 05:04 or 5:04)."
+        )
 
 
 def _to_seconds(time: dt.time | dt.timedelta, from_excel: bool = False) -> int:
@@ -111,7 +110,8 @@ def _parse_bool(value: Optional[str]) -> bool:
 
     if not isinstance(value, str):
         raise ValueError(
-            f"Invalid boolean '{value}'; use 'Yes', 'No' or leave empty (note: keys without suffix are bool).")
+            f"Invalid boolean '{value}'; use 'Yes', 'No' or leave empty (note: keys without suffix are bool)."
+        )
 
     value = value.strip()
     if value == "Yes":
@@ -122,7 +122,8 @@ def _parse_bool(value: Optional[str]) -> bool:
         return False
     else:
         raise ValueError(
-            f"Invalid boolean '{value}'; use 'Yes', 'No' or leave empty (note: keys without suffix are bool).")
+            f"Invalid boolean '{value}'; use 'Yes', 'No' or leave empty (note: keys without suffix are bool)."
+        )
 
 
 def _strip_trailing_brackets(s: Optional[str]) -> Optional[str]:
@@ -138,8 +139,8 @@ def _strip_trailing_brackets(s: Optional[str]) -> Optional[str]:
         return s
 
     s = s.strip()
-    idx = s.rfind('[')
-    if idx != -1 and s.endswith(']'):
+    idx = s.rfind("[")
+    if idx != -1 and s.endswith("]"):
         s = s[:idx].strip()
     return s
 
@@ -149,6 +150,7 @@ def _str_to_int(value: str, error_msg: str):
         return int(value)
     except ValueError:
         raise ValueError(error_msg)
+
 
 # -----------------------------------------------
 # Some test cases

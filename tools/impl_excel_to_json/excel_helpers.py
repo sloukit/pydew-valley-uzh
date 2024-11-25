@@ -20,7 +20,9 @@ def cell_value(sheet: Worksheet, cell_address: str) -> Optional[str]:
     for merged_range in sheet.merged_cells.ranges:
         if cell.coordinate in merged_range:
             master_cell = merged_range.start_cell  # Get the top-left (master) cell
-            return sheet[master_cell.coordinate].value  # Return the value of the master cell
+            return sheet[
+                master_cell.coordinate
+            ].value  # Return the value of the master cell
 
     # If not merged, return the cell's own value
     return cell.value

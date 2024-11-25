@@ -37,21 +37,20 @@ sheet = workbook.active  # active tab in Excel
 
 headers = [
     parse_cell("level_name_text", cell_value(sheet, cell.coordinate))
-    for cell in sheet["2"] if cell.column >= FIRST_DATA_COL  # Start from column B (column index >= 2)
+    for cell in sheet["2"]
+    if cell.column >= FIRST_DATA_COL  # Start from column B (column index >= 2)
 ]
 
 print(f"headers: {headers}")
 
 col_letters = [
-    get_column_letter(i)
-    for i in range(FIRST_DATA_COL, sheet.max_column + 1)
+    get_column_letter(i) for i in range(FIRST_DATA_COL, sheet.max_column + 1)
 ]
 
 levels = [{"level_name_text": h} for h in headers]
 errors = []
 
 for row in range(FIRST_DATA_ROW, sheet.max_row):
-
     key = sheet[f"{KEY_COL}{row}"].value
 
     # row_vals = []
