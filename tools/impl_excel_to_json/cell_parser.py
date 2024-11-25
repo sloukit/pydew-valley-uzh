@@ -73,10 +73,10 @@ def _parse_timestamp(value: str) -> int:
         value = value.strip()
         parsed_time = dt.datetime.strptime(value, "%M:%S").time()
         return _to_seconds(parsed_time)
-    except ValueError:
+    except ValueError as err:
         raise ValueError(
             f"Invalid timestamp '{value}'. Allowed format is MM:SS (e.g., 05:04 or 5:04)."
-        )
+        ) from err
 
 
 def _to_seconds(time: dt.time | dt.timedelta, from_excel: bool = False) -> int:
@@ -148,8 +148,8 @@ def _strip_trailing_brackets(s: Optional[str]) -> Optional[str]:
 def _str_to_int(value: str, error_msg: str):
     try:
         return int(value)
-    except ValueError:
-        raise ValueError(error_msg)
+    except ValueError as err:
+        raise ValueError(error_msg) from err
 
 
 # -----------------------------------------------
