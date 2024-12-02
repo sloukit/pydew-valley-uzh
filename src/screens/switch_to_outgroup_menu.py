@@ -25,8 +25,6 @@ class OutgroupMenu(GeneralMenu):
     def button_action(self, text):
         if "Yes" in text:
             self.player.study_group = StudyGroup.OUTGROUP
-            self.player.has_hat = False
-            self.player.has_necklace = False
             self.switch_screen(GameState.PLAY)
         elif "No" in text:
             self.switch_screen(GameState.PLAY)
