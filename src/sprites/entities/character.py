@@ -165,6 +165,17 @@ class Character(Entity, ABC):
                 skin_frame = skin_ani.get_frame(self.frame_index)
                 skin_frame.set_alpha(self.image_alpha)
                 blit_list.append((skin_frame, rect))
+            else:
+                # if transition to outgroup has not finished, drew the ingroup body
+                self.image.set_alpha(self.image_alpha)
+                super().draw(display_surface, rect, camera)
+
+                if self.has_hat:
+                    hat_state = EntityState(f"hat_{self.state.value}")
+                    hat_ani = self.assets[hat_state][self.facing_direction]
+                    hat_frame = hat_ani.get_frame(self.frame_index)
+                    hat_frame.set_alpha(self.image_alpha)
+                    blit_list.append((hat_frame, rect))
 
             if self.has_horn:
                 horn_state = EntityState(f"horn_{self.state.value}")
