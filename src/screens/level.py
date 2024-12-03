@@ -599,28 +599,36 @@ class Level:
             # move player other npc_in_center to the meeting point and make him face to the east (right)
             npc_in_center.teleport(meeting_pos)
             # npc_in_center.direction = pygame.Vector2(1, 0)
-            npc_in_center.direction.update((1, 0))
+            if active_group == StudyGroup.INGROUP:
+                npc_in_center.direction.update((1, 0))
+            else:
+                npc_in_center.direction.update((-1, 0))
             npc_in_center.get_facing_direction()
             npc_in_center.direction.update((0, 0))
 
             # spread all ingroup npc in half-circle of 2 * SCALED_TILE_SIZE diameter
             # from north to south clockwise or counterclockwise (depends on group)
             # and make them face the player in the center
-            distance = pygame.Vector2(0, -2 * SCALED_TILE_SIZE)
-            rot_by = (180) / (len(npcs) - 1)
-            # the outgroup circle is layed out counterclockwise
-            if active_group == StudyGroup.OUTGROUP:
-                rot_by = -rot_by
-            angle = 0.0
+            if len(npcs) > 0:
+                distance = pygame.Vector2(0, -2 * SCALED_TILE_SIZE)
+                if len(npcs) == 1:
+                    rot_by = 0.0
+                    angle = -90.0
+                else:
+                    rot_by = (180) / (len(npcs) - 1)
+                    angle = 0.0
+                # the outgroup circle is laid out counterclockwise
+                if active_group == StudyGroup.OUTGROUP:
+                    rot_by = -rot_by
 
-            for npc in npcs:
-                new_pos = meeting_pos + distance.rotate(angle)
-                npc.direction.update(-distance.rotate(angle))
-                npc.get_facing_direction()
-                npc.direction.update((0, 0))
+                for npc in npcs:
+                    new_pos = meeting_pos + distance.rotate(angle)
+                    npc.direction.update(-distance.rotate(angle))
+                    npc.get_facing_direction()
+                    npc.direction.update((0, 0))
 
-                npc.teleport(new_pos)
-                angle += rot_by
+                    npc.teleport(new_pos)
+                    angle += rot_by
             self.cutscene_animation.reset()
             self.cutscene_animation.start()
 
