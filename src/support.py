@@ -16,7 +16,7 @@ from src.settings import SCALE_FACTOR, SCALED_TILE_SIZE, TILE_SIZE, Coordinate
 
 
 def load_translations():
-    game_language = os.environ.get('GAME_LANGUAGE', 'en')
+    game_language = os.environ.get("GAME_LANGUAGE", "en")
     path = os.path.join(
         os.path.dirname(__file__),
         "..",
@@ -28,7 +28,7 @@ def load_translations():
         text = file.read()
 
     lines = text.splitlines()
-    pairs = [tuple(line.split('=')) for line in lines]
+    pairs = [tuple(line.split("=")) for line in lines]
     return dict(pairs)
 
 

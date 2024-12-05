@@ -6,7 +6,6 @@ import src.support as support
 
 
 class TestLoadTranslations(unittest.TestCase):
-
     @mock.patch.dict(
         os.environ,
         {"GAME_LANGUAGE": "en"},
@@ -14,7 +13,7 @@ class TestLoadTranslations(unittest.TestCase):
     )
     def test_english(self):
         tr = support.load_translations()
-        self.assertEqual(tr['enter_play_token'], "Please enter token:")
+        self.assertEqual(tr["enter_play_token"], "Please enter token:")
 
     @mock.patch.dict(
         os.environ,
@@ -23,4 +22,4 @@ class TestLoadTranslations(unittest.TestCase):
     )
     def test_german(self):
         tr = support.load_translations()
-        self.assertEqual(tr['enter_play_token'], "Bitte Token eingeben:")
+        self.assertEqual(tr["enter_play_token"], "Bitte Token eingeben:")

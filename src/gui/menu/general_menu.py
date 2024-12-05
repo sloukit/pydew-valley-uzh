@@ -4,13 +4,12 @@ import pygame
 from pygame.math import Vector2 as vector
 from pygame.mouse import get_pressed as mouse_buttons
 
+from src import support
 from src.enums import CustomCursor, GameState
 from src.events import SET_CURSOR, post_event
 from src.gui.menu.abstract_menu import AbstractMenu
 from src.gui.menu.components import Button
 from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH
-
-from src import support
 
 _SCREEN_CENTER = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
 
@@ -67,7 +66,7 @@ class GeneralMenu(AbstractMenu):
 
         if self.input_active:
             label_font = self.font
-            label_text = support.TR['enter_play_token']
+            label_text = support.TR["enter_play_token"]
             label_surface = label_font.render(label_text, True, text_color)
 
             # Position the label slightly above the input box
