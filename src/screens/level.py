@@ -482,7 +482,7 @@ class Level:
         # If the player is in the farm and 60 seconds (currently 30s) have passed
         if (
             self.outgroup_farm_entered
-            and pygame.time.get_ticks() - self.outgroup_farm_time_entered >= 30000
+            and pygame.time.get_ticks() - self.outgroup_farm_time_entered >= 30_000
         ):
             # Checks if player has already received the message and is not part of the outgroup
             if (
@@ -498,16 +498,32 @@ class Level:
 
         # checks 60 seconds and 120 seconds after player joins outgroup to convert appearance
         if self.player.study_group == StudyGroup.OUTGROUP:
+            # immediately player looses necklace
+            delta_time = pygame.time.get_ticks() - (
+                self.start_become_outgroup_time or 0
+            )
             if not self.start_become_outgroup:
                 self.start_become_outgroup_time = pygame.time.get_ticks()
                 self.start_become_outgroup = True
+                self.player.has_necklace = False
+
             elif self.finish_become_outgroup:
                 pass
-            elif pygame.time.get_ticks() - self.start_become_outgroup_time > 120000:
-                self.player.has_outgroup_skin = True
-                self.finish_become_outgroup = True
-            elif pygame.time.get_ticks() - self.start_become_outgroup_time > 60000:
+            # after 3 minutes player gets horn
+            elif delta_time > 180_000:
                 self.player.has_horn = True
+                self.finish_become_outgroup = True
+            # after 2 minutes player gets the same color as outgroup
+            elif delta_time > 120_000 and delta_time < 180_000:
+                self.player.image_alpha = 255
+            # after 1 minute player looses hat, fade in outgroup body
+            elif delta_time > 60_000 and delta_time < 120_000:
+                self.player.has_hat = False
+                self.player.has_outgroup_skin = True
+                self.player.image_alpha = 35 + 220 * ((delta_time - 60_000) / 60_000)
+            # during first minute fade out ingroup body
+            elif delta_time < 60_000:
+                self.player.image_alpha = 35 + 220 * (1 - (delta_time) / 60_000)
 
     def handle_event(self, event: pygame.event.Event) -> bool:
         if self.current_minigame and self.current_minigame.running:
@@ -546,6 +562,9 @@ class Level:
 
         if self.controls.DEBUG_END_ROUND.click:
             self.switch_screen(GameState.ROUND_END)
+
+        if self.controls.DEBUG_SELF_ASSESSMENT.click:
+            self.switch_screen(GameState.SELF_ASSESSMENT)
 
         if self.controls.DEBUG_PLAYER_RECEIVES_HAT.click:
             self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_HAT)
@@ -608,28 +627,36 @@ class Level:
             # move player other npc_in_center to the meeting point and make him face to the east (right)
             npc_in_center.teleport(meeting_pos)
             # npc_in_center.direction = pygame.Vector2(1, 0)
-            npc_in_center.direction.update((1, 0))
+            if active_group == StudyGroup.INGROUP:
+                npc_in_center.direction.update((1, 0))
+            else:
+                npc_in_center.direction.update((-1, 0))
             npc_in_center.get_facing_direction()
             npc_in_center.direction.update((0, 0))
 
             # spread all ingroup npc in half-circle of 2 * SCALED_TILE_SIZE diameter
             # from north to south clockwise or counterclockwise (depends on group)
             # and make them face the player in the center
-            distance = pygame.Vector2(0, -2 * SCALED_TILE_SIZE)
-            rot_by = (180) / (len(npcs) - 1)
-            # the outgroup circle is layed out counterclockwise
-            if active_group == StudyGroup.OUTGROUP:
-                rot_by = -rot_by
-            angle = 0.0
+            if len(npcs) > 0:
+                distance = pygame.Vector2(0, -2 * SCALED_TILE_SIZE)
+                if len(npcs) == 1:
+                    rot_by = 0.0
+                    angle = -90.0
+                else:
+                    rot_by = (180) / (len(npcs) - 1)
+                    angle = 0.0
+                # the outgroup circle is laid out counterclockwise
+                if active_group == StudyGroup.OUTGROUP:
+                    rot_by = -rot_by
 
-            for npc in npcs:
-                new_pos = meeting_pos + distance.rotate(angle)
-                npc.direction.update(-distance.rotate(angle))
-                npc.get_facing_direction()
-                npc.direction.update((0, 0))
+                for npc in npcs:
+                    new_pos = meeting_pos + distance.rotate(angle)
+                    npc.direction.update(-distance.rotate(angle))
+                    npc.get_facing_direction()
+                    npc.direction.update((0, 0))
 
-                npc.teleport(new_pos)
-                angle += rot_by
+                    npc.teleport(new_pos)
+                    angle += rot_by
             self.cutscene_animation.reset()
             self.cutscene_animation.start()
 

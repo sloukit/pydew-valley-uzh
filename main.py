@@ -13,7 +13,7 @@ import sys
 import pygame
 
 from src import support
-from src.enums import CustomCursor, GameState
+from src.enums import CustomCursor, GameState, SelfAssessmentDimension
 from src.events import DIALOG_ADVANCE, DIALOG_SHOW, OPEN_INVENTORY, SET_CURSOR
 from src.groups import AllSprites
 from src.gui.interface.dialog import DialogueManager
@@ -27,6 +27,7 @@ from src.screens.menu_pause import PauseMenu
 from src.screens.menu_round_end import RoundMenu
 from src.screens.menu_settings import SettingsMenu
 from src.screens.player_task import PlayerTask
+from src.screens.self_assessment_menu import SelfAssessmentMenu
 from src.screens.shop import ShopMenu
 from src.screens.switch_to_outgroup_menu import OutgroupMenu
 from src.settings import (
@@ -130,6 +131,15 @@ class Game:
             self.switch_state,
         )
 
+        self.self_assessment_menu = SelfAssessmentMenu(
+            lambda: self.switch_state(GameState.PLAY),
+            (
+                SelfAssessmentDimension.VALENCE,
+                SelfAssessmentDimension.AROUSAL,
+                SelfAssessmentDimension.DOMINANCE,
+            ),
+        )
+
         # dialog
         self.all_sprites = AllSprites()
         self.dialogue_manager = DialogueManager(
@@ -150,6 +160,7 @@ class Game:
             GameState.PLAYER_TASK: self.allocation_task,
             GameState.ROUND_END: self.round_menu,
             GameState.OUTGROUP_MENU: self.outgroup_menu,
+            GameState.SELF_ASSESSMENT: self.self_assessment_menu,
         }
         self.current_state = GameState.MAIN_MENU
 
@@ -263,26 +274,11 @@ class Game:
         return self.current_state != GameState.PLAY
 
     def show_intro_msg(self):
-        # A Message At The Starting Of The Game Giving Introduction To The Game And The InGroup.
-        if not self.intro_txt_is_rendering:
+        # A Message At The Starting Of The Game Giving Introduction To Group.
+        if not self.intro_txt_shown:
             if not self.game_paused():
-                self.dialogue_manager.open_dialogue(
-                    "intro_to_game", self.msg_left, self.msg_top
-                )
-                self.intro_txt_is_rendering = True
-                self.intro_txt_rendered = True
-        elif not self.level.cutscene_animation.active:
-            if (
-                self.dialogue_manager.showing_dialogue
-            ):  # prepare text box to switch to tutorial
-                if self.intro_txt_rendered:
-                    self.dialogue_manager.advance()
-                    self.intro_txt_rendered = False
-            elif not self.player.save_file.is_tutorial_completed:
-                try:
-                    self.tutorial.dialogue_manager._get_current_tb()  # to execute ready() only at the beginning
-                except Exception:
-                    self.tutorial.ready()
+                self.dialogue_manager.open_dialogue(dial="intro")
+                self.intro_txt_shown = True
 
     # events
     def event_loop(self):
