@@ -900,6 +900,12 @@ class GameMap:
 
                 self.npc_emote_manager.show_emote(npc, emote)
 
+                # check if the player achieved task "interact with an ingroup member" or "interact with an outgroup member"
+                if self.player.study_group == npc.study_group:
+                    self.player.ingroup_member_interacted = True
+                else:
+                    self.player.outgroup_member_interacted = True
+
         @self.player_emote_manager.on_emote_wheel_opened
         def on_emote_wheel_opened():
             player_pos = self.player.rect.center

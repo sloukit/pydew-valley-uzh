@@ -2,11 +2,10 @@ import json
 import os
 import sys
 
-from openpyxl import load_workbook
-from openpyxl.utils import get_column_letter
-
 from impl_excel_to_json.cell_parser import parse_cell
 from impl_excel_to_json.excel_helpers import cell_value
+from openpyxl import load_workbook
+from openpyxl.utils import get_column_letter
 
 FIRST_DATA_ROW = 3  # in which row data begins
 FIRST_DATA_COL = 3  # in which column data begins (numeric)

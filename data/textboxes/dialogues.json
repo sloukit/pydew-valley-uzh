@@ -1,7 +1,7 @@
 {
   "test":[
-    ["A character", "BLAH BLAH BLAH"], //Single-line text example
-    ["A character", "Insightful text here, or something. I mean, what the heck should I say?"] //Text wrapping function test
+    ["A character", "BLAH BLAH BLAH"],
+    ["A character", "Insightful text here, or something. I mean, what the heck should I say?"] 
   ],
   "intro": [
     ["Character", "This is your Character!"],
@@ -9,19 +9,19 @@
     ["Group", "This is your Outgroup"]
   ],
   "scripted_sequence_player_receives_hat": [
-    ["Special event!", "We gather her for a special occasion"],
+    ["Special event!", "We gather here for a special occasion"],
     ["Special event!", "You have received a hat!"]
   ],
   "scripted_sequence_player_receives_necklace": [
-    ["Special event!", "We gather her for a special occasion"],
+    ["Special event!", "We gather here for a special occasion"],
     ["Special event!", "You have received a necklace!"]
   ],
   "scripted_sequence_players_birthday": [
-    ["Special event!", "We gather her for a special occasion"],
+    ["Special event!", "We gather here for a special occasion"],
     ["Special event!", "We wish you a Happy birthday!"]
   ],
   "scripted_sequence_npc_receives_necklace": [
-    ["Special event!", "We gather her for a special occasion"],
+    ["Special event!", "We gather here for a special occasion"],
     ["Special event!", "Our group member received a necklace!"]
   ],
   "scripted_sequence_decide_tomato_or_corn": [

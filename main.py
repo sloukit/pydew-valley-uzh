@@ -35,11 +35,13 @@ from src.settings import (
     RANDOM_SEED,
     SCREEN_HEIGHT,
     SCREEN_WIDTH,
+    TB_SIZE,
     AniFrames,
     MapDict,
     SoundDict,
 )
 from src.sprites.setup import setup_entity_assets
+from src.tutorial.tutorial import Tutorial
 
 # set random seed. It has to be set first before any other random function is called.
 random.seed(RANDOM_SEED)
@@ -140,7 +142,13 @@ class Game:
 
         # dialog
         self.all_sprites = AllSprites()
-        self.dialogue_manager = DialogueManager(self.all_sprites)
+        self.dialogue_manager = DialogueManager(
+            self.all_sprites, "data/textboxes/dialogues.json"
+        )
+
+        ### dialogue text box positions
+        self.msg_left = SCREEN_WIDTH / 2 - TB_SIZE[0] / 2
+        self.msg_top = SCREEN_HEIGHT - TB_SIZE[1]
 
         # screens
         self.menus = {
@@ -156,8 +164,12 @@ class Game:
         }
         self.current_state = GameState.MAIN_MENU
 
-        # intro to in-group msg.
-        self.intro_txt_shown = False
+        # tutorial
+        self.tutorial = Tutorial(self.all_sprites, self.player, self.level)
+
+        # intro to game and in-group msg.
+        self.intro_txt_is_rendering = False
+        self.intro_txt_rendered = False
 
     def set_round(self, round):
         self.round = round
@@ -305,7 +317,9 @@ class Game:
             if self.dialogue_manager.showing_dialogue:
                 pass
             else:
-                self.dialogue_manager.open_dialogue(event.dial)
+                self.dialogue_manager.open_dialogue(
+                    event.dial, self.msg_left, self.msg_top
+                )
                 self.player.blocked = True
                 self.player.direction.update((0, 0))
             return True
@@ -327,7 +341,10 @@ class Game:
             dt = self.clock.tick() / 1000
 
             self.event_loop()
-            if not self.game_paused() or is_first_frame:
+
+            is_game_paused = self.game_paused()
+
+            if not is_game_paused or is_first_frame:
                 if self.level.cutscene_animation.active:
                     event = pygame.key.get_pressed()
                     if event[pygame.K_RSHIFT]:
@@ -337,7 +354,7 @@ class Game:
                 else:
                     self.level.update(dt, self.current_state == GameState.PLAY)
 
-            if self.game_paused() and not is_first_frame:
+            if is_game_paused and not is_first_frame:
                 self.display_surface.blit(self.previous_frame, (0, 0))
                 self.menus[self.current_state].update(dt)
             else:
@@ -355,16 +372,20 @@ class Game:
                         self.fast_forward.draw_overlay(self.display_surface)
             else:
                 self.all_sprites.update(dt)
-            self.all_sprites.draw(self.level.camera)
+            self.all_sprites.draw(self.level.camera, is_game_paused)
 
             # Apply blur effect only if the player has goggles equipped
             if self.player.has_goggles and self.current_state == GameState.PLAY:
                 surface = pygame.transform.box_blur(self.display_surface, 3)
                 self.display_surface.blit(surface, (0, 0))
 
+            # Into and Tutorial
             self.show_intro_msg()
+            if not self.player.save_file.is_tutorial_completed:
+                self.tutorial.update(is_game_paused)
+
             mouse_pos = pygame.mouse.get_pos()
-            if not self.game_paused() or is_first_frame:
+            if not is_game_paused or is_first_frame:
                 self.previous_frame = self.display_surface.copy()
             self.display_surface.blit(self._cursor_img, mouse_pos)
             is_first_frame = False

@@ -3,6 +3,7 @@
     "current_tool",
     "current_seed"
   ],
+  "tutorial_status": true,
   "money": 216,
   "current_tool": "axe",
   "current_seed": "tomato_seed",

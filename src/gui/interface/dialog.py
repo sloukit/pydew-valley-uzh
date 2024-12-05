@@ -5,7 +5,7 @@ import pygame
 
 from src import utils
 from src.enums import Layer
-from src.settings import CHARS_PER_LINE, SCREEN_HEIGHT, SCREEN_WIDTH, TB_SIZE
+from src.settings import CHARS_PER_LINE, TB_SIZE
 from src.sprites.base import Sprite
 from src.support import resource_path
 from src.timer import Timer
@@ -45,12 +45,17 @@ class TextBox(Sprite):
         ]
         cls._TB_IMAGE.fblits(blit_list)
 
-    def __init__(self, character_name: str, text: str, font: pygame.Font):
+    def __init__(
+        self, character_name: str, text: str, font: pygame.Font, left: int, top: int
+    ):
         """Create a text box.
 
         :param character_name: The character meant to speak using this text box.
         :param text: The dialogue the character is supposed to say.
-        :param font: The font used to render this dialogue."""
+        :param font: The font used to render this dialogue.
+        :param left: The value used to set the left side position of the box
+        :param top:  The value used to set the top side position of the box"""
+
         self.font: pygame.Font = font
         self.name: str = character_name
         self.text: str = textwrap.fill(text, width=CHARS_PER_LINE)
@@ -71,8 +76,8 @@ class TextBox(Sprite):
 
         super().__init__(
             (
-                SCREEN_WIDTH / 2 - self.image.get_width() / 2,
-                SCREEN_HEIGHT - self.image.get_height(),
+                left,
+                top,
             ),
             self.image,
             (),
@@ -89,8 +94,6 @@ class TextBox(Sprite):
         self._finished_advancing = val
         if val:
             self._chr_index = len(self.text)
-
-    # finished_advancing = property(fget=attrgetter("_finished_advancing"), fset=_set_finished_advancing)
 
     def _advance_by_one(self):
         self._chr_index += 1
@@ -142,11 +145,11 @@ class DialogueManager:
     """Dialogue manager object.
     This class will store all dialogues and has a method to show a dialogue on-screen."""
 
-    def __init__(self, sprite_group: pygame.sprite.Group):
+    def __init__(self, sprite_group: pygame.sprite.Group, dialogue_file_path: str):
         self.spr_grp: pygame.sprite.Group = sprite_group
         # Open the dialogues file and dump all of its content in here,
         # while purging the raw file content from its comments.
-        with open(resource_path("data/dialogues.json"), "r") as dialogue_file:
+        with open(resource_path(dialogue_file_path), "r") as dialogue_file:
             self.dialogues: dict[str, list[list[str, str]]] = utils.json_loads(
                 dialogue_file.read()
             )
@@ -165,8 +168,8 @@ class DialogueManager:
         self._tb_list.clear()
         self._msg_index = 0
 
-    def _create_tb(self, cname: str, txt: str):
-        self._tb_list.append(TextBox(cname, txt, self.font))
+    def _create_tb(self, cname: str, txt: str, left: int, top: int):
+        self._tb_list.append(TextBox(cname, txt, self.font, left, top))
 
     def _push_current_tb_to_foreground(self):
         if not self._msg_index:
@@ -178,10 +181,12 @@ class DialogueManager:
     def _get_current_tb(self):
         return self._tb_list[self._msg_index]
 
-    def open_dialogue(self, dial: str):
+    def open_dialogue(self, dial: str, left: int, top: int):
         """Opens a text box with the current dialogue ID's first text showed on-screen.
         Does nothing if a text box is already on-screen.
         :param dial: The dialogue ID for which you want to open textboxes on the screen.
+        :param left: The value used to set the left side position of the textboxes
+        :param top:  The value used to set the top side position of the textboxes
         :raise ValueError: if the given dialogue ID does not exist."""
         if self._showing_dialogue:
             return
@@ -197,7 +202,7 @@ class DialogueManager:
         self._showing_dialogue = True
 
         for cname, portion in dial_info:
-            self._create_tb(cname, portion)
+            self._create_tb(cname, portion, left, top)
 
         self._push_current_tb_to_foreground()
 

@@ -107,6 +107,7 @@ class SaveFile:
 
     def __init__(
         self,
+        tutorial_status: bool,
         current_tool: FarmingTool,
         current_seed: FarmingTool,
         inventory: dict[InventoryResource, int],
@@ -137,6 +138,7 @@ class SaveFile:
         self.has_hat = hat_status
         self.has_horn = horn_status
         self.has_outgroup_skin = outgroup_skin_status
+        self.is_tutorial_completed = tutorial_status
         self._soil_data = soil_data or {}
 
     @classmethod
@@ -164,6 +166,7 @@ class SaveFile:
             serialised_inventory[CONVERT_TO_IR] = keys_to_convert
             obj_to_dump = {
                 CONVERT_TO_FT: ["current_tool", "current_seed"],
+                "tutorial_status": self.is_tutorial_completed,
                 "money": self.money,
                 "current_tool": self.current_tool.as_serialised_string(),
                 "current_seed": self.current_seed.as_serialised_string(),
