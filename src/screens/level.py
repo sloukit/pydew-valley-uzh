@@ -223,12 +223,6 @@ class Level:
         self.get_round = get_set_round[0]
         self.set_round = get_set_round[1]
 
-        # watch the player behaviour in achieving tutorial tasks
-        self.tile_farmed = False
-        self.crop_planted: set = set()
-        self.crop_watered = False
-        self.hit_tree = False
-
     def load_map(self, game_map: Map, from_map: str = None):
         # prepare level state for new map
         # clear all sprite groups
@@ -402,40 +396,18 @@ class Level:
                     ),
                 ):
                     tree.hit(character)
-
-                    # check if player achieved task "go to the forest and hit a tree"
-                    if isinstance(character, Player):
-                        self.hit_tree = True
-
                     self._play_playeronly_sound("axe", character)
             case FarmingTool.HOE:
                 if self.soil_manager.hoe(character, pos):
                     self._play_playeronly_sound("hoe", character)
-
-                    # check if the player achieved task "farm with your hoe"
-                    if isinstance(character, Player):
-                        self.tile_farmed = True
             case FarmingTool.WATERING_CAN:
-                if self.soil_manager.water(character, pos):
-                    # check if the player achieved task "water the crop"
-                    if (
-                        isinstance(character, Player)
-                        and True in self.crop_planted
-                        and pos in self.crop_planted
-                    ):
-                        self.crop_watered = True
-
+                self.soil_manager.water(character, pos)
                 self._play_playeronly_sound("water", character)
             case _:  # All seeds
                 if self.soil_manager.plant(
                     character, pos, tool, character.remove_resource
                 ):
                     self._play_playeronly_sound("plant", character)
-
-                    # check if the player achieved task "plant a crop"
-                    if isinstance(character, Player):
-                        self.crop_planted.add(True)
-                        self.crop_planted.add(pos)
                 else:
                     self._play_playeronly_sound("cant_plant", character)
 
@@ -928,7 +900,7 @@ class Level:
     def draw(self, dt: float, move_things: bool):
         self.player.hp = self.overlay.health_bar.hp
         self.display_surface.fill((130, 168, 132))
-        self.all_sprites.draw(self.camera, False)
+        self.all_sprites.draw(self.camera)
 
         self.draw_pf_overlay()
         self.draw_hitboxes()

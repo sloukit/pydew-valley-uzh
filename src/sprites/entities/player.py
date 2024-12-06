@@ -98,12 +98,6 @@ class Player(Character):
         # check if the zoom is allowed
         self.zoom_allowed = False
 
-        # watch the player behaviour in achieving tutorial tasks
-        self.bought_sold = False
-        self.minigame_finished = False
-        self.ingroup_member_interacted = False
-        self.outgroup_member_interacted = False
-
     def focus_entity(self, entity: Entity):
         if self.focused_entity:
             self.focused_entity.unfocus()
