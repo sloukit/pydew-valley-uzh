@@ -274,11 +274,26 @@ class Game:
         return self.current_state != GameState.PLAY
 
     def show_intro_msg(self):
-        # A Message At The Starting Of The Game Giving Introduction To Group.
-        if not self.intro_txt_shown:
+        # A Message At The Starting Of The Game Giving Introduction To The Game And The InGroup.
+        if not self.intro_txt_is_rendering:
             if not self.game_paused():
-                self.dialogue_manager.open_dialogue(dial="intro")
-                self.intro_txt_shown = True
+                self.dialogue_manager.open_dialogue(
+                    "intro_to_game", self.msg_left, self.msg_top
+                )
+                self.intro_txt_is_rendering = True
+                self.intro_txt_rendered = True
+        elif not self.level.cutscene_animation.active:
+            if (
+                self.dialogue_manager.showing_dialogue
+            ):  # prepare text box to switch to tutorial
+                if self.intro_txt_rendered:
+                    self.dialogue_manager.advance()
+                    self.intro_txt_rendered = False
+            elif not self.player.save_file.is_tutorial_completed:
+                try:
+                    self.tutorial.dialogue_manager._get_current_tb()  # to execute ready() only at the beginning
+                except Exception:
+                    self.tutorial.ready()
 
     # events
     def event_loop(self):
