@@ -3,10 +3,8 @@
     ["A character", "BLAH BLAH BLAH"],
     ["A character", "Insightful text here, or something. I mean, what the heck should I say?"] 
   ],
-  "intro": [
-    ["Character", "This is your Character!"],
-    ["Group", "This is your Ingroup"],
-    ["Group", "This is your Outgroup"]
+  "intro_to_game": [
+    ["Ingroup", "Welcome to Clear Skies. \t\t ----- You are ingroup ! -----"]
   ],
   "scripted_sequence_player_receives_hat": [
     ["Special event!", "We gather here for a special occasion"],
@@ -25,7 +23,7 @@
     ["Special event!", "Our group member received a necklace!"]
   ],
   "scripted_sequence_decide_tomato_or_corn": [
-    ["Group gathering", "We gather her to decide what to buy at the market"],
+    ["Group gathering", "We gather here to decide what to buy at the market"],
     ["Group gathering", "Everyone needs to vote one of the items:\t - tomato\n\t\t\t\t\t\t\t - corn"]
   ],
   "scripted_sequence_buy_tomato": [
