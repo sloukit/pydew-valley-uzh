@@ -316,7 +316,8 @@ class Level:
         # show intro scripted sequence only once
         if not self.intro_shown.get(game_map, False):
             self.intro_shown[game_map] = True
-            self.cutscene_animation.start()
+            # TODO revert, this only for debug
+            # self.cutscene_animation.start()
 
         if game_map == Map.MINIGAME:
             self.current_minigame = CowHerding(
@@ -565,6 +566,9 @@ class Level:
 
         if self.controls.DEBUG_SELF_ASSESSMENT.click:
             self.switch_screen(GameState.SELF_ASSESSMENT)
+
+        if self.controls.DEBUG_NOTIFICATION_MENU.click:
+            self.switch_screen(GameState.NOTIFICATION_MENU)
 
         if self.controls.DEBUG_PLAYER_RECEIVES_HAT.click:
             self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_HAT)
