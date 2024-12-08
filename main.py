@@ -23,6 +23,7 @@ from src.savefile import SaveFile
 from src.screens.inventory import InventoryMenu, prepare_checkmark_for_buttons
 from src.screens.level import Level
 from src.screens.menu_main import MainMenu
+from src.screens.menu_notification import NotificationMenu
 from src.screens.menu_pause import PauseMenu
 from src.screens.menu_round_end import RoundMenu
 from src.screens.menu_settings import SettingsMenu
@@ -91,10 +92,9 @@ class Game:
         self.load_assets()
 
         # level info
-        self.ROUND_END_TIME_IN_MINUTES = 15
-        self.round_end_timer = 0.0
-        self.round = 1
+        self.rounds_config = support.load_data("rounds_config.json")
         self.get_round = lambda: self.round
+        self.set_round(1)
 
         # screens
         self.level = Level(
@@ -124,7 +124,7 @@ class Game:
             self.player.assign_seed,
         )
         self.round_menu = RoundMenu(
-            self.switch_state, self.player, self.increment_round
+            self.switch_state, self.player, self.increment_round, self.get_round
         )
         self.outgroup_menu = OutgroupMenu(
             self.player,
@@ -140,13 +140,18 @@ class Game:
             ),
         )
 
+        self.notification_menu = NotificationMenu(
+            self.switch_state,
+            "This is a very long Test Message with German characters: üß",
+        )
+
         # dialog
         self.all_sprites = AllSprites()
         self.dialogue_manager = DialogueManager(
             self.all_sprites, "data/textboxes/dialogues.json"
         )
 
-        ### dialogue text box positions
+        # dialogue text box positions
         self.msg_left = SCREEN_WIDTH / 2 - TB_SIZE[0] / 2
         self.msg_top = SCREEN_HEIGHT - TB_SIZE[1]
 
@@ -161,6 +166,7 @@ class Game:
             GameState.ROUND_END: self.round_menu,
             GameState.OUTGROUP_MENU: self.outgroup_menu,
             GameState.SELF_ASSESSMENT: self.self_assessment_menu,
+            GameState.NOTIFICATION_MENU: self.notification_menu,
         }
         self.current_state = GameState.MAIN_MENU
 
@@ -173,10 +179,20 @@ class Game:
 
     def set_round(self, round):
         self.round = round
+        # if config for given round number not found, use first one as fall back
+        # TODO: fix volcano eruption (`m`) debug which switched round to not existing value of 7
+        if round < len(self.rounds_config):
+            self.round_config = self.rounds_config[round - 1]
+        else:
+            print(f"ERROR: No config found for round {round}! Using config for round 1.")
+            self.round_config = self.rounds_config[0]
+        self.round_end_timer = 0.0
+        self.ROUND_END_TIME_IN_MINUTES = self.round_config["level_duration"] / 60  # 15
+        print(self.round_config["level_name_text"])
 
     def increment_round(self):
         if self.round < 12:
-            self.round += 1
+            self.set_round(self.round + 1)
 
     def switch_state(self, state: GameState):
         self.set_cursor(CustomCursor.ARROW)
@@ -277,9 +293,10 @@ class Game:
         # A Message At The Starting Of The Game Giving Introduction To The Game And The InGroup.
         if not self.intro_txt_is_rendering:
             if not self.game_paused():
-                self.dialogue_manager.open_dialogue(
-                    "intro_to_game", self.msg_left, self.msg_top
-                )
+                # TODO revert, this only for debug
+                # self.dialogue_manager.open_dialogue(
+                #     "intro_to_game", self.msg_left, self.msg_top
+                # )
                 self.intro_txt_is_rendering = True
                 self.intro_txt_rendered = True
         elif not self.level.cutscene_animation.active:
@@ -377,6 +394,16 @@ class Game:
                 if self.round_end_timer > self.ROUND_END_TIME_IN_MINUTES * 60:
                     self.round_end_timer = 0
                     self.switch_state(GameState.ROUND_END)
+                elif self.round_config["notify_new_crop_text"] \
+                        and self.round_config["notify_new_crop_timestamp"] \
+                        and self.round_end_timer > self.round_config["notify_new_crop_timestamp"][0]:
+                    # make a copy of a string
+                    message = self.round_config["notify_new_crop_text"][:]
+                    self.notification_menu.message = message
+                    self.switch_state(GameState.NOTIFICATION_MENU)
+                    # set to empty to not repeat
+                    self.round_config["notify_new_crop_text"] = ""
+                    self.round_config["notify_new_crop_timestamp"] = []
 
             if self.level.cutscene_animation.active:
                 self.all_sprites.update_blocked(dt)

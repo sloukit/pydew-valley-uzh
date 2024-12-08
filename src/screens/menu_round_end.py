@@ -30,11 +30,13 @@ class RoundMenu(GeneralMenu):
         switch_screen: Callable[[GameState], None],
         player: Player,
         increment_round: Callable[[], None],
+        get_round: Callable[[], int],
     ):
         self.player = player
         self.scroll = 0
         self.min_scroll = self.get_min_scroll()
-        title = "Round has ended. You currently have:"
+        self.get_round = get_round
+        title = f"Round {self.get_round()} has ended. You currently have:"
         options = ["continue to next round"]
         size = (400, 400)
         super().__init__(title, options, switch_screen, size)
@@ -46,6 +48,7 @@ class RoundMenu(GeneralMenu):
 
     def reset_menu(self):
         self.increment_round()
+        print(f"Current round is {self.get_round()}")
         self.background.blit(self.display_surface, (0, 0))
         self.scroll = 0
         self.generate_items()

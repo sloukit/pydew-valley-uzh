@@ -176,3 +176,7 @@ images/characters/rabbit/temp_hat.png
 # Tools
 /tools/input
 /tools/output
+
+# other
+.env_name
+*.code-workspace
