@@ -57,7 +57,7 @@ class AbstractMenu(ABC):
         pass
 
     # events
-    def handle_event(self, event: pygame.event.Event):
+    def handle_event(self, event: pygame.event.Event) -> bool:
         return self.click(event)
 
     # setup
@@ -65,7 +65,7 @@ class AbstractMenu(ABC):
         self.rect = pygame.Rect((0, 0), self.size)
         self.rect.center = self.center or _SCREEN_CENTER
 
-    def click(self, event):
+    def click(self, event) -> bool:
         if event.type == pygame.MOUSEBUTTONDOWN and mouse_buttons()[0]:
             self.pressed_button = self.get_hovered_button()
             if self.pressed_button:

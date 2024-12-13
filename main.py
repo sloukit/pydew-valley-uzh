@@ -3,6 +3,7 @@
 #  "pygame-ce",
 #  "pytmx",
 #  "pathfinding",
+#  "pygbag",
 # ]
 # ///
 
@@ -16,7 +17,7 @@ import pygame
 
 import src.utils  # noqa [ to patch utf-8 on top of file without linting errors ]
 from src import support
-from src.client import send_telemetry
+from src import client
 from src.enums import (
     CustomCursor,
     GameState,
@@ -60,10 +61,12 @@ from src.settings import (
     AniFrames,
     MapDict,
     SoundDict,
+    # SERVER_URL,
 )
 from src.sprites.setup import setup_entity_assets
 from src.support import get_translated_string as _
 from src.tutorial.tutorial import Tutorial
+from src import xplat
 
 # set random seed. It has to be set first before any other random function is called.
 random.seed(RANDOM_SEED)
@@ -139,7 +142,7 @@ class Game:
         self.get_round = lambda: self.round
         self.game_version: int = -1
         self.round: int = -1
-        self.token: str = ""
+        # JWT token to use to interact with backend, and send telemetry
         self.jwt: str = ""
         self.round_end_timer: float = 0.0
         self.ROUND_END_TIME_IN_MINUTES: float = 99999999.0
@@ -271,7 +274,7 @@ class Game:
                 "game_round": self.round,
                 "round_timer": round(self.round_end_timer, 2),
             }
-            send_telemetry(self.jwt, telemetry)
+            client.send_telemetry(self.jwt, telemetry)
         self.switch_state(GameState.PLAY)
 
     def send_resource_allocation(self, resource_allocation: dict[str, Any]) -> None:
@@ -282,18 +285,28 @@ class Game:
                 "game_round": self.round,
                 "round_timer": round(self.round_end_timer, 2),
             }
-            send_telemetry(self.jwt, telemetry)
+            client.send_telemetry(self.jwt, telemetry)
         self.switch_state(GameState.PLAY)
 
     def set_players_name(self, players_name: str) -> None:
         self.player.name = players_name
 
     def set_token(self, response: dict[str, Any]) -> dict[str, Any]:
+        xplat.log("Login successful!")
+        # `token` is the play token the player entered
         self.token = response["token"]
+        # `jwt` is the creds used to send telemetry to the backend
         self.jwt = response["jwt"]
-        self.game_version = response["game_version"]
+        # `game_version` is stored in the player database
+        self.game_version = int(response["game_version"])
+        xplat.log(f"token: {self.token}")
+        xplat.log(f"jwt: {self.jwt}")
+        xplat.log(f"game version: {self.game_version}")
+        if USE_SERVER:
+            client.send_telemetry(self.jwt, {"event": "player_login"})
 
         if not USE_SERVER:
+            xplat.log("Not using server!")
             # token 100-379 triggers game version 1,
             # token 380-659 triggers game version 2,
             # token 660-939 triggers game version 3
@@ -313,7 +326,7 @@ class Game:
             else:
                 raise ValueError("Invalid token value")
 
-        print(f"Game version {self.game_version}")
+        xplat.log(f"Game version {self.game_version}")
         self.set_round(1)
 
         return self.round_config

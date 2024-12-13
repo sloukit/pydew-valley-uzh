@@ -4,15 +4,21 @@ from typing import Any
 import pygame
 from pygame.mouse import get_pressed as mouse_buttons
 
-from src.client import authn
+from src import client
 from src.enums import CustomCursor, GameState
 from src.events import SET_CURSOR, post_event
 from src.gui.menu.general_menu import GeneralMenu
-from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH, USE_SERVER
+from src.settings import (
+    SCREEN_HEIGHT,
+    SCREEN_WIDTH,
+    # USE_SERVER,
+)
 from src.support import get_translated_string as _
+from src import xplat
 
 _SCREEN_CENTER = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
-MAX_TOKEN_LEN = 3
+# MAX_TOKEN_LEN = 3
+MAX_TOKEN_LEN = 10
 MAX_PLAYERS_NAME_LEN = 16
 
 
@@ -27,6 +33,7 @@ class MainMenu(GeneralMenu):
         title = _("Main Menu")
         size = (400, 400)
         super().__init__(title, options, switch_screen, size)
+        # This function references a method of the main `Game` object.
         self.set_token = set_token
         self.set_players_name = set_players_name
         self.token = ""  # Variable to store token
@@ -118,26 +125,33 @@ class MainMenu(GeneralMenu):
                 self.players_name_active,
             )
 
-    def validate_token(self, token: str) -> dict[str, Any]:
-        result: dict[str, Any] = {"token": token, "jwt": "", "game_version": -1}
-
-        if USE_SERVER:
-            resp = authn(token)
-            if resp.get("jwt", "") and "game_version" in resp:
-                result = resp
-                result["token"] = token
+    def post_login_callback(self, login_response: dict) -> None:
+        """Meant to be used as a callback function post-login."""
+        xplat.log("post login callback")
+        # jwt = login_response["jwt"]
+        # Pass the JWT back to the main Game object:
+        # self.set_token(jwt)
+        self.round_config = self.set_token(login_response)
+        self.token = self.input_text
+        self.players_name_active = True
+        self.input_active = True
+        self.input_text = ""
+        # get players_name only if used in introduction
+        if self.round_config.get("character_introduction_text", ""):
+            xplat.log("round config has character introduction")
+            self.players_name_active = True
         else:
-            valid_tokens = [0]
-            valid_tokens.extend(range(100, 940))
-            try:
-                token_int = int(token)
-                if token_int in valid_tokens:
-                    result["jwt"] = "dummy_token"
-            except ValueError:
-                print("ERROR! Invalid token:", token)
-                return result
+            xplat.log("round config DOES NOT have character introduction")
+            self.players_name_active = True
+            self.set_players_name("")
+            self.play_button_enabled = True
+            self.remove_button(_("Enter authentication data"))
+            self.draw()
+        self.input_text = ""
 
-        return result
+    def do_login(self, token: str) -> None:
+        """Log in with a play token."""
+        client.authn(token, self.post_login_callback)
 
     def button_action(self, text) -> None:
         if text == _("Play") and self.play_button_enabled:
@@ -175,20 +189,22 @@ class MainMenu(GeneralMenu):
             if self.input_active:
                 if event.key in [pygame.K_RETURN, pygame.K_KP_ENTER]:
                     if self.input_text:
-                        response = self.validate_token(self.input_text)
-                        if response.get("jwt", ""):
-                            self.token = self.input_text
-                            self.round_config = self.set_token(response)
-                            self.input_active = False
-                            # get players_name only if used in introduction
-                            if self.round_config.get("character_introduction_text", ""):
-                                self.players_name_active = True
-                            else:
-                                self.set_players_name("")
-                                self.play_button_enabled = True
-                                self.remove_button(_("Enter authentication data"))
-                                self.draw()
-                            self.input_text = ""
+                        self.do_login(self.input_text)
+                        self.input_active = False
+                        # response = self.validate_token(self.input_text)
+                        # if response.get("jwt", ""):
+                        #     self.token = self.input_text
+                        #     self.round_config = self.set_token(response)
+                        #     self.input_active = False
+                        #     # get players_name only if used in introduction
+                        #     if self.round_config.get("character_introduction_text", ""):
+                        #         self.players_name_active = True
+                        #     else:
+                        #         self.set_players_name("")
+                        #         self.play_button_enabled = True
+                        #         self.remove_button(_("Enter authentication data"))
+                        #         self.draw()
+                        #     self.input_text = ""
                         return True
                 elif event.key == pygame.K_ESCAPE:
                     self.reset_fields()
@@ -231,5 +247,4 @@ class MainMenu(GeneralMenu):
                 elif event.key == pygame.K_ESCAPE:
                     self.button_action(_("Quit"))
                     return True
-
         return False
