@@ -32,62 +32,63 @@ except Exception as e:
     print(f"\t{e}")
     exit(1)
 
-sheet = workbook.active  # active tab in Excel
+# print(workbook.sheetnames)
+# print(workbook.active)
+# sheet = workbook.active  # active tab in Excel
+final = []
+for sheet_name in workbook.sheetnames:
+    sheet = workbook[sheet_name]
+    print("------------------------------------")
+    print(f"Processing sheet: '{sheet}'")
 
-headers = [
-    parse_cell("level_name_text", cell_value(sheet, cell.coordinate))
-    for cell in sheet["2"]
-    if cell.column >= FIRST_DATA_COL  # Start from column B (column index >= 2)
-]
+    headers = [
+        parse_cell("level_name_text", cell_value(sheet, cell.coordinate))
+        for cell in sheet["2"]
+        if cell.column >= FIRST_DATA_COL  # Start from column B (column index >= 2)
+    ]
 
-print(f"headers: {headers}")
+    print(f"headers: {headers}")
 
-col_letters = [
-    get_column_letter(i) for i in range(FIRST_DATA_COL, sheet.max_column + 1)
-]
+    col_letters = [
+        get_column_letter(i) for i in range(FIRST_DATA_COL, sheet.max_column + 1)
+    ]
 
-levels = [{"level_name_text": h} for h in headers]
-errors = []
+    levels = [{"level_name_text": h} for h in headers]
+    errors = []
 
-for row in range(FIRST_DATA_ROW, sheet.max_row):
-    key = sheet[f"{KEY_COL}{row}"].value
+    for row in range(FIRST_DATA_ROW, sheet.max_row):
+        key = sheet[f"{KEY_COL}{row}"].value
 
-    # row_vals = []
+        # row_vals = []
 
-    for i, col in enumerate(col_letters):
-        address = f"{col}{row}"
-        cell = cell_value(sheet, address)
+        for i, col in enumerate(col_letters):
+            address = f"{col}{row}"
+            cell = cell_value(sheet, address)
 
-        if EAGER_FAIL:
-            val = parse_cell(key, cell)
-            levels[i][key] = val
-        else:
-            try:
+            if EAGER_FAIL:
                 val = parse_cell(key, cell)
                 levels[i][key] = val
-            except ValueError as e:
-                errors.append(f"Cell {address}: {e}")
-            except Exception as e:
-                errors.append(f"Cell {address}: unexpected error - {e}")
+            else:
+                try:
+                    val = parse_cell(key, cell)
+                    levels[i][key] = val
+                except ValueError as e:
+                    errors.append(f"Cell {address}: {e}")
+                except Exception as e:
+                    errors.append(f"Cell {address}: unexpected error - {e}")
 
-        # row_vals.append(cell)
+            # row_vals.append(cell)
 
-    # print(f"row: {row_vals}")
+        # print(f"row: {row_vals}")
 
-# Use the commented-out part if the JSON output should be nested document.
-final = levels
+    # Use the commented-out part if the JSON output should be nested document.
+    final.append(levels)
 
-# final = {
-#     "headers": headers,
-#     "levels": levels,
-# }
-
-
-if errors:
-    print("\nERROR: failed to validate input format:")
-    for e in errors:
-        print(f"* {e}")
-    exit(1)
+    if errors:
+        print("\nERROR: failed to validate input format:")
+        for e in errors:
+            print(f"* {e}")
+        exit(1)
 
 print("------------------------------------")
 print("Success!")
@@ -96,7 +97,7 @@ print("Success!")
 
 # Directory and file paths
 directory = "tools/output"
-file_path = os.path.join(directory, "levels.json")
+file_path = os.path.join(directory, "rounds_config.json")
 os.makedirs(directory, exist_ok=True)
 
 # Write JSON to the file
