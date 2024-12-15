@@ -1,5 +1,5 @@
 import pygame  # noqa
-import pytmx
+import pytmx  # type:ignore [import-untyped]
 
 from src.enums import Map
 from src.import_checks import *  # noqa: F403
@@ -26,6 +26,12 @@ GAME_MAP = Map.NEW_FARM
 
 ENABLE_NPCS = True
 TEST_ANIMALS = True
+
+DEBUG_MODE_VERSION = 0
+USE_SERVER = True
+SERVER_IP = "http://127.0.0.1"
+PORT = 5000
+API_KEY = "123"
 
 SETUP_PATHFINDING = any((ENABLE_NPCS, TEST_ANIMALS))
 

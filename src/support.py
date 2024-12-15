@@ -8,7 +8,7 @@ from dataclasses import dataclass
 
 import pygame
 import pygame.gfxdraw
-import pytmx
+import pytmx  # type:ignore [import-untyped]
 
 from src import settings
 from src.enums import Direction

@@ -7,11 +7,14 @@
 # ///
 
 import asyncio
+import copy
 import random
 import sys
+from typing import Any
 
 import pygame
 
+from src.client import send_telemetry
 from src import support
 from src.enums import CustomCursor, GameState, SelfAssessmentDimension
 from src.events import DIALOG_ADVANCE, DIALOG_SHOW, OPEN_INVENTORY, SET_CURSOR
@@ -32,11 +35,13 @@ from src.screens.self_assessment_menu import SelfAssessmentMenu
 from src.screens.shop import ShopMenu
 from src.screens.switch_to_outgroup_menu import OutgroupMenu
 from src.settings import (
+    DEBUG_MODE_VERSION,
     EMOTE_SIZE,
     RANDOM_SEED,
     SCREEN_HEIGHT,
     SCREEN_WIDTH,
     TB_SIZE,
+    USE_SERVER,
     AniFrames,
     MapDict,
     SoundDict,
@@ -58,7 +63,7 @@ _COSMETIC_SUBSURF_AREAS = {
 
 
 class Game:
-    def __init__(self):
+    def __init__(self) -> None:
         # main setup
         pygame.init()
         screen_size = (SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -92,14 +97,37 @@ class Game:
         self.load_assets()
 
         # level info
-        self.rounds_config = support.load_data("rounds_config.json")
+        self.rounds_config: list[list[dict[str, Any]]] = support.load_data("rounds_config.json")
+        self.round_config: list[dict[str, Any]] = []
+        # copy first config and use it as a base for the debug version (all features enabled)
+        debug_config = copy.copy(self.rounds_config[0])
+        for level in debug_config:
+            for key, value in level.items():
+                # turn on all feature flags
+                if type(value) is bool:
+                    level[key] = True
+        # add debug config to the start of list (DEBUG_MODE_VERSION == 0)
+        # print(debug_config)
+        # with open("test.json", "w") as file:
+        #     json.dump(debug_config, file, indent=4)  # Writing with pretty-printing
+
+        self.rounds_config.insert(DEBUG_MODE_VERSION, debug_config)
+
         self.get_round = lambda: self.round
+        self.game_version: int = -1
+        self.round: int = -1
+        self.token: str = ""
+        self.jwt: str = ""
+        if not USE_SERVER:
+            self.set_token({"token": "000", "jwt": "dummy_token", "game_version": 0})
         self.set_round(1)
 
         # screens
         self.level = Level(
             self.switch_state,
             (self.get_round, self.set_round),
+            self.round_config,
+            self.game_version,
             self.tmx_maps,
             self.frames,
             self.sounds,
@@ -109,8 +137,8 @@ class Game:
         self.player = self.level.player
 
         self.token_status = False
-        self.allocation_task = PlayerTask(self.switch_state, self.round)
-        self.main_menu = MainMenu(self.switch_state)
+        self.allocation_task = PlayerTask(self.send_resource_allocation)
+        self.main_menu = MainMenu(self.switch_state, self.set_token)
         self.pause_menu = PauseMenu(self.switch_state)
         self.settings_menu = SettingsMenu(
             self.switch_state, self.sounds, self.player.controls
@@ -132,7 +160,7 @@ class Game:
         )
 
         self.self_assessment_menu = SelfAssessmentMenu(
-            lambda: self.switch_state(GameState.PLAY),
+            self.send_self_assessment,
             (
                 SelfAssessmentDimension.VALENCE,
                 SelfAssessmentDimension.AROUSAL,
@@ -177,24 +205,75 @@ class Game:
         self.intro_txt_is_rendering = False
         self.intro_txt_rendered = False
 
-    def set_round(self, round):
+    def send_self_assessment(self, assessment: dict[str, int]) -> None:
+        telemetry = {
+            "self_assessment": assessment,
+            "game_version": self.game_version,
+            "game_round": self.round,
+            "round_timer": round(self.round_end_timer, 2),
+        }
+        send_telemetry(self.jwt, telemetry)
+        self.switch_state(GameState.PLAY)
+
+    def send_resource_allocation(self, resource_allocation: dict[str, Any]) -> None:
+        telemetry = {
+            "resource_allocation": resource_allocation,
+            "game_version": self.game_version,
+            "game_round": self.round,
+            "round_timer": round(self.round_end_timer, 2),
+        }
+        send_telemetry(self.jwt, telemetry)
+        self.switch_state(GameState.PLAY)
+
+    def set_token(self, response: dict[str, Any]) -> None:
+        print(f"Got token '{response["token"]}'")
+        self.token = response["token"]
+        self.jwt = response["jwt"]
+        self.game_version = response["game_version"]
+
+        if not USE_SERVER:
+            # token 100-349 triggers game version 1,
+            # token 350-599 triggers game version 2,
+            # token 600-849 triggers game version 3
+            # token 0 or 999 triggers game in debug mode (all features enabled)
+            try:
+                token_int = int(self.token)
+            except ValueError:
+                raise ValueError("Invalid token value")
+            if token_int in range(100, 350):
+                self.game_version = 1
+            elif token_int in range(350, 600):
+                self.game_version = 2
+            elif token_int in range(600, 850):
+                self.game_version = 3
+            elif token_int in [0, 999]:
+                self.game_version = DEBUG_MODE_VERSION
+            else:
+                raise ValueError("Invalid token value")
+
+        print(f"Game version set to {self.game_version}")
+
+    def set_round(self, round: int) -> None:
         self.round = round
         # if config for given round number not found, use first one as fall back
         # TODO: fix volcano eruption (`m`) debug which switched round to not existing value of 7
-        if round < len(self.rounds_config):
-            self.round_config = self.rounds_config[round - 1]
+        if self.game_version < 0:
+            self.game_version = DEBUG_MODE_VERSION
+
+        if round < len(self.rounds_config[self.game_version]):
+            self.round_config = self.rounds_config[self.game_version][round - 1]
         else:
             print(f"ERROR: No config found for round {round}! Using config for round 1.")
-            self.round_config = self.rounds_config[0]
+            self.round_config = self.rounds_config[self.game_version][0]
         self.round_end_timer = 0.0
         self.ROUND_END_TIME_IN_MINUTES = self.round_config["level_duration"] / 60  # 15
         print(self.round_config["level_name_text"])
 
-    def increment_round(self):
+    def increment_round(self) -> None:
         if self.round < 12:
             self.set_round(self.round + 1)
 
-    def switch_state(self, state: GameState):
+    def switch_state(self, state: GameState) -> None:
         self.set_cursor(CustomCursor.ARROW)
         self.current_state = state
         if self.current_state == GameState.SAVE_AND_RESUME:
@@ -206,15 +285,15 @@ class Game:
         if self.current_state == GameState.ROUND_END:
             self.round_menu.reset_menu()
             self.round_menu.generate_items()
-        if self.current_state == GameState.PLAYER_TASK:
-            self.allocation_task.round = self.get_round()
+        # if self.current_state == GameState.PLAYER_TASK:
+        #     self.allocation_task.round = self.get_round()
         if self.game_paused():
             self.player.blocked = True
             self.player.direction.update((0, 0))
         else:
             self.player.blocked = False
 
-    def set_cursor(self, cursor: CustomCursor, override: bool = False):
+    def set_cursor(self, cursor: CustomCursor, override: bool = False) -> None:
         if self._cursor != cursor:
             # ensure the cursor does not get switched back to CustomCursor.POINT during
             # click animation
@@ -226,7 +305,7 @@ class Game:
                 self._cursor = cursor
                 self._cursor_img = self._available_cursors[self._cursor]
 
-    def load_assets(self):
+    def load_assets(self) -> None:
         self.tmx_maps = support.tmx_importer("data/maps")
 
         # frames
@@ -286,10 +365,10 @@ class Game:
 
         self.font = support.import_font(30, "font/LycheeSoda.ttf")
 
-    def game_paused(self):
+    def game_paused(self) -> bool:
         return self.current_state != GameState.PLAY
 
-    def show_intro_msg(self):
+    def show_intro_msg(self) -> None:
         # A Message At The Starting Of The Game Giving Introduction To The Game And The InGroup.
         if not self.intro_txt_is_rendering:
             if not self.game_paused():
@@ -313,7 +392,7 @@ class Game:
                     self.tutorial.ready()
 
     # events
-    def event_loop(self):
+    def event_loop(self) -> None:
         for event in pygame.event.get():
             if self.handle_event(event):
                 continue
@@ -366,7 +445,7 @@ class Game:
             return True
         return False
 
-    async def run(self):
+    async def run(self) -> None:
         pygame.mouse.set_visible(False)
         is_first_frame = True
         while self.running:
@@ -404,6 +483,23 @@ class Game:
                     # set to empty to not repeat
                     self.round_config["notify_new_crop_text"] = ""
                     self.round_config["notify_new_crop_timestamp"] = []
+                elif len(self.round_config["self_assessment_timestamp"]) > 0 \
+                        and self.round_end_timer > self.round_config["self_assessment_timestamp"][0]:
+                    # remove first timestamp from list
+                    self.round_config["self_assessment_timestamp"] = self.round_config["self_assessment_timestamp"][1:]
+                    self.switch_state(GameState.SELF_ASSESSMENT)
+                elif self.round_config["resource_allocation_text"] \
+                        and self.round_config["resource_allocation_timestamp"] \
+                        and self.round_end_timer > self.round_config["resource_allocation_timestamp"][0]:
+                    # make a copy of a string
+                    allocations_text = self.round_config["resource_allocation_text"][:]
+                    # self.allocation_task.title = message
+                    self.allocation_task.allocations_text = allocations_text
+                    self.allocation_task.parse_allocation_items(self.round_config["resource_allocation_item_text"])
+                    self.switch_state(GameState.PLAYER_TASK)
+                    # set to empty to not repeat
+                    self.round_config["resource_allocation_text"] = ""
+                    self.round_config["resource_allocation_timestamp"] = []
 
             if self.level.cutscene_animation.active:
                 self.all_sprites.update_blocked(dt)

@@ -4,7 +4,7 @@ import time
 import warnings
 from collections.abc import Callable
 from functools import partial
-from typing import cast
+from typing import Any, cast
 
 import pygame
 
@@ -31,6 +31,7 @@ from src.screens.game_map import GameMap
 from src.screens.minigames.base import Minigame
 from src.screens.minigames.cow_herding import CowHerding, CowHerdingState
 from src.settings import (
+    DEBUG_MODE_VERSION,
     DEFAULT_ANIMATION_NAME,
     EMOTES_LIST,
     GAME_MAP,
@@ -103,10 +104,16 @@ class Level:
 
     intro_shown: dict[str, bool]
 
+    # current game version config
+    round_config: list[dict[str, Any]]
+    game_version: int
+
     def __init__(
         self,
         switch: Callable[[GameState], None],
-        get_set_round: tuple[Callable[[], int], Callable[[int], []]],
+        get_set_round: tuple[Callable[[], int], Callable[[int], None]],
+        round_config: list[dict[str, Any]],
+        game_version: int,
         tmx_maps: MapDict,
         frames: dict[str, dict],
         sounds: SoundDict,
@@ -222,6 +229,8 @@ class Level:
         # level interactions
         self.get_round = get_set_round[0]
         self.set_round = get_set_round[1]
+        self.round_config = round_config
+        self.game_version = game_version
 
         # watch the player behaviour in achieving tutorial tasks
         self.tile_farmed = False
@@ -555,44 +564,45 @@ class Level:
         if self.controls.ADVANCE_DIALOG.click:
             post_event(DIALOG_ADVANCE)
 
-        if self.controls.DEBUG_QUAKE.click:
-            post_event(START_QUAKE, duration=2.0, debug=True)
+        if self.game_version == DEBUG_MODE_VERSION:
+            if self.controls.DEBUG_QUAKE.click:
+                post_event(START_QUAKE, duration=2.0, debug=True)
 
-        if self.controls.DEBUG_PLAYER_TASK.click:
-            self.switch_screen(GameState.PLAYER_TASK)
+            if self.controls.DEBUG_PLAYER_TASK.click:
+                self.switch_screen(GameState.PLAYER_TASK)
 
-        if self.controls.DEBUG_END_ROUND.click:
-            self.switch_screen(GameState.ROUND_END)
+            if self.controls.DEBUG_END_ROUND.click:
+                self.switch_screen(GameState.ROUND_END)
 
-        if self.controls.DEBUG_SELF_ASSESSMENT.click:
-            self.switch_screen(GameState.SELF_ASSESSMENT)
+            if self.controls.DEBUG_SELF_ASSESSMENT.click:
+                self.switch_screen(GameState.SELF_ASSESSMENT)
 
-        if self.controls.DEBUG_NOTIFICATION_MENU.click:
-            self.switch_screen(GameState.NOTIFICATION_MENU)
+            if self.controls.DEBUG_NOTIFICATION_MENU.click:
+                self.switch_screen(GameState.NOTIFICATION_MENU)
 
-        if self.controls.DEBUG_PLAYER_RECEIVES_HAT.click:
-            self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_HAT)
+            if self.controls.DEBUG_PLAYER_RECEIVES_HAT.click:
+                self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_HAT)
 
-        if self.controls.DEBUG_PLAYER_RECEIVES_NECKLACE.click:
-            self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE)
+            if self.controls.DEBUG_PLAYER_RECEIVES_NECKLACE.click:
+                self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE)
 
-        if self.controls.DEBUG_PLAYERS_BIRTHDAY.click:
-            self.start_scripted_sequence(ScriptedSequenceType.PLAYERS_BIRTHDAY)
+            if self.controls.DEBUG_PLAYERS_BIRTHDAY.click:
+                self.start_scripted_sequence(ScriptedSequenceType.PLAYERS_BIRTHDAY)
 
-        if self.controls.DEBUG_NPC_RECEIVES_NECKLACE.click:
-            self.start_scripted_sequence(ScriptedSequenceType.NPC_RECEIVES_NECKLACE)
+            if self.controls.DEBUG_NPC_RECEIVES_NECKLACE.click:
+                self.start_scripted_sequence(ScriptedSequenceType.NPC_RECEIVES_NECKLACE)
 
-        if self.controls.DEBUG_DECIDE_TOMATO_OR_CORN.click:
-            self.start_scripted_sequence(ScriptedSequenceType.DECIDE_TOMATO_OR_CORN)
+            if self.controls.DEBUG_DECIDE_TOMATO_OR_CORN.click:
+                self.start_scripted_sequence(ScriptedSequenceType.DECIDE_TOMATO_OR_CORN)
 
-        if self.controls.DEBUG_SHOW_HITBOXES.click:
-            self.show_hitbox_active = not self.show_hitbox_active
+            if self.controls.DEBUG_SHOW_HITBOXES.click:
+                self.show_hitbox_active = not self.show_hitbox_active
 
-        if self.controls.DEBUG_SHOW_PF_OVERLAY.click:
-            self.show_pf_overlay = not self.show_pf_overlay
+            if self.controls.DEBUG_SHOW_PF_OVERLAY.click:
+                self.show_pf_overlay = not self.show_pf_overlay
 
-        if self.controls.DEBUG_SHOW_DIALOG.click:
-            post_event(DIALOG_SHOW, dial="test")
+            if self.controls.DEBUG_SHOW_DIALOG.click:
+                post_event(DIALOG_SHOW, dial="test")
 
     def start_scripted_sequence(self, sequence_type: ScriptedSequenceType):
         # do not start new scripted sequence when one is already running
