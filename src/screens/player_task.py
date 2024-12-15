@@ -75,9 +75,10 @@ class PlayerTask(AbstractMenu):
             self.allocation_item = " ".join(elements[1:])
         else:
             print(f"Error! Could not parse allocation items: '{allocation_items}'")
-            self.max_allocation = 1
+            self.max_allocation = 2
             self.allocation_item = "<GENERIC_ITEM_NAME>"
         self.total_items = self.max_allocation
+        self.allocations = [0, 0]
 
     def draw_title(self) -> None:
         text = Text(Linebreak((0, 2)), TextChunk("Task", self.title_font))
@@ -244,9 +245,12 @@ class PlayerTask(AbstractMenu):
                             self.allocations[i] + 1, self.max_allocation
                         )
                 elif down.mouse_hover():
-                    self.allocations[i] = max(
-                        self.allocations[i] - 1, self.min_allocation
-                    )
+                    # self.allocations[i] = max(
+                    #     self.allocations[i] - 1, self.min_allocation
+                    # )
+                    self.allocations[i] = self.allocations[i] - 1
+                    if self.allocations[i] < 0:
+                        self.allocations[i] = self.total_items - sum(self.allocations) - 1
 
         if event.type == pygame.KEYDOWN and self.active_input is not None:
             if event.key == pygame.K_BACKSPACE:

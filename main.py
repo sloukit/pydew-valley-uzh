@@ -16,7 +16,7 @@ import pygame
 
 from src.client import send_telemetry
 from src import support
-from src.enums import CustomCursor, GameState, SelfAssessmentDimension
+from src.enums import CustomCursor, GameState, ScriptedSequenceType, SelfAssessmentDimension
 from src.events import DIALOG_ADVANCE, DIALOG_SHOW, OPEN_INVENTORY, SET_CURSOR
 from src.groups import AllSprites
 from src.gui.interface.dialog import DialogueManager
@@ -96,11 +96,13 @@ class Game:
         self.clock = pygame.time.Clock()
         self.load_assets()
 
-        # level info
+        # config of all game versions and all rounds: rounds_config[game_version][round_no][feature_name] = value
         self.rounds_config: list[list[dict[str, Any]]] = support.load_data("rounds_config.json")
-        self.round_config: list[dict[str, Any]] = []
-        # copy first config and use it as a base for the debug version (all features enabled)
-        debug_config = copy.copy(self.rounds_config[0])
+        # config of current game version of a current round: round_config[feature_name] = value
+        self.round_config: dict[str, Any] = {}
+        # copy first config (for round 1) and use it as a base for the debug version (all features enabled)
+        debug_config = copy.deepcopy(self.rounds_config[0])
+
         for level in debug_config:
             for key, value in level.items():
                 # turn on all feature flags
@@ -120,14 +122,15 @@ class Game:
         self.jwt: str = ""
         if not USE_SERVER:
             self.set_token({"token": "000", "jwt": "dummy_token", "game_version": 0})
-        self.set_round(1)
+        self.round_end_timer: float = 0.0
+        self.ROUND_END_TIME_IN_MINUTES: float = 99999999.0
 
         # screens
         self.level = Level(
             self.switch_state,
             (self.get_round, self.set_round),
             self.round_config,
-            self.game_version,
+            lambda: self.game_version,
             self.tmx_maps,
             self.frames,
             self.sounds,
@@ -226,7 +229,7 @@ class Game:
         self.switch_state(GameState.PLAY)
 
     def set_token(self, response: dict[str, Any]) -> None:
-        print(f"Got token '{response["token"]}'")
+        # print(f"Got token '{response["token"]}'")
         self.token = response["token"]
         self.jwt = response["jwt"]
         self.game_version = response["game_version"]
@@ -251,7 +254,8 @@ class Game:
             else:
                 raise ValueError("Invalid token value")
 
-        print(f"Game version set to {self.game_version}")
+        print(f"Game version {self.game_version}")
+        self.set_round(1)
 
     def set_round(self, round: int) -> None:
         self.round = round
@@ -265,6 +269,7 @@ class Game:
         else:
             print(f"ERROR: No config found for round {round}! Using config for round 1.")
             self.round_config = self.rounds_config[self.game_version][0]
+        self.level.round_config = self.round_config
         self.round_end_timer = 0.0
         self.ROUND_END_TIME_IN_MINUTES = self.round_config["level_duration"] / 60  # 15
         print(self.round_config["level_name_text"])
@@ -373,9 +378,20 @@ class Game:
         if not self.intro_txt_is_rendering:
             if not self.game_paused():
                 # TODO revert, this only for debug
-                # self.dialogue_manager.open_dialogue(
-                #     "intro_to_game", self.msg_left, self.msg_top
-                # )
+                if self.round_config.get("character_introduction_text", "") \
+                        and self.round_config["character_introduction_timestamp"] \
+                        and self.round_end_timer > self.round_config["character_introduction_timestamp"][0]:
+                    label = "press <Space> to continue"
+                    self.dialogue_manager.set_item(
+                        "intro_to_game",
+                        [
+                            ["Clear Skies", f"{self.round_config["character_introduction_text"]}\t\t\t\t\t\t\t{label}"],
+                            ["Clear Skies", f"{self.round_config["ingroup_introduction_text"]}\t\t\t\t\t\t\t{label}"]
+                        ]
+                    )
+                    self.dialogue_manager.open_dialogue(
+                        "intro_to_game", self.msg_left, self.msg_top
+                    )
                 self.intro_txt_is_rendering = True
                 self.intro_txt_rendered = True
         elif not self.level.cutscene_animation.active:
@@ -473,7 +489,17 @@ class Game:
                 if self.round_end_timer > self.ROUND_END_TIME_IN_MINUTES * 60:
                     self.round_end_timer = 0
                     self.switch_state(GameState.ROUND_END)
-                elif self.round_config["notify_new_crop_text"] \
+                # elif self.round_config.get("character_introduction_text", "") \
+                #         and self.round_config["character_introduction_timestamp"] \
+                #         and self.round_end_timer > self.round_config["character_introduction_timestamp"][0]:
+                #     # make a copy of a string
+                #     message = self.round_config["character_introduction_text"][:]
+                #     self.notification_menu.message = message
+                #     self.switch_state(GameState.NOTIFICATION_MENU)
+                #     # set to empty to not repeat
+                #     self.round_config["character_introduction_text"] = ""
+                #     self.round_config["character_introduction_timestamp"] = []
+                elif self.round_config.get("notify_new_crop_text", "") \
                         and self.round_config["notify_new_crop_timestamp"] \
                         and self.round_end_timer > self.round_config["notify_new_crop_timestamp"][0]:
                     # make a copy of a string
@@ -483,12 +509,36 @@ class Game:
                     # set to empty to not repeat
                     self.round_config["notify_new_crop_text"] = ""
                     self.round_config["notify_new_crop_timestamp"] = []
-                elif len(self.round_config["self_assessment_timestamp"]) > 0 \
+                elif len(self.round_config.get("self_assessment_timestamp", [])) > 0 \
                         and self.round_end_timer > self.round_config["self_assessment_timestamp"][0]:
-                    # remove first timestamp from list
+                    # remove first timestamp from list not to repeat infinitely
                     self.round_config["self_assessment_timestamp"] = self.round_config["self_assessment_timestamp"][1:]
                     self.switch_state(GameState.SELF_ASSESSMENT)
-                elif self.round_config["resource_allocation_text"] \
+                elif len(self.round_config.get("player_hat_sequence_timestamp", [])) > 0 \
+                        and self.round_end_timer > self.round_config["player_hat_sequence_timestamp"][0]:
+                    # remove first timestamp from list not to repeat infinitely
+                    self.round_config["player_hat_sequence_timestamp"] = \
+                        self.round_config["player_hat_sequence_timestamp"][1:]
+                    self.level.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_HAT)
+                elif len(self.round_config.get("ingroup_necklace_sequence_timestamp", [])) > 0 \
+                        and self.round_end_timer > self.round_config["ingroup_necklace_sequence_timestamp"][0]:
+                    # remove first timestamp from list not to repeat infinitely
+                    self.round_config["ingroup_necklace_sequence_timestamp"] = \
+                        self.round_config["ingroup_necklace_sequence_timestamp"][1:]
+                    self.level.start_scripted_sequence(ScriptedSequenceType.NPC_RECEIVES_NECKLACE)
+                elif len(self.round_config.get("player_necklace_sequence_timestamp", [])) > 0 \
+                        and self.round_end_timer > self.round_config["player_necklace_sequence_timestamp"][0]:
+                    # remove first timestamp from list not to repeat infinitely
+                    self.round_config["player_necklace_sequence_timestamp"] = \
+                        self.round_config["player_necklace_sequence_timestamp"][1:]
+                    self.level.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE)
+                elif len(self.round_config.get("player_birthday_sequence_timestamp", [])) > 0 \
+                        and self.round_end_timer > self.round_config["player_birthday_sequence_timestamp"][0]:
+                    # remove first timestamp from list not to repeat infinitely
+                    self.round_config["player_birthday_sequence_timestamp"] = \
+                        self.round_config["player_birthday_sequence_timestamp"][1:]
+                    self.level.start_scripted_sequence(ScriptedSequenceType.PLAYERS_BIRTHDAY)
+                elif self.round_config.get("resource_allocation_text", "") \
                         and self.round_config["resource_allocation_timestamp"] \
                         and self.round_end_timer > self.round_config["resource_allocation_timestamp"][0]:
                     # make a copy of a string
@@ -497,7 +547,7 @@ class Game:
                     self.allocation_task.allocations_text = allocations_text
                     self.allocation_task.parse_allocation_items(self.round_config["resource_allocation_item_text"])
                     self.switch_state(GameState.PLAYER_TASK)
-                    # set to empty to not repeat
+                    # set to empty not to repeat infinitely
                     self.round_config["resource_allocation_text"] = ""
                     self.round_config["resource_allocation_timestamp"] = []
 

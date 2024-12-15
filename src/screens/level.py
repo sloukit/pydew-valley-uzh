@@ -105,21 +105,21 @@ class Level:
     intro_shown: dict[str, bool]
 
     # current game version config
-    round_config: list[dict[str, Any]]
-    game_version: int
+    round_config: dict[str, Any]
+    get_game_version: Callable[[], int]
 
     def __init__(
         self,
         switch: Callable[[GameState], None],
         get_set_round: tuple[Callable[[], int], Callable[[int], None]],
-        round_config: list[dict[str, Any]],
-        game_version: int,
+        round_config: dict[str, Any],
+        get_game_version: Callable[[], int],
         tmx_maps: MapDict,
         frames: dict[str, dict],
         sounds: SoundDict,
         save_file: SaveFile,
         clock: pygame.time.Clock,
-    ):
+    ) -> None:
         # main setup
         self.display_surface = pygame.display.get_surface()
         self.switch_screen = switch
@@ -184,6 +184,7 @@ class Level:
             bathstat=False,
             bath_time=0,
             save_file=self.save_file,
+            get_game_version=get_game_version,
         )
         self.prev_player_pos = (0, 0)
         self.all_sprites.add_persistent(self.player)
@@ -218,6 +219,12 @@ class Level:
         self.start_become_outgroup_time = None
         self.finish_become_outgroup = False
 
+        # level interactions
+        self.get_round = get_set_round[0]
+        self.set_round = get_set_round[1]
+        self.round_config = round_config
+        self.get_game_version = get_game_version
+
         # map
         self.load_map(GAME_MAP)
         self.map_transition = Transition(
@@ -225,12 +232,6 @@ class Level:
             self.finish_transition,
             dur=2400,
         )
-
-        # level interactions
-        self.get_round = get_set_round[0]
-        self.set_round = get_set_round[1]
-        self.round_config = round_config
-        self.game_version = game_version
 
         # watch the player behaviour in achieving tutorial tasks
         self.tile_farmed = False
@@ -321,12 +322,6 @@ class Level:
         self.rain.set_floor_size(self.game_map.get_size())
 
         self.current_map = game_map
-
-        # show intro scripted sequence only once
-        if not self.intro_shown.get(game_map, False):
-            self.intro_shown[game_map] = True
-            # TODO revert, this only for debug
-            # self.cutscene_animation.start()
 
         if game_map == Map.MINIGAME:
             self.current_minigame = CowHerding(
@@ -456,7 +451,7 @@ class Level:
         if collided_interactions:
             if collided_interactions[0].name == "Bed":
                 self.start_day_transition()
-            if collided_interactions[0].name == "sign":
+            if collided_interactions[0].name == "sign" and self.round_config["sign_interaction"]:
                 self.show_sign(collided_interactions[0])
             if collided_interactions[0].name == "Trader":
                 self.switch_screen(GameState.SHOP)
@@ -470,7 +465,10 @@ class Level:
         label_key = sign.custom_properties.get("label", "label_not_available")
         post_event(DIALOG_SHOW, dial=label_key)
 
-    def check_outgroup_logic(self):
+    def check_outgroup_logic(self) -> None:
+        if not self.round_config.get("playable_outgroup", False):
+            return
+
         collided_with_outgroup_farm = pygame.sprite.spritecollide(
             self.player,
             [i for i in self.interaction_sprites if i.name == "Outgroup Farm"],
@@ -504,7 +502,7 @@ class Level:
 
         # Resets so that message can be displayed again if player exits and reenters farm
         if not self.outgroup_farm_entered:
-            self.outgroup_message_receieved = False
+            self.outgroup_message_received = False
 
         # checks 60 seconds and 120 seconds after player joins outgroup to convert appearance
         if self.player.study_group == StudyGroup.OUTGROUP:
@@ -564,9 +562,9 @@ class Level:
         if self.controls.ADVANCE_DIALOG.click:
             post_event(DIALOG_ADVANCE)
 
-        if self.game_version == DEBUG_MODE_VERSION:
-            if self.controls.DEBUG_QUAKE.click:
-                post_event(START_QUAKE, duration=2.0, debug=True)
+        if self.get_game_version() == DEBUG_MODE_VERSION:
+            # if self.controls.DEBUG_QUAKE.click:
+            #     post_event(START_QUAKE, duration=2.0, debug=True)
 
             if self.controls.DEBUG_PLAYER_TASK.click:
                 self.switch_screen(GameState.PLAYER_TASK)
@@ -976,6 +974,14 @@ class Level:
         self.game_time.update()
         self.check_map_exit()
         self.check_outgroup_logic()
+
+        # show intro scripted sequence only once
+        if not self.intro_shown.get(self.current_map, False):
+            # TODO revert, this only for debug
+            if self.round_config.get("character_introduction_timestamp", []) \
+                    and self.round_config.get("character_introduction_text", ""):
+                self.intro_shown[self.current_map] = True
+                self.cutscene_animation.start()
 
         if self.current_minigame and self.current_minigame.running:
             self.current_minigame.update(dt)

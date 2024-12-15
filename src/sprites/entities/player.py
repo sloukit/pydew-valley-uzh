@@ -12,7 +12,7 @@ from src.events import OPEN_INVENTORY, START_QUAKE, post_event
 from src.gui.interface.emotes import PlayerEmoteManager
 from src.npc.bases.npc_base import NPCBase
 from src.savefile import SaveFile
-from src.settings import BATH_STATUS_TIMEOUT, Coordinate, SoundDict
+from src.settings import BATH_STATUS_TIMEOUT, DEBUG_MODE_VERSION, Coordinate, SoundDict
 from src.sprites.entities.character import Character
 from src.sprites.entities.entity import Entity
 from src.sprites.setup import EntityAsset
@@ -50,7 +50,8 @@ class Player(Character):
         bathstat: bool,
         bath_time: float,
         save_file: SaveFile,
-    ):
+        get_game_version: Callable[[], int],
+    ) -> None:
         super().__init__(
             pos=pos,
             assets=assets,
@@ -61,6 +62,7 @@ class Player(Character):
             plant_collision=plant_collision,
         )
 
+        self.get_game_version = get_game_version
         # movement
         self.save_file = save_file
         self.controls = controls
@@ -217,7 +219,7 @@ class Player(Character):
             if self.controls.INVENTORY.click:
                 post_event(OPEN_INVENTORY)
 
-            if self.controls.DEBUG_QUAKE.click:
+            if self.controls.DEBUG_QUAKE.click and self.get_game_version() == DEBUG_MODE_VERSION:
                 post_event(START_QUAKE, duration=2.0, debug=True)
 
         # emotes
