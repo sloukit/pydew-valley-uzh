@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import time
-from typing import Callable, Type
+from typing import Any, Callable, Type
 
 import pygame  # noqa
 
@@ -50,6 +50,7 @@ class Player(Character):
         bathstat: bool,
         bath_time: float,
         save_file: SaveFile,
+        round_config: dict[str, Any],
         get_game_version: Callable[[], int],
     ) -> None:
         super().__init__(
@@ -62,6 +63,7 @@ class Player(Character):
             plant_collision=plant_collision,
         )
 
+        self.round_config = round_config
         self.get_game_version = get_game_version
         # movement
         self.save_file = save_file
@@ -222,9 +224,9 @@ class Player(Character):
             if self.controls.DEBUG_QUAKE.click and self.get_game_version() == DEBUG_MODE_VERSION:
                 post_event(START_QUAKE, duration=2.0, debug=True)
 
-        # emotes
+                # emotes
         if not self.blocked:
-            if self.controls.EMOTE_WHEEL.click:
+            if self.controls.EMOTE_WHEEL.click and self.round_config.get("emote_wheel", False):
                 self.emote_manager.toggle_emote_wheel()
                 if self.emote_manager.emote_wheel.visible:
                     self.direction = pygame.Vector2()

@@ -4,8 +4,8 @@ from collections.abc import Callable
 from typing import Any
 
 import pygame
-from pathfinding.core.grid import Grid
-from pytmx import TiledElement, TiledMap, TiledObject, TiledObjectGroup, TiledTileLayer
+from pathfinding.core.grid import Grid  # type: ignore[import-untyped]
+from pytmx import TiledElement, TiledMap, TiledObject, TiledObjectGroup, TiledTileLayer  # type: ignore[import-untyped]
 
 from src.camera.camera_target import CameraTarget
 from src.camera.zoom_area import ZoomArea
@@ -272,6 +272,8 @@ class GameMap:
     npcs: list[NPC]
     animals: list[Animal]
 
+    round_config: dict[str, Any]
+
     def __init__(
         self,
         selected_map: Map,
@@ -297,6 +299,7 @@ class GameMap:
         plant_collision: Callable[[Character], None],
         # assets
         frames: dict,
+        round_config: dict[str, Any],
     ):
         self._tilemap = tilemap
 
@@ -321,6 +324,7 @@ class GameMap:
         self.plant_collision = plant_collision
 
         self.frames = frames
+        self.round_config = round_config
 
         self._tilemap_size = (self._tilemap.width, self._tilemap.height)
         self._tilemap_scaled_size = (
@@ -353,6 +357,11 @@ class GameMap:
             if ENABLE_NPCS:
                 self._setup_emote_interactions()
                 _setup_animal_ranges(self.interaction_sprites, self.animals)
+
+    def round_config_changed(self, round_config: dict[str, Any]) -> None:
+        self.round_config = round_config
+        for npc in self.npcs:
+            npc.set_sickness_allowed(round_config.get("sickness", False))
 
     @property
     def size(self):
@@ -549,8 +558,14 @@ class GameMap:
                 self._setup_bush(pos, obj, object_type)
 
             else:
+                if props.get("type") == "hidden_sign":
+                    # layer = Layer.HIDDEN_SIGN
+                    name = "hidden_sign"
+                else:
+                    name = None
+
                 if object_type.hitbox is not None:
-                    CollideableMapObject(pos, object_type, z=layer).add(
+                    CollideableMapObject(pos, object_type, z=layer, name=name).add(
                         self.all_sprites,
                         self.collision_sprites,
                     )
@@ -568,6 +583,7 @@ class GameMap:
                     ),
                 )
         else:
+
             surf = pygame.transform.scale_by(object_type.image, SCALE_FACTOR)
             Sprite(pos, surf, z=layer).add(self.all_sprites)
 
@@ -665,9 +681,11 @@ class GameMap:
             soil_manager=self.soil_manager,
             emote_manager=self.npc_emote_manager,
             tree_sprites=self.tree_sprites,
+            sickness_allowed=self.round_config.get("sickness", False),
         )
         npc.teleport(pos)
-        # Ingroup NPCs wearing only the hat and no necklace should not be able to walk on the forest and town map, only on the farming map
+        # Ingroup NPCs wearing only the hat and no necklace should not be able to walk on the forest and town map,
+        # only on the farming map
         no_walking_npc = (
             (
                 gmap != Map.FARM
@@ -900,7 +918,8 @@ class GameMap:
 
                 self.npc_emote_manager.show_emote(npc, emote)
 
-                # check if the player achieved task "interact with an ingroup member" or "interact with an outgroup member"
+                # check if the player achieved task "interact with an ingroup member" or "interact
+                # with an outgroup member"
                 if self.player.study_group == npc.study_group:
                     self.player.ingroup_member_interacted = True
                 else:

@@ -269,7 +269,7 @@ class Game:
         else:
             print(f"ERROR: No config found for round {round}! Using config for round 1.")
             self.round_config = self.rounds_config[self.game_version][0]
-        self.level.round_config = self.round_config
+        self.level.round_config_changed(self.round_config)
         self.round_end_timer = 0.0
         self.ROUND_END_TIME_IN_MINUTES = self.round_config["level_duration"] / 60  # 15
         print(self.round_config["level_name_text"])
@@ -560,7 +560,7 @@ class Game:
                         self.fast_forward.draw_overlay(self.display_surface)
             else:
                 self.all_sprites.update(dt)
-            self.all_sprites.draw(self.level.camera, is_game_paused)
+            # self.all_sprites.draw(self.level.camera, is_game_paused)
 
             # Apply blur effect only if the player has goggles equipped
             if self.player.has_goggles and self.current_state == GameState.PLAY:

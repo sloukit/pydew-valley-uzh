@@ -169,6 +169,12 @@ class Level:
 
         self.controls = Controls
 
+        # level interactions
+        self.get_round = get_set_round[0]
+        self.set_round = get_set_round[1]
+        self.round_config = round_config
+        self.get_game_version = get_game_version
+
         self.player = Player(
             pos=(0, 0),
             assets=copy.deepcopy(ENTITY_ASSETS.RABBIT),
@@ -184,6 +190,7 @@ class Level:
             bathstat=False,
             bath_time=0,
             save_file=self.save_file,
+            round_config=self.round_config,
             get_game_version=get_game_version,
         )
         self.prev_player_pos = (0, 0)
@@ -203,7 +210,7 @@ class Level:
         self.current_day = 0
 
         # overlays
-        self.overlay = Overlay(self.player, frames["items"], self.game_time, clock)
+        self.overlay = Overlay(self.player, frames["items"], self.game_time, clock, round_config)
         self.show_hitbox_active = False
         self.show_pf_overlay = False
         self.setup_pf_overlay()
@@ -219,12 +226,6 @@ class Level:
         self.start_become_outgroup_time = None
         self.finish_become_outgroup = False
 
-        # level interactions
-        self.get_round = get_set_round[0]
-        self.set_round = get_set_round[1]
-        self.round_config = round_config
-        self.get_game_version = get_game_version
-
         # map
         self.load_map(GAME_MAP)
         self.map_transition = Transition(
@@ -238,6 +239,12 @@ class Level:
         self.crop_planted: set = set()
         self.crop_watered = False
         self.hit_tree = False
+
+    def round_config_changed(self, round_config: dict[str, Any]) -> None:
+        self.round_config = round_config
+        self.player.round_config = round_config
+        self.overlay.round_config = round_config
+        self.game_map.round_config_changed(round_config)
 
     def load_map(self, game_map: Map, from_map: str = None):
         # prepare level state for new map
@@ -272,6 +279,7 @@ class Level:
             plant_collision=self.plant_collision,
             frames=self.frames,
             save_file=self.save_file,
+            round_config=self.round_config,
         )
 
         self.camera.change_size(*self.game_map.size)
@@ -371,16 +379,20 @@ class Level:
         if self.tmx_maps.get(map_name):
             self.load_map(map_name, from_map=self.current_map)
         else:
-            if map_name == "bathhouse" and self.player.hp < 80:
+            if map_name == "bathhouse" and self.round_config["accessible_bathhouse"] and self.player.hp < 80:
+                print("accessible_bathhouse hp < 80")
                 self.overlay.health_bar.apply_health(9999999)
                 self.player.bathstat = True
                 self.player.bath_time = time.time()
                 self.player.emote_manager.show_emote(self.player, "sad_sick_ani")
                 self.load_map(self.current_map, from_map=map_name)
             elif map_name == "bathhouse":
+                print("bathhouse hp > 80")
                 # this is to prevent warning in the console
-                self.load_map(self.current_map, from_map=map_name)
-                self.player.emote_manager.show_emote(self.player, "sad_sick_ani")
+                if self.round_config["accessible_bathhouse"]:
+                    print("accessible_bathhouse hp > 80")
+                    self.load_map(self.current_map, from_map=map_name)
+                    self.player.emote_manager.show_emote(self.player, "sad_sick_ani")
             else:
                 warnings.warn(f'Error loading map: Map "{map_name}" not found')
 
@@ -453,7 +465,7 @@ class Level:
                 self.start_day_transition()
             if collided_interactions[0].name == "sign" and self.round_config["sign_interaction"]:
                 self.show_sign(collided_interactions[0])
-            if collided_interactions[0].name == "Trader":
+            if collided_interactions[0].name == "Trader" and self.round_config["market"]:
                 self.switch_screen(GameState.SHOP)
             if collided_interactions[0] in self.bush_sprites.sprites():
                 if self.player.axe_hitbox.colliderect(
@@ -565,6 +577,11 @@ class Level:
         if self.get_game_version() == DEBUG_MODE_VERSION:
             # if self.controls.DEBUG_QUAKE.click:
             #     post_event(START_QUAKE, duration=2.0, debug=True)
+            if self.controls.DEBUG_APPLY_HEALTH.click:
+                self.overlay.health_bar.apply_health(1)
+
+            if self.controls.DEBUG_APPLY_DAMAGE.click:
+                self.overlay.health_bar.apply_damage(1)
 
             if self.controls.DEBUG_PLAYER_TASK.click:
                 self.switch_screen(GameState.PLAYER_TASK)
@@ -844,7 +861,8 @@ class Level:
     def check_map_exit(self):
         if not self.map_transition:
             for warp_hitbox in self.player_exit_warps:
-                if self.player.hitbox_rect.colliderect(warp_hitbox.rect):
+                if self.player.hitbox_rect.colliderect(warp_hitbox.rect) and \
+                        (not warp_hitbox.name == "bathhouse" or self.round_config["accessible_bathhouse"]):
                     self.map_transition.reset = partial(
                         self.switch_to_map, warp_hitbox.name
                     )
@@ -940,7 +958,7 @@ class Level:
     def draw(self, dt: float, move_things: bool):
         self.player.hp = self.overlay.health_bar.hp
         self.display_surface.fill((130, 168, 132))
-        self.all_sprites.draw(self.camera, False)
+        self.all_sprites.draw(self.camera, False, self.round_config.get("bathtub_signs", False))
 
         self.draw_pf_overlay()
         self.draw_hitboxes()
@@ -1017,8 +1035,9 @@ class Level:
                 ),
                 dt,
             )
+            if self.round_config.get("sickness", False):
+                self.decay_health()
 
-            self.decay_health()
         self.draw(dt, move_things)
 
         for control in self.controls:

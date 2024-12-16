@@ -97,6 +97,8 @@ class Controls(Control, Enum):
     EMOTE_WHEEL = (pygame.K_e, "Toggle Emote Wheel")
     ADVANCE_DIALOG = (pygame.K_SPACE, "Advance Dialog")
 
+    DEBUG_APPLY_HEALTH = (pygame.K_1, "Apply health")
+    DEBUG_APPLY_DAMAGE = (pygame.K_2, "Apply damage")
     DEBUG_QUAKE = (pygame.K_m, "Start Earthquake Effect")
     DEBUG_PLAYER_TASK = (pygame.K_b, "Show Player Task")
     DEBUG_END_ROUND = (pygame.K_r, "Skip to End of Round")
