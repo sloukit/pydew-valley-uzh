@@ -5,7 +5,13 @@ from typing import Any
 
 import pygame
 from pathfinding.core.grid import Grid  # type: ignore[import-untyped]
-from pytmx import TiledElement, TiledMap, TiledObject, TiledObjectGroup, TiledTileLayer  # type: ignore[import-untyped]
+from pytmx import (  # type: ignore[import-untyped]
+    TiledElement,
+    TiledMap,
+    TiledObject,
+    TiledObjectGroup,
+    TiledTileLayer,
+)
 
 from src.camera.camera_target import CameraTarget
 from src.camera.zoom_area import ZoomArea
@@ -362,7 +368,9 @@ class GameMap:
         self.round_config = round_config
         for npc in self.npcs:
             npc.set_sickness_allowed(round_config.get("sickness", False))
-            npc.assign_outfit_ingroup(round_config.get("ingroup_40p_hat_necklace_appearance", False))
+            npc.assign_outfit_ingroup(
+                round_config.get("ingroup_40p_hat_necklace_appearance", False)
+            )
 
     @property
     def size(self):
@@ -584,7 +592,6 @@ class GameMap:
                     ),
                 )
         else:
-
             surf = pygame.transform.scale_by(object_type.image, SCALE_FACTOR)
             Sprite(pos, surf, z=layer).add(self.all_sprites)
 

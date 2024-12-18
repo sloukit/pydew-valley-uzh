@@ -4,7 +4,7 @@ import pygame
 
 from src.enums import GameState
 from src.gui.menu.general_menu import GeneralMenu
-from src.settings import SCREEN_WIDTH, SCREEN_HEIGHT
+from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH
 
 
 class NotificationMenu(GeneralMenu):
@@ -30,7 +30,12 @@ class NotificationMenu(GeneralMenu):
             return True
 
         if event.type == pygame.KEYDOWN:
-            if event.key in [pygame.K_ESCAPE, pygame.K_RETURN, pygame.K_SPACE, pygame.K_BACKSPACE]:
+            if event.key in [
+                pygame.K_ESCAPE,
+                pygame.K_RETURN,
+                pygame.K_SPACE,
+                pygame.K_BACKSPACE,
+            ]:
                 self.switch_screen(GameState.PLAY)
                 return True
 
@@ -42,9 +47,7 @@ class NotificationMenu(GeneralMenu):
         left = SCREEN_WIDTH // 2
 
         text_surf = self.font.render(self.message, False, "black")
-        text_rect = text_surf.get_frect(
-            top=top, centerx=left
-        )
+        text_rect = text_surf.get_frect(top=top, centerx=left)
 
         bg_rect = pygame.Rect(0, 0, text_rect.width + 40, 50)
         bg_rect.center = text_rect.center

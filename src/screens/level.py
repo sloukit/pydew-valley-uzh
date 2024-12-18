@@ -210,7 +210,9 @@ class Level:
         self.current_day = 0
 
         # overlays
-        self.overlay = Overlay(self.player, frames["items"], self.game_time, clock, round_config)
+        self.overlay = Overlay(
+            self.player, frames["items"], self.game_time, clock, round_config
+        )
         self.show_hitbox_active = False
         self.show_pf_overlay = False
         self.setup_pf_overlay()
@@ -379,7 +381,11 @@ class Level:
         if self.tmx_maps.get(map_name):
             self.load_map(map_name, from_map=self.current_map)
         else:
-            if map_name == "bathhouse" and self.round_config["accessible_bathhouse"] and self.player.hp < 80:
+            if (
+                map_name == "bathhouse"
+                and self.round_config["accessible_bathhouse"]
+                and self.player.hp < 80
+            ):
                 print("accessible_bathhouse hp < 80")
                 self.overlay.health_bar.apply_health(9999999)
                 self.player.bathstat = True
@@ -463,9 +469,15 @@ class Level:
         if collided_interactions:
             if collided_interactions[0].name == "Bed":
                 self.start_day_transition()
-            if collided_interactions[0].name == "sign" and self.round_config["sign_interaction"]:
+            if (
+                collided_interactions[0].name == "sign"
+                and self.round_config["sign_interaction"]
+            ):
                 self.show_sign(collided_interactions[0])
-            if collided_interactions[0].name == "Trader" and self.round_config["market"]:
+            if (
+                collided_interactions[0].name == "Trader"
+                and self.round_config["market"]
+            ):
                 self.switch_screen(GameState.SHOP)
             if collided_interactions[0] in self.bush_sprites.sprites():
                 if self.player.axe_hitbox.colliderect(
@@ -599,7 +611,9 @@ class Level:
                 self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_HAT)
 
             if self.controls.DEBUG_PLAYER_RECEIVES_NECKLACE.click:
-                self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE)
+                self.start_scripted_sequence(
+                    ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE
+                )
 
             if self.controls.DEBUG_PLAYERS_BIRTHDAY.click:
                 self.start_scripted_sequence(ScriptedSequenceType.PLAYERS_BIRTHDAY)
@@ -861,8 +875,10 @@ class Level:
     def check_map_exit(self):
         if not self.map_transition:
             for warp_hitbox in self.player_exit_warps:
-                if self.player.hitbox_rect.colliderect(warp_hitbox.rect) and \
-                        (not warp_hitbox.name == "bathhouse" or self.round_config["accessible_bathhouse"]):
+                if self.player.hitbox_rect.colliderect(warp_hitbox.rect) and (
+                    not warp_hitbox.name == "bathhouse"
+                    or self.round_config["accessible_bathhouse"]
+                ):
                     self.map_transition.reset = partial(
                         self.switch_to_map, warp_hitbox.name
                     )
@@ -958,7 +974,9 @@ class Level:
     def draw(self, dt: float, move_things: bool):
         self.player.hp = self.overlay.health_bar.hp
         self.display_surface.fill((130, 168, 132))
-        self.all_sprites.draw(self.camera, False, self.round_config.get("bathtub_signs", False))
+        self.all_sprites.draw(
+            self.camera, False, self.round_config.get("bathtub_signs", False)
+        )
 
         self.draw_pf_overlay()
         self.draw_hitboxes()
@@ -996,8 +1014,9 @@ class Level:
         # show intro scripted sequence only once
         if not self.intro_shown.get(self.current_map, False):
             # TODO revert, this only for debug
-            if self.round_config.get("character_introduction_timestamp", []) \
-                    and self.round_config.get("character_introduction_text", ""):
+            if self.round_config.get(
+                "character_introduction_timestamp", []
+            ) and self.round_config.get("character_introduction_text", ""):
                 self.intro_shown[self.current_map] = True
                 self.cutscene_animation.start()
 

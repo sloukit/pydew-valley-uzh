@@ -57,5 +57,9 @@ class AllSprites(PersistentSpriteGroup):
         for layer in Layer:
             for sprite in sorted_sprites:
                 # including game_paused condition to prevent drawing overlaps between tutorial text boxes and menus
-                if sprite.z == layer and not game_paused and (show_signs or not sprite.name == "hidden_sign"):
+                if (
+                    sprite.z == layer
+                    and not game_paused
+                    and (show_signs or not sprite.name == "hidden_sign")
+                ):
                     sprite.draw(self.display_surface, camera.apply(sprite), camera)

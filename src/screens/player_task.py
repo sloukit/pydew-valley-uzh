@@ -2,7 +2,7 @@ from typing import Any, Callable
 
 import pygame
 
-from src.enums import CustomCursor, GameState  # InventoryResource
+from src.enums import CustomCursor  # InventoryResource
 from src.events import SET_CURSOR, post_event
 from src.gui.menu.abstract_menu import AbstractMenu
 from src.gui.menu.components import ArrowButton, InputField
@@ -218,7 +218,7 @@ class PlayerTask(AbstractMenu):
             resource_allocation = {
                 "allocation_item": self.allocation_item,
                 "max_allocation": self.max_allocation,
-                "allocations": self.allocations
+                "allocations": self.allocations,
             }
             self.send_resource_allocation(resource_allocation)
 
@@ -250,7 +250,9 @@ class PlayerTask(AbstractMenu):
                     # )
                     self.allocations[i] = self.allocations[i] - 1
                     if self.allocations[i] < 0:
-                        self.allocations[i] = self.total_items - sum(self.allocations) - 1
+                        self.allocations[i] = (
+                            self.total_items - sum(self.allocations) - 1
+                        )
 
         if event.type == pygame.KEYDOWN and self.active_input is not None:
             if event.key == pygame.K_BACKSPACE:

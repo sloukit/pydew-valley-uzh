@@ -131,7 +131,7 @@ class InventoryMenu(AbstractMenu):
 
     def sections_titles_setup(self) -> None:
         # show Equipment column only if feature "inventory_goggles" is enabled
-        if self.player.round_config["inventory_goggles"]:
+        if self.player.round_config.get("inventory_goggles", False):
             self.SECTION_TITLES = ("Resources", "Tools", "Equipment")
         else:
             self.SECTION_TITLES = ("Resources", "Tools")
@@ -256,7 +256,7 @@ class InventoryMenu(AbstractMenu):
         self._inv_buttons.extend(self._inventory_part_btn_setup(player, _BUTTON_SIZE))
         self._ft_buttons.extend(self._ft_btn_setup(player, _BUTTON_SIZE))
         # show Equipment column only if feature "inventory_goggles" is enabled
-        if self.player.round_config["inventory_goggles"]:
+        if self.player.round_config.get("inventory_goggles", False):
             self._special_btns.extend(self._special_btn_setup(player, _BUTTON_SIZE))
         self.buttons.extend(
             chain(self._inv_buttons, self._ft_buttons, self._special_btns)
@@ -292,7 +292,9 @@ class InventoryMenu(AbstractMenu):
         )
         self._ft_buttons.extend(self._ft_btn_setup(self.player, _BUTTON_SIZE))
         if self.player.round_config["inventory_goggles"]:
-            self._special_btns.extend(self._special_btn_setup(self.player, _BUTTON_SIZE))
+            self._special_btns.extend(
+                self._special_btn_setup(self.player, _BUTTON_SIZE)
+            )
         self.buttons.extend(
             chain(self._inv_buttons, self._ft_buttons, self._special_btns)
         )

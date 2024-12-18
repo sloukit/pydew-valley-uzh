@@ -1,4 +1,5 @@
 from typing import Any
+
 import pygame
 
 from src.enums import ClockVersion

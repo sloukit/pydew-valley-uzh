@@ -5,11 +5,11 @@ import pygame
 from pygame.mouse import get_pressed as mouse_buttons
 
 from src import support
+from src.client import authn
 from src.enums import CustomCursor, GameState
 from src.events import SET_CURSOR, post_event
 from src.gui.menu.general_menu import GeneralMenu
 from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH, USE_SERVER
-from src.client import authn
 
 _SCREEN_CENTER = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
 

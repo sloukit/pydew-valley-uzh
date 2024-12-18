@@ -221,12 +221,17 @@ class Player(Character):
             if self.controls.INVENTORY.click:
                 post_event(OPEN_INVENTORY)
 
-            if self.controls.DEBUG_QUAKE.click and self.get_game_version() == DEBUG_MODE_VERSION:
+            if (
+                self.controls.DEBUG_QUAKE.click
+                and self.get_game_version() == DEBUG_MODE_VERSION
+            ):
                 post_event(START_QUAKE, duration=2.0, debug=True)
 
                 # emotes
         if not self.blocked:
-            if self.controls.EMOTE_WHEEL.click and self.round_config.get("emote_wheel", False):
+            if self.controls.EMOTE_WHEEL.click and self.round_config.get(
+                "emote_wheel", False
+            ):
                 self.emote_manager.toggle_emote_wheel()
                 if self.emote_manager.emote_wheel.visible:
                     self.direction = pygame.Vector2()

@@ -1,4 +1,5 @@
 from typing import Any
+
 import requests
 
 from src.settings import API_KEY, PORT, SERVER_IP
@@ -15,12 +16,8 @@ DUMMY_TELEMETRY_DATA = {"self_assessment": "ok"}
 def authn(play_token: str, api_key: str = API_KEY) -> Any:
     resp = requests.post(
         url=f"{SERVER_IP}:{PORT}/authn",
-        headers={
-            "x-api-key": api_key
-        },
-        json={
-            "play_token": play_token
-        }
+        headers={"x-api-key": api_key},
+        json={"play_token": play_token},
     )
     try:
         resp_json = resp.json()
@@ -30,20 +27,15 @@ def authn(play_token: str, api_key: str = API_KEY) -> Any:
     # print(f"{resp.url=}, {resp.status_code=}, {resp_json=}")
     return resp_json
 
+
 #####################################################################
 
 
 def send_telemetry(encoded_jwt: str, telemetry: Any, api_key: str = API_KEY) -> Any:
-
     resp2 = requests.post(
         url=f"{SERVER_IP}:{PORT}/telemetry",
-        headers={
-            "x-api-key": api_key,
-            "Authorization": f"Bearer {encoded_jwt}"
-        },
-        json={
-            "telemetry_data": telemetry
-        }
+        headers={"x-api-key": api_key, "Authorization": f"Bearer {encoded_jwt}"},
+        json={"telemetry_data": telemetry},
     )
 
     try:
