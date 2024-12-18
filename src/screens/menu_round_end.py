@@ -30,14 +30,17 @@ class RoundMenu(GeneralMenu):
         switch_screen: Callable[[GameState], None],
         player: Player,
         increment_round: Callable[[], None],
+        get_round: Callable[[], int],
     ):
         self.player = player
         self.scroll = 0
         self.min_scroll = self.get_min_scroll()
-        title = "Round has ended. You currently have:"
+        self.get_round = get_round
+        self.title = f"Round {self.get_round()} has ended. You currently have:"
         options = ["continue to next round"]
         size = (400, 400)
-        super().__init__(title, options, switch_screen, size)
+
+        super().__init__(self.title, options, switch_screen, size)
         self.background = pygame.Surface(self.display_surface.get_size())
         self.stats_options = [""]
 
@@ -113,6 +116,7 @@ class RoundMenu(GeneralMenu):
         return False
 
     def draw_title(self):
+        self.title = f"Round {self.get_round() - 1} has ended. You currently have:"
         text_surf = self.font.render(self.title, False, "Black")
         midtop = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 20)
         text_rect = text_surf.get_frect(midtop=midtop)

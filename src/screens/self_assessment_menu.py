@@ -101,6 +101,7 @@ class SelfAssessmentMenu(AbstractMenu):
     _continue_button_text: str | None
 
     _sam_buttons: list[_SAMButton]
+    _sam_results: dict[str, int]
 
     _surface: pygame.Surface | None
 
@@ -127,6 +128,7 @@ class SelfAssessmentMenu(AbstractMenu):
         self._continue_button_text = "Continue"
 
         self._sam_buttons = []
+        self._sam_results = {}
 
         self._surface = None
 
@@ -225,13 +227,18 @@ class SelfAssessmentMenu(AbstractMenu):
     def _continue(self):
         if not self.selected_sam:
             return
+
+        dimension = self._selection[self.current_dimension_index].name
+        assessment = int(self.selected_sam._name)
+        self._sam_results[dimension] = assessment
+
         # print(f"{self._current_dimension.name} - {self._selected_scale}")
         self.selected_sam.deselect()
         self.selected_sam = None
 
         if self.current_dimension_index >= len(self._selection) - 1:
             self.current_dimension_index = 0
-            self._return_func()
+            self._return_func(self._sam_results)
         else:
             self.current_dimension_index += 1
 

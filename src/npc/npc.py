@@ -29,6 +29,7 @@ class NPC(NPCBase):
         soil_manager: SoilManager,
         emote_manager: NPCEmoteManager,
         tree_sprites: pygame.sprite.Group,
+        sickness_allowed: bool,
     ):
         self.tree_sprites = tree_sprites
 
@@ -50,6 +51,7 @@ class NPC(NPCBase):
         self.has_hat = False
         self.has_horn = False
         self.has_outgroup_skin = False
+        self.sickness_allowed = sickness_allowed
 
         # TODO: Ensure that the NPC always has all needed seeds it needs
         #  in its inventory
@@ -68,20 +70,33 @@ class NPC(NPCBase):
         self.assign_outfit_ingroup()
 
         # NPC health / sickness / death
+
         self.probability_to_get_sick = (
             0.3 if self.has_goggles else 0.6
         ) < random.random()
         # set a timer to get the NPC sick after a random time
         self.sick_timer = Timer(
             random.randint(5, 20) * 1000,
-            autostart=True,
+            autostart=self.sickness_allowed,
             func=self.get_sick,
         )
+
         self.is_sick = False
         self.is_dead = False
         self.hp = 100
         # how fast the NPC dies after getting sick
         self.die_rate = random.randint(35, 75)
+
+    def set_sickness_allowed(self, sickness_allowed: bool) -> None:
+        self.sickness_allowed = sickness_allowed
+        if sickness_allowed:
+            if not self.sick_timer.active:
+                self.sick_timer.activate()
+        else:
+            if self.sick_timer.active:
+                self.sick_timer.deactivate()
+            self.is_sick = False
+            self.hp = 100
 
     def get_personal_soil_area_tiles(self, tile_type: str) -> list[tuple[int, int]]:
         """
@@ -147,15 +162,19 @@ class NPC(NPCBase):
         ]
         return adjacent_untilled_tiles
 
-    def assign_outfit_ingroup(self):
+    def assign_outfit_ingroup(self, ingroup_40p_hat_necklace_appearance: bool = False):
         # 40% of the ingroup NPCs should wear a hat and a necklace, and 60% of the ingroup NPCs should only wear the hat
         if self.study_group == StudyGroup.INGROUP:
-            if random.random() <= 0.4:
-                self.has_necklace = True
-                self.has_hat = True
+            if ingroup_40p_hat_necklace_appearance:
+                if random.random() <= 0.4:
+                    self.has_necklace = True
+                    self.has_hat = True
+                else:
+                    self.has_necklace = False
+                    self.has_hat = True
             else:
                 self.has_necklace = False
-                self.has_hat = True
+                self.has_hat = False
         else:
             self.has_necklace = False
             self.has_hat = False
@@ -199,7 +218,8 @@ class NPC(NPCBase):
                 self.die()
 
     def update(self, dt):
-        self.manage_sickness(dt)
+        if self.sickness_allowed:
+            self.manage_sickness(dt)
         if self.is_dead:
             return
         super().update(dt)

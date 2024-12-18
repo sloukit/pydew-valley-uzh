@@ -42,6 +42,7 @@ class GameState(IntEnum):
     OUTGROUP_MENU = 12
     PLAYER_TASK = 13
     SELF_ASSESSMENT = 14
+    NOTIFICATION_MENU = 15
 
 
 # NOTE : DO NOT pay attention to anything the IDE might complain about in this class, as the enum generation mechanisms

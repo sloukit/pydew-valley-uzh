@@ -34,5 +34,7 @@ class PauseMenu(GeneralMenu):
             if event.key == pygame.K_ESCAPE:
                 self.switch_screen(GameState.PLAY)
                 return True
+            if event.key == pygame.K_q:
+                self.quit_game()
 
         return False

@@ -109,8 +109,3 @@ class HealthProgressBar:
     def draw(self, screen):
         self.change_color()
         self.render(screen)
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_2]:
-            self.apply_health(1)
-        elif keys[pygame.K_1]:
-            self.apply_damage(1)

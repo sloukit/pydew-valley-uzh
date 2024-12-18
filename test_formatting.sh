@@ -1,0 +1,1 @@
+python formatlint.py $@

@@ -223,5 +223,8 @@ class DialogueManager:
             return
         self._push_current_tb_to_foreground()
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: str) -> list[list[str, str]]:
         return self.dialogues[item]
+
+    def set_item(self, item: str, value: list[list[str, str]]) -> None:
+        self.dialogues[item] = value
