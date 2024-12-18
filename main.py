@@ -120,8 +120,6 @@ class Game:
         self.round: int = -1
         self.token: str = ""
         self.jwt: str = ""
-        if not USE_SERVER:
-            self.set_token({"token": "000", "jwt": "dummy_token", "game_version": 0})
         self.round_end_timer: float = 0.0
         self.ROUND_END_TIME_IN_MINUTES: float = 99999999.0
 
@@ -138,6 +136,9 @@ class Game:
             self.clock,
         )
         self.player = self.level.player
+
+        if not USE_SERVER:
+            self.set_token({"token": "000", "jwt": "dummy_token", "game_version": 0})
 
         self.token_status = False
         self.allocation_task = PlayerTask(self.send_resource_allocation)

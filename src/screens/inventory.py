@@ -88,7 +88,7 @@ _SPACING_BETWEEN_ROWS = 20
 _TOP_MARGIN = 200
 _LEFT_MARGIN = 40
 _BUTTON_SIZE = (80, 80)
-_SECTION_TITLES = ("Resources", "Tools", "Equipment")
+
 _AVAILABLE_TOOLS = ("axe", "hoe", "water")
 _get_resource_count = itemgetter(1)
 
@@ -127,6 +127,14 @@ class InventoryMenu(AbstractMenu):
         self._ft_buttons = []
         self._special_btns = []
         self.button_setup(player)
+        self.sections_titles_setup()
+
+    def sections_titles_setup(self) -> None:
+        # show Equipment column only if feature "inventory_goggles" is enabled
+        if self.player.round_config["inventory_goggles"]:
+            self.SECTION_TITLES = ("Resources", "Tools", "Equipment")
+        else:
+            self.SECTION_TITLES = ("Resources", "Tools")
 
     def _prepare_img_for_ir_button(self, ir: InventoryResource, count: int):
         # , _ ,
@@ -247,7 +255,9 @@ class InventoryMenu(AbstractMenu):
     def button_setup(self, player):
         self._inv_buttons.extend(self._inventory_part_btn_setup(player, _BUTTON_SIZE))
         self._ft_buttons.extend(self._ft_btn_setup(player, _BUTTON_SIZE))
-        self._special_btns.extend(self._special_btn_setup(player, _BUTTON_SIZE))
+        # show Equipment column only if feature "inventory_goggles" is enabled
+        if self.player.round_config["inventory_goggles"]:
+            self._special_btns.extend(self._special_btn_setup(player, _BUTTON_SIZE))
         self.buttons.extend(
             chain(self._inv_buttons, self._ft_buttons, self._special_btns)
         )
@@ -255,7 +265,7 @@ class InventoryMenu(AbstractMenu):
     def draw_title(self):
         super().draw_title()
         top = SCREEN_HEIGHT / 20 + 75
-        for i, section_name in enumerate(_SECTION_TITLES):
+        for i, section_name in enumerate(self.SECTION_TITLES):
             text_surf = self.font.render(section_name, False, "black")
             text_rect = text_surf.get_frect(
                 top=top, centerx=(self.rect.width * (i + 1)) / 4
@@ -268,6 +278,7 @@ class InventoryMenu(AbstractMenu):
             self.display_surface.blit(text_surf, text_rect)
 
     def refresh_buttons_content(self):
+        self.sections_titles_setup()
         """Replace the existing buttons for available tools and resource count,
         in case the values change."""
         for btn in chain(self._inv_buttons, self._ft_buttons, self._special_btns):
@@ -280,7 +291,8 @@ class InventoryMenu(AbstractMenu):
             self._inventory_part_btn_setup(self.player, _BUTTON_SIZE)
         )
         self._ft_buttons.extend(self._ft_btn_setup(self.player, _BUTTON_SIZE))
-        self._special_btns.extend(self._special_btn_setup(self.player, _BUTTON_SIZE))
+        if self.player.round_config["inventory_goggles"]:
+            self._special_btns.extend(self._special_btn_setup(self.player, _BUTTON_SIZE))
         self.buttons.extend(
             chain(self._inv_buttons, self._ft_buttons, self._special_btns)
         )

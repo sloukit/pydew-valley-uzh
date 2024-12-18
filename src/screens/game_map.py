@@ -362,6 +362,7 @@ class GameMap:
         self.round_config = round_config
         for npc in self.npcs:
             npc.set_sickness_allowed(round_config.get("sickness", False))
+            npc.assign_outfit_ingroup(round_config.get("ingroup_40p_hat_necklace_appearance", False))
 
     @property
     def size(self):
