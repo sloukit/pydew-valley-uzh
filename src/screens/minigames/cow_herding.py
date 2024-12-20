@@ -3,11 +3,11 @@ import random
 
 # from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Type
+from typing import Any, Type
 
 import pygame
 import pygame.gfxdraw
-from pathfinding.core.grid import Grid
+from pathfinding.core.grid import Grid  # type: ignore[import-untyped]
 
 from src.controls import Controls
 from src.enums import Direction, StudyGroup
@@ -169,8 +169,9 @@ class CowHerding(Minigame):
     # collision sprites for the minigame contestants (i.e. the Player and their opponent)
     contestant_collision_sprites: PersistentSpriteGroup
 
-    def __init__(self, state: CowHerdingState):
+    def __init__(self, state: CowHerdingState, round_config: dict[str, Any]):
         super().__init__(state)
+        self.round_config = round_config
         self.camera_target = DummySprite(self._state.player.rect.copy())
         self.player_controls = self._state.player.controls
 
@@ -194,6 +195,7 @@ class CowHerding(Minigame):
             soil_manager=self._state.game_map.soil_manager,
             emote_manager=self._state.game_map.npc_emote_manager,
             tree_sprites=pygame.sprite.Group(),
+            sickness_allowed=self.round_config.get("sickness", False),
         )
         opponent.probability_to_get_sick = 1
         self._state.game_map.npcs.append(opponent)

@@ -180,3 +180,4 @@ images/characters/rabbit/temp_hat.png
 # other
 .env_name
 *.code-workspace
+.env_name.leave

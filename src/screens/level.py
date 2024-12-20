@@ -342,7 +342,8 @@ class Level:
                     collision_sprites=self.collision_sprites,
                     overlay=self.overlay,
                     sounds=self.sounds,
-                )
+                ),
+                round_config = self.round_config,
             )
 
             @self.current_minigame.on_finish
