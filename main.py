@@ -217,23 +217,25 @@ class Game:
         self.intro_txt_rendered = False
 
     def send_self_assessment(self, assessment: dict[str, int]) -> None:
-        telemetry = {
-            "self_assessment": assessment,
-            "game_version": self.game_version,
-            "game_round": self.round,
-            "round_timer": round(self.round_end_timer, 2),
-        }
-        send_telemetry(self.jwt, telemetry)
+        if USE_SERVER:
+            telemetry = {
+                "self_assessment": assessment,
+                "game_version": self.game_version,
+                "game_round": self.round,
+                "round_timer": round(self.round_end_timer, 2),
+            }
+            send_telemetry(self.jwt, telemetry)
         self.switch_state(GameState.PLAY)
 
     def send_resource_allocation(self, resource_allocation: dict[str, Any]) -> None:
-        telemetry = {
-            "resource_allocation": resource_allocation,
-            "game_version": self.game_version,
-            "game_round": self.round,
-            "round_timer": round(self.round_end_timer, 2),
-        }
-        send_telemetry(self.jwt, telemetry)
+        if USE_SERVER:
+            telemetry = {
+                "resource_allocation": resource_allocation,
+                "game_version": self.game_version,
+                "game_round": self.round,
+                "round_timer": round(self.round_end_timer, 2),
+            }
+            send_telemetry(self.jwt, telemetry)
         self.switch_state(GameState.PLAY)
 
     def set_token(self, response: dict[str, Any]) -> None:
