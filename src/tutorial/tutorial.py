@@ -121,7 +121,6 @@ class Tutorial:
                 if (
                     0 not in self.movement_axis
                     and self.dialogue_manager._get_current_tb().finished_advancing
-                    and not self.level.cutscene_animation.active
                 ):
                     self.switch_to_task(1)
                     self.tasks_achieved += 1
