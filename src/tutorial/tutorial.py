@@ -1,9 +1,11 @@
+from typing import Any
+
 import pygame
 
 from src.enums import StudyGroup
 from src.gui.interface.dialog import DialogueManager
 from src.screens.level import Level
-from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH, TB_SIZE
+from src.settings import GAME_LANGUAGE, SCREEN_HEIGHT, SCREEN_WIDTH, TB_SIZE
 from src.sprites.entities.player import Player
 
 
@@ -18,12 +20,14 @@ class Tutorial:
         sprite_group: pygame.sprite.Group,
         player: Player,
         level: Level,
+        round_config: dict[str, Any],
     ):
         self.dialogue_manager = DialogueManager(
-            sprite_group, "data/textboxes/tutorial.json"
+            sprite_group, f"data/textboxes/{GAME_LANGUAGE}/tutorial.json"
         )
         self.player = player
         self.level = level
+        self.round_config = round_config
 
         # position of the tutorial text box
         self.left_pos = SCREEN_WIDTH - TB_SIZE[0]
@@ -205,10 +209,16 @@ class Tutorial:
                     self.player.outgroup_member_interacted
                     and self.dialogue_manager._get_current_tb().finished_advancing
                 ):
-                    self.switch_to_task(9)
-                    self.tasks_achieved += 1
+                    if self.round_config.get("playable_outgroup", False):
+                        self.switch_to_task(9)
+                        self.tasks_achieved += 1
 
-                    self.player.outgroup_member_interacted = False
+                        self.player.outgroup_member_interacted = False
+                    else:
+                        self.show_tutorial_end()
+                        self.tasks_achieved = 10
+
+                        self.player.blocked = True
 
             case 9:
                 # check if the player achieved task "walk around the outgroup farm and switch to the outgroup"
