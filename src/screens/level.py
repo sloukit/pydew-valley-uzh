@@ -242,9 +242,18 @@ class Level:
         self.crop_watered = False
         self.hit_tree = False
 
+    def hide_bath_signs(self) -> None:
+        if not self.round_config.get("bathtub_signs", False):
+            gr = self.collision_sprites
+            for sprite in gr:
+                if sprite.name == "hidden_sign":
+                    gr.remove(sprite)
+                    sprite.kill()
+
     def round_config_changed(self, round_config: dict[str, Any]) -> None:
         self.round_config = round_config
-        self.player.round_config = round_config
+        self.hide_bath_signs()
+        self.player.round_config_changed(round_config)
         self.overlay.round_config = round_config
         self.game_map.round_config_changed(round_config)
 
@@ -381,23 +390,21 @@ class Level:
     def switch_to_map(self, map_name: Map):
         if self.tmx_maps.get(map_name):
             self.load_map(map_name, from_map=self.current_map)
+            self.hide_bath_signs()
         else:
             if (
                 map_name == "bathhouse"
                 and self.round_config["accessible_bathhouse"]
                 and self.player.hp < 80
             ):
-                print("accessible_bathhouse hp < 80")
                 self.overlay.health_bar.apply_health(9999999)
                 self.player.bathstat = True
                 self.player.bath_time = time.time()
                 self.player.emote_manager.show_emote(self.player, "sad_sick_ani")
                 self.load_map(self.current_map, from_map=map_name)
             elif map_name == "bathhouse":
-                print("bathhouse hp > 80")
                 # this is to prevent warning in the console
                 if self.round_config["accessible_bathhouse"]:
-                    print("accessible_bathhouse hp > 80")
                     self.load_map(self.current_map, from_map=map_name)
                     self.player.emote_manager.show_emote(self.player, "sad_sick_ani")
             else:
@@ -633,6 +640,9 @@ class Level:
 
             if self.controls.DEBUG_SHOW_DIALOG.click:
                 post_event(DIALOG_SHOW, dial="test")
+
+            if self.controls.DEBUG_SHOW_SHOP.click:
+                self.switch_screen(GameState.SHOP)
 
     def start_scripted_sequence(self, sequence_type: ScriptedSequenceType):
         # do not start new scripted sequence when one is already running
@@ -976,7 +986,7 @@ class Level:
         self.player.hp = self.overlay.health_bar.hp
         self.display_surface.fill((130, 168, 132))
         self.all_sprites.draw(
-            self.camera, False, self.round_config.get("bathtub_signs", False)
+            self.camera, False
         )
 
         self.draw_pf_overlay()
@@ -1014,12 +1024,12 @@ class Level:
 
         # show intro scripted sequence only once
         if not self.intro_shown.get(self.current_map, False):
-            # TODO revert, this only for debug
             if self.round_config.get(
                 "character_introduction_timestamp", []
             ) and self.round_config.get("character_introduction_text", ""):
                 self.intro_shown[self.current_map] = True
-                self.cutscene_animation.start()
+                # TODO revert, this only for debug
+                # self.cutscene_animation.start()
 
         if self.current_minigame and self.current_minigame.running:
             self.current_minigame.update(dt)
