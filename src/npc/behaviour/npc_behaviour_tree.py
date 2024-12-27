@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import random
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Callable
 
@@ -30,6 +30,8 @@ class NPCSharedContext:
 @dataclass
 class NPCIndividualContext(Context):
     npc: NPCBase
+    # list of available seeds depending on game version and round number
+    allowed_seeds: list[SeedType] = field(default_factory=list)
 
 
 def walk_to_pos(
@@ -293,7 +295,8 @@ def plant_adjacent_or_random_seed(context: NPCIndividualContext) -> bool:
         # been planted the least is used
         if not seed_type:
             seed_type = min(
-                SeedType, key=lambda x: soil_layer.planted_types[x]
+                context.allowed_seeds,
+                key=lambda x: soil_layer.planted_types[x],
             ).as_fts()
 
         context.npc.current_seed = seed_type

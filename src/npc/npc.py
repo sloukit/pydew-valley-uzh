@@ -5,7 +5,14 @@ from typing import Callable
 
 import pygame
 
-from src.enums import EntityState, FarmingTool, InventoryResource, Layer, StudyGroup
+from src.enums import (
+    EntityState,
+    FarmingTool,
+    InventoryResource,
+    Layer,
+    SeedType,
+    StudyGroup,
+)
 from src.gui.interface.emotes import NPCEmoteManager
 from src.npc.bases.npc_base import NPCBase
 from src.npc.behaviour.npc_behaviour_tree import NPCIndividualContext
@@ -63,8 +70,18 @@ class NPC(NPCBase):
             InventoryResource.PEAR: 0,
             InventoryResource.CORN: 0,
             InventoryResource.TOMATO: 0,
+            InventoryResource.BEETROOT: 0,
+            InventoryResource.CARROT: 0,
+            InventoryResource.EGGPLANT: 0,
+            InventoryResource.PUMPKIN: 0,
+            InventoryResource.PARSNIP: 0,
             InventoryResource.CORN_SEED: 999,
             InventoryResource.TOMATO_SEED: 999,
+            InventoryResource.BEETROOT_SEED: 999,
+            InventoryResource.CARROT_SEED: 999,
+            InventoryResource.EGGPLANT_SEED: 999,
+            InventoryResource.PUMPKIN_SEED: 999,
+            InventoryResource.PARSNIP_SEED: 999,
         }
 
         self.assign_outfit_ingroup()
@@ -86,6 +103,15 @@ class NPC(NPCBase):
         self.hp = 100
         # how fast the NPC dies after getting sick
         self.die_rate = random.randint(35, 75)
+
+    def set_allowed_seeds(self, allowed_seeds: dict[str]) -> None:
+        seed_types = []
+        for seed_type in SeedType:
+            if SeedType._AS_IRS[seed_type].as_serialised_string() in allowed_seeds:
+                seed_types.append(seed_type)
+        # using NPCIndividualContext, however it would make more sense to use NPCSharedContext,
+        # but not sure how to set it :-(
+        self.behaviour_tree_context.allowed_seeds = seed_types
 
     def set_sickness_allowed(self, sickness_allowed: bool) -> None:
         self.sickness_allowed = sickness_allowed

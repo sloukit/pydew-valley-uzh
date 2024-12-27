@@ -1,5 +1,6 @@
 import pygame  # noqa
 
+from src.support import get_translated_string as _, parse_crop_types
 from src.events import SET_CURSOR, post_event
 from src.gui.menu.abstract_menu import AbstractMenu
 from src.enums import (
@@ -107,14 +108,16 @@ class InventoryMenu(AbstractMenu):
         switch_screen: Callable,
         assign_tool: Callable,
         assign_seed: Callable,
+        round_config: dict[str, Any],
     ):
-        super().__init__("Inventory", (SCREEN_WIDTH, 800))
+        super().__init__(_("Inventory"), (SCREEN_WIDTH, 800))
         self.player = player
         self._inventory = player.inventory
         self._av_tools = _AVAILABLE_TOOLS
         self.switch_screen = switch_screen
         self.assign_tool = assign_tool
         self.assign_seed = assign_seed
+        self.round_config = round_config
         self.item_frames = frames["items"]
         self.object_frames = frames["level"]["objects"]
         self.cosmetic_frames = frames["cosmetics"]
@@ -126,18 +129,18 @@ class InventoryMenu(AbstractMenu):
         self._inv_buttons = []
         self._ft_buttons = []
         self._special_btns = []
+        self.allowed_crops = []
         self.button_setup(player)
         self.sections_titles_setup()
 
     def sections_titles_setup(self) -> None:
         # show Equipment column only if feature "inventory_goggles" is enabled
         if self.player.round_config.get("inventory_goggles", False):
-            self.SECTION_TITLES = ("Resources", "Tools", "Equipment")
+            self.SECTION_TITLES = (_("Resources"), _("Tools"), _("Equipment"))
         else:
-            self.SECTION_TITLES = ("Resources", "Tools")
+            self.SECTION_TITLES = (_("Resources"), _("Tools"))
 
     def _prepare_img_for_ir_button(self, ir: InventoryResource, count: int):
-        # , _ ,
         btn_name = ir.as_serialised_string()
         img = self.item_frames[btn_name]
         calc_rect = img.get_frect(center=(32, 32))
@@ -146,6 +149,21 @@ class InventoryMenu(AbstractMenu):
         blit_list = ((img, calc_rect), (amount, amount.get_frect(bottomright=(64, 64))))
         calc_img.fblits(blit_list)  # faster than doing two separate blits
         return calc_img, btn_name
+
+    def _is_crop_enabled(self, inventory: tuple[InventoryResource, int]) -> bool:
+        ir, count = inventory
+        return ir.as_serialised_string() in self.allowed_crops
+
+    def round_config_changed(self, round_config: dict[str, Any]) -> None:
+        self.round_config = round_config
+        crop_types_list = self.round_config.get("crop_types_list", [])
+
+        self.allowed_crops = parse_crop_types(
+            crop_types_list,
+            include_base_allowed_crops=True,
+            include_crops=True,
+            include_seeds=True,
+        )
 
     def _inventory_part_btn_setup(self, player, button_size: tuple[int, int]):
         # Portion of the menu to allow the player to see
@@ -159,7 +177,10 @@ class InventoryMenu(AbstractMenu):
             1, btns_per_line - 1
         )
         for button_no, (ir, count) in enumerate(
-            filter(_get_resource_count, self._inventory.items())
+            filter(
+                self._is_crop_enabled,
+                filter(_get_resource_count, self._inventory.items()),
+            )
         ):
             calc_img, btn_name = self._prepare_img_for_ir_button(ir, count)
             row, column = divmod(button_no, 6)  # , _ ,
@@ -213,10 +234,10 @@ class InventoryMenu(AbstractMenu):
         # whatsoever, show only one button with "No Equipment" on it
         # and stop yielding buttons
         if not buttons_to_display:
-            text_rect = self.font.render("No equipment", False, "black").get_rect(
+            text_rect = self.font.render(_("No equipment"), False, "black").get_rect(
                 centerx=self.rect.width * 3 / 4, centery=self.rect.centery
             )
-            yield Button("No equipment", text_rect, self.font)
+            yield Button(_("No equipment"), text_rect, self.font)
             return
 
         generic_rect = pygame.Rect(0, 0, *button_size)

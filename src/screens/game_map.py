@@ -62,6 +62,7 @@ from src.sprites.entities.player import Player
 from src.sprites.objects.berry_bush import BerryBush
 from src.sprites.objects.tree import Tree
 from src.sprites.setup import ENTITY_ASSETS
+from src.support import parse_crop_types
 
 
 def _setup_tile_layer(
@@ -357,6 +358,11 @@ class GameMap:
 
         self._setup_layers(save_file, selected_map, scene_ani, zoom_man)
 
+        if selected_map == Map.MINIGAME and not self.round_config.get(
+            "minigame_rooting_npcs", False
+        ):
+            self.npcs = []
+
         if SETUP_PATHFINDING:
             AIData.update(self._pf_matrix, self.player, [*self.npcs, *self.animals])
 
@@ -366,8 +372,18 @@ class GameMap:
 
     def round_config_changed(self, round_config: dict[str, Any]) -> None:
         self.round_config = round_config
+
+        crop_types_list = self.round_config.get("crop_types_list", [])
+        allowed_seeds = parse_crop_types(
+            crop_types_list,
+            include_base_allowed_crops=False,
+            include_crops=False,
+            include_seeds=True,
+        )
+
         for npc in self.npcs:
             npc.set_sickness_allowed(round_config.get("sickness", False))
+            npc.set_allowed_seeds(allowed_seeds)
             npc.assign_outfit_ingroup(
                 round_config.get("ingroup_40p_hat_necklace_appearance", False)
             )
@@ -661,6 +677,11 @@ class GameMap:
          actually restrict its movable area, or make sure that a day does not last long
          enough after a farming area has been fully watered.
         """
+
+        if gmap == Map.MINIGAME and not self.round_config.get(
+            "minigame_rooting_npcs", False
+        ):
+            return None
 
         study_group = StudyGroup.NO_GROUP
         group = obj.properties.get("group")

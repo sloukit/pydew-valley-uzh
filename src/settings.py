@@ -1,3 +1,5 @@
+import os
+
 import pygame  # noqa
 import pytmx  # type:ignore [import-untyped]
 
@@ -27,8 +29,9 @@ GAME_MAP = Map.NEW_FARM
 ENABLE_NPCS = True
 TEST_ANIMALS = True
 
+GAME_LANGUAGE = os.environ.get("GAME_LANGUAGE", "en")
 DEBUG_MODE_VERSION = 0
-USE_SERVER = True
+USE_SERVER = False
 SERVER_IP = "http://127.0.0.1"
 PORT = 5000
 API_KEY = "123"
@@ -42,7 +45,27 @@ SAM_BORDER_SIZE = (
     131,
 )  # absolute size of the border around self-assessment manikins
 
-GROW_SPEED = {"corn": 1, "tomato": 0.7}
+GROW_SPEED = {
+    "corn": 1,
+    "tomato": 0.7,
+    "beetroot": 0.7,
+    "carrot": 0.7,
+    "eggplant": 0.7,
+    "pumpkin": 0.7,
+    "parsnip": 0.7,
+}
+
+BASE_ALLOWED_CROPS = [
+    "wood",
+    "apple",
+    "blackberry",
+    "blueberry",
+    "raspberry",
+    "orange",
+    "peach",
+    "pear",
+]
+
 
 OVERLAY_POSITIONS = {
     "tool": (86, 150),

@@ -88,11 +88,20 @@ class InventoryResource(_SerialisableEnum):
             "pear",
             "corn",
             "tomato",
+            "beetroot",
+            "carrot",
+            "eggplant",
+            "pumpkin",
+            "parsnip",
             "corn_seed",
             "tomato_seed",
+            "beetroot_seed",
+            "carrot_seed",
+            "eggplant_seed",
+            "pumpkin_seed",
+            "parsnip_seed",
         )
     )
-
     # All item worths in the game. When traders buy things off you, they pay you for half the worth.
     # If YOU buy something from THEM, then you have to pay the FULL worth, though.
     _ITEM_WORTHS = nonmember(
@@ -107,8 +116,18 @@ class InventoryResource(_SerialisableEnum):
             10,  # PEAR
             20,  # CORN
             40,  # TOMATO
+            20,  # BEETROOT
+            20,  # CARROT
+            20,  # EGGPLANT
+            20,  # PUMPKIN
+            20,  # PARSNIP
             4,  # CORN_SEED
             5,  # TOMATO_SEED
+            6,  # BEETROOT_SEED
+            6,  # CARROT_SEED
+            6,  # EGGPLANT_SEED
+            6,  # PUMPKIN_SEED
+            6,  # PARSNIP_SEED
         )
     )
 
@@ -122,8 +141,21 @@ class InventoryResource(_SerialisableEnum):
     PEAR = 7
     CORN = 8
     TOMATO = 9
-    CORN_SEED = 10
-    TOMATO_SEED = 11
+
+    BEETROOT = 10
+    CARROT = 11
+    EGGPLANT = 12
+    PUMPKIN = 13
+    PARSNIP = 14
+
+    CORN_SEED = 15
+    TOMATO_SEED = 16
+
+    BEETROOT_SEED = 17
+    CARROT_SEED = 18
+    EGGPLANT_SEED = 19
+    PUMPKIN_SEED = 20
+    PARSNIP_SEED = 21
 
     def get_worth(self):
         return self._ITEM_WORTHS[self]  # noqa
@@ -139,7 +171,19 @@ class FarmingTool(_SerialisableEnum):
     """Notably used to distinguish the different farming tools (including seeds) in-code."""
 
     _SERIALISABLE_STRINGS = nonmember(
-        ("none", "axe", "hoe", "water", "corn_seed", "tomato_seed")
+        (
+            "none",
+            "axe",
+            "hoe",
+            "water",
+            "corn_seed",
+            "tomato_seed",
+            "beetroot_seed",
+            "carrot_seed",
+            "eggplant_seed",
+            "pumpkin_seed",
+            "parsnip_seed",
+        )
     )
 
     NONE = 0  # Possible placeholder value if needed somewhere
@@ -149,15 +193,34 @@ class FarmingTool(_SerialisableEnum):
     CORN_SEED = 4
     TOMATO_SEED = 5
 
+    BEETROOT_SEED = 6
+    CARROT_SEED = 7
+    EGGPLANT_SEED = 8
+    PUMPKIN_SEED = 9
+    PARSNIP_SEED = 10
+
     _AS_IRS = nonmember(
         {
             CORN_SEED: InventoryResource.CORN_SEED,
             TOMATO_SEED: InventoryResource.TOMATO_SEED,
+            BEETROOT_SEED: InventoryResource.BEETROOT_SEED,
+            CARROT_SEED: InventoryResource.CARROT_SEED,
+            EGGPLANT_SEED: InventoryResource.EGGPLANT_SEED,
+            PUMPKIN_SEED: InventoryResource.PUMPKIN_SEED,
+            PARSNIP_SEED: InventoryResource.PARSNIP_SEED,
         }
     )
 
     _AS_NS_IRS = nonmember(
-        {CORN_SEED: InventoryResource.CORN, TOMATO_SEED: InventoryResource.TOMATO}
+        {
+            CORN_SEED: InventoryResource.CORN,
+            TOMATO_SEED: InventoryResource.TOMATO,
+            BEETROOT_SEED: InventoryResource.BEETROOT,
+            CARROT_SEED: InventoryResource.CARROT,
+            EGGPLANT_SEED: InventoryResource.EGGPLANT,
+            PUMPKIN_SEED: InventoryResource.PUMPKIN,
+            PARSNIP_SEED: InventoryResource.PARSNIP,
+        }
     )
 
     # Using frozenset to ensure this cannot change
@@ -199,14 +262,49 @@ class FarmingTool(_SerialisableEnum):
 
 
 class SeedType(IntEnum):
-    _AS_FTS = nonmember((FarmingTool.CORN_SEED, FarmingTool.TOMATO_SEED))
+    _AS_FTS = nonmember(
+        (
+            FarmingTool.CORN_SEED,
+            FarmingTool.TOMATO_SEED,
+            FarmingTool.BEETROOT_SEED,
+            FarmingTool.CARROT_SEED,
+            FarmingTool.EGGPLANT_SEED,
+            FarmingTool.PUMPKIN_SEED,
+            FarmingTool.PARSNIP_SEED,
+        )
+    )
 
-    _AS_IRS = nonmember((InventoryResource.CORN_SEED, InventoryResource.TOMATO_SEED))
+    _AS_IRS = nonmember(
+        (
+            InventoryResource.CORN_SEED,
+            InventoryResource.TOMATO_SEED,
+            InventoryResource.BEETROOT_SEED,
+            InventoryResource.CARROT_SEED,
+            InventoryResource.EGGPLANT_SEED,
+            InventoryResource.PUMPKIN_SEED,
+            InventoryResource.PARSNIP_SEED,
+        )
+    )
 
-    _AS_NS_IRS = nonmember((InventoryResource.CORN, InventoryResource.TOMATO))
+    _AS_NS_IRS = nonmember(
+        (
+            InventoryResource.CORN,
+            InventoryResource.TOMATO,
+            InventoryResource.BEETROOT,
+            InventoryResource.CARROT,
+            InventoryResource.EGGPLANT,
+            InventoryResource.PUMPKIN,
+            InventoryResource.PARSNIP,
+        )
+    )
 
     CORN = 0
     TOMATO = 1
+    BEETROOT = 2
+    CARROT = 3
+    EGGPLANT = 4
+    PUMPKIN = 5
+    PARSNIP = 6
 
     @classmethod
     def from_farming_tool(cls, val: FarmingTool):
