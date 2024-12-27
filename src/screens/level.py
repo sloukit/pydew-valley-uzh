@@ -985,9 +985,7 @@ class Level:
     def draw(self, dt: float, move_things: bool):
         self.player.hp = self.overlay.health_bar.hp
         self.display_surface.fill((130, 168, 132))
-        self.all_sprites.draw(
-            self.camera, False
-        )
+        self.all_sprites.draw(self.camera, False)
 
         self.draw_pf_overlay()
         self.draw_hitboxes()
