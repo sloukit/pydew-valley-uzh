@@ -42,6 +42,7 @@ from src.screens.switch_to_outgroup_menu import OutgroupMenu
 from src.settings import (
     DEBUG_MODE_VERSION,
     EMOTE_SIZE,
+    GAME_LANGUAGE,
     RANDOM_SEED,
     SCREEN_HEIGHT,
     SCREEN_WIDTH,
@@ -144,6 +145,10 @@ class Game:
         )
         self.player = self.level.player
 
+        self.tutorial = None
+        self.inventory_menu = None
+        self.shop_menu = None
+        self.settings_menu = None
         if not USE_SERVER:
             self.set_token({"token": "000", "jwt": "dummy_token", "game_version": 0})
 
@@ -154,13 +159,20 @@ class Game:
         self.settings_menu = SettingsMenu(
             self.switch_state, self.sounds, self.player.controls
         )
-        self.shop_menu = ShopMenu(self.player, self.switch_state, self.font)
+        self.shop_menu = ShopMenu(
+            self.player,
+            self.switch_state,
+            self.font,
+            self.round_config,
+            self.frames,
+        )
         self.inventory_menu = InventoryMenu(
             self.player,
             self.frames,
             self.switch_state,
             self.player.assign_tool,
             self.player.assign_seed,
+            self.round_config,
         )
         self.round_menu = RoundMenu(
             self.switch_state, self.player, self.increment_round, self.get_round
@@ -187,7 +199,7 @@ class Game:
         # dialog
         self.all_sprites = AllSprites()
         self.dialogue_manager = DialogueManager(
-            self.all_sprites, "data/textboxes/dialogues.json"
+            self.all_sprites, f"data/textboxes/{GAME_LANGUAGE}/dialogues.json"
         )
 
         # dialogue text box positions
@@ -210,7 +222,9 @@ class Game:
         self.current_state = GameState.MAIN_MENU
 
         # tutorial
-        self.tutorial = Tutorial(self.all_sprites, self.player, self.level)
+        self.tutorial = Tutorial(
+            self.all_sprites, self.player, self.level, self.round_config
+        )
 
         # intro to game and in-group msg.
         self.intro_txt_is_rendering = False
@@ -274,7 +288,7 @@ class Game:
         if self.game_version < 0:
             self.game_version = DEBUG_MODE_VERSION
 
-        if round < len(self.rounds_config[self.game_version]):
+        if round <= len(self.rounds_config[self.game_version]):
             self.round_config = self.rounds_config[self.game_version][round - 1]
         else:
             print(
@@ -282,6 +296,16 @@ class Game:
             )
             self.round_config = self.rounds_config[self.game_version][0]
         self.level.round_config_changed(self.round_config)
+        if self.inventory_menu:
+            self.inventory_menu.round_config_changed(self.round_config)
+        if self.tutorial:
+            self.tutorial.round_config = self.round_config
+        if self.shop_menu:
+            self.shop_menu.round_config_changed(self.round_config)
+        if self.settings_menu:
+            self.settings_menu.show_debug_keybinds = (
+                self.game_version == DEBUG_MODE_VERSION
+            )
         self.round_end_timer = 0.0
         self.ROUND_END_TIME_IN_MINUTES = self.round_config["level_duration"] / 60  # 15
         print(self.round_config["level_name_text"])
@@ -336,6 +360,11 @@ class Game:
             "soil water": support.import_folder_dict("images/tilesets/soil/soil water"),
             "tomato": support.import_folder("images/tilesets/plants/tomato"),
             "corn": support.import_folder("images/tilesets/plants/corn"),
+            "beetroot": support.import_folder("images/tilesets/plants/beetroot"),
+            "carrot": support.import_folder("images/tilesets/plants/carrot"),
+            "eggplant": support.import_folder("images/tilesets/plants/eggplant"),
+            "pumpkin": support.import_folder("images/tilesets/plants/pumpkin"),
+            "parsnip": support.import_folder("images/tilesets/plants/parsnip"),
             "rain drops": support.import_folder("images/rain/drops"),
             "rain floor": support.import_folder("images/rain/floor"),
             "objects": support.import_folder_dict("images/objects"),
@@ -413,8 +442,8 @@ class Game:
                     self.dialogue_manager.open_dialogue(
                         "intro_to_game", self.msg_left, self.msg_top
                     )
-                self.intro_txt_is_rendering = True
-                self.intro_txt_rendered = True
+                    self.intro_txt_is_rendering = True
+                    self.intro_txt_rendered = True
         elif not self.level.cutscene_animation.active:
             if (
                 self.dialogue_manager.showing_dialogue
@@ -506,113 +535,121 @@ class Game:
                 self.display_surface.blit(self.previous_frame, (0, 0))
                 self.menus[self.current_state].update(dt)
             else:
-                self.round_end_timer += dt
-                if self.round_end_timer > self.ROUND_END_TIME_IN_MINUTES * 60:
-                    self.round_end_timer = 0
-                    self.switch_state(GameState.ROUND_END)
-                # elif self.round_config.get("character_introduction_text", "") \
-                #         and self.round_config["character_introduction_timestamp"] \
-                #         and self.round_end_timer > self.round_config["character_introduction_timestamp"][0]:
-                #     # make a copy of a string
-                #     message = self.round_config["character_introduction_text"][:]
-                #     self.notification_menu.message = message
-                #     self.switch_state(GameState.NOTIFICATION_MENU)
-                #     # set to empty to not repeat
-                #     self.round_config["character_introduction_text"] = ""
-                #     self.round_config["character_introduction_timestamp"] = []
-                elif (
-                    self.round_config.get("notify_new_crop_text", "")
-                    and self.round_config["notify_new_crop_timestamp"]
-                    and self.round_end_timer
-                    > self.round_config["notify_new_crop_timestamp"][0]
+                # prevents events to happen during minigame
+                if (
+                    not self.level.current_minigame
+                    or not self.level.current_minigame.running
                 ):
-                    # make a copy of a string
-                    message = self.round_config["notify_new_crop_text"][:]
-                    self.notification_menu.message = message
-                    self.switch_state(GameState.NOTIFICATION_MENU)
-                    # set to empty to not repeat
-                    self.round_config["notify_new_crop_text"] = ""
-                    self.round_config["notify_new_crop_timestamp"] = []
-                elif (
-                    len(self.round_config.get("self_assessment_timestamp", [])) > 0
-                    and self.round_end_timer
-                    > self.round_config["self_assessment_timestamp"][0]
-                ):
-                    # remove first timestamp from list not to repeat infinitely
-                    self.round_config["self_assessment_timestamp"] = self.round_config[
-                        "self_assessment_timestamp"
-                    ][1:]
-                    self.switch_state(GameState.SELF_ASSESSMENT)
-                elif (
-                    len(self.round_config.get("player_hat_sequence_timestamp", [])) > 0
-                    and self.round_end_timer
-                    > self.round_config["player_hat_sequence_timestamp"][0]
-                ):
-                    # remove first timestamp from list not to repeat infinitely
-                    self.round_config["player_hat_sequence_timestamp"] = (
-                        self.round_config["player_hat_sequence_timestamp"][1:]
-                    )
-                    self.level.start_scripted_sequence(
-                        ScriptedSequenceType.PLAYER_RECEIVES_HAT
-                    )
-                elif (
-                    len(
-                        self.round_config.get("ingroup_necklace_sequence_timestamp", [])
-                    )
-                    > 0
-                    and self.round_end_timer
-                    > self.round_config["ingroup_necklace_sequence_timestamp"][0]
-                ):
-                    # remove first timestamp from list not to repeat infinitely
-                    self.round_config["ingroup_necklace_sequence_timestamp"] = (
-                        self.round_config["ingroup_necklace_sequence_timestamp"][1:]
-                    )
-                    self.level.start_scripted_sequence(
-                        ScriptedSequenceType.NPC_RECEIVES_NECKLACE
-                    )
-                elif (
-                    len(self.round_config.get("player_necklace_sequence_timestamp", []))
-                    > 0
-                    and self.round_end_timer
-                    > self.round_config["player_necklace_sequence_timestamp"][0]
-                ):
-                    # remove first timestamp from list not to repeat infinitely
-                    self.round_config["player_necklace_sequence_timestamp"] = (
-                        self.round_config["player_necklace_sequence_timestamp"][1:]
-                    )
-                    self.level.start_scripted_sequence(
-                        ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE
-                    )
-                elif (
-                    len(self.round_config.get("player_birthday_sequence_timestamp", []))
-                    > 0
-                    and self.round_end_timer
-                    > self.round_config["player_birthday_sequence_timestamp"][0]
-                ):
-                    # remove first timestamp from list not to repeat infinitely
-                    self.round_config["player_birthday_sequence_timestamp"] = (
-                        self.round_config["player_birthday_sequence_timestamp"][1:]
-                    )
-                    self.level.start_scripted_sequence(
-                        ScriptedSequenceType.PLAYERS_BIRTHDAY
-                    )
-                elif (
-                    self.round_config.get("resource_allocation_text", "")
-                    and self.round_config["resource_allocation_timestamp"]
-                    and self.round_end_timer
-                    > self.round_config["resource_allocation_timestamp"][0]
-                ):
-                    # make a copy of a string
-                    allocations_text = self.round_config["resource_allocation_text"][:]
-                    # self.allocation_task.title = message
-                    self.allocation_task.allocations_text = allocations_text
-                    self.allocation_task.parse_allocation_items(
-                        self.round_config["resource_allocation_item_text"]
-                    )
-                    self.switch_state(GameState.PLAYER_TASK)
-                    # set to empty not to repeat infinitely
-                    self.round_config["resource_allocation_text"] = ""
-                    self.round_config["resource_allocation_timestamp"] = []
+                    self.round_end_timer += dt
+                    if self.round_end_timer > self.ROUND_END_TIME_IN_MINUTES * 60:
+                        self.round_end_timer = 0
+                        self.switch_state(GameState.ROUND_END)
+                    elif (
+                        self.round_config.get("notify_new_crop_text", "")
+                        and self.round_config["notify_new_crop_timestamp"]
+                        and self.round_end_timer
+                        > self.round_config["notify_new_crop_timestamp"][0]
+                    ):
+                        # make a copy of a string
+                        message = self.round_config["notify_new_crop_text"][:]
+                        self.notification_menu.message = message
+                        self.switch_state(GameState.NOTIFICATION_MENU)
+                        # set to empty to not repeat
+                        self.round_config["notify_new_crop_text"] = ""
+                        self.round_config["notify_new_crop_timestamp"] = []
+                    elif (
+                        len(self.round_config.get("self_assessment_timestamp", [])) > 0
+                        and self.round_end_timer
+                        > self.round_config["self_assessment_timestamp"][0]
+                    ):
+                        # remove first timestamp from list not to repeat infinitely
+                        self.round_config["self_assessment_timestamp"] = (
+                            self.round_config["self_assessment_timestamp"][1:]
+                        )
+                        self.switch_state(GameState.SELF_ASSESSMENT)
+                    elif (
+                        len(self.round_config.get("player_hat_sequence_timestamp", []))
+                        > 0
+                        and self.round_end_timer
+                        > self.round_config["player_hat_sequence_timestamp"][0]
+                    ):
+                        # remove first timestamp from list not to repeat infinitely
+                        self.round_config["player_hat_sequence_timestamp"] = (
+                            self.round_config["player_hat_sequence_timestamp"][1:]
+                        )
+                        self.level.start_scripted_sequence(
+                            ScriptedSequenceType.PLAYER_RECEIVES_HAT
+                        )
+                    elif (
+                        len(
+                            self.round_config.get(
+                                "ingroup_necklace_sequence_timestamp", []
+                            )
+                        )
+                        > 0
+                        and self.round_end_timer
+                        > self.round_config["ingroup_necklace_sequence_timestamp"][0]
+                    ):
+                        # remove first timestamp from list not to repeat infinitely
+                        self.round_config["ingroup_necklace_sequence_timestamp"] = (
+                            self.round_config["ingroup_necklace_sequence_timestamp"][1:]
+                        )
+                        self.level.start_scripted_sequence(
+                            ScriptedSequenceType.NPC_RECEIVES_NECKLACE
+                        )
+                    elif (
+                        len(
+                            self.round_config.get(
+                                "player_necklace_sequence_timestamp", []
+                            )
+                        )
+                        > 0
+                        and self.round_end_timer
+                        > self.round_config["player_necklace_sequence_timestamp"][0]
+                    ):
+                        # remove first timestamp from list not to repeat infinitely
+                        self.round_config["player_necklace_sequence_timestamp"] = (
+                            self.round_config["player_necklace_sequence_timestamp"][1:]
+                        )
+                        self.level.start_scripted_sequence(
+                            ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE
+                        )
+                    elif (
+                        len(
+                            self.round_config.get(
+                                "player_birthday_sequence_timestamp", []
+                            )
+                        )
+                        > 0
+                        and self.round_end_timer
+                        > self.round_config["player_birthday_sequence_timestamp"][0]
+                    ):
+                        # remove first timestamp from list not to repeat infinitely
+                        self.round_config["player_birthday_sequence_timestamp"] = (
+                            self.round_config["player_birthday_sequence_timestamp"][1:]
+                        )
+                        self.level.start_scripted_sequence(
+                            ScriptedSequenceType.PLAYERS_BIRTHDAY
+                        )
+                    elif (
+                        self.round_config.get("resource_allocation_text", "")
+                        and self.round_config["resource_allocation_timestamp"]
+                        and self.round_end_timer
+                        > self.round_config["resource_allocation_timestamp"][0]
+                    ):
+                        # make a copy of a string
+                        allocations_text = self.round_config[
+                            "resource_allocation_text"
+                        ][:]
+                        # self.allocation_task.title = message
+                        self.allocation_task.allocations_text = allocations_text
+                        self.allocation_task.parse_allocation_items(
+                            self.round_config["resource_allocation_item_text"]
+                        )
+                        self.switch_state(GameState.PLAYER_TASK)
+                        # set to empty not to repeat infinitely
+                        self.round_config["resource_allocation_text"] = ""
+                        self.round_config["resource_allocation_timestamp"] = []
 
             if self.level.cutscene_animation.active:
                 self.all_sprites.update_blocked(dt)
@@ -623,7 +660,11 @@ class Game:
                         self.fast_forward.draw_overlay(self.display_surface)
             else:
                 self.all_sprites.update(dt)
-            # self.all_sprites.draw(self.level.camera, is_game_paused)
+            # this draw duplicates the same call in level.py, but without it, dialog box won't be visible
+            self.all_sprites.draw(
+                self.level.camera,
+                is_game_paused,
+            )
 
             # Apply blur effect only if the player has goggles equipped
             if self.player.has_goggles and self.current_state == GameState.PLAY:
