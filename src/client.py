@@ -1,6 +1,8 @@
+import sys
 from typing import Any
 
-import requests
+if sys.platform not in ("emscripten", "wasm"):
+    import requests  # type: ignore[import-untyped]
 
 from src.settings import API_KEY, PORT, SERVER_IP
 

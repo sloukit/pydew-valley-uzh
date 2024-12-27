@@ -1,4 +1,5 @@
 import os
+import sys
 
 import pygame  # noqa
 import pytmx  # type:ignore [import-untyped]
@@ -32,6 +33,10 @@ TEST_ANIMALS = True
 GAME_LANGUAGE = os.environ.get("GAME_LANGUAGE", "en")
 DEBUG_MODE_VERSION = 0
 USE_SERVER = False
+# for now, in web mode, do not use dummy server (which requires `requests` module not available via pygbag)
+if sys.platform not in ("emscripten", "wasm"):
+    USE_SERVER = False
+
 SERVER_IP = "http://127.0.0.1"
 PORT = 5000
 API_KEY = "123"
