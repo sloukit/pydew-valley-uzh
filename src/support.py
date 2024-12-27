@@ -12,11 +12,44 @@ import pytmx  # type:ignore [import-untyped]
 
 from src import settings
 from src.enums import Direction
-from src.settings import SCALE_FACTOR, SCALED_TILE_SIZE, TILE_SIZE, Coordinate
+from src.settings import (
+    BASE_ALLOWED_CROPS,
+    GAME_LANGUAGE,
+    SCALE_FACTOR,
+    SCALED_TILE_SIZE,
+    TILE_SIZE,
+    Coordinate,
+)
 
 
-def load_translations():
-    game_language = os.environ.get("GAME_LANGUAGE", "en")
+def parse_crop_types(
+    crop_types_list: list[str],
+    include_base_allowed_crops: list[str],
+    include_crops: bool,
+    include_seeds: bool,
+) -> list[str]:
+    crop_types_list = [crop.lower() for crop in crop_types_list]
+    allowed_crops = []
+
+    if include_base_allowed_crops:
+        allowed_crops.extend(BASE_ALLOWED_CROPS)
+
+    if include_crops:
+        allowed_crops.extend(crop_types_list)
+
+    if include_seeds:
+        seed_types_list = [f"{crop}_seed" for crop in crop_types_list]
+        allowed_crops.extend(seed_types_list)
+
+    return allowed_crops
+
+
+def load_translations(lang: str = None) -> dict[str, str]:
+    if lang:
+        game_language = lang
+    else:
+        game_language = GAME_LANGUAGE
+
     path = os.path.join(
         os.path.dirname(__file__),
         "..",
@@ -28,15 +61,44 @@ def load_translations():
         text = file.read()
 
     lines = text.splitlines()
-    pairs = [tuple(line.split("=")) for line in lines]
+    pairs = [
+        tuple(line.split("@@"))
+        for line in lines
+        # read only not empty lines, skip lines starting with # and without "@@" (comments)
+        if line and (line[0] != "#" or "@@" in line)
+    ]
     return dict(pairs)
 
 
 # Language translations for game text/labels:
-TR = load_translations()
+TR: dict[str, str] = load_translations()
 
 
-def resource_path(relative_path: str):
+def get_translated_string(text: str) -> str:
+    """
+    this method can be imported anyway in the code to get translated text:
+    `from src.support import get_translated_string as _`
+    then, replace strings that needs to be translated from this:
+    `print("This is hardcoded messages")`
+    to this:
+    `print(_("This is hardcoded messages"))`
+    next run this script with python file name as parameter, eg:
+    `./extract_translations.sh src/screens/inventory.py`
+
+    This is not the intended way of using Pythons `gettext` module, but it's simpler and suits the purpose.
+    Current language is taken from `GAME_LANGUAGE` env variable, `en` is used when not set.
+    If desired string is not found in translations, it's returned prefixed by `N/A`.
+
+    Args:
+        text (str): text literal that needs to be translated to desired language.
+
+    Returns:
+        str: translated literal string
+    """
+    return TR.get(text, f"N/A: {text}")
+
+
+def resource_path(relative_path: str) -> str:
     """Get absolute path to resource, works for dev and for PyInstaller"""
     relative_path = relative_path.replace("/", os.sep)
 

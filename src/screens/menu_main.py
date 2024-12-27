@@ -4,12 +4,12 @@ from typing import Any
 import pygame
 from pygame.mouse import get_pressed as mouse_buttons
 
-from src import support
 from src.client import authn
 from src.enums import CustomCursor, GameState
 from src.events import SET_CURSOR, post_event
 from src.gui.menu.general_menu import GeneralMenu
 from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH, USE_SERVER
+from src.support import get_translated_string as _
 
 _SCREEN_CENTER = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
 
@@ -20,8 +20,8 @@ class MainMenu(GeneralMenu):
         switch_screen: Callable[[GameState], None],
         set_token: Callable[[dict[str, Any]], None],
     ) -> None:
-        options = ["Play", "Quit", "Enter a Token to Play"]
-        title = "Main Menu"
+        options = [_("Play"), _("Quit"), _("Enter a Token to Play")]
+        title = _("Main Menu")
         size = (400, 400)
         super().__init__(title, options, switch_screen, size)
         self.set_token = set_token
@@ -62,7 +62,7 @@ class MainMenu(GeneralMenu):
 
         if self.input_active:
             label_font = self.font
-            label_text = support.TR["enter_play_token"]
+            label_text = _("Enter play token:")
             label_surface = label_font.render(label_text, True, text_color)
 
             # Position the label slightly above the input box
@@ -129,14 +129,14 @@ class MainMenu(GeneralMenu):
         return result
 
     def button_action(self, text) -> None:
-        if text == "Play" and self.play_button_enabled:
+        if text == _("Play") and self.play_button_enabled:
             # Only allow playing if the token is valid
             post_event(SET_CURSOR, cursor=CustomCursor.ARROW)
             self.switch_screen(GameState.PLAY)
-        elif text == "Enter a Token to Play":
+        elif text == _("Enter a Token to Play"):
             self.input_active = True
             self.token_input = ""
-        elif text == "Quit":
+        elif text == _("Quit"):
             self.quit_game()
 
     def handle_event(self, event: pygame.event.Event) -> bool:
@@ -167,7 +167,7 @@ class MainMenu(GeneralMenu):
                         self.set_token(response)
                         self.play_button_enabled = True
                         self.input_active = False
-                        self.remove_button("Enter a Token to Play")
+                        self.remove_button(_("Enter a Token to Play"))
                         self.draw()
                         self.input_text = ""
                     return True

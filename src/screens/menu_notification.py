@@ -5,6 +5,7 @@ import pygame
 from src.enums import GameState
 from src.gui.menu.general_menu import GeneralMenu
 from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH
+from src.support import get_translated_string as _
 
 
 class NotificationMenu(GeneralMenu):
@@ -13,14 +14,14 @@ class NotificationMenu(GeneralMenu):
         switch_screen: Callable[[GameState], None],
         message: str,
     ):
-        options = ["OK"]
-        title = "Notification"
+        options = [_("OK")]
+        title = _("Notification")
         size = (400, 400)
         self.message = message
         super().__init__(title, options, switch_screen, size)
 
     def button_action(self, text: str):
-        if text == "OK":
+        if text == _("OK"):
             self.switch_screen(GameState.PLAY)
         # if text == "Quit":
         #     self.quit_game()

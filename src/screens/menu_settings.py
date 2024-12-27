@@ -10,6 +10,7 @@ from src.enums import GameState
 from src.gui.menu.description import KeybindsDescription, VolumeDescription
 from src.gui.menu.general_menu import GeneralMenu
 from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH
+from src.support import get_translated_string as _
 
 
 class SettingsMenu(GeneralMenu):
@@ -19,8 +20,8 @@ class SettingsMenu(GeneralMenu):
         sounds: settings.SoundDict,
         controls: Type[Controls],
     ):
-        options = ["Keybinds", "Volume", "Back"]
-        title = "Settings"
+        options = [_("Keybinds"), _("Volume"), _("Back")]
+        title = _("Settings")
         size = (400, 400)
         switch = switch_screen
         center = vector(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2) + vector(-350, 0)
@@ -34,20 +35,21 @@ class SettingsMenu(GeneralMenu):
 
         # buttons
         self.buttons.append(self.keybinds_description.reset_button)
+        self.show_debug_keybinds: bool = False
 
     # setup
     def button_action(self, text: str):
         self.current_description.reset()
 
-        if text == "Keybinds":
+        if text == _("Keybinds"):
             self.current_description = self.keybinds_description
-        if text == "Volume":
+        if text == _("Volume"):
             self.current_description = self.volume_description
-        if text == "Back":
+        if text == _("Back"):
             self.keybinds_description.save_data()
             self.volume_description.save_data()
             self.switch_screen(GameState.PAUSE)
-        if text == "Reset":
+        if text == _("Reset"):
             self.keybinds_description.reset_keybinds()
             self.volume_description.reset_volumes()
 
@@ -70,7 +72,7 @@ class SettingsMenu(GeneralMenu):
     # draw
     def draw(self):
         super().draw()
-        self.current_description.draw()
+        self.current_description.draw(self.show_debug_keybinds)
 
     # update
     def update(self, dt: float):

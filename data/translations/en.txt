@@ -1,1 +1,133 @@
-enter_play_token=Please enter token:
+# main menu
+
+Enter play token:@@Please enter token:
+Play@@Play
+Quit@@Quit
+Enter a Token to Play@@Enter a Token to Play
+Main Menu@@Main Menu
+
+# Inventory
+
+Resources@@Resources
+Inventory@@Inventory
+Tools@@Tools
+Equipment@@Equipment
+goggles@@goggles
+hat@@hat
+necklace@@necklace
+horn@@horn
+No equipment@@No equipment
+
+# shop menu
+
+buy one@@buy one
+sell one@@sell one
+Welcome to the shop!@@Welcome to the shop!
+Your money:@@Your money:
+Amount  Value@@Amount  Value
+none@@none
+wood@@wood
+apple@@apple
+blackberry@@blackberry
+blueberry@@blueberry
+raspberry@@raspberry
+orange@@orange
+peach@@peach
+pear@@pear
+corn@@corn
+tomato@@tomato
+beetroot@@beetroot
+carrot@@carrot
+eggplant@@eggplant
+pumpkin@@pumpkin
+parsnip@@parsnip
+corn seed@@corn seed
+tomato seed@@tomato seed
+beetroot seed@@beetroot seed
+carrot seed@@carrot seed
+eggplant seed@@eggplant seed
+pumpkin seed@@pumpkin seed
+parsnip seed@@parsnip seed
+
+# pause menu
+
+Resume@@Resume
+Options@@Options
+Save and Resume@@Save and Resume
+Pause Menu@@Pause Menu
+
+# options menu
+
+Keybinds@@Keybinds
+Volume@@Volume
+Back@@Back
+Settings@@Settings
+Reset@@Reset
+
+# round end menu
+
+Round %d has ended. You currently have:@@Round %d has ended. You currently have:
+continue to next round@@continue to next round
+
+# task (items allocation) menu
+
+Task@@Task
+Confirm@@Confirm
+Distribute them@@Distribute them
+You have not allocated all of the items yet!@@You have not allocated all of the items yet!
+You don't have that many items to distribute.@@You don't have that many items to distribute.
+Items missing:@@Items missing:
+Take out:@@Take out:
+You have received@@You have received
+Your group's inventory:@@Your group's inventory:
+Other group's inventory:@@Other group's inventory:
+
+# src/screens/menu_notification.py
+
+OK@@OK
+Notification@@Notification
+
+# src/screens/self_assessment_menu.py
+
+How do you feel right now?@@How do you feel right now?
+Continue@@Continue
+
+# src/overlay/fast_forward.py
+
+Right Shift to Fast Forward@@Right Shift to Fast Forward
+
+# src/controls.py
+
+Move Up@@Move Up
+Move Down@@Move Down
+Move Left@@Move Left
+Move Right@@Move Right
+Use Tool@@Use Tool
+Cycle Tools@@Cycle Tools
+Cycle Seeds@@Cycle Seeds
+Plant Seed@@Plant Seed
+Interact@@Interact
+Open Inventory@@Open Inventory
+Toggle Emote Wheel@@Toggle Emote Wheel
+Advance Dialog@@Advance Dialog
+Apply health@@Apply health
+Apply damage@@Apply damage
+Start Earthquake Effect@@Start Earthquake Effect
+Show Player Task@@Show Player Task
+Skip to End of Round@@Skip to End of Round
+Open self assessment menu@@Open self assessment menu
+Open notification menu@@Open notification menu
+Player receives hat@@Player receives hat
+Player receives necklace@@Player receives necklace
+Player's birthday@@Player's birthday
+NPC receives necklace@@NPC receives necklace
+Decide: tomato or corn@@Decide: tomato or corn
+Show Hitboxes@@Show Hitboxes
+Show Pathfinding@@Show Pathfinding
+Show Dialog@@Show Dialog
+Show Shop@@Show Shop
+
+# src/gui/menu/description.py
+
+Music@@Music
+SFX@@SFX

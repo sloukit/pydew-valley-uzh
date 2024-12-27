@@ -1,0 +1,41 @@
+{
+    "Basic_movement":[
+        ["EN: Tutorial", "EN: Press Up, Down, Right, Left to move"]
+    ],
+    "Get_hat_from_ingroup":[
+        ["Tutorial", "Get the hat from the ingroup"]
+    ],
+    "Get_necklace_from_ingroup":[
+        ["Tutorial", "Get the necklace from the ingroup"]
+    ],
+    "Farm_tile":[
+        ["Tutorial", "Farm with your hoe \t\t\t\t Go to your group farm \t\t\t\t Tab to switch tool \t\t\t\t I to open inventory \t\t\t\t Left Click to farm"]
+    ],
+    "Plant_crop":[
+        ["Tutorial", "Plant a crop \t\t\t\t\t Left Shift to change seed \t\t\t\t Right Click to plant"]
+    ],
+    "Water_crop":[
+        ["Tutorial", "Water the crop"]
+    ],
+    "Go_to_forest_and_hit_tree":[
+        ["Tutorial", "Go to the forest and hit a tree"]
+    ],
+    "Interact_with_ingroup_member":[
+        ["Tutorial", "Interact with an ingroup member \t\t\t\t E to show or hide emojis  \t\t\t\t Right and Left to change selected emoji \t\t\t\t Space to show emoji"]
+    ],
+    "Interact_with_outgroup_member":[
+        ["Tutorial", "Interact with an outgroup member"]
+    ],
+    "Walk_around_outgroup_farm_and_switch_to_outgroup":[
+        ["Tutorial", "Walk around on the outgroup farm \t\t\t and switch to the outgroup"]
+    ],
+    "Go_to_market_and_buy/sell_something":[
+        ["Tutorial", "Go to the market and buy or sell something \t\t\t\t Up and Down to select \t\t\t\t Space to sell or buy \t\t\t\t Esc to exit"]
+    ],
+    "Go_to_minigame_map_and_play":[
+        ["Tutorial", "Go to the minigame area \t\t\t and play the minigame"]
+    ],
+    "Tutorial_end":[
+        ["Tutorial", "Well done. Since you completed \t\t\t the tutorial, the real game will begin ! \t\t .\t\t\t\t\t\t Space to continue"]
+    ]
+}

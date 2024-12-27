@@ -7,6 +7,7 @@ from src.gui.menu.components import Button
 from src.gui.menu.general_menu import GeneralMenu
 from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH
 from src.sprites.entities.player import Player
+from src.support import get_translated_string as _
 from src.support import resource_path
 
 
@@ -36,8 +37,8 @@ class RoundMenu(GeneralMenu):
         self.scroll = 0
         self.min_scroll = self.get_min_scroll()
         self.get_round = get_round
-        self.title = f"Round {self.get_round()} has ended. You currently have:"
-        options = ["continue to next round"]
+        self.title = _("Round %d has ended. You currently have:") % self.get_round()
+        options = [_("continue to next round")]
         size = (400, 400)
 
         super().__init__(self.title, options, switch_screen, size)
@@ -63,7 +64,7 @@ class RoundMenu(GeneralMenu):
 
         for index, item in enumerate(list(self.player.inventory)):
             rect = pygame.Rect(basicRect)
-            itemName = item.as_user_friendly_string()
+            itemName = _(item.as_user_friendly_string())
             text = itemName + f": {list(self.player.inventory.values())[index]}"
             itemUI = self.TextUI(text, rect)
             self.textUIs.append(itemUI)
@@ -93,7 +94,7 @@ class RoundMenu(GeneralMenu):
             generic_button_rect = rect.move(0, button_height + space)
 
     def button_action(self, text: str):
-        if text == "continue to next round":
+        if text == _("continue to next round"):
             self.switch_screen(GameState.PLAY)
 
     def handle_event(self, event: pygame.event.Event) -> bool:
@@ -116,7 +117,7 @@ class RoundMenu(GeneralMenu):
         return False
 
     def draw_title(self):
-        self.title = f"Round {self.get_round() - 1} has ended. You currently have:"
+        self.title = _("Round %d has ended. You currently have:") % self.get_round()
         text_surf = self.font.render(self.title, False, "Black")
         midtop = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 20)
         text_rect = text_surf.get_frect(midtop=midtop)
