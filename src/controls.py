@@ -112,6 +112,7 @@ class Controls(Control, Enum):
     DEBUG_SHOW_HITBOXES = (pygame.K_h, "Show Hitboxes")
     DEBUG_SHOW_PF_OVERLAY = (pygame.K_p, "Show Pathfinding")
     DEBUG_SHOW_DIALOG = (pygame.K_t, "Show Dialog")
+    DEBUG_SHOW_SHOP = (pygame.K_y, "Show Shop")
 
     @classmethod
     def get_by_value(cls, control_value: int) -> Generator[Control, None, None]:
