@@ -673,7 +673,10 @@ class Game:
 
             # Into and Tutorial
             self.show_intro_msg()
-            if not self.player.save_file.is_tutorial_completed:
+            if (
+                not self.player.save_file.is_tutorial_completed
+                and not self.level.cutscene_animation.active
+            ):
                 self.tutorial.update(is_game_paused)
 
             mouse_pos = pygame.mouse.get_pos()

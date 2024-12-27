@@ -1027,7 +1027,7 @@ class Level:
             ) and self.round_config.get("character_introduction_text", ""):
                 self.intro_shown[self.current_map] = True
                 # TODO revert, this only for debug
-                # self.cutscene_animation.start()
+                self.cutscene_animation.start()
 
         if self.current_minigame and self.current_minigame.running:
             self.current_minigame.update(dt)
