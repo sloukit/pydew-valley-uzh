@@ -150,7 +150,7 @@ class Game:
         self.shop_menu = None
         self.settings_menu = None
         if not USE_SERVER:
-            self.set_token({"token": "123", "jwt": "dummy_token", "game_version": 0})
+            self.set_token({"token": "123", "jwt": "dummy_token", "game_version": 1})
 
         self.token_status = False
         self.allocation_task = PlayerTask(self.send_resource_allocation)
