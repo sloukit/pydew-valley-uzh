@@ -115,8 +115,7 @@ class ShopMenu:
             self.total_height += text_surf.get_height() + (self.padding * 2)
 
             frame_name = item.as_serialised_string()
-            img = self.item_frames[frame_name]
-            # img = pygame.transform.scale_by(self.item_frames[frame_name], 0.5)
+            img = pygame.transform.scale_by(self.item_frames[frame_name], 0.5)
 
             self.img_surfs.append(img)
 
@@ -243,28 +242,27 @@ class ShopMenu:
 
         # img (icon)
         img_rect = img_surf.get_frect(
-            # midleft=(self.main_rect.left + 10, bg_rect.centery)
-            midright=(self.main_rect.left - 10, bg_rect.centery)
+            midleft=(self.main_rect.left + 10, bg_rect.centery)
         )
         self.display_surface.blit(img_surf, img_rect)
 
         # text
         text_rect = text_surf.get_frect(
-            midleft=(self.main_rect.left + 20, bg_rect.centery + 5)
+            midleft=(self.main_rect.left + 50, bg_rect.centery + 5)
         )
         self.display_surface.blit(text_surf, text_rect)
 
         # amount
         amount_surf = self.font.render(str(amount), False, "Black")
         amount_rect = amount_surf.get_frect(
-            midright=(self.main_rect.right - 140, bg_rect.centery)
+            midright=(self.main_rect.right - 120, bg_rect.centery + 5)
         )
         self.display_surface.blit(amount_surf, amount_rect)
 
         # value
         value_surf = self.font.render(f"${str(value)}", False, "Black")
         value_rect = value_surf.get_frect(
-            midright=(self.main_rect.right - 20, bg_rect.centery)
+            midright=(self.main_rect.right - 20, bg_rect.centery + 5)
         )
         self.display_surface.blit(value_surf, value_rect)
 
@@ -272,7 +270,7 @@ class ShopMenu:
         if index == text_index:
             pygame.draw.rect(self.display_surface, "black", bg_rect, 4, 4)
             pos_rect = self.buy_text.get_frect(
-                midleft=(self.main_rect.left + 250, bg_rect.centery)
+                midleft=(self.main_rect.left + 270, bg_rect.centery + 5)
             )
             surf = self.buy_text if self.options[index].is_seed() else self.sell_text
             self.display_surface.blit(surf, pos_rect)
