@@ -8,7 +8,8 @@ from src.gui.menu.components import Button
 from src.gui.menu.general_menu import GeneralMenu
 from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH
 from src.sprites.entities.player import Player
-from src.support import get_translated_string as _, parse_crop_types
+from src.support import get_translated_string as _
+from src.support import parse_crop_types
 
 
 class RoundMenu(GeneralMenu):
@@ -19,17 +20,30 @@ class RoundMenu(GeneralMenu):
         img: pygame.Surface = None
         rect: pygame.Rect = None
 
-        def __init__(self, font: pygame.Font, text: str, value: str, icon: pygame.Surface, rect: pygame.Rect) -> None:
+        def __init__(
+            self,
+            font: pygame.Font,
+            text: str,
+            value: str,
+            icon: pygame.Surface,
+            rect: pygame.Rect,
+        ) -> None:
             self.img = pygame.Surface(rect.size, flags=pygame.SRCALPHA)
             self.img.fill(pygame.Color(0, 0, 0, 0))
             pygame.draw.rect(self.img, "White", (0, 0, rect.width, rect.height), 0, 4)
 
             # crop icon
-            self.img.blit(icon, icon.get_rect().move(10, rect.height // 2 - icon.height // 2))
+            self.img.blit(
+                icon,
+                icon.get_rect().move(10, rect.height // 2 - icon.height // 2)
+            )
 
             # crop name
             label = font.render(text, False, "Black")
-            self.img.blit(label, label.get_rect().move(50, rect.height // 2 - label.height // 2))
+            self.img.blit(
+                label,
+                label.get_rect().move(50, rect.height // 2 - label.height // 2)
+            )
 
             # crop amount
             val = font.render(value, False, "Black")
@@ -161,7 +175,10 @@ class RoundMenu(GeneralMenu):
         return False
 
     def draw_title(self):
-        self.title = _("Round %d has ended. You currently have $%d, and:") % (self.get_round() - 1, self.player.money)
+        self.title = _("Round %d has ended. You currently have $%d, and:") % (
+            self.get_round() - 1,
+            self.player.money,
+        )
         text_surf = self.font.render(self.title, False, "Black")
         midtop = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 20)
         text_rect = text_surf.get_frect(midtop=midtop)

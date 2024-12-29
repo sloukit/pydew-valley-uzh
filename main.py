@@ -184,7 +184,6 @@ class Game:
             self.get_round,
             self.round_config,
             self.frames,
-
         )
         self.outgroup_menu = OutgroupMenu(
             self.player,
