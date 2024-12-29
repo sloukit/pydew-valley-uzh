@@ -177,10 +177,16 @@ class Controls(Control, Enum):
             cls.load_default_keybind(control, keybinds=keybinds)
 
     @classmethod
-    def all_controls(cls) -> Generator[Control, None, None]:
+    def all_controls(
+        cls, show_debug_keybinds: bool = False
+    ) -> Generator[Control, None, None]:
         """:return: A generator which yields all Controls members."""
-        return (getattr(cls, i.name) for i in cls)
+        return (
+            getattr(cls, i.name)
+            for i in cls
+            if "DEBUG_" not in i.name or show_debug_keybinds
+        )
 
     @classmethod
-    def length(cls) -> int:
-        return len(list(cls.all_controls()))
+    def length(cls, show_debug_keybinds: bool = False) -> int:
+        return len(list(cls.all_controls(show_debug_keybinds)))

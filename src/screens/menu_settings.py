@@ -1,5 +1,5 @@
 from collections.abc import Callable
-from typing import Type
+from typing import Any, Type
 
 import pygame
 from pygame.math import Vector2 as vector
@@ -9,7 +9,7 @@ from src.controls import Controls
 from src.enums import GameState
 from src.gui.menu.description import KeybindsDescription, VolumeDescription
 from src.gui.menu.general_menu import GeneralMenu
-from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH
+from src.settings import DEBUG_MODE_VERSION, SCREEN_HEIGHT, SCREEN_WIDTH
 from src.support import get_translated_string as _
 
 
@@ -19,11 +19,13 @@ class SettingsMenu(GeneralMenu):
         switch_screen: Callable[[GameState], None],
         sounds: settings.SoundDict,
         controls: Type[Controls],
+        get_game_version: Callable[[], int],
     ):
         options = [_("Keybinds"), _("Volume"), _("Back")]
         title = _("Settings")
         size = (400, 400)
         switch = switch_screen
+        self.get_game_version = get_game_version
         center = vector(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2) + vector(-350, 0)
         super().__init__(title, options, switch, size, center)
 
@@ -36,6 +38,11 @@ class SettingsMenu(GeneralMenu):
         # buttons
         self.buttons.append(self.keybinds_description.reset_button)
         self.show_debug_keybinds: bool = False
+
+    def round_config_changed(self, round_config: dict[str, Any]) -> None:
+        self.round_config = round_config
+        self.show_debug_keybinds = self.get_game_version() == DEBUG_MODE_VERSION
+        self.keybinds_description.create_keybinds(self.show_debug_keybinds)
 
     # setup
     def button_action(self, text: str):
@@ -50,7 +57,7 @@ class SettingsMenu(GeneralMenu):
             self.volume_description.save_data()
             self.switch_screen(GameState.PAUSE)
         if text == _("Reset"):
-            self.keybinds_description.reset_keybinds()
+            self.keybinds_description.reset_keybinds(self.show_debug_keybinds)
             self.volume_description.reset_volumes()
 
     # events
@@ -72,7 +79,7 @@ class SettingsMenu(GeneralMenu):
     # draw
     def draw(self):
         super().draw()
-        self.current_description.draw(self.show_debug_keybinds)
+        self.current_description.draw()
 
     # update
     def update(self, dt: float):
