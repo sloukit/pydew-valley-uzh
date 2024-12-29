@@ -7,6 +7,7 @@ from pygame.mouse import get_pressed as mouse_buttons
 from src.enums import CustomCursor
 from src.events import SET_CURSOR, post_event
 from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH
+from src.support import get_translated_string as _
 from src.support import resource_path
 
 _SCREEN_CENTER = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
@@ -106,7 +107,7 @@ class AbstractMenu(ABC):
     def draw_buttons(self):
         self.buttons_surface.fill(pygame.Color(0, 0, 0, 0))
         for button in self.buttons:
-            if button.text == "Play" and not self.play_button_enabled:
+            if button.text == _("Play") and not self.play_button_enabled:
                 button.draw_disabled(self.display_surface)
             else:
                 button.draw(self.display_surface)

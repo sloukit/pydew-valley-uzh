@@ -12,6 +12,7 @@ from src.colors import (
     SL_ORANGE_MEDIUM,
 )
 from src.controls import Control
+from src.support import get_translated_string as _
 from src.support import resource_path
 
 
@@ -259,7 +260,7 @@ class KeySetup(Component):
         # params
         self.name = name
         self.value = control.control_value
-        self.title = control.text
+        self.title = _(control.text)
         self.unicode = unicode
 
         # design

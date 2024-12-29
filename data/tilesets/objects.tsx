@@ -275,12 +275,18 @@
   <image source="../../images/objects/desk.png" width="48" height="30"/>
  </tile>
  <tile id="77">
+  <properties>
+   <property name="type" value="hidden_sign"/>
+  </properties>
   <image source="../../images/objects/Signpost_Bathtub_Left.png" width="22" height="25"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="10.0506" y="18.9897" width="4.8954" height="5"/>
   </objectgroup>
  </tile>
  <tile id="78">
+  <properties>
+   <property name="type" value="hidden_sign"/>
+  </properties>
   <image source="../../images/objects/Signpost_Bathtub_Right.png" width="21" height="26"/>
   <objectgroup draworder="index" id="3">
    <object id="2" x="6.13414" y="20.2106" width="4.8954" height="5"/>
@@ -377,12 +383,18 @@
   </objectgroup>
  </tile>
  <tile id="94">
+  <properties>
+   <property name="type" value="hidden_sign"/>
+  </properties>
   <image source="../../images/objects/Signpost_Bathtub_Down_LSA.png" width="27" height="22"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="15.2796" y="16.1364" width="4.8954" height="5"/>
   </objectgroup>
  </tile>
  <tile id="95">
+  <properties>
+   <property name="type" value="sign"/>
+  </properties>
   <image source="../../images/objects/Signpost_Farm_Right_Left.png" width="16" height="25"/>
   <objectgroup draworder="index" id="2">
    <object id="1" x="6.14451" y="16.9123" width="4.07461" height="6.90273"/>

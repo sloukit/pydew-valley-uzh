@@ -1,1 +1,133 @@
-enter_play_token=Bitte Token eingeben:
+# main menu
+
+Enter play token:@@Bitte Token eingeben:
+Play@@Spielen
+Quit@@Verlassen
+Enter a Token to Play@@Token eingeben
+Main Menu@@Hauptmenü
+
+# Inventory
+
+Resources@@Ressourcen
+Inventory@@EN: Inventory
+Tools@@EN: Tools
+Equipment@@EN: Equipment
+goggles@@EN: goggles
+hat@@EN: hat
+necklace@@EN: necklace
+horn@@EN: horn
+No equipment@@EN: No equipment
+
+# shop menu
+
+buy one@@EN: buy one
+sell one@@EN: sell one
+Welcome to the shop!@@EN: Welcome to the shop!
+Your money:@@EN: Your money:
+Amount  Value@@EN: Amount  Value
+none@@EN: none
+wood@@EN: wood
+apple@@EN: apple
+blackberry@@EN: blackberry
+blueberry@@EN: blueberry
+raspberry@@EN: raspberry
+orange@@EN: orange
+peach@@EN: peach
+pear@@EN: pear
+corn@@EN: corn
+tomato@@EN: tomato
+beetroot@@EN: beetroot
+carrot@@EN: carrot
+eggplant@@EN: eggplant
+pumpkin@@EN: pumpkin
+parsnip@@EN: parsnip
+corn seed@@EN: corn seed
+tomato seed@@EN: tomato seed
+beetroot seed@@EN: beetroot seed
+carrot seed@@EN: carrot seed
+eggplant seed@@EN: eggplant seed
+pumpkin seed@@EN: pumpkin seed
+parsnip seed@@EN: parsnip seed
+
+# pause menu
+
+Resume@@EN: Resume
+Options@@EN: Options
+Save and Resume@@EN: Save and Resume
+Pause Menu@@EN: Pause Menu
+
+# options menu
+
+Keybinds@@EN: Keybinds
+Volume@@EN: Volume
+Back@@EN: Back
+Settings@@EN: Settings
+Reset@@EN: Reset
+
+# round end menu
+
+Round %d has ended. You currently have:@@EN: Round %d has ended. You currently have:
+continue to next round@@EN: continue to next round
+
+# task (items allocation) menu
+
+Task@@EN: Task
+Confirm@@EN: Confirm
+Distribute them@@EN: Distribute them
+You have not allocated all of the items yet!@@EN: You have not allocated all of the items yet!
+You don't have that many items to distribute.@@EN: You don't have that many items to distribute.
+Items missing:@@EN: Items missing:
+Take out:@@EN: Take out:
+You have received@@EN: You have received
+Your group's inventory:@@EN: Your group's inventory:
+Other group's inventory:@@EN: Other group's inventory:
+
+# src/screens/menu_notification.py
+
+OK@@EN: OK
+Notification@@EN: Notification
+
+# src/screens/self_assessment_menu.py
+
+How do you feel right now?@@EN: How do you feel right now?
+Continue@@EN: Continue
+
+# src/overlay/fast_forward.py
+
+Right Shift to Fast Forward@@EN: Right Shift to Fast Forward
+
+# src/controls.py
+
+Move Up@@EN: Move Up
+Move Down@@EN: Move Down
+Move Left@@EN: Move Left
+Move Right@@EN: Move Right
+Use Tool@@EN: Use Tool
+Cycle Tools@@EN: Cycle Tools
+Cycle Seeds@@EN: Cycle Seeds
+Plant Seed@@EN: Plant Seed
+Interact@@EN: Interact
+Open Inventory@@EN: Open Inventory
+Toggle Emote Wheel@@EN: Toggle Emote Wheel
+Advance Dialog@@EN: Advance Dialog
+Apply health@@EN: Apply health
+Apply damage@@EN: Apply damage
+Start Earthquake Effect@@EN: Start Earthquake Effect
+Show Player Task@@EN: Show Player Task
+Skip to End of Round@@EN: Skip to End of Round
+Open self assessment menu@@EN: Open self assessment menu
+Open notification menu@@EN: Open notification menu
+Player receives hat@@EN: Player receives hat
+Player receives necklace@@EN: Player receives necklace
+Player's birthday@@EN: Player's birthday
+NPC receives necklace@@EN: NPC receives necklace
+Decide: tomato or corn@@EN: Decide: tomato or corn
+Show Hitboxes@@EN: Show Hitboxes
+Show Pathfinding@@EN: Show Pathfinding
+Show Dialog@@EN: Show Dialog
+Show Shop@@EN: Show Shop
+
+# src/gui/menu/description.py
+
+Music@@EN: Music
+SFX@@EN: SFX

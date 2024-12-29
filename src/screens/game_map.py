@@ -4,8 +4,14 @@ from collections.abc import Callable
 from typing import Any
 
 import pygame
-from pathfinding.core.grid import Grid
-from pytmx import TiledElement, TiledMap, TiledObject, TiledObjectGroup, TiledTileLayer
+from pathfinding.core.grid import Grid  # type: ignore[import-untyped]
+from pytmx import (  # type: ignore[import-untyped]
+    TiledElement,
+    TiledMap,
+    TiledObject,
+    TiledObjectGroup,
+    TiledTileLayer,
+)
 
 from src.camera.camera_target import CameraTarget
 from src.camera.zoom_area import ZoomArea
@@ -56,6 +62,7 @@ from src.sprites.entities.player import Player
 from src.sprites.objects.berry_bush import BerryBush
 from src.sprites.objects.tree import Tree
 from src.sprites.setup import ENTITY_ASSETS
+from src.support import parse_crop_types
 
 
 def _setup_tile_layer(
@@ -272,6 +279,8 @@ class GameMap:
     npcs: list[NPC]
     animals: list[Animal]
 
+    round_config: dict[str, Any]
+
     def __init__(
         self,
         selected_map: Map,
@@ -297,6 +306,7 @@ class GameMap:
         plant_collision: Callable[[Character], None],
         # assets
         frames: dict,
+        round_config: dict[str, Any],
     ):
         self._tilemap = tilemap
 
@@ -321,6 +331,7 @@ class GameMap:
         self.plant_collision = plant_collision
 
         self.frames = frames
+        self.round_config = round_config
 
         self._tilemap_size = (self._tilemap.width, self._tilemap.height)
         self._tilemap_scaled_size = (
@@ -347,12 +358,35 @@ class GameMap:
 
         self._setup_layers(save_file, selected_map, scene_ani, zoom_man)
 
+        if selected_map == Map.MINIGAME and not self.round_config.get(
+            "minigame_rooting_npcs", False
+        ):
+            self.npcs = []
+
         if SETUP_PATHFINDING:
             AIData.update(self._pf_matrix, self.player, [*self.npcs, *self.animals])
 
             if ENABLE_NPCS:
                 self._setup_emote_interactions()
                 _setup_animal_ranges(self.interaction_sprites, self.animals)
+
+    def round_config_changed(self, round_config: dict[str, Any]) -> None:
+        self.round_config = round_config
+
+        crop_types_list = self.round_config.get("crop_types_list", [])
+        allowed_seeds = parse_crop_types(
+            crop_types_list,
+            include_base_allowed_crops=False,
+            include_crops=False,
+            include_seeds=True,
+        )
+
+        for npc in self.npcs:
+            npc.set_sickness_allowed(round_config.get("sickness", False))
+            npc.set_allowed_seeds(allowed_seeds)
+            npc.assign_outfit_ingroup(
+                round_config.get("ingroup_40p_hat_necklace_appearance", False)
+            )
 
     @property
     def size(self):
@@ -549,8 +583,14 @@ class GameMap:
                 self._setup_bush(pos, obj, object_type)
 
             else:
+                if props.get("type") == "hidden_sign":
+                    # layer = Layer.HIDDEN_SIGN
+                    name = "hidden_sign"
+                else:
+                    name = None
+
                 if object_type.hitbox is not None:
-                    CollideableMapObject(pos, object_type, z=layer).add(
+                    CollideableMapObject(pos, object_type, z=layer, name=name).add(
                         self.all_sprites,
                         self.collision_sprites,
                     )
@@ -638,6 +678,11 @@ class GameMap:
          enough after a farming area has been fully watered.
         """
 
+        if gmap == Map.MINIGAME and not self.round_config.get(
+            "minigame_rooting_npcs", False
+        ):
+            return None
+
         study_group = StudyGroup.NO_GROUP
         group = obj.properties.get("group")
         if group is None:
@@ -665,9 +710,11 @@ class GameMap:
             soil_manager=self.soil_manager,
             emote_manager=self.npc_emote_manager,
             tree_sprites=self.tree_sprites,
+            sickness_allowed=self.round_config.get("sickness", False),
         )
         npc.teleport(pos)
-        # Ingroup NPCs wearing only the hat and no necklace should not be able to walk on the forest and town map, only on the farming map
+        # Ingroup NPCs wearing only the hat and no necklace should not be able to walk on the forest and town map,
+        # only on the farming map
         no_walking_npc = (
             (
                 gmap != Map.FARM
@@ -900,7 +947,8 @@ class GameMap:
 
                 self.npc_emote_manager.show_emote(npc, emote)
 
-                # check if the player achieved task "interact with an ingroup member" or "interact with an outgroup member"
+                # check if the player achieved task "interact with an ingroup member" or "interact
+                # with an outgroup member"
                 if self.player.study_group == npc.study_group:
                     self.player.ingroup_member_interacted = True
                 else:

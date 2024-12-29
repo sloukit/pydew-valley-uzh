@@ -1,21 +1,21 @@
 from __future__ import annotations
 
 import time
-from typing import Callable, Type
+from typing import Any, Callable, Type
 
 import pygame  # noqa
 
-from src import support
 from src.controls import Controls
 from src.enums import FarmingTool, InventoryResource, ItemToUse, StudyGroup
 from src.events import OPEN_INVENTORY, START_QUAKE, post_event
 from src.gui.interface.emotes import PlayerEmoteManager
 from src.npc.bases.npc_base import NPCBase
 from src.savefile import SaveFile
-from src.settings import BATH_STATUS_TIMEOUT, Coordinate, SoundDict
+from src.settings import BATH_STATUS_TIMEOUT, DEBUG_MODE_VERSION, Coordinate, SoundDict
 from src.sprites.entities.character import Character
 from src.sprites.entities.entity import Entity
 from src.sprites.setup import EntityAsset
+from src.support import load_data, parse_crop_types, save_data
 
 _NONSEED_INVENTORY_DEFAULT_AMOUNT = 20
 _SEED_INVENTORY_DEFAULT_AMOUNT = 5
@@ -34,6 +34,8 @@ class Player(Character):
     interact: Callable[[], None]
     sounds: SoundDict
 
+    allowed_seeds: list[str]
+
     def __init__(
         self,
         pos: Coordinate,
@@ -50,7 +52,9 @@ class Player(Character):
         bathstat: bool,
         bath_time: float,
         save_file: SaveFile,
-    ):
+        round_config: dict[str, Any],
+        get_game_version: Callable[[], int],
+    ) -> None:
         super().__init__(
             pos=pos,
             assets=assets,
@@ -61,6 +65,8 @@ class Player(Character):
             plant_collision=plant_collision,
         )
 
+        self.round_config = round_config
+        self.get_game_version = get_game_version
         # movement
         self.save_file = save_file
         self.controls = controls
@@ -86,6 +92,7 @@ class Player(Character):
         self.current_seed = save_file.current_seed
         # inventory
         self.inventory = save_file.inventory.copy()
+        self.allowed_seeds = []
         self.money = save_file.money
 
         # sounds
@@ -133,10 +140,10 @@ class Player(Character):
     def load_controls(self):
         self.controls.load_default_keybinds()
         try:
-            data = support.load_data("keybinds.json")
+            data = load_data("keybinds.json")
             self.controls.from_dict(data)
         except FileNotFoundError:
-            support.save_data(self.controls.as_dict(), "keybinds.json")
+            save_data(self.controls.as_dict(), "keybinds.json")
 
     def assign_seed(self, seed: str):
         computed_value = FarmingTool.from_serialised_string(seed)
@@ -149,6 +156,21 @@ class Player(Character):
         if computed_value.is_seed():
             raise ValueError("given value is a seed")
         self.current_tool = computed_value
+
+    def get_next_seed(self, current_seed: FarmingTool) -> FarmingTool:
+        proceed = True
+        while proceed:
+            if current_seed == len(FarmingTool) - 1:
+                current_seed = FarmingTool.get_first_seed_id()
+            else:
+                current_seed = FarmingTool(current_seed.value + 1)
+            if (
+                current_seed.is_seed()
+                and current_seed.as_serialised_string() in self.allowed_seeds
+            ):
+                proceed = False
+
+        return current_seed
 
     def handle_controls(self):
         # the scripted sequence needs the emote_manager to work even when NPC is blocked"""
@@ -199,12 +221,7 @@ class Player(Character):
 
             # seed switch
             if self.controls.NEXT_SEED.click:
-                seed_index = (
-                    self.current_seed.value - FarmingTool.get_first_seed_id().value + 1
-                ) % FarmingTool.get_seed_count()
-                self.current_seed = FarmingTool(
-                    seed_index + FarmingTool.get_first_seed_id()
-                )
+                self.current_seed = self.get_next_seed(self.current_seed)
 
             # seed used
             if self.controls.PLANT.click:
@@ -217,15 +234,36 @@ class Player(Character):
             if self.controls.INVENTORY.click:
                 post_event(OPEN_INVENTORY)
 
-            if self.controls.DEBUG_QUAKE.click:
+            if (
+                self.controls.DEBUG_QUAKE.click
+                and self.get_game_version() == DEBUG_MODE_VERSION
+            ):
                 post_event(START_QUAKE, duration=2.0, debug=True)
 
-        # emotes
+                # emotes
         if not self.blocked:
-            if self.controls.EMOTE_WHEEL.click:
+            if self.controls.EMOTE_WHEEL.click and self.round_config.get(
+                "emote_wheel", False
+            ):
                 self.emote_manager.toggle_emote_wheel()
                 if self.emote_manager.emote_wheel.visible:
                     self.direction = pygame.Vector2()
+
+    def round_config_changed(self, round_config: dict[str, Any]) -> None:
+        self.round_config = round_config
+        crop_types_list = self.round_config.get("crop_types_list", [])
+
+        self.allowed_seeds = parse_crop_types(
+            crop_types_list,
+            include_base_allowed_crops=True,
+            include_crops=False,
+            include_seeds=True,
+        )
+
+        if not self.round_config.get("ingroup_40p_hat_necklace_appearance", False):
+            self.has_goggles = False
+            self.has_hat = False
+            self.has_necklace = False
 
     def move(self, dt: float):
         self.hitbox_rect.update(

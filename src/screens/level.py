@@ -4,7 +4,7 @@ import time
 import warnings
 from collections.abc import Callable
 from functools import partial
-from typing import cast
+from typing import Any, cast
 
 import pygame
 
@@ -31,6 +31,7 @@ from src.screens.game_map import GameMap
 from src.screens.minigames.base import Minigame
 from src.screens.minigames.cow_herding import CowHerding, CowHerdingState
 from src.settings import (
+    DEBUG_MODE_VERSION,
     DEFAULT_ANIMATION_NAME,
     EMOTES_LIST,
     GAME_MAP,
@@ -103,16 +104,22 @@ class Level:
 
     intro_shown: dict[str, bool]
 
+    # current game version config
+    round_config: dict[str, Any]
+    get_game_version: Callable[[], int]
+
     def __init__(
         self,
         switch: Callable[[GameState], None],
-        get_set_round: tuple[Callable[[], int], Callable[[int], []]],
+        get_set_round: tuple[Callable[[], int], Callable[[int], None]],
+        round_config: dict[str, Any],
+        get_game_version: Callable[[], int],
         tmx_maps: MapDict,
         frames: dict[str, dict],
         sounds: SoundDict,
         save_file: SaveFile,
         clock: pygame.time.Clock,
-    ):
+    ) -> None:
         # main setup
         self.display_surface = pygame.display.get_surface()
         self.switch_screen = switch
@@ -162,6 +169,12 @@ class Level:
 
         self.controls = Controls
 
+        # level interactions
+        self.get_round = get_set_round[0]
+        self.set_round = get_set_round[1]
+        self.round_config = round_config
+        self.get_game_version = get_game_version
+
         self.player = Player(
             pos=(0, 0),
             assets=copy.deepcopy(ENTITY_ASSETS.RABBIT),
@@ -177,6 +190,8 @@ class Level:
             bathstat=False,
             bath_time=0,
             save_file=self.save_file,
+            round_config=self.round_config,
+            get_game_version=get_game_version,
         )
         self.prev_player_pos = (0, 0)
         self.all_sprites.add_persistent(self.player)
@@ -195,7 +210,9 @@ class Level:
         self.current_day = 0
 
         # overlays
-        self.overlay = Overlay(self.player, frames["items"], self.game_time, clock)
+        self.overlay = Overlay(
+            self.player, frames["items"], self.game_time, clock, round_config
+        )
         self.show_hitbox_active = False
         self.show_pf_overlay = False
         self.setup_pf_overlay()
@@ -219,15 +236,26 @@ class Level:
             dur=2400,
         )
 
-        # level interactions
-        self.get_round = get_set_round[0]
-        self.set_round = get_set_round[1]
-
         # watch the player behaviour in achieving tutorial tasks
         self.tile_farmed = False
         self.crop_planted: set = set()
         self.crop_watered = False
         self.hit_tree = False
+
+    def hide_bath_signs(self) -> None:
+        if not self.round_config.get("bathtub_signs", False):
+            gr = self.collision_sprites
+            for sprite in gr:
+                if sprite.name == "hidden_sign":
+                    gr.remove(sprite)
+                    sprite.kill()
+
+    def round_config_changed(self, round_config: dict[str, Any]) -> None:
+        self.round_config = round_config
+        self.hide_bath_signs()
+        self.player.round_config_changed(round_config)
+        self.overlay.round_config = round_config
+        self.game_map.round_config_changed(round_config)
 
     def load_map(self, game_map: Map, from_map: str = None):
         # prepare level state for new map
@@ -262,6 +290,7 @@ class Level:
             plant_collision=self.plant_collision,
             frames=self.frames,
             save_file=self.save_file,
+            round_config=self.round_config,
         )
 
         self.camera.change_size(*self.game_map.size)
@@ -313,11 +342,6 @@ class Level:
 
         self.current_map = game_map
 
-        # show intro scripted sequence only once
-        if not self.intro_shown.get(game_map, False):
-            self.intro_shown[game_map] = True
-            self.cutscene_animation.start()
-
         if game_map == Map.MINIGAME:
             self.current_minigame = CowHerding(
                 CowHerdingState(
@@ -327,7 +351,8 @@ class Level:
                     collision_sprites=self.collision_sprites,
                     overlay=self.overlay,
                     sounds=self.sounds,
-                )
+                ),
+                round_config=self.round_config,
             )
 
             @self.current_minigame.on_finish
@@ -365,8 +390,13 @@ class Level:
     def switch_to_map(self, map_name: Map):
         if self.tmx_maps.get(map_name):
             self.load_map(map_name, from_map=self.current_map)
+            self.hide_bath_signs()
         else:
-            if map_name == "bathhouse" and self.player.hp < 80:
+            if (
+                map_name == "bathhouse"
+                and self.round_config["accessible_bathhouse"]
+                and self.player.hp < 80
+            ):
                 self.overlay.health_bar.apply_health(9999999)
                 self.player.bathstat = True
                 self.player.bath_time = time.time()
@@ -374,8 +404,9 @@ class Level:
                 self.load_map(self.current_map, from_map=map_name)
             elif map_name == "bathhouse":
                 # this is to prevent warning in the console
-                self.load_map(self.current_map, from_map=map_name)
-                self.player.emote_manager.show_emote(self.player, "sad_sick_ani")
+                if self.round_config["accessible_bathhouse"]:
+                    self.load_map(self.current_map, from_map=map_name)
+                    self.player.emote_manager.show_emote(self.player, "sad_sick_ani")
             else:
                 warnings.warn(f'Error loading map: Map "{map_name}" not found')
 
@@ -446,9 +477,15 @@ class Level:
         if collided_interactions:
             if collided_interactions[0].name == "Bed":
                 self.start_day_transition()
-            if collided_interactions[0].name == "sign":
+            if (
+                collided_interactions[0].name == "sign"
+                and self.round_config["sign_interaction"]
+            ):
                 self.show_sign(collided_interactions[0])
-            if collided_interactions[0].name == "Trader":
+            if (
+                collided_interactions[0].name == "Trader"
+                and self.round_config["market"]
+            ):
                 self.switch_screen(GameState.SHOP)
             if collided_interactions[0] in self.bush_sprites.sprites():
                 if self.player.axe_hitbox.colliderect(
@@ -460,7 +497,10 @@ class Level:
         label_key = sign.custom_properties.get("label", "label_not_available")
         post_event(DIALOG_SHOW, dial=label_key)
 
-    def check_outgroup_logic(self):
+    def check_outgroup_logic(self) -> None:
+        if not self.round_config.get("playable_outgroup", False):
+            return
+
         collided_with_outgroup_farm = pygame.sprite.spritecollide(
             self.player,
             [i for i in self.interaction_sprites if i.name == "Outgroup Farm"],
@@ -494,7 +534,7 @@ class Level:
 
         # Resets so that message can be displayed again if player exits and reenters farm
         if not self.outgroup_farm_entered:
-            self.outgroup_message_receieved = False
+            self.outgroup_message_received = False
 
         # checks 60 seconds and 120 seconds after player joins outgroup to convert appearance
         if self.player.study_group == StudyGroup.OUTGROUP:
@@ -554,41 +594,55 @@ class Level:
         if self.controls.ADVANCE_DIALOG.click:
             post_event(DIALOG_ADVANCE)
 
-        if self.controls.DEBUG_QUAKE.click:
-            post_event(START_QUAKE, duration=2.0, debug=True)
+        if self.get_game_version() == DEBUG_MODE_VERSION:
+            # if self.controls.DEBUG_QUAKE.click:
+            #     post_event(START_QUAKE, duration=2.0, debug=True)
+            if self.controls.DEBUG_APPLY_HEALTH.click:
+                self.overlay.health_bar.apply_health(1)
 
-        if self.controls.DEBUG_PLAYER_TASK.click:
-            self.switch_screen(GameState.PLAYER_TASK)
+            if self.controls.DEBUG_APPLY_DAMAGE.click:
+                self.overlay.health_bar.apply_damage(1)
 
-        if self.controls.DEBUG_END_ROUND.click:
-            self.switch_screen(GameState.ROUND_END)
+            if self.controls.DEBUG_PLAYER_TASK.click:
+                self.switch_screen(GameState.PLAYER_TASK)
 
-        if self.controls.DEBUG_SELF_ASSESSMENT.click:
-            self.switch_screen(GameState.SELF_ASSESSMENT)
+            if self.controls.DEBUG_END_ROUND.click:
+                self.switch_screen(GameState.ROUND_END)
 
-        if self.controls.DEBUG_PLAYER_RECEIVES_HAT.click:
-            self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_HAT)
+            if self.controls.DEBUG_SELF_ASSESSMENT.click:
+                self.switch_screen(GameState.SELF_ASSESSMENT)
 
-        if self.controls.DEBUG_PLAYER_RECEIVES_NECKLACE.click:
-            self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE)
+            if self.controls.DEBUG_NOTIFICATION_MENU.click:
+                self.switch_screen(GameState.NOTIFICATION_MENU)
 
-        if self.controls.DEBUG_PLAYERS_BIRTHDAY.click:
-            self.start_scripted_sequence(ScriptedSequenceType.PLAYERS_BIRTHDAY)
+            if self.controls.DEBUG_PLAYER_RECEIVES_HAT.click:
+                self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_HAT)
 
-        if self.controls.DEBUG_NPC_RECEIVES_NECKLACE.click:
-            self.start_scripted_sequence(ScriptedSequenceType.NPC_RECEIVES_NECKLACE)
+            if self.controls.DEBUG_PLAYER_RECEIVES_NECKLACE.click:
+                self.start_scripted_sequence(
+                    ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE
+                )
 
-        if self.controls.DEBUG_DECIDE_TOMATO_OR_CORN.click:
-            self.start_scripted_sequence(ScriptedSequenceType.DECIDE_TOMATO_OR_CORN)
+            if self.controls.DEBUG_PLAYERS_BIRTHDAY.click:
+                self.start_scripted_sequence(ScriptedSequenceType.PLAYERS_BIRTHDAY)
 
-        if self.controls.DEBUG_SHOW_HITBOXES.click:
-            self.show_hitbox_active = not self.show_hitbox_active
+            if self.controls.DEBUG_NPC_RECEIVES_NECKLACE.click:
+                self.start_scripted_sequence(ScriptedSequenceType.NPC_RECEIVES_NECKLACE)
 
-        if self.controls.DEBUG_SHOW_PF_OVERLAY.click:
-            self.show_pf_overlay = not self.show_pf_overlay
+            if self.controls.DEBUG_DECIDE_TOMATO_OR_CORN.click:
+                self.start_scripted_sequence(ScriptedSequenceType.DECIDE_TOMATO_OR_CORN)
 
-        if self.controls.DEBUG_SHOW_DIALOG.click:
-            post_event(DIALOG_SHOW, dial="test")
+            if self.controls.DEBUG_SHOW_HITBOXES.click:
+                self.show_hitbox_active = not self.show_hitbox_active
+
+            if self.controls.DEBUG_SHOW_PF_OVERLAY.click:
+                self.show_pf_overlay = not self.show_pf_overlay
+
+            if self.controls.DEBUG_SHOW_DIALOG.click:
+                post_event(DIALOG_SHOW, dial="test")
+
+            if self.controls.DEBUG_SHOW_SHOP.click:
+                self.switch_screen(GameState.SHOP)
 
     def start_scripted_sequence(self, sequence_type: ScriptedSequenceType):
         # do not start new scripted sequence when one is already running
@@ -832,7 +886,10 @@ class Level:
     def check_map_exit(self):
         if not self.map_transition:
             for warp_hitbox in self.player_exit_warps:
-                if self.player.hitbox_rect.colliderect(warp_hitbox.rect):
+                if self.player.hitbox_rect.colliderect(warp_hitbox.rect) and (
+                    not warp_hitbox.name == "bathhouse"
+                    or self.round_config["accessible_bathhouse"]
+                ):
                     self.map_transition.reset = partial(
                         self.switch_to_map, warp_hitbox.name
                     )
@@ -963,6 +1020,15 @@ class Level:
         self.check_map_exit()
         self.check_outgroup_logic()
 
+        # show intro scripted sequence only once
+        if not self.intro_shown.get(self.current_map, False):
+            if self.round_config.get(
+                "character_introduction_timestamp", []
+            ) and self.round_config.get("character_introduction_text", ""):
+                self.intro_shown[self.current_map] = True
+                # TODO revert, this only for debug
+                self.cutscene_animation.start()
+
         if self.current_minigame and self.current_minigame.running:
             self.current_minigame.update(dt)
 
@@ -997,8 +1063,9 @@ class Level:
                 ),
                 dt,
             )
+            if self.round_config.get("sickness", False):
+                self.decay_health()
 
-            self.decay_health()
         self.draw(dt, move_things)
 
         for control in self.controls:

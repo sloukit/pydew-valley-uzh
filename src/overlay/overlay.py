@@ -1,3 +1,5 @@
+from typing import Any
+
 import pygame
 
 from src.enums import ClockVersion
@@ -10,8 +12,13 @@ from src.settings import OVERLAY_POSITIONS
 
 class Overlay:
     def __init__(
-        self, entity, item_frames, game_time: GameTime, clock: pygame.time.Clock
-    ):
+        self,
+        entity,
+        item_frames,
+        game_time: GameTime,
+        clock: pygame.time.Clock,
+        round_config: dict[str, Any],
+    ) -> None:
         # general setup
         self.display_surface = pygame.display.get_surface()
         self.player = entity
@@ -26,6 +33,8 @@ class Overlay:
 
         self.clock = Clock(game_time, ClockVersion.DIGITAL)
         self.FPS = FPS(clock)
+
+        self.round_config = round_config
 
     def display(self):
         if not self.visible:
@@ -45,4 +54,5 @@ class Overlay:
         self.FPS.display()
 
         # health bar
-        self.health_bar.draw(self.display_surface)
+        if self.round_config.get("healthbar", False):
+            self.health_bar.draw(self.display_surface)

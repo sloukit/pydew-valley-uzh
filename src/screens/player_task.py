@@ -1,8 +1,8 @@
-from typing import Callable
+from typing import Any, Callable
 
 import pygame
 
-from src.enums import CustomCursor, GameState  # InventoryResource
+from src.enums import CustomCursor  # InventoryResource
 from src.events import SET_CURSOR, post_event
 from src.gui.menu.abstract_menu import AbstractMenu
 from src.gui.menu.components import ArrowButton, InputField
@@ -14,6 +14,7 @@ from src.screens.minigames.gui import (
     _ReturnButton,
 )
 from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH
+from src.support import get_translated_string as _
 from src.support import import_font
 
 """
@@ -27,33 +28,35 @@ TODO:
 class PlayerTask(AbstractMenu):
     """Run the item allocation task."""
 
-    def __init__(self, switch_screen: Callable[[], None], current_round: int):
-        super().__init__(title="Task", size=(SCREEN_WIDTH, SCREEN_HEIGHT))
+    def __init__(self, send_resource_allocation: Callable[[dict[str, Any]], None]):
+        super().__init__(title=_("Task"), size=(SCREEN_WIDTH, SCREEN_HEIGHT))
         self.display_surface: pygame.Surface = pygame.display.get_surface()
         self.title_font: pygame.Font = import_font(38, "font/LycheeSoda.ttf")
         self.text_font: pygame.Font = import_font(32, "font/LycheeSoda.ttf")
         self.input_field_font: pygame.font.Font = import_font(38, "font/LycheeSoda.ttf")
-        self.confirm_button_text: str = "Confirm"
-        self.switch_screen = switch_screen
+        self.confirm_button_text: str = _("Confirm")
+        self.allocations_text: str = _("Distribute them")
+        self.send_resource_allocation = send_resource_allocation
         self.buttons = []
         self.button_setup()
-        self.round = current_round
+        # self.round = current_round
 
-        self.allocation_items: list[tuple[str, int]] = [
-            ("candy bar", 20),
-            ("blanket", 10),
-            ("glove", 14),
-            ("boot", 8),
-            ("jean", 22),
-            ("shirt", 18),
-            ("rain cape", 6),
-            ("apron", 16),
-            ("water bottle", 24),
-            ("flashlight", 12),
-            ("umbrella", 4),
-            ("mask", 26),
-        ]
-        self.allocation_item: tuple[str, int] | None = None
+        # self.allocation_items: list[tuple[str, int]] = [
+        #     ("candy bar", 20),
+        #     ("blanket", 10),
+        #     ("glove", 14),
+        #     ("boot", 8),
+        #     ("jean", 22),
+        #     ("shirt", 18),
+        #     ("rain cape", 6),
+        #     ("apron", 16),
+        #     ("water bottle", 24),
+        #     ("flashlight", 12),
+        #     ("umbrella", 4),
+        #     ("mask", 26),
+        # ]
+        # self.allocation_item: tuple[str, int] | None = None
+        self.allocation_item: str | None = None
         self.arrow_buttons: list[list[ArrowButton]] = []
         self.input_fields: list[InputField] = []
         self.allocations: list[int] = [0, 0]
@@ -62,17 +65,24 @@ class PlayerTask(AbstractMenu):
         self.total_items: int | None = None
         self.active_input: int | None = None
 
-    def determine_allocation_item(self) -> None:
-        # this could be omitted if the game was set up to not generate a allocation task after lvl 12 in the first place
-        if self.round <= 12:
-            self.allocation_item = self.allocation_items[self.round - 1]
+    def parse_allocation_items(self, allocation_items: str) -> None:
+        elements = allocation_items.split(" ")
+        if len(elements) > 1:
+            if elements[0].isnumeric():
+                self.max_allocation = int(elements[0])
+            else:
+                self.max_allocation = 2
+
+            self.allocation_item = " ".join(elements[1:])
         else:
-            self.allocation_item = self.allocation_items[0]
-        self.max_allocation = self.allocation_item[1]
-        self.total_items = self.allocation_item[1]
+            print(f"Error! Could not parse allocation items: '{allocation_items}'")
+            self.max_allocation = 2
+            self.allocation_item = "<GENERIC_ITEM_NAME>"
+        self.total_items = self.max_allocation
+        self.allocations = [0, 0]
 
     def draw_title(self) -> None:
-        text = Text(Linebreak((0, 2)), TextChunk("Task", self.title_font))
+        text = Text(Linebreak((0, 2)), TextChunk(_("Task"), self.title_font))
         _draw_box(
             self.display_surface,
             (SCREEN_WIDTH / 2, 0),
@@ -112,12 +122,14 @@ class PlayerTask(AbstractMenu):
                 button.draw(self.display_surface)
 
     def draw_info(self) -> None:
-        not_enough_items: str = "You have not allocated all of the items yet!"
-        too_many_items: str = "You don't have that many items to distribute."
+        not_enough_items: str = _("You have not allocated all of the items yet!")
+        too_many_items: str = _("You don't have that many items to distribute.")
+        items_missing: str = _("Items missing:")
         missing_items: str = (
-            f"Items missing: {self.total_items - sum(self.allocations)}"
+            f"{items_missing} {self.total_items - sum(self.allocations)}"
         )
-        overstock_items: str = f"Take out: {sum(self.allocations) - self.total_items}"
+        take_out = _("Take out:")
+        overstock_items: str = f"{take_out} {sum(self.allocations) - self.total_items}"
 
         if sum(self.allocations) < self.total_items:
             text_parts = not_enough_items, missing_items
@@ -150,22 +162,24 @@ class PlayerTask(AbstractMenu):
         )
 
     def draw_task_surf(self) -> None:
-        self.determine_allocation_item()
+        if not self.allocation_item:
+            self.parse_allocation_items("")
         box_center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 3)
         button_area_height = self.confirm_button.rect.height
 
+        you_have_received = _("You have received")
         text = Text(
             Linebreak((0, 12)),
             TextChunk(
-                f"You have received {self.max_allocation} {self.allocation_item[0]}s!",
+                f"{you_have_received} {self.max_allocation} {self.allocation_item}!",
                 self.text_font,
             ),
             Linebreak(),
-            TextChunk("Distribute them:", self.text_font),
+            TextChunk(self.allocations_text, self.text_font),
             Linebreak((0, 18)),
-            TextChunk("Your group's inventory:", self.text_font),
+            TextChunk(_("Your group's inventory:"), self.text_font),
             Linebreak((0, 18)),
-            TextChunk("Other group's inventory:", self.text_font),
+            TextChunk(_("Other group's inventory:"), self.text_font),
             Linebreak((0, 12)),
         )
         box_min_width = 400
@@ -205,7 +219,12 @@ class PlayerTask(AbstractMenu):
             name == self.confirm_button.text
             and sum(self.allocations) == self.total_items
         ):
-            self.switch_screen(GameState.PLAY)
+            resource_allocation = {
+                "allocation_item": self.allocation_item,
+                "max_allocation": self.max_allocation,
+                "allocations": self.allocations,
+            }
+            self.send_resource_allocation(resource_allocation)
 
     def button_setup(self) -> None:
         self.confirm_button = _ReturnButton(self.confirm_button_text)
@@ -230,9 +249,14 @@ class PlayerTask(AbstractMenu):
                             self.allocations[i] + 1, self.max_allocation
                         )
                 elif down.mouse_hover():
-                    self.allocations[i] = max(
-                        self.allocations[i] - 1, self.min_allocation
-                    )
+                    # self.allocations[i] = max(
+                    #     self.allocations[i] - 1, self.min_allocation
+                    # )
+                    self.allocations[i] = self.allocations[i] - 1
+                    if self.allocations[i] < 0:
+                        self.allocations[i] = (
+                            self.total_items - sum(self.allocations) - 1
+                        )
 
         if event.type == pygame.KEYDOWN and self.active_input is not None:
             if event.key == pygame.K_BACKSPACE:

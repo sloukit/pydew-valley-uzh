@@ -14,6 +14,7 @@ from src.gui.menu.abstract_menu import AbstractMenu
 from src.gui.menu.components import AbstractButton
 from src.screens.minigames.gui import Text, TextChunk, _draw_box, _ReturnButton
 from src.settings import SAM_BORDER_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH
+from src.support import get_translated_string as _
 from src.support import import_font, resource_path
 
 
@@ -101,6 +102,7 @@ class SelfAssessmentMenu(AbstractMenu):
     _continue_button_text: str | None
 
     _sam_buttons: list[_SAMButton]
+    _sam_results: dict[str, int]
 
     _surface: pygame.Surface | None
 
@@ -112,7 +114,7 @@ class SelfAssessmentMenu(AbstractMenu):
         selection: Iterable[SelfAssessmentDimension],
     ):
         super().__init__(
-            title="How do you feel right now?", size=(SCREEN_WIDTH, SCREEN_HEIGHT)
+            title=_("How do you feel right now?"), size=(SCREEN_WIDTH, SCREEN_HEIGHT)
         )
 
         self._return_func = return_func
@@ -124,9 +126,10 @@ class SelfAssessmentMenu(AbstractMenu):
         self._selected_scale = None
 
         self._continue_button = None
-        self._continue_button_text = "Continue"
+        self._continue_button_text = _("Continue")
 
         self._sam_buttons = []
+        self._sam_results = {}
 
         self._surface = None
 
@@ -165,7 +168,7 @@ class SelfAssessmentMenu(AbstractMenu):
         button_top_margin = 32
         button_area_height = self._continue_button.rect.height + button_top_margin
 
-        text = Text(TextChunk("How do you feel right now?", self.font_title))
+        text = Text(TextChunk(_("How do you feel right now?"), self.font_title))
 
         sam_button_w = SAM_BORDER_SIZE[0]
         sam_button_h = SAM_BORDER_SIZE[1]
@@ -225,13 +228,18 @@ class SelfAssessmentMenu(AbstractMenu):
     def _continue(self):
         if not self.selected_sam:
             return
+
+        dimension = self._selection[self.current_dimension_index].name
+        assessment = int(self.selected_sam._name)
+        self._sam_results[dimension] = assessment
+
         # print(f"{self._current_dimension.name} - {self._selected_scale}")
         self.selected_sam.deselect()
         self.selected_sam = None
 
         if self.current_dimension_index >= len(self._selection) - 1:
             self.current_dimension_index = 0
-            self._return_func()
+            self._return_func(self._sam_results)
         else:
             self.current_dimension_index += 1
 

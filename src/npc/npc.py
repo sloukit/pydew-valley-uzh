@@ -5,7 +5,14 @@ from typing import Callable
 
 import pygame
 
-from src.enums import EntityState, FarmingTool, InventoryResource, Layer, StudyGroup
+from src.enums import (
+    EntityState,
+    FarmingTool,
+    InventoryResource,
+    Layer,
+    SeedType,
+    StudyGroup,
+)
 from src.gui.interface.emotes import NPCEmoteManager
 from src.npc.bases.npc_base import NPCBase
 from src.npc.behaviour.npc_behaviour_tree import NPCIndividualContext
@@ -29,6 +36,7 @@ class NPC(NPCBase):
         soil_manager: SoilManager,
         emote_manager: NPCEmoteManager,
         tree_sprites: pygame.sprite.Group,
+        sickness_allowed: bool,
     ):
         self.tree_sprites = tree_sprites
 
@@ -50,6 +58,7 @@ class NPC(NPCBase):
         self.has_hat = False
         self.has_horn = False
         self.has_outgroup_skin = False
+        self.sickness_allowed = sickness_allowed
 
         # TODO: Ensure that the NPC always has all needed seeds it needs
         #  in its inventory
@@ -61,27 +70,59 @@ class NPC(NPCBase):
             InventoryResource.PEAR: 0,
             InventoryResource.CORN: 0,
             InventoryResource.TOMATO: 0,
+            InventoryResource.BEETROOT: 0,
+            InventoryResource.CARROT: 0,
+            InventoryResource.EGGPLANT: 0,
+            InventoryResource.PUMPKIN: 0,
+            InventoryResource.PARSNIP: 0,
             InventoryResource.CORN_SEED: 999,
             InventoryResource.TOMATO_SEED: 999,
+            InventoryResource.BEETROOT_SEED: 999,
+            InventoryResource.CARROT_SEED: 999,
+            InventoryResource.EGGPLANT_SEED: 999,
+            InventoryResource.PUMPKIN_SEED: 999,
+            InventoryResource.PARSNIP_SEED: 999,
         }
 
         self.assign_outfit_ingroup()
 
         # NPC health / sickness / death
+
         self.probability_to_get_sick = (
             0.3 if self.has_goggles else 0.6
         ) < random.random()
         # set a timer to get the NPC sick after a random time
         self.sick_timer = Timer(
             random.randint(5, 20) * 1000,
-            autostart=True,
+            autostart=self.sickness_allowed,
             func=self.get_sick,
         )
+
         self.is_sick = False
         self.is_dead = False
         self.hp = 100
         # how fast the NPC dies after getting sick
         self.die_rate = random.randint(35, 75)
+
+    def set_allowed_seeds(self, allowed_seeds: dict[str]) -> None:
+        seed_types = []
+        for seed_type in SeedType:
+            if SeedType._AS_IRS[seed_type].as_serialised_string() in allowed_seeds:
+                seed_types.append(seed_type)
+        # using NPCIndividualContext, however it would make more sense to use NPCSharedContext,
+        # but not sure how to set it :-(
+        self.behaviour_tree_context.allowed_seeds = seed_types
+
+    def set_sickness_allowed(self, sickness_allowed: bool) -> None:
+        self.sickness_allowed = sickness_allowed
+        if sickness_allowed:
+            if not self.sick_timer.active:
+                self.sick_timer.activate()
+        else:
+            if self.sick_timer.active:
+                self.sick_timer.deactivate()
+            self.is_sick = False
+            self.hp = 100
 
     def get_personal_soil_area_tiles(self, tile_type: str) -> list[tuple[int, int]]:
         """
@@ -147,15 +188,19 @@ class NPC(NPCBase):
         ]
         return adjacent_untilled_tiles
 
-    def assign_outfit_ingroup(self):
+    def assign_outfit_ingroup(self, ingroup_40p_hat_necklace_appearance: bool = False):
         # 40% of the ingroup NPCs should wear a hat and a necklace, and 60% of the ingroup NPCs should only wear the hat
         if self.study_group == StudyGroup.INGROUP:
-            if random.random() <= 0.4:
-                self.has_necklace = True
-                self.has_hat = True
+            if ingroup_40p_hat_necklace_appearance:
+                if random.random() <= 0.4:
+                    self.has_necklace = True
+                    self.has_hat = True
+                else:
+                    self.has_necklace = False
+                    self.has_hat = True
             else:
                 self.has_necklace = False
-                self.has_hat = True
+                self.has_hat = False
         else:
             self.has_necklace = False
             self.has_hat = False
@@ -199,7 +244,8 @@ class NPC(NPCBase):
                 self.die()
 
     def update(self, dt):
-        self.manage_sickness(dt)
+        if self.sickness_allowed:
+            self.manage_sickness(dt)
         if self.is_dead:
             return
         super().update(dt)

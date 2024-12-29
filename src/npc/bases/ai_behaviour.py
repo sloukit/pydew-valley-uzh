@@ -4,7 +4,7 @@ from abc import ABC
 from collections.abc import Callable
 
 import pygame
-from pathfinding.core.grid import Grid
+from pathfinding.core.grid import Grid  # type: ignore[import-untyped]
 
 from src.enums import AIState
 from src.npc.bases.ai_behaviour_base import AIBehaviourBase

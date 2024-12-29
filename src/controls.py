@@ -97,10 +97,13 @@ class Controls(Control, Enum):
     EMOTE_WHEEL = (pygame.K_e, "Toggle Emote Wheel")
     ADVANCE_DIALOG = (pygame.K_SPACE, "Advance Dialog")
 
+    DEBUG_APPLY_HEALTH = (pygame.K_1, "Apply health")
+    DEBUG_APPLY_DAMAGE = (pygame.K_2, "Apply damage")
     DEBUG_QUAKE = (pygame.K_m, "Start Earthquake Effect")
     DEBUG_PLAYER_TASK = (pygame.K_b, "Show Player Task")
     DEBUG_END_ROUND = (pygame.K_r, "Skip to End of Round")
     DEBUG_SELF_ASSESSMENT = (pygame.K_v, "Open self assessment menu")
+    DEBUG_NOTIFICATION_MENU = (pygame.K_n, "Open notification menu")
     DEBUG_PLAYER_RECEIVES_HAT = (pygame.K_j, "Player receives hat")
     DEBUG_PLAYER_RECEIVES_NECKLACE = (pygame.K_k, "Player receives necklace")
     DEBUG_PLAYERS_BIRTHDAY = (pygame.K_o, "Player's birthday")
@@ -109,6 +112,7 @@ class Controls(Control, Enum):
     DEBUG_SHOW_HITBOXES = (pygame.K_h, "Show Hitboxes")
     DEBUG_SHOW_PF_OVERLAY = (pygame.K_p, "Show Pathfinding")
     DEBUG_SHOW_DIALOG = (pygame.K_t, "Show Dialog")
+    DEBUG_SHOW_SHOP = (pygame.K_y, "Show Shop")
 
     @classmethod
     def get_by_value(cls, control_value: int) -> Generator[Control, None, None]:

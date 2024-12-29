@@ -2,6 +2,9 @@ import os
 
 import pygame
 
+from src.settings import SCREEN_WIDTH
+from src.support import get_translated_string as _
+
 
 class FastForward:
     def __init__(self) -> None:
@@ -16,7 +19,10 @@ class FastForward:
                 self.total_frame = 10
                 self.font = pygame.font.Font("font/LycheeSoda.ttf", 30)
                 self.text_surface = self.font.render(
-                    "R_Shift to Fast Forward", True, (255, 255, 255)
+                    _("Right Shift to Fast Forward"), True, (255, 255, 255)
+                )
+                self.text_rect = self.text_surface.get_frect(
+                    midright=((SCREEN_WIDTH - 15, 600))
                 )
 
     def draw_overlay(self, display_surface):
@@ -26,4 +32,4 @@ class FastForward:
             self.current_frame = 0
 
     def draw_option(self, display_surface):
-        display_surface.blit(self.text_surface, (980, 600))
+        display_surface.blit(self.text_surface, self.text_rect)

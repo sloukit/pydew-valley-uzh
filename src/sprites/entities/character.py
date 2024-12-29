@@ -79,8 +79,18 @@ class Character(Entity, ABC):
             InventoryResource.PEAR: 0,
             InventoryResource.CORN: 0,
             InventoryResource.TOMATO: 0,
+            InventoryResource.BEETROOT: 0,
+            InventoryResource.CARROT: 0,
+            InventoryResource.EGGPLANT: 0,
+            InventoryResource.PUMPKIN: 0,
+            InventoryResource.PARSNIP: 0,
             InventoryResource.CORN_SEED: 0,
             InventoryResource.TOMATO_SEED: 0,
+            InventoryResource.BEETROOT_SEED: 0,
+            InventoryResource.CARROT_SEED: 0,
+            InventoryResource.EGGPLANT_SEED: 0,
+            InventoryResource.PUMPKIN_SEED: 0,
+            InventoryResource.PARSNIP_SEED: 0,
         }
 
         # Not all Characters can go to the market,
