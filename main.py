@@ -157,7 +157,10 @@ class Game:
         self.main_menu = MainMenu(self.switch_state, self.set_token)
         self.pause_menu = PauseMenu(self.switch_state)
         self.settings_menu = SettingsMenu(
-            self.switch_state, self.sounds, self.player.controls
+            self.switch_state,
+            self.sounds,
+            self.player.controls,
+            lambda: self.game_version,
         )
         self.shop_menu = ShopMenu(
             self.player,
@@ -303,9 +306,8 @@ class Game:
         if self.shop_menu:
             self.shop_menu.round_config_changed(self.round_config)
         if self.settings_menu:
-            self.settings_menu.show_debug_keybinds = (
-                self.game_version == DEBUG_MODE_VERSION
-            )
+            self.settings_menu.round_config_changed(self.round_config)
+
         self.round_end_timer = 0.0
         self.ROUND_END_TIME_IN_MINUTES = self.round_config["level_duration"] / 60  # 15
         print(self.round_config["level_name_text"])
