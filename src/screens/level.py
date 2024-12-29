@@ -255,6 +255,9 @@ class Level:
         self.hide_bath_signs()
         self.player.round_config_changed(round_config)
         self.overlay.round_config = round_config
+        self.overlay.is_debug_mode_version = (
+            self.get_game_version() == DEBUG_MODE_VERSION
+        )
         self.game_map.round_config_changed(round_config)
 
     def load_map(self, game_map: Map, from_map: str = None):

@@ -35,6 +35,7 @@ class Overlay:
         self.FPS = FPS(clock)
 
         self.round_config = round_config
+        self.is_debug_mode_version: bool = False
 
     def display(self):
         if not self.visible:
@@ -51,7 +52,8 @@ class Overlay:
         self.display_surface.blit(tool_surf, tool_rect)
 
         self.clock.display()
-        self.FPS.display()
+        if self.is_debug_mode_version:
+            self.FPS.display()
 
         # health bar
         if self.round_config.get("healthbar", False):
