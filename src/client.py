@@ -1,10 +1,10 @@
 import sys
 from typing import Any
+from src.settings import API_KEY, PORT, SERVER_IP, USE_SERVER
 
-if sys.platform not in ("emscripten", "wasm"):
+if USE_SERVER and sys.platform not in ("emscripten", "wasm"):
     import requests  # type: ignore[import-untyped]
 
-from src.settings import API_KEY, PORT, SERVER_IP
 
 BAD_API_KEY = "9"
 
