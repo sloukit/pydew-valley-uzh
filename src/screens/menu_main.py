@@ -94,9 +94,19 @@ class MainMenu(GeneralMenu):
     def draw(self) -> None:
         super().draw()
         if self.input_active:
-            self.draw_input_box(self.input_box, self.input_text, _("Enter play token:"), self.input_active)
+            self.draw_input_box(
+                self.input_box,
+                self.input_text,
+                _("Enter play token:"),
+                self.input_active,
+            )
         if self.initials_active:
-            self.draw_input_box(self.initials_box, self.initials_text, _("Enter initials:"), self.initials_active)
+            self.draw_input_box(
+                self.initials_box,
+                self.initials_text,
+                _("Enter initials:"),
+                self.initials_active,
+            )
 
     def validate_token(self, token: str) -> dict[str, Any]:
         result: dict[str, Any] = {"token": token, "jwt": "", "game_version": -1}
