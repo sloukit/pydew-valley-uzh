@@ -1,9 +1,11 @@
 # main menu
 
 Enter play token:@@Bitte Token eingeben:
+Enter authentication data@@EN: Enter authentication data
 Play@@Spielen
 Quit@@Verlassen
 Enter a Token to Play@@Token eingeben
+Enter initials:@@EN: Enter initials:
 Main Menu@@Hauptmenü
 
 # Inventory
