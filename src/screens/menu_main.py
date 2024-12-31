@@ -184,7 +184,7 @@ class MainMenu(GeneralMenu):
                 elif event.key == pygame.K_BACKSPACE:
                     self.input_text = self.input_text[:-1]
                     return True
-                else:
+                elif len(self.input_text) < 4:
                     self.input_text += event.unicode
                     return True
 
@@ -203,7 +203,7 @@ class MainMenu(GeneralMenu):
                 elif event.key == pygame.K_BACKSPACE:
                     self.initials_text = self.initials_text[:-1]
                     return True
-                else:
+                elif len(self.initials_text) < 2:
                     self.initials_text += event.unicode
                     return True
 
@@ -215,5 +215,8 @@ class MainMenu(GeneralMenu):
                     elif self.play_button_enabled:
                         self.button_action(_("Play"))
                         return True
+                elif event.key == pygame.K_ESCAPE:
+                    self.button_action(_("Quit"))
+                    return True
 
         return False

@@ -19,7 +19,7 @@ class PauseMenu(GeneralMenu):
 
     def button_action(self, text: str):
         if text == _("Resume"):
-            self.switch_screen(GameState.MAIN_MENU)
+            self.switch_screen(GameState.PLAY)
         if text == _("Options"):
             self.switch_screen(GameState.SETTINGS)
         if text == _("Save and Resume"):
@@ -33,7 +33,7 @@ class PauseMenu(GeneralMenu):
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                self.switch_screen(GameState.MAIN_MENU)
+                self.switch_screen(GameState.PLAY)
                 return True
             if event.key == pygame.K_q:
                 self.quit_game()
