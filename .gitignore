@@ -167,8 +167,7 @@ cython_debug/
 /.vscode
 __pycache__
 
-data/settings/keybinds.json
-data/settings/volume.json
+data/settings/*
 images/characters/rabbit/temp_goggles.png
 images/characters/rabbit/temp_horn.png
 images/characters/rabbit/temp_hat.png
