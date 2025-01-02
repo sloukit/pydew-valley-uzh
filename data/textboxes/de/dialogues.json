@@ -22,15 +22,19 @@
     ["Special event!", "We gather here for a special occasion"],
     ["Special event!", "Our group member received a necklace!"]
   ],
-  "scripted_sequence_decide_tomato_or_corn": [
-    ["Group gathering", "We gather here to decide what to buy at the market"],
+  "scripted_sequence_passive_decide_tomato_or_corn": [
+    ["Group gathering", "We gather here to decide what to sell at the market"],
+    ["Group gathering", "This time you can't decide. Wait for the group to decide."]
+  ],
+  "scripted_sequence_active_decide_tomato_or_corn": [
+    ["Group gathering", "We gather here to decide what to sell at the market"],
     ["Group gathering", "Everyone needs to vote one of the items:\t - tomato\n\t\t\t\t\t\t\t - corn"]
   ],
   "scripted_sequence_buy_tomato": [
-    ["Group gathering", "The group has decided to buy tomato!"]
+    ["Group gathering", "The group has decided to sell tomato!"]
   ],
   "scripted_sequence_buy_corn": [
-    ["Group gathering", "The group has decided to buy corn!"]
+    ["Group gathering", "The group has decided to sell corn!"]
   ],
   "label_not_available":[
     ["Sign", "label not available"],

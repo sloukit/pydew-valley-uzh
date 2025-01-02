@@ -19,6 +19,7 @@ from src.client import send_telemetry
 from src.enums import (
     CustomCursor,
     GameState,
+    Map,
     ScriptedSequenceType,
     SelfAssessmentDimension,
 )
@@ -630,6 +631,41 @@ class Game:
                         )
                         self.level.start_scripted_sequence(
                             ScriptedSequenceType.PLAYERS_BIRTHDAY
+                        )
+                    elif (
+                        len(
+                            self.round_config.get(
+                                "group_market_passive_player_sequence_timestamp", []
+                            )
+                        )
+                        > 0
+                        and self.round_end_timer
+                        > self.round_config["group_market_passive_player_sequence_timestamp"][0]
+                    ):
+                        # remove first timestamp from list after transition to Town ends not to repeat infinitely
+                        if self.level.current_map == Map.TOWN:
+                            self.round_config["group_market_passive_player_sequence_timestamp"] = (
+                                self.round_config["group_market_passive_player_sequence_timestamp"][1:]
+                            )
+                        self.level.start_scripted_sequence(
+                            ScriptedSequenceType.PASSIVE_DECIDE_TOMATO_OR_CORN
+                        )
+                    elif (
+                        len(
+                            self.round_config.get(
+                                "group_market_active_player_sequence_timestamp", []
+                            )
+                        )
+                        > 0
+                        and self.round_end_timer
+                        > self.round_config["group_market_active_player_sequence_timestamp"][0]
+                    ):
+                        # remove first timestamp from list not to repeat infinitely
+                        self.round_config["group_market_active_player_sequence_timestamp"] = (
+                            self.round_config["group_market_active_player_sequence_timestamp"][1:]
+                        )
+                        self.level.start_scripted_sequence(
+                            ScriptedSequenceType.ACTIVE_DECIDE_TOMATO_OR_CORN
                         )
                     elif (
                         self.round_config.get("resource_allocation_text", "")

@@ -63,6 +63,7 @@ class Level:
     sounds: SoundDict
     tmx_maps: MapDict
     current_map: Map | None
+    prev_map: Map | None
     game_map: GameMap | None
     save_file: SaveFile
 
@@ -140,6 +141,7 @@ class Level:
         self.sounds = sounds
         self.tmx_maps = tmx_maps
         self.current_map = None
+        self.prev_map = None
         self.game_map = None
 
         self.all_sprites = AllSprites()
@@ -306,7 +308,11 @@ class Level:
                     f'from: "{self.current_map}"',
                     GameMapWarning,
                 )
-
+        # TODO: jump to default spawn point when during decision tomato or corn scripted sequence
+        if self.prev_map and self.prev_map == game_map:
+            # print(f"come back after decide to {self.prev_map} new spawn pos {self.prev_player_pos}")
+            player_spawn = self.prev_player_pos
+            self.prev_map = None
         # use default spawnpoint if no origin map is specified,
         # or if no entry warp for the player's origin map is found
         if not player_spawn:
@@ -629,8 +635,11 @@ class Level:
             if self.controls.DEBUG_NPC_RECEIVES_NECKLACE.click:
                 self.start_scripted_sequence(ScriptedSequenceType.NPC_RECEIVES_NECKLACE)
 
-            if self.controls.DEBUG_DECIDE_TOMATO_OR_CORN.click:
-                self.start_scripted_sequence(ScriptedSequenceType.DECIDE_TOMATO_OR_CORN)
+            if self.controls.DEBUG_PASSIVE_DECIDE_TOMATO_OR_CORN.click:
+                self.start_scripted_sequence(ScriptedSequenceType.PASSIVE_DECIDE_TOMATO_OR_CORN)
+
+            if self.controls.DEBUG_ACTIVE_DECIDE_TOMATO_OR_CORN.click:
+                self.start_scripted_sequence(ScriptedSequenceType.ACTIVE_DECIDE_TOMATO_OR_CORN)
 
             if self.controls.DEBUG_SHOW_HITBOXES.click:
                 self.show_hitbox_active = not self.show_hitbox_active
@@ -655,6 +664,26 @@ class Level:
         else:
             animation_name = "outgroup_gathering"
 
+        decide = [ScriptedSequenceType.PASSIVE_DECIDE_TOMATO_OR_CORN, ScriptedSequenceType.ACTIVE_DECIDE_TOMATO_OR_CORN]
+        if sequence_type in decide:
+            if not self.current_map == Map.TOWN and not self.map_transition:
+                self.prev_player_pos = cast(
+                    tuple[int, int], self.player.rect.center
+                )
+                print(f"start transition, store pos {self.prev_player_pos}")
+                self.prev_map = self.current_map
+                self.map_transition.reset = partial(
+                    self.switch_to_map, Map.TOWN
+                )
+                self.start_map_transition()
+
+        # if switching to TOWN map for decide tomato or corn scripted sequence - quit until transition ends
+        if not self.map_transition.peaked:
+            # print("in transition", self.map_transition.timer.get_progress())
+            return
+        # else:
+        #     print("transition ended")
+
         if self.cutscene_animation.has_animation_name(animation_name):
             npcs: list[Player | NPC] = []
             if self.game_map:
@@ -673,10 +702,12 @@ class Level:
             self.cutscene_animation.is_end_condition_met = partial(
                 self.end_scripted_sequence, sequence_type, npc_in_center
             )
-            if self.player.rect:
+            # if self.player.rect and sequence_type not in decide:
+            if sequence_type not in decide or not self.prev_map:
                 self.prev_player_pos = cast(
                     tuple[int, int], self.player.rect.center
                 )  # else (0, 0)
+                # print(f"has_animation_name, store pos {self.prev_player_pos}")
             meeting_pos = self.cutscene_animation.targets[0].pos
             # move player other npc_in_center to the meeting point and make him face to the east (right)
             npc_in_center.teleport(meeting_pos)
@@ -732,16 +763,20 @@ class Level:
             pass
         elif sequence_type == ScriptedSequenceType.NPC_RECEIVES_NECKLACE:
             npc.has_necklace = True
-        elif sequence_type == ScriptedSequenceType.DECIDE_TOMATO_OR_CORN:
+        elif sequence_type == ScriptedSequenceType.PASSIVE_DECIDE_TOMATO_OR_CORN:
             buy_list = TOMATO_OR_CORN_LIST
-            self.end_scripted_sequence_decide(buy_list)
+            self.end_scripted_sequence_decide(buy_list, is_player_active=False)
+            return False
+        elif sequence_type == ScriptedSequenceType.ACTIVE_DECIDE_TOMATO_OR_CORN:
+            buy_list = TOMATO_OR_CORN_LIST
+            self.end_scripted_sequence_decide(buy_list, is_player_active=True)
             return False
 
         self.scripted_sequence_cleanup()
 
         return True
 
-    def end_scripted_sequence_decide(self, buy_list: list[str]) -> None:
+    def end_scripted_sequence_decide(self, buy_list: list[str], is_player_active: bool) -> None:
         # just to make linter happy (game_map could be None)
         if not self.game_map:
             return
@@ -759,21 +794,26 @@ class Level:
             self.game_map._setup_emote_interactions()
             # show EmoteWheel
             # self.player.blocked = True
-            self.player_emote_manager.toggle_emote_wheel()
+            if is_player_active:
+                self.player_emote_manager.toggle_emote_wheel()
             # still block the Scripted Sequence from finishing, until user makes selection
         else:
             if self.player_emote_manager.emote_wheel.visible:
                 # EmoteWheel is still displayed, waiting for his vote
                 return
             else:
-                # Player has voted
-                # self.player.blocked = False
-                total_votes = 1
-                # how many Characters voted for the first option
-                first_item_votes = 0
-                players_vote = self.player_emote_manager.emote_wheel._current_emote
-                if players_vote == buy_list[0]:
-                    first_item_votes += 1
+                # Player has voted or is passive
+                if is_player_active:
+                    # self.player.blocked = False
+                    total_votes = 1
+                    # how many Characters voted for the first option
+                    first_item_votes = 0
+                    players_vote = self.player_emote_manager.emote_wheel._current_emote
+                    if players_vote == buy_list[0]:
+                        first_item_votes += 1
+                else:
+                    total_votes = 0
+                    first_item_votes = 0
 
                 for npc in self.game_map.npcs:
                     if npc.study_group == self.player.study_group and not npc.is_dead:
@@ -787,8 +827,9 @@ class Level:
                 # in case of draw, Player vote decides
                 if first_item_votes == total_votes / 2:
                     total_votes += 1
-                    if players_vote == buy_list[0]:
+                    if is_player_active and players_vote == buy_list[0]:
                         first_item_votes += 1
+
                 winner_item = (
                     buy_list[0] if first_item_votes > total_votes / 2 else buy_list[1]
                 )
@@ -825,7 +866,16 @@ class Level:
         return True
 
     def scripted_sequence_cleanup(self):
-        self.player.teleport(self.prev_player_pos)
+        # TODO: go back to previous map
+        if not self.prev_map == Map.TOWN and self.prev_map:
+            # print(f"transit back to {self.prev_map}")
+            self.map_transition.reset = partial(
+                self.switch_to_map, Map(self.prev_map)
+                # self.switch_to_map, self.prev_map
+            )
+            self.start_map_transition()
+        else:
+            self.player.teleport(self.prev_player_pos)
         self.cutscene_animation.set_current_animation(DEFAULT_ANIMATION_NAME)
         self.cutscene_animation.is_end_condition_met = lambda: True
 
@@ -1027,7 +1077,7 @@ class Level:
             ) and self.round_config.get("character_introduction_text", ""):
                 self.intro_shown[self.current_map] = True
                 # TODO revert, this only for debug
-                self.cutscene_animation.start()
+                # self.cutscene_animation.start()
 
         if self.current_minigame and self.current_minigame.running:
             self.current_minigame.update(dt)
