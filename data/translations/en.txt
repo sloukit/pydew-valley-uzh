@@ -1,9 +1,11 @@
 # main menu
 
 Enter play token:@@Please enter token:
+Enter authentication data@@Enter authentication data
 Play@@Play
 Quit@@Quit
 Enter a Token to Play@@Enter a Token to Play
+Enter initials:@@Enter initials:
 Main Menu@@Main Menu
 
 # Inventory
@@ -66,7 +68,7 @@ Reset@@Reset
 
 # round end menu
 
-Round %d has ended. You currently have:@@Round %d has ended. You currently have:
+Round %d has ended. You currently have $%d, and:@@Round %d has ended. You currently have $%d, and:
 continue to next round@@continue to next round
 
 # task (items allocation) menu

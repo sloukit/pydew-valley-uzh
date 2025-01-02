@@ -27,6 +27,9 @@ authors = [
   { name = "dee-a-go" },
 ]
 description = "A game based on Pydeew Valley by ClearCode, used by the University of Zurich in an experimental study in psychology."
+dependencies = [
+    "requests>=2.32.3",
+]
 
 # Use Ruff to replace Black, isort, and Flake8
 [tool.ruff]
