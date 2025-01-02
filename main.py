@@ -150,15 +150,19 @@ class Game:
         self.inventory_menu = None
         self.shop_menu = None
         self.settings_menu = None
+        self.round_menu = None
         if not USE_SERVER:
-            self.set_token({"token": "000", "jwt": "dummy_token", "game_version": 0})
+            self.set_token({"token": "123", "jwt": "dummy_token", "game_version": 1})
 
         self.token_status = False
         self.allocation_task = PlayerTask(self.send_resource_allocation)
         self.main_menu = MainMenu(self.switch_state, self.set_token)
         self.pause_menu = PauseMenu(self.switch_state)
         self.settings_menu = SettingsMenu(
-            self.switch_state, self.sounds, self.player.controls
+            self.switch_state,
+            self.sounds,
+            self.player.controls,
+            lambda: self.game_version,
         )
         self.shop_menu = ShopMenu(
             self.player,
@@ -176,7 +180,12 @@ class Game:
             self.round_config,
         )
         self.round_menu = RoundMenu(
-            self.switch_state, self.player, self.increment_round, self.get_round
+            self.switch_state,
+            self.player,
+            self.increment_round,
+            self.get_round,
+            self.round_config,
+            self.frames,
         )
         self.outgroup_menu = OutgroupMenu(
             self.player,
@@ -289,6 +298,11 @@ class Game:
         if self.game_version < 0:
             self.game_version = DEBUG_MODE_VERSION
 
+        # round end menu needs to get config from previous round,
+        # since when this menu is activated it's already new round
+        if self.round_menu:
+            self.round_menu.round_config_changed(self.round_config)
+
         if round <= len(self.rounds_config[self.game_version]):
             self.round_config = self.rounds_config[self.game_version][round - 1]
         else:
@@ -304,9 +318,8 @@ class Game:
         if self.shop_menu:
             self.shop_menu.round_config_changed(self.round_config)
         if self.settings_menu:
-            self.settings_menu.show_debug_keybinds = (
-                self.game_version == DEBUG_MODE_VERSION
-            )
+            self.settings_menu.round_config_changed(self.round_config)
+
         self.round_end_timer = 0.0
         self.ROUND_END_TIME_IN_MINUTES = self.round_config["level_duration"] / 60  # 15
         print(self.round_config["level_name_text"])
@@ -326,9 +339,6 @@ class Game:
             self.inventory_menu.refresh_buttons_content()
         if self.current_state == GameState.ROUND_END:
             self.round_menu.reset_menu()
-            self.round_menu.generate_items()
-        # if self.current_state == GameState.PLAYER_TASK:
-        #     self.allocation_task.round = self.get_round()
         if self.game_paused():
             self.player.blocked = True
             self.player.direction.update((0, 0))

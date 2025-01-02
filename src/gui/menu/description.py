@@ -79,7 +79,7 @@ class Description:
 
         pygame.draw.rect(self.display_surface, "grey", slide_bar_rect, 0, 4)
 
-    def draw(self, show_debug_keybinds: bool = False):
+    def draw(self):
         pygame.draw.rect(self.display_surface, "White", self.rect, 0, 4)
 
         # blit description slider
@@ -103,7 +103,7 @@ class KeybindsDescription(Description):
         self.pressed_key = None
 
         # setup
-        self.create_keybinds()
+        self.create_keybinds(show_debug_keybinds=False)
         reset_btn_rect = pygame.Rect(0, 0, 130, 50)
         reset_btn_rect.bottomright = self.rect.bottomleft - vector(10, 0)
 
@@ -115,16 +115,16 @@ class KeybindsDescription(Description):
 
         save_data(self.controls.as_dict(), "keybinds.json")
 
-    def create_keybinds(self):
+    def create_keybinds(self, show_debug_keybinds: bool):
         margin = 10
-        size = (600, 60 * self.controls.length() + 2 * margin)
+        size = (600, 60 * self.controls.length(show_debug_keybinds) + 2 * margin)
         self.description_slider_surface = pygame.Surface(size, pygame.SRCALPHA)
         rect = self.description_slider_surface.get_rect()
         self.description_slider_rect = rect
 
         self.keys_group.clear()
         index = 0
-        for control in self.controls.all_controls():
+        for control in self.controls.all_controls(show_debug_keybinds):
             name = self.controls(control).name
 
             unicode = self.value_to_unicode(control.control_value)
@@ -239,9 +239,9 @@ class KeybindsDescription(Description):
             self.pressed_key.bg_color = "grey"
             self.pressed_key = None
 
-    def reset_keybinds(self):
+    def reset_keybinds(self, show_debug_keybinds: bool):
         self.controls.load_default_keybinds()
-        self.create_keybinds()
+        self.create_keybinds(show_debug_keybinds)
 
     @staticmethod
     def is_generic(symbol: str | None):
@@ -295,14 +295,13 @@ class KeybindsDescription(Description):
             key.update(dt)
 
     # draw
-    def draw_keybinds(self, show_debug_keybinds: bool):
+    def draw_keybinds(self):
         for key in self.keys_group:
-            if "DEBUG_" not in key.name or show_debug_keybinds:
-                key.draw(self.description_slider_surface)
+            key.draw(self.description_slider_surface)
 
-    def draw(self, show_debug_keybinds: bool):
+    def draw(self):
         self.make_surface_transparent()
-        self.draw_keybinds(show_debug_keybinds)
+        self.draw_keybinds()
         super().draw()
 
 
@@ -376,7 +375,7 @@ class VolumeDescription(Description):
         self.sfx_slider.draw(self.description_slider_surface)
         self.draw_text(_("SFX"), self.sfx_slider.rect.topleft + offset)
 
-    def draw(self, show_debug_keybinds: bool = False):
+    def draw(self):
         self.make_surface_transparent()
         self.draw_slider()
         super().draw()
