@@ -391,6 +391,7 @@ class Level:
         if self.tmx_maps.get(map_name):
             self.load_map(map_name, from_map=self.current_map)
             self.hide_bath_signs()
+            self.game_map.process_npc_round_config()
         else:
             if (
                 map_name == "bathhouse"
