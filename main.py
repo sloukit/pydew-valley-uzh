@@ -19,6 +19,7 @@ from src.client import send_telemetry
 from src.enums import (
     CustomCursor,
     GameState,
+    Map,
     ScriptedSequenceType,
     SelfAssessmentDimension,
 )
@@ -117,9 +118,6 @@ class Game:
                 if type(value) is bool:
                     level[key] = True
         # add debug config to the start of list (DEBUG_MODE_VERSION == 0)
-        # print(debug_config)
-        # with open("test.json", "w") as file:
-        #     json.dump(debug_config, file, indent=4)  # Writing with pretty-printing
 
         self.rounds_config.insert(DEBUG_MODE_VERSION, debug_config)
 
@@ -130,6 +128,12 @@ class Game:
         self.jwt: str = ""
         self.round_end_timer: float = 0.0
         self.ROUND_END_TIME_IN_MINUTES: float = 99999999.0
+
+        # dialog
+        self.all_sprites = AllSprites()
+        self.dialogue_manager = DialogueManager(
+            self.all_sprites, f"data/textboxes/{GAME_LANGUAGE}/dialogues.json"
+        )
 
         # screens
         self.level = Level(
@@ -142,6 +146,7 @@ class Game:
             self.sounds,
             self.save_file,
             self.clock,
+            self.dialogue_manager,
         )
         self.player = self.level.player
 
@@ -205,12 +210,6 @@ class Game:
             "This is a very long Test Message with German characters: üß",
         )
 
-        # dialog
-        self.all_sprites = AllSprites()
-        self.dialogue_manager = DialogueManager(
-            self.all_sprites, f"data/textboxes/{GAME_LANGUAGE}/dialogues.json"
-        )
-
         # dialogue text box positions
         self.msg_left = SCREEN_WIDTH / 2 - TB_SIZE[0] / 2
         self.msg_top = SCREEN_HEIGHT - TB_SIZE[1]
@@ -262,7 +261,6 @@ class Game:
         self.switch_state(GameState.PLAY)
 
     def set_token(self, response: dict[str, Any]) -> None:
-        # print(f"Got token '{response["token"]}'")
         self.token = response["token"]
         self.jwt = response["jwt"]
         self.game_version = response["game_version"]
@@ -640,6 +638,50 @@ class Game:
                         )
                         self.level.start_scripted_sequence(
                             ScriptedSequenceType.PLAYERS_BIRTHDAY
+                        )
+                    elif (
+                        len(
+                            self.round_config.get(
+                                "group_market_passive_player_sequence_timestamp", []
+                            )
+                        )
+                        > 0
+                        and self.round_end_timer
+                        > self.round_config[
+                            "group_market_passive_player_sequence_timestamp"
+                        ][0]
+                    ):
+                        # remove first timestamp from list after transition to Town ends not to repeat infinitely
+                        if self.level.current_map == Map.TOWN:
+                            self.round_config[
+                                "group_market_passive_player_sequence_timestamp"
+                            ] = self.round_config[
+                                "group_market_passive_player_sequence_timestamp"
+                            ][1:]
+                        self.level.start_scripted_sequence(
+                            ScriptedSequenceType.PASSIVE_DECIDE_TOMATO_OR_CORN
+                        )
+                    elif (
+                        len(
+                            self.round_config.get(
+                                "group_market_active_player_sequence_timestamp", []
+                            )
+                        )
+                        > 0
+                        and self.round_end_timer
+                        > self.round_config[
+                            "group_market_active_player_sequence_timestamp"
+                        ][0]
+                    ):
+                        # remove first timestamp from list after transition to Town ends not to repeat infinitely
+                        if self.level.current_map == Map.TOWN:
+                            self.round_config[
+                                "group_market_active_player_sequence_timestamp"
+                            ] = self.round_config[
+                                "group_market_active_player_sequence_timestamp"
+                            ][1:]
+                        self.level.start_scripted_sequence(
+                            ScriptedSequenceType.ACTIVE_DECIDE_TOMATO_OR_CORN
                         )
                     elif (
                         self.round_config.get("resource_allocation_text", "")
