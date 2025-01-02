@@ -1,5 +1,6 @@
 import sys
 from typing import Any
+
 from src.settings import API_KEY, PORT, SERVER_IP, USE_SERVER
 
 if USE_SERVER and sys.platform not in ("emscripten", "wasm"):
