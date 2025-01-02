@@ -311,9 +311,8 @@ class Level:
                     f'from: "{self.current_map}"',
                     GameMapWarning,
                 )
-        # TODO: jump to default spawn point when during decision tomato or corn scripted sequence
+        # jump to default spawn point (set to market place) when during decision tomato or corn scripted sequence
         if self.prev_map and self.prev_map == game_map:
-            # print(f"come back after decide to {self.prev_map} new spawn pos {self.prev_player_pos}")
             player_spawn = self.prev_player_pos
             self.prev_map = None
         # use default spawnpoint if no origin map is specified,
@@ -675,7 +674,6 @@ class Level:
                 self.prev_player_pos = cast(
                     tuple[int, int], self.player.rect.center
                 )
-                print(f"start transition, store pos {self.prev_player_pos}")
                 self.prev_map = self.current_map
                 self.map_transition.reset = partial(
                     self.switch_to_map, Map.TOWN
@@ -684,10 +682,7 @@ class Level:
 
         # if switching to TOWN map for decide tomato or corn scripted sequence - quit until transition ends
         if not self.map_transition.peaked:
-            # print("in transition", self.map_transition.timer.get_progress())
             return
-        # else:
-        #     print("transition ended")
 
         if self.cutscene_animation.has_animation_name(animation_name):
             npcs: list[Player | NPC] = []
@@ -707,12 +702,12 @@ class Level:
             self.cutscene_animation.is_end_condition_met = partial(
                 self.end_scripted_sequence, sequence_type, npc_in_center
             )
-            # if self.player.rect and sequence_type not in decide:
+
             if sequence_type not in decide or not self.prev_map:
                 self.prev_player_pos = cast(
                     tuple[int, int], self.player.rect.center
                 )  # else (0, 0)
-                # print(f"has_animation_name, store pos {self.prev_player_pos}")
+
             meeting_pos = self.cutscene_animation.targets[0].pos
             # move player other npc_in_center to the meeting point and make him face to the east (right)
             npc_in_center.teleport(meeting_pos)
@@ -871,12 +866,11 @@ class Level:
         return True
 
     def scripted_sequence_cleanup(self):
-        # TODO: go back to previous map
+        # go back to previous map if came not from TOWN
         if not self.prev_map == Map.TOWN and self.prev_map:
-            # print(f"transit back to {self.prev_map}")
+
             self.map_transition.reset = partial(
                 self.switch_to_map, Map(self.prev_map)
-                # self.switch_to_map, self.prev_map
             )
             self.start_map_transition()
         else:
@@ -1082,7 +1076,7 @@ class Level:
             ) and self.round_config.get("character_introduction_text", ""):
                 self.intro_shown[self.current_map] = True
                 # TODO revert, this only for debug
-                # self.cutscene_animation.start()
+                self.cutscene_animation.start()
 
         if self.current_minigame and self.current_minigame.running:
             self.current_minigame.update(dt)

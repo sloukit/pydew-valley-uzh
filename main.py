@@ -118,9 +118,6 @@ class Game:
                 if type(value) is bool:
                     level[key] = True
         # add debug config to the start of list (DEBUG_MODE_VERSION == 0)
-        # print(debug_config)
-        # with open("test.json", "w") as file:
-        #     json.dump(debug_config, file, indent=4)  # Writing with pretty-printing
 
         self.rounds_config.insert(DEBUG_MODE_VERSION, debug_config)
 
@@ -263,7 +260,6 @@ class Game:
         self.switch_state(GameState.PLAY)
 
     def set_token(self, response: dict[str, Any]) -> None:
-        # print(f"Got token '{response["token"]}'")
         self.token = response["token"]
         self.jwt = response["jwt"]
         self.game_version = response["game_version"]
@@ -670,10 +666,11 @@ class Game:
                         and self.round_end_timer
                         > self.round_config["group_market_active_player_sequence_timestamp"][0]
                     ):
-                        # remove first timestamp from list not to repeat infinitely
-                        self.round_config["group_market_active_player_sequence_timestamp"] = (
-                            self.round_config["group_market_active_player_sequence_timestamp"][1:]
-                        )
+                        # remove first timestamp from list after transition to Town ends not to repeat infinitely
+                        if self.level.current_map == Map.TOWN:
+                            self.round_config["group_market_active_player_sequence_timestamp"] = (
+                                self.round_config["group_market_active_player_sequence_timestamp"][1:]
+                            )
                         self.level.start_scripted_sequence(
                             ScriptedSequenceType.ACTIVE_DECIDE_TOMATO_OR_CORN
                         )
