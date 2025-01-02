@@ -129,6 +129,12 @@ class Game:
         self.round_end_timer: float = 0.0
         self.ROUND_END_TIME_IN_MINUTES: float = 99999999.0
 
+        # dialog
+        self.all_sprites = AllSprites()
+        self.dialogue_manager = DialogueManager(
+            self.all_sprites, f"data/textboxes/{GAME_LANGUAGE}/dialogues.json"
+        )
+
         # screens
         self.level = Level(
             self.switch_state,
@@ -140,6 +146,7 @@ class Game:
             self.sounds,
             self.save_file,
             self.clock,
+            self.dialogue_manager,
         )
         self.player = self.level.player
 
@@ -201,12 +208,6 @@ class Game:
         self.notification_menu = NotificationMenu(
             self.switch_state,
             "This is a very long Test Message with German characters: üß",
-        )
-
-        # dialog
-        self.all_sprites = AllSprites()
-        self.dialogue_manager = DialogueManager(
-            self.all_sprites, f"data/textboxes/{GAME_LANGUAGE}/dialogues.json"
         )
 
         # dialogue text box positions
@@ -646,13 +647,17 @@ class Game:
                         )
                         > 0
                         and self.round_end_timer
-                        > self.round_config["group_market_passive_player_sequence_timestamp"][0]
+                        > self.round_config[
+                            "group_market_passive_player_sequence_timestamp"
+                        ][0]
                     ):
                         # remove first timestamp from list after transition to Town ends not to repeat infinitely
                         if self.level.current_map == Map.TOWN:
-                            self.round_config["group_market_passive_player_sequence_timestamp"] = (
-                                self.round_config["group_market_passive_player_sequence_timestamp"][1:]
-                            )
+                            self.round_config[
+                                "group_market_passive_player_sequence_timestamp"
+                            ] = self.round_config[
+                                "group_market_passive_player_sequence_timestamp"
+                            ][1:]
                         self.level.start_scripted_sequence(
                             ScriptedSequenceType.PASSIVE_DECIDE_TOMATO_OR_CORN
                         )
@@ -664,13 +669,17 @@ class Game:
                         )
                         > 0
                         and self.round_end_timer
-                        > self.round_config["group_market_active_player_sequence_timestamp"][0]
+                        > self.round_config[
+                            "group_market_active_player_sequence_timestamp"
+                        ][0]
                     ):
                         # remove first timestamp from list after transition to Town ends not to repeat infinitely
                         if self.level.current_map == Map.TOWN:
-                            self.round_config["group_market_active_player_sequence_timestamp"] = (
-                                self.round_config["group_market_active_player_sequence_timestamp"][1:]
-                            )
+                            self.round_config[
+                                "group_market_active_player_sequence_timestamp"
+                            ] = self.round_config[
+                                "group_market_active_player_sequence_timestamp"
+                            ][1:]
                         self.level.start_scripted_sequence(
                             ScriptedSequenceType.ACTIVE_DECIDE_TOMATO_OR_CORN
                         )
