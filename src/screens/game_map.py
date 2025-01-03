@@ -372,7 +372,9 @@ class GameMap:
 
     def round_config_changed(self, round_config: dict[str, Any]) -> None:
         self.round_config = round_config
+        self.process_npc_round_config()
 
+    def process_npc_round_config(self):
         crop_types_list = self.round_config.get("crop_types_list", [])
         allowed_seeds = parse_crop_types(
             crop_types_list,
@@ -382,10 +384,10 @@ class GameMap:
         )
 
         for npc in self.npcs:
-            npc.set_sickness_allowed(round_config.get("sickness", False))
+            npc.set_sickness_allowed(self.round_config.get("sickness", False))
             npc.set_allowed_seeds(allowed_seeds)
             npc.assign_outfit_ingroup(
-                round_config.get("ingroup_40p_hat_necklace_appearance", False)
+                self.round_config.get("ingroup_40p_hat_necklace_appearance", False)
             )
 
     @property
