@@ -419,6 +419,7 @@ class Layer(IntEnum):
     PARTICLES = auto()
     EMOTES = auto()
     TEXT_BOX = auto()
+    VOLCANO = auto()
 
 
 class SpecialObjectLayer(StrEnum):
@@ -439,6 +440,7 @@ class Map(StrEnum):
     FOREST = "forest"
     TOWN = "town"
     MINIGAME = "minigame"
+    VOLCANO = "volcano"
 
 
 class StudyGroup(IntEnum):
