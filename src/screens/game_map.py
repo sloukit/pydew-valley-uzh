@@ -372,6 +372,7 @@ class GameMap:
 
     def round_config_changed(self, round_config: dict[str, Any]) -> None:
         self.round_config = round_config
+        self.process_npc_round_config()
 
         self.process_npc_round_config()
 

@@ -23,22 +23,62 @@ We use [Ruff](https://docs.astral.sh/ruff/) for linting and formatting. Run `pip
 
 > [!IMPORTANT]
 > **Before opening a PR, please run the following command to ensure that your code is formatted and doesn't upset the Ruff linter:**
-> 
+>
 > ```sh
 > python formatlint.py
 > ```
-> 
+>
 > Or alternatively, run the following commands individually:
-> 
+>
 > ```sh
 > ruff format . && ruff check --include I --fix . #  format code and sort imports
 > ruff check . # Run linting and perform fixes accordingly, or use '# noqa: <RULE>' followed by a comment justifying why the rule is ignored
 > ```
 
+## Translations
+
+The game supports for now English 🇬🇧 (abbreviated to `en` ) and German 🇩🇪 (abbreviated to `de` )
+
+Now, all strings that are displayed, need to be kept in 2 files:
+
+- `data/translations/en.txt`
+- `data/translations/de.txt`
+
+Also, dialogues and tutorial json files have 2 versions:
+
+- `data/textboxes/en/tutorial.json`
+- `data/textboxes/de/tutorial.json`
+
+- `data/textboxes/en/dialogues.json`
+- `data/textboxes/de/dialogues.json`
+
+They need to be kept in sync - every change in one language must be reflected in another. You don't need to provide the actual German translations - someone else will do it, just add your new/changed string in the German file version, prefixed with `EN: `.
+
+### How to use it:
+
+Instead of writing something like this:
+
+`print("This is hardcoded messages")`
+
+do this:
+
+`print(_("This is hardcoded messages"))`
+
+If this hardcoded string is in a python file that has not used translations so far, add this import:
+`from src.support import get_translated_string as _`
+
+You can read more about this functionality in [extract_translations.sh](extract_translations.sh) script.
+
+To run the game in a given language, set the environment variable `GAME_LANGUAGE` to either `en` or `de`. See [run_game.sh](run_game.sh) for example in Linux/MacOS. On Windows the command is `set GAME_LANGUAGE=en`. English is used as default.
+
+If there is a text starting `N/A: ` visible in the game, it means the string is missing in `data/translations/en.txt` or `data/translations/de.txt` file - this needs to be fixed.
+
+If the text starts with `EN: ` it means it's not translated yet - nothing to worry.
+
 ## Adding new Assets
 
 ### Characters
-All the imports happen in the `Game.load_assets()` method in [main.py](./main.py) and the `Game.character_importer()` method imports the content of [images/characters/](images/characters/). The name of the subfolder will be a key in the dictionary 
+All the imports happen in the `Game.load_assets()` method in [main.py](./main.py) and the `Game.character_importer()` method imports the content of [images/characters/](images/characters/). The name of the subfolder will be a key in the dictionary
 and the files within that subfolder should be tileset images with each tile being 48x48. Each of these images will be stored in a sub dictionary attached to the subfolder key; the first row
 should be the up animation, the second one the down animation and the third row the left aimation; animations for the right side will be a flipped copy of the left side.
 If you want to add more character animations just check out the rabbit folder in characters to understand how it works.

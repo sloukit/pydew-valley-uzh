@@ -1,6 +1,6 @@
 PyTMX==3.32
 pathfinding==1.0.10
 pygame-ce==2.5.0
-
+requests==2.32.3
 # Only for tools - TODO find way to not install for game.
 openpyxl==3.1.5
