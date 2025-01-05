@@ -837,30 +837,35 @@
  <objectgroup id="26" name="Camera Targets">
   <object id="385" name="CAMTARGET_0" x="125.667" y="92">
    <properties>
+    <property name="animation_name" value="intro_DISABLED"/>
     <property name="targ_id" type="int" value="0"/>
    </properties>
    <point/>
   </object>
   <object id="387" name="CAMTARGET_1" x="269.333" y="109">
    <properties>
+    <property name="animation_name" value="intro_DISABLED"/>
     <property name="targ_id" type="int" value="1"/>
    </properties>
    <point/>
   </object>
   <object id="388" name="CAMTARGET_2" x="245.333" y="272.667">
    <properties>
+    <property name="animation_name" value="intro_DISABLED"/>
     <property name="targ_id" type="int" value="2"/>
    </properties>
    <point/>
   </object>
   <object id="389" name="CAMTARGET_3" x="372.667" y="428.667">
    <properties>
+    <property name="animation_name" value="intro_DISABLED"/>
     <property name="targ_id" type="int" value="3"/>
    </properties>
    <point/>
   </object>
   <object id="390" name="CAMTARGET_4" x="483" y="314.667">
    <properties>
+    <property name="animation_name" value="intro_DISABLED"/>
     <property name="targ_id" type="int" value="4"/>
    </properties>
    <point/>
