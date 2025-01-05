@@ -374,6 +374,8 @@ class GameMap:
         self.round_config = round_config
         self.process_npc_round_config()
 
+        self.process_npc_round_config()
+
     def process_npc_round_config(self):
         crop_types_list = self.round_config.get("crop_types_list", [])
         allowed_seeds = parse_crop_types(

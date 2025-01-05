@@ -123,7 +123,8 @@ Player receives hat@@EN: Player receives hat
 Player receives necklace@@EN: Player receives necklace
 Player's birthday@@EN: Player's birthday
 NPC receives necklace@@EN: NPC receives necklace
-Decide: tomato or corn@@EN: Decide: tomato or corn
+Passive decide: tomato or corn@@EN: Passive decide: tomato or corn
+Active decide: tomato or corn@@EN: Active decide: tomato or corn
 Show Hitboxes@@EN: Show Hitboxes
 Show Pathfinding@@EN: Show Pathfinding
 Show Dialog@@EN: Show Dialog

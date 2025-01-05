@@ -17,6 +17,7 @@ from src.enums import FarmingTool, GameState, Map, ScriptedSequenceType, StudyGr
 from src.events import DIALOG_ADVANCE, DIALOG_SHOW, START_QUAKE, post_event
 from src.exceptions import GameMapWarning
 from src.groups import AllSprites, PersistentSpriteGroup
+from src.gui.interface.dialog import DialogueManager
 from src.gui.interface.emotes import NPCEmoteManager, PlayerEmoteManager
 from src.gui.scene_animation import SceneAnimation
 from src.npc.npc import NPC
@@ -63,6 +64,7 @@ class Level:
     sounds: SoundDict
     tmx_maps: MapDict
     current_map: Map | None
+    prev_map: Map | None
     game_map: GameMap | None
     save_file: SaveFile
 
@@ -119,11 +121,13 @@ class Level:
         sounds: SoundDict,
         save_file: SaveFile,
         clock: pygame.time.Clock,
+        dialogue_manager: DialogueManager,
     ) -> None:
         # main setup
         self.display_surface = pygame.display.get_surface()
         self.switch_screen = switch
         self.save_file = save_file
+        self.dialogue_manager = dialogue_manager
 
         # cutscene
         # target_points = [(100, 100), (200, 200), (300, 100), (800, 900)]
@@ -140,6 +144,7 @@ class Level:
         self.sounds = sounds
         self.tmx_maps = tmx_maps
         self.current_map = None
+        self.prev_map = None
         self.game_map = None
 
         self.all_sprites = AllSprites()
@@ -309,7 +314,10 @@ class Level:
                     f'from: "{self.current_map}"',
                     GameMapWarning,
                 )
-
+        # jump to default spawn point (set to market place) when during decision tomato or corn scripted sequence
+        if self.prev_map and self.prev_map == game_map:
+            player_spawn = self.prev_player_pos
+            self.prev_map = None
         # use default spawnpoint if no origin map is specified,
         # or if no entry warp for the player's origin map is found
         if not player_spawn:
@@ -395,6 +403,7 @@ class Level:
             self.load_map(map_name, from_map=self.current_map)
             self.hide_bath_signs()
             self.game_map.process_npc_round_config()
+
         else:
             if (
                 map_name == "bathhouse"
@@ -633,8 +642,15 @@ class Level:
             if self.controls.DEBUG_NPC_RECEIVES_NECKLACE.click:
                 self.start_scripted_sequence(ScriptedSequenceType.NPC_RECEIVES_NECKLACE)
 
-            if self.controls.DEBUG_DECIDE_TOMATO_OR_CORN.click:
-                self.start_scripted_sequence(ScriptedSequenceType.DECIDE_TOMATO_OR_CORN)
+            if self.controls.DEBUG_PASSIVE_DECIDE_TOMATO_OR_CORN.click:
+                self.start_scripted_sequence(
+                    ScriptedSequenceType.PASSIVE_DECIDE_TOMATO_OR_CORN
+                )
+
+            if self.controls.DEBUG_ACTIVE_DECIDE_TOMATO_OR_CORN.click:
+                self.start_scripted_sequence(
+                    ScriptedSequenceType.ACTIVE_DECIDE_TOMATO_OR_CORN
+                )
 
             if self.controls.DEBUG_SHOW_HITBOXES.click:
                 self.show_hitbox_active = not self.show_hitbox_active
@@ -659,6 +675,21 @@ class Level:
         else:
             animation_name = "outgroup_gathering"
 
+        decide_sequence = [
+            ScriptedSequenceType.PASSIVE_DECIDE_TOMATO_OR_CORN,
+            ScriptedSequenceType.ACTIVE_DECIDE_TOMATO_OR_CORN,
+        ]
+        if sequence_type in decide_sequence:
+            if not self.current_map == Map.TOWN and not self.map_transition:
+                self.prev_player_pos = cast(tuple[int, int], self.player.rect.center)
+                self.prev_map = self.current_map
+                self.map_transition.reset = partial(self.switch_to_map, Map.TOWN)
+                self.start_map_transition()
+
+        # if switching to TOWN map for decide tomato or corn scripted sequence - quit until transition ends
+        if not self.map_transition.peaked:
+            return
+
         if self.cutscene_animation.has_animation_name(animation_name):
             npcs: list[Player | NPC] = []
             if self.game_map:
@@ -667,21 +698,35 @@ class Level:
                     for npc in self.game_map.npcs
                     if npc.study_group == active_group and not npc.is_dead
                 ]
+                other_npcs = [
+                    npc
+                    for npc in self.game_map.npcs
+                    if npc.study_group != active_group and not npc.is_dead
+                ]
             if sequence_type == ScriptedSequenceType.NPC_RECEIVES_NECKLACE:
                 npc_in_center = random.choice(npcs)
                 npcs.remove(npc_in_center)
                 npcs.append(self.player)
             else:
                 npc_in_center = self.player
+
             self.cutscene_animation.set_current_animation(animation_name)
             self.cutscene_animation.is_end_condition_met = partial(
                 self.end_scripted_sequence, sequence_type, npc_in_center
             )
-            if self.player.rect:
+
+            if sequence_type not in decide_sequence or not self.prev_map:
                 self.prev_player_pos = cast(
                     tuple[int, int], self.player.rect.center
                 )  # else (0, 0)
+
             meeting_pos = self.cutscene_animation.targets[0].pos
+            if sequence_type in decide_sequence:
+                # find position on map to teleport npc's from study group other then player's
+                # (located in a clear field, in the upper part of the TOWN map)
+                outgroup_hide_pos = self.cutscene_animation.animations[
+                    "outgroup_gathering"
+                ][0].pos
             # move player other npc_in_center to the meeting point and make him face to the east (right)
             npc_in_center.teleport(meeting_pos)
             # npc_in_center.direction = pygame.Vector2(1, 0)
@@ -715,6 +760,18 @@ class Level:
 
                     npc.teleport(new_pos)
                     angle += rot_by
+
+            # teleport npc's from study group other then player's to the upper part of the TOWN map,
+            # so they don't interrupt in the meeting by the market
+            if sequence_type in decide_sequence and len(other_npcs) > 0:
+                distance = pygame.Vector2(0, -2 * SCALED_TILE_SIZE)
+                angle = 0.0
+                rot_by = (180) / (len(other_npcs) - 1)
+                for npc in other_npcs:
+                    new_pos = outgroup_hide_pos + distance.rotate(angle)
+                    npc.teleport(new_pos)
+                    angle += rot_by
+
             self.cutscene_animation.reset()
             self.cutscene_animation.start()
 
@@ -736,18 +793,28 @@ class Level:
             pass
         elif sequence_type == ScriptedSequenceType.NPC_RECEIVES_NECKLACE:
             npc.has_necklace = True
-        elif sequence_type == ScriptedSequenceType.DECIDE_TOMATO_OR_CORN:
+        elif sequence_type == ScriptedSequenceType.PASSIVE_DECIDE_TOMATO_OR_CORN:
             buy_list = TOMATO_OR_CORN_LIST
-            self.end_scripted_sequence_decide(buy_list)
+            self.end_scripted_sequence_decide(buy_list, is_player_active=False)
+            return False
+        elif sequence_type == ScriptedSequenceType.ACTIVE_DECIDE_TOMATO_OR_CORN:
+            buy_list = TOMATO_OR_CORN_LIST
+            self.end_scripted_sequence_decide(buy_list, is_player_active=True)
             return False
 
         self.scripted_sequence_cleanup()
 
         return True
 
-    def end_scripted_sequence_decide(self, buy_list: list[str]) -> None:
+    def end_scripted_sequence_decide(
+        self, buy_list: list[str], is_player_active: bool
+    ) -> None:
         # just to make linter happy (game_map could be None)
         if not self.game_map:
+            return
+
+        # do not proceed with the scripted sequence if the dialog is still opened
+        if self.dialogue_manager.showing_dialogue:
             return
 
         if buy_list[0] not in self.player_emote_manager.emote_wheel._emotes:
@@ -763,21 +830,26 @@ class Level:
             self.game_map._setup_emote_interactions()
             # show EmoteWheel
             # self.player.blocked = True
-            self.player_emote_manager.toggle_emote_wheel()
+            if is_player_active:
+                self.player_emote_manager.toggle_emote_wheel()
             # still block the Scripted Sequence from finishing, until user makes selection
         else:
             if self.player_emote_manager.emote_wheel.visible:
                 # EmoteWheel is still displayed, waiting for his vote
                 return
             else:
-                # Player has voted
-                # self.player.blocked = False
-                total_votes = 1
-                # how many Characters voted for the first option
-                first_item_votes = 0
-                players_vote = self.player_emote_manager.emote_wheel._current_emote
-                if players_vote == buy_list[0]:
-                    first_item_votes += 1
+                # Player has voted or is passive
+                if is_player_active:
+                    # self.player.blocked = False
+                    total_votes = 1
+                    # how many Characters voted for the first option
+                    first_item_votes = 0
+                    players_vote = self.player_emote_manager.emote_wheel._current_emote
+                    if players_vote == buy_list[0]:
+                        first_item_votes += 1
+                else:
+                    total_votes = 0
+                    first_item_votes = 0
 
                 for npc in self.game_map.npcs:
                     if npc.study_group == self.player.study_group and not npc.is_dead:
@@ -791,8 +863,9 @@ class Level:
                 # in case of draw, Player vote decides
                 if first_item_votes == total_votes / 2:
                     total_votes += 1
-                    if players_vote == buy_list[0]:
+                    if is_player_active and players_vote == buy_list[0]:
                         first_item_votes += 1
+
                 winner_item = (
                     buy_list[0] if first_item_votes > total_votes / 2 else buy_list[1]
                 )
@@ -829,7 +902,12 @@ class Level:
         return True
 
     def scripted_sequence_cleanup(self):
-        self.player.teleport(self.prev_player_pos)
+        # go back to previous map if came not from TOWN
+        if not self.prev_map == Map.TOWN and self.prev_map:
+            self.map_transition.reset = partial(self.switch_to_map, Map(self.prev_map))
+            self.start_map_transition()
+        else:
+            self.player.teleport(self.prev_player_pos)
         self.cutscene_animation.set_current_animation(DEFAULT_ANIMATION_NAME)
         self.cutscene_animation.is_end_condition_met = lambda: True
 
@@ -987,6 +1065,17 @@ class Level:
         self.overlay.display()
 
     def draw(self, dt: float, move_things: bool):
+        # if self.dialogue_manager.showing_dialogue:
+        #     print("dialog index", self.dialogue_manager._msg_index,
+        #           "animation name", self.cutscene_animation.current_animation_name,
+        #           "animation index", self.cutscene_animation.current_index,
+        #           "animation active", self.cutscene_animation.active)
+        # else:
+        #     print("dialog index", -1,
+        #           "animation name", self.cutscene_animation.current_animation_name,
+        #           "animation index", self.cutscene_animation.current_index,
+        #           "animation active", self.cutscene_animation.active)
+
         self.player.hp = self.overlay.health_bar.hp
         self.display_surface.fill((130, 168, 132))
         self.all_sprites.draw(self.camera, False)
