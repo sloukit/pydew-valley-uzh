@@ -2,7 +2,7 @@
     [
         {
             "level_name_text": "Level 1",
-            "level_duration": 900,
+            "level_duration": 999,
             "town_area": true,
             "farm_area": true,
             "forest_area": true,
@@ -38,7 +38,7 @@
             "resource_allocation_text": "Verteile die Ressource zwischen deinem Familienclan und der anderen Gruppe",
             "resource_allocation_item_text": "6 pairs of gloves",
             "character_introduction_timestamp": [
-                999
+                0
             ],
             "character_introduction_text": "Das bist Du: Mika [Initialen] aus Hafenwald",
             "self_assessment_timestamp": [
@@ -48,16 +48,10 @@
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
-            "ingroup_introduction_timestamp": [
-                999
-            ],
             "ingroup_introduction_text": "Das ist dein Familienclan: Ihr seid die Blaukappen",
-            "outgroup_introduction_timestamp": [
-                999
-            ],
             "outgroup_introduction_text": "Das ist die andere Gruppe: Die Hornlinge",
             "player_hat_sequence_timestamp": [
-                2
+                999
             ],
             "player_hat_sequence_text": "Dein Familienclan verleiht Dir den Hut als Zeichen deiner Zugehörigkeit",
             "ingroup_necklace_sequence_timestamp": [],
@@ -124,9 +118,7 @@
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
-            "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
-            "outgroup_introduction_timestamp": [],
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [
                 420
@@ -199,9 +191,7 @@
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
-            "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
-            "outgroup_introduction_timestamp": [],
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -271,9 +261,7 @@
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
-            "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
-            "outgroup_introduction_timestamp": [],
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -346,9 +334,7 @@
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
-            "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
-            "outgroup_introduction_timestamp": [],
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -420,9 +406,7 @@
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
-            "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
-            "outgroup_introduction_timestamp": [],
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -491,13 +475,7 @@
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
-            "ingroup_introduction_timestamp": [
-                30
-            ],
             "ingroup_introduction_text": "Das ist deine Freundesfarm: Ihr seid die Blaukappen",
-            "outgroup_introduction_timestamp": [
-                40
-            ],
             "outgroup_introduction_text": "Das ist die andere Gruppe: Die Hornlinge",
             "player_hat_sequence_timestamp": [
                 2
@@ -566,9 +544,7 @@
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
-            "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
-            "outgroup_introduction_timestamp": [],
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [
                 420
@@ -640,9 +616,7 @@
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
-            "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
-            "outgroup_introduction_timestamp": [],
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -711,9 +685,7 @@
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
-            "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
-            "outgroup_introduction_timestamp": [],
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -785,9 +757,7 @@
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
-            "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
-            "outgroup_introduction_timestamp": [],
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -858,9 +828,7 @@
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
-            "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
-            "outgroup_introduction_timestamp": [],
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -926,13 +894,7 @@
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": false,
-            "ingroup_introduction_timestamp": [
-                30
-            ],
             "ingroup_introduction_text": "Du bist zuf\u00e4llig bei den Blaukappen gelandet",
-            "outgroup_introduction_timestamp": [
-                40
-            ],
             "outgroup_introduction_text": "Das ist die andere Gruppe: Die Hornlinge",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -998,9 +960,7 @@
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": false,
-            "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
-            "outgroup_introduction_timestamp": [],
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -1067,9 +1027,7 @@
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": false,
-            "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
-            "outgroup_introduction_timestamp": [],
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -1139,9 +1097,7 @@
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": false,
-            "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
-            "outgroup_introduction_timestamp": [],
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -1210,9 +1166,7 @@
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": false,
-            "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
-            "outgroup_introduction_timestamp": [],
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -1282,9 +1236,7 @@
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": false,
-            "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
-            "outgroup_introduction_timestamp": [],
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
