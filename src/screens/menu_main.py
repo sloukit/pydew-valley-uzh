@@ -17,7 +17,6 @@ MAX_INITIALS_LEN = 2
 
 
 class MainMenu(GeneralMenu):
-
     def __init__(
         self,
         switch_screen: Callable[[GameState], None],

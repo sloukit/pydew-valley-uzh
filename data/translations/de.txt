@@ -72,7 +72,7 @@ Reset@@Standard
 
 # round end menu
 
-Round %d has ended. You currently have $%d, and:@@Runde %d ist beendet. Du verfügst im Moment über $%d und:
+Round %d has ended. You currently have $%d, and:@@Runde %d ist fertig. Du hast $%d und:
 continue to next round@@Weiter in die nächste Runde
 
 # task (items allocation) menu

@@ -637,10 +637,14 @@ class Level:
                 )
 
             if self.controls.DEBUG_PLAYERS_BIRTHDAY.click:
-                self.start_scripted_sequence(ScriptedSequenceType.PLAYER_BIRTHDAY_SEQUENCE)
+                self.start_scripted_sequence(
+                    ScriptedSequenceType.PLAYER_BIRTHDAY_SEQUENCE
+                )
 
             if self.controls.DEBUG_NPC_RECEIVES_NECKLACE.click:
-                self.start_scripted_sequence(ScriptedSequenceType.INGROUP_NECKLACE_SEQUENCE)
+                self.start_scripted_sequence(
+                    ScriptedSequenceType.INGROUP_NECKLACE_SEQUENCE
+                )
 
             if self.controls.DEBUG_PASSIVE_DECIDE_TOMATO_OR_CORN.click:
                 self.start_scripted_sequence(
@@ -664,7 +668,9 @@ class Level:
             if self.controls.DEBUG_SHOW_SHOP.click:
                 self.switch_screen(GameState.SHOP)
 
-    def set_dialogue_from_round_config(self, sequence_type: ScriptedSequenceType) -> None:
+    def set_dialogue_from_round_config(
+        self, sequence_type: ScriptedSequenceType
+    ) -> None:
         dialogue_key = f"scripted_sequence_{sequence_type.value}"
         config_key = f"{sequence_type.value}_text"
         new_text = self.round_config[config_key]
@@ -1074,17 +1080,6 @@ class Level:
         self.overlay.display()
 
     def draw(self, dt: float, move_things: bool):
-        # if self.dialogue_manager.showing_dialogue:
-        #     print("dialog index", self.dialogue_manager._msg_index,
-        #           "animation name", self.cutscene_animation.current_animation_name,
-        #           "animation index", self.cutscene_animation.current_index,
-        #           "animation active", self.cutscene_animation.active)
-        # else:
-        #     print("dialog index", -1,
-        #           "animation name", self.cutscene_animation.current_animation_name,
-        #           "animation index", self.cutscene_animation.current_index,
-        #           "animation active", self.cutscene_animation.active)
-
         self.player.hp = self.overlay.health_bar.hp
         self.display_surface.fill((130, 168, 132))
         self.all_sprites.draw(self.camera, False)

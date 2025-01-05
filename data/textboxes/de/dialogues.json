@@ -4,7 +4,7 @@
     ["EN: A character", "EN: Insightful text here, or something. I mean, what the heck should I say?"]
   ],
   "intro_to_game": [
-    ["EN: Ingroup", "EN: Welcome to Clear Skies. \t\t ----- You are ingroup ! -----"]
+    ["EN: Tutorial", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
   "scripted_sequence_player_hat_sequence": [
     ["EN: Special event!", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]

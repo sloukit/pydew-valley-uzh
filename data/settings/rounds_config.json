@@ -2,7 +2,7 @@
     [
         {
             "level_name_text": "Level 1",
-            "level_duration": 999,
+            "level_duration": 900,
             "town_area": true,
             "farm_area": true,
             "forest_area": true,
@@ -33,39 +33,37 @@
             "emote_wheel": true,
             "government_statistics": false,
             "resource_allocation_timestamp": [
-                999
+                720
             ],
             "resource_allocation_text": "Verteile die Ressource zwischen deinem Familienclan und der anderen Gruppe",
             "resource_allocation_item_text": "6 pairs of gloves",
             "character_introduction_timestamp": [
                 0
             ],
-            "character_introduction_text": "Das bist Du: Mika [Initialen] aus Hafenwald",
+            "character_introduction_text": "Das bist Du\u00fc: Mika [Initialen] aus Hafenwald",
             "self_assessment_timestamp": [
-                999,
-                999
+                300,
+                780
             ],
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "Das ist dein Familienclan: Ihr seid die Blaukappen",
             "outgroup_introduction_text": "Das ist die andere Gruppe: Die Hornlinge",
-            "player_hat_sequence_timestamp": [
-                999
-            ],
-            "player_hat_sequence_text": "Dein Familienclan verleiht Dir den Hut als Zeichen deiner Zugehörigkeit",
+            "player_hat_sequence_timestamp": [],
+            "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
-            "ingroup_necklace_sequence_text": "Dein Familienclan verleiht Dir die Kette. Jetzt bist Du vollwertiges Familienclan Mitglied",
+            "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [],
-            "player_necklace_sequence_text": "Eines unserer Blaukappen bekommt die Kette verliehen und ist jetzt ein vollwertiges Mitglied des Familienclans",
+            "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
-            "player_birthday_sequence_text": "Die Blaukappen gratulieren Dir zum Geburtstag",
+            "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [
-                999
+                480
             ],
-            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur täglichen Abstimmung darüber, was auf dem Markt gekauft werden soll",
+            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll",
             "group_market_active_player_sequence_timestamp": [],
-            "group_market_active_player_sequence_text": "Stimme ab:",
+            "group_market_active_player_sequence_text": "",
             "ingroup_40p_hat_necklace_appearance": true,
             "outgroup_npcs_identical_appearance": true
         },
@@ -123,7 +121,7 @@
             "player_hat_sequence_timestamp": [
                 420
             ],
-            "player_hat_sequence_text": "Dein Familienclan verleiht Dir den Hut als Zeichen deiner Zugehörigkeit",
+            "player_hat_sequence_text": "Dein Familienclan verleiht Dir den Hut als Zeichen deiner Zugeh\u00f6rigkeit",
             "ingroup_necklace_sequence_timestamp": [
                 120
             ],
@@ -135,7 +133,7 @@
             "group_market_passive_player_sequence_timestamp": [
                 540
             ],
-            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur täglichen Abstimmung darüber, was auf dem Markt gekauft werden soll",
+            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll",
             "group_market_active_player_sequence_timestamp": [],
             "group_market_active_player_sequence_text": "",
             "ingroup_40p_hat_necklace_appearance": true,
@@ -204,7 +202,7 @@
             "group_market_passive_player_sequence_timestamp": [
                 420
             ],
-            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur täglichen Abstimmung darüber, was auf dem Markt gekauft werden soll",
+            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll",
             "group_market_active_player_sequence_timestamp": [],
             "group_market_active_player_sequence_text": "",
             "ingroup_40p_hat_necklace_appearance": true,
@@ -477,10 +475,8 @@
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "Das ist deine Freundesfarm: Ihr seid die Blaukappen",
             "outgroup_introduction_text": "Das ist die andere Gruppe: Die Hornlinge",
-            "player_hat_sequence_timestamp": [
-                2
-            ],
-            "player_hat_sequence_text": "Dein Familienclan verleiht Dir den Hut als Zeichen deiner Zugehörigkeit",
+            "player_hat_sequence_timestamp": [],
+            "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
             "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [],
@@ -490,7 +486,7 @@
             "group_market_passive_player_sequence_timestamp": [
                 480
             ],
-            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur täglichen Abstimmung darüber, was auf dem Markt gekauft werden soll",
+            "group_market_passive_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll",
             "group_market_active_player_sequence_timestamp": [],
             "group_market_active_player_sequence_text": "",
             "ingroup_40p_hat_necklace_appearance": true
@@ -549,11 +545,11 @@
             "player_hat_sequence_timestamp": [
                 420
             ],
-            "player_hat_sequence_text": "Dein Familienclan verleiht Dir den Hut als Zeichen deiner Zugehörigkeit",
+            "player_hat_sequence_text": "Deine Freundesfarm verleiht Dir den Hut als Zeichen deiner Zugeh\u00f6rigkeit",
             "ingroup_necklace_sequence_timestamp": [
                 120
             ],
-            "ingroup_necklace_sequence_text": "Dein Familienclan verleiht Dir die Kette. Jetzt bist Du vollwertiges Familienclan Mitglied",
+            "ingroup_necklace_sequence_text": "Deine Freundesfarm verleiht Dir die Kette. Jetzt bist Du vollwertiges Freundesfarm Mitglied",
             "player_necklace_sequence_timestamp": [],
             "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
@@ -561,7 +557,7 @@
             "group_market_passive_player_sequence_timestamp": [
                 540
             ],
-            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur täglichen Abstimmung darüber, was auf dem Markt gekauft werden soll",
+            "group_market_passive_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll",
             "group_market_active_player_sequence_timestamp": [],
             "group_market_active_player_sequence_text": "",
             "ingroup_40p_hat_necklace_appearance": true
@@ -629,7 +625,7 @@
             "group_market_passive_player_sequence_timestamp": [
                 420
             ],
-            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur täglichen Abstimmung darüber, was auf dem Markt gekauft werden soll",
+            "group_market_passive_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll",
             "group_market_active_player_sequence_timestamp": [],
             "group_market_active_player_sequence_text": "",
             "ingroup_40p_hat_necklace_appearance": true
@@ -694,7 +690,7 @@
             "player_necklace_sequence_timestamp": [
                 480
             ],
-            "player_necklace_sequence_text": "Eines unserer Blaukappen bekommt die Kette verliehen und ist jetzt ein vollwertiges Mitglied des Familienclans",
+            "player_necklace_sequence_text": "Eines unserer Blaukappen bekommt die Kette verliehen und ist jetzt ein vollwertiges Mitglied der Freundesfarm",
             "player_birthday_sequence_timestamp": [],
             "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [],
@@ -885,8 +881,10 @@
             ],
             "resource_allocation_text": "Verteile die Ressource zwischen den Blaukappen und den Hornlingen",
             "resource_allocation_item_text": "6 pairs of gloves",
-            "character_introduction_timestamp": [],
-            "character_introduction_text": "No",
+            "character_introduction_timestamp": [
+                0
+            ],
+            "character_introduction_text": "",
             "self_assessment_timestamp": [
                 300,
                 780
@@ -895,7 +893,7 @@
             "minigame": true,
             "minigame_rooting_npcs": false,
             "ingroup_introduction_text": "Du bist zuf\u00e4llig bei den Blaukappen gelandet",
-            "outgroup_introduction_text": "Das ist die andere Gruppe: Die Hornlinge",
+            "outgroup_introduction_text": "Das sind die Hornlinge",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],

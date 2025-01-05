@@ -15,8 +15,6 @@ from typing import Any
 import pygame
 
 from src import support
-from src.support import get_translated_string as _
-
 from src.client import send_telemetry
 from src.enums import (
     CustomCursor,
@@ -56,6 +54,7 @@ from src.settings import (
     SoundDict,
 )
 from src.sprites.setup import setup_entity_assets
+from src.support import get_translated_string as _
 from src.tutorial.tutorial import Tutorial
 
 # set random seed. It has to be set first before any other random function is called.
@@ -76,7 +75,9 @@ class Game:
         # main setup
         pygame.init()
 
-        program_icon =  pygame.image.load(support.resource_path("images/objects/rabbit.png"))
+        program_icon = pygame.image.load(
+            support.resource_path("images/objects/rabbit.png")
+        )
         pygame.display.set_icon(program_icon)
 
         screen_size = (SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -440,45 +441,80 @@ class Game:
         # A Message At The Starting Of The Game Giving Introduction To The Game And The InGroup.
         if not self.intro_txt_is_rendering:
             if not self.game_paused():
-                # TODO revert, this only for debug
                 if (
-                    self.round_config.get("character_introduction_text", "")
+                    self.level.current_map == Map.NEW_FARM
+                    # and self.round_config.get("character_introduction_text", "")
                     and self.round_config["character_introduction_timestamp"]
                     and self.round_end_timer
                     > self.round_config["character_introduction_timestamp"][0]
                 ):
+                    # get previous dialog text
+                    intro_text = self.dialogue_manager.dialogues["intro_to_game"][0][1]
 
-                    self.dialogue_manager.set_item(
-                        "intro_to_game",
-                        [
-                            [
-                                _("Clear Skies"),
-                                self.round_config["character_introduction_text"].replace(
-                                    "[Initialen]", self.player.name),
-                            ],
-                            [
-                                _("Clear Skies"),
-                                self.round_config["ingroup_introduction_text"],
-                            ],
-                        ],
-                    )
-                    self.dialogue_manager.open_dialogue(
-                        "intro_to_game", self.msg_left, self.msg_top
-                    )
-                    self.intro_txt_is_rendering = True
-                    self.intro_txt_rendered = True
+                    if self.level.cutscene_animation.active:
+                        # start of intro - camera at home location
+                        if self.level.cutscene_animation.current_index == 0:
+                            if self.round_config.get("character_introduction_text", ""):
+                                intro_text = self.round_config[
+                                    "character_introduction_text"
+                                ]
+                        # ingroup introduction - camera over ingroup area
+                        elif self.level.cutscene_animation.current_index == 2:
+                            if self.round_config.get("ingroup_introduction_text", ""):
+                                intro_text = self.round_config[
+                                    "ingroup_introduction_text"
+                                ]
+                        # outgroup introduction - camera over outgroup area
+                        elif self.level.cutscene_animation.current_index == 5:
+                            if self.round_config.get("outgroup_introduction_text", ""):
+                                intro_text = self.round_config[
+                                    "outgroup_introduction_text"
+                                ]
+                        # end of intro - camera heading back to home location
+                        elif self.level.cutscene_animation.current_index == 7:
+                            if self.dialogue_manager.showing_dialogue:
+                                self.dialogue_manager.close_dialogue()
+
+                            self.intro_txt_is_rendering = True
+                            self.intro_txt_rendered = True
+
+                    intro_text = intro_text.replace("[Initialen]", self.player.name)
+
+                    if (
+                        self.dialogue_manager.dialogues["intro_to_game"][0][1]
+                        != intro_text
+                    ):
+                        # dialog text has changed -> camera arrived to next intro stage,
+                        # set new dialog text
+                        self.dialogue_manager.dialogues["intro_to_game"][0][1] = (
+                            intro_text
+                        )
+                        # set header to game name
+                        # self.dialogue_manager.dialogues["intro_to_game"][0][0] = _("Clear Skies")
+
+                        # if old text is still displayed, reset dialog manager
+                        if self.dialogue_manager.showing_dialogue:
+                            self.dialogue_manager.close_dialogue()
+
+                        # show dialog with new text in the position the same as tutorial
+                        self.dialogue_manager.open_dialogue(
+                            "intro_to_game",
+                            self.tutorial.left_pos,
+                            self.tutorial.top_pos,
+                        )
+                    # self.intro_txt_rendered = True
         elif not self.level.cutscene_animation.active:
-            if (
-                self.dialogue_manager.showing_dialogue
-            ):  # prepare text box to switch to tutorial
+            if self.dialogue_manager.showing_dialogue:
+                # prepare text box to switch to tutorial
                 if self.intro_txt_rendered:
-                    self.dialogue_manager.advance()
+                    self.dialogue_manager.close_dialogue()
                     self.intro_txt_rendered = False
-            elif not self.player.save_file.is_tutorial_completed:
-                try:
-                    self.tutorial.dialogue_manager._get_current_tb()  # to execute ready() only at the beginning
-                except Exception:
-                    self.tutorial.ready()
+            if (
+                not self.player.save_file.is_tutorial_completed
+                and self.intro_txt_rendered
+            ):
+                self.intro_txt_rendered = False
+                self.tutorial.ready()
 
     # events
     def event_loop(self) -> None:
@@ -547,7 +583,10 @@ class Game:
             if not is_game_paused or is_first_frame:
                 if self.level.cutscene_animation.active:
                     event = pygame.key.get_pressed()
-                    if event[pygame.K_RSHIFT] and self.game_version == DEBUG_MODE_VERSION:
+                    if (
+                        event[pygame.K_RSHIFT]
+                        and self.game_version == DEBUG_MODE_VERSION
+                    ):
                         # fast-forward
                         self.level.update(dt * 5, self.current_state == GameState.PLAY)
                     else:
@@ -721,7 +760,10 @@ class Game:
 
             if self.level.cutscene_animation.active:
                 self.all_sprites.update_blocked(dt)
-                if self.current_state == GameState.PLAY and self.game_version == DEBUG_MODE_VERSION:
+                if (
+                    self.current_state == GameState.PLAY
+                    and self.game_version == DEBUG_MODE_VERSION
+                ):
                     event = pygame.key.get_pressed()
                     self.fast_forward.draw_option(self.display_surface)
                     if event[pygame.K_RSHIFT]:
