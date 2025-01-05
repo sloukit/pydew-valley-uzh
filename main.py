@@ -75,6 +75,10 @@ class Game:
     def __init__(self) -> None:
         # main setup
         pygame.init()
+
+        program_icon =  pygame.image.load(support.resource_path("images/objects/rabbit.png"))
+        pygame.display.set_icon(program_icon)
+
         screen_size = (SCREEN_WIDTH, SCREEN_HEIGHT)
         self.display_surface = pygame.display.set_mode(screen_size)
         pygame.display.set_caption(_("Clear Skies"))
