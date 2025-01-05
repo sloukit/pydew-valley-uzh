@@ -14,7 +14,7 @@ class Transition:
         # setup
         self.display_surface = pygame.display.get_surface()
         self.reset = reset
-        self.peaked = False
+        self.peaked = True
         self.timer = Timer(dur, func=finish_reset)
         self.finish_reset = finish_reset
 
