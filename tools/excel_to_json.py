@@ -59,6 +59,10 @@ for sheet_name in workbook.sheetnames:
     for row in range(FIRST_DATA_ROW, sheet.max_row):
         key = sheet[f"{KEY_COL}{row}"].value
 
+        # no more data - skip to next sheet
+        if not key:
+            break
+
         # row_vals = []
 
         for i, col in enumerate(col_letters):
