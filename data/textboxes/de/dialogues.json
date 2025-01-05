@@ -4,73 +4,67 @@
     ["EN: A character", "EN: Insightful text here, or something. I mean, what the heck should I say?"]
   ],
   "intro_to_game": [
-    ["Ingroup", "Welcome to Clear Skies. \t\t ----- You are ingroup ! -----"]
+    ["EN: Ingroup", "EN: Welcome to Clear Skies. \t\t ----- You are ingroup ! -----"]
   ],
-  "scripted_sequence_player_receives_hat": [
-    ["Special event!", "We gather here for a special occasion"],
-    ["Special event!", "You have received a hat!"]
+  "scripted_sequence_player_hat_sequence": [
+    ["EN: Special event!", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
-  "scripted_sequence_player_receives_necklace": [
-    ["Special event!", "We gather here for a special occasion"],
-    ["Special event!", "You have received a necklace!"]
+  "scripted_sequence_player_necklace_sequence": [
+    ["EN: Special event!", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
-  "scripted_sequence_players_birthday": [
-    ["Special event!", "We gather here for a special occasion"],
-    ["Special event!", "We wish you a Happy birthday!"]
+  "scripted_sequence_player_birthday_sequence": [
+    ["EN: Special event!", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
-  "scripted_sequence_npc_receives_necklace": [
-    ["Special event!", "We gather here for a special occasion"],
-    ["Special event!", "Our group member received a necklace!"]
+  "scripted_sequence_ingroup_necklace_sequence": [
+    ["EN: Special event!", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
-  "scripted_sequence_passive_decide_tomato_or_corn": [
-    ["Group gathering", "We gather here to decide what to sell at the market"],
-    ["Group gathering", "This time you can't decide. Wait for the group to decide."]
+  "scripted_sequence_group_market_passive_player_sequence": [
+    ["EN: Group gathering", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
-  "scripted_sequence_active_decide_tomato_or_corn": [
-    ["Group gathering", "We gather here to decide what to sell at the market"],
-    ["Group gathering", "Everyone needs to vote one of the items:\t - tomato\n\t\t\t\t\t\t\t - corn"]
+  "scripted_sequence_group_market_active_player_sequence": [
+    ["EN: Group gathering", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
   "scripted_sequence_buy_tomato": [
-    ["Group gathering", "The group has decided to sell tomato!"]
+    ["EN: Group gathering", "EN: The group has decided to sell tomato!"]
   ],
   "scripted_sequence_buy_corn": [
-    ["Group gathering", "The group has decided to sell corn!"]
+    ["EN: Group gathering", "EN: The group has decided to sell corn!"]
   ],
   "label_not_available":[
-    ["Sign", "label not available"],
-    ["Sign", "check map tmx, Interactions layer, custom property: label"]
+    ["EN: Sign", "EN: label not available"],
+    ["EN: Sign", "EN: check map tmx, Interactions layer, custom property: label"]
   ],
   "to_trader_up":[
-    ["Sign", "/\\\t\t\t\t\t\t\t | |  go up to the Trader"]
+    ["EN: Sign", "EN: /\\\t\t\t\t\t\t\t | |  go up to the Trader"]
   ],
   "to_farm_up":[
-    ["Sign", "/\\\t\t\t\t\t\t\t | |  go up to the Farm"]
+    ["EN: Sign", "EN: /\\\t\t\t\t\t\t\t | |  go up to the Farm"]
   ],
   "to_minigame_up":[
-    ["Sign", "/\\\t\t\t\t\t\t\t | |  go up to the Mini game"]
+    ["EN: Sign", "EN: /\\\t\t\t\t\t\t\t | |  go up to the Mini game"]
   ],
   "to_bath_down":[
-    ["Sign", "| |\t\t\t\t\t\t\t\\/ go down to the Bathhouse"]
+    ["EN: Sign", "EN: | |\t\t\t\t\t\t\t\\/ go down to the Bathhouse"]
   ],
   "to_forest_down":[
-    ["Sign", "| |\t\t\t\t\t\t\t\\/ go down to the Forest"]
+    ["EN: Sign", "EN: | |\t\t\t\t\t\t\t\\/ go down to the Forest"]
   ],
   "to_town_down":[
-    ["Sign", "| |\t\t\t\t\t\t\t\\/ go down to the Town"]
+    ["EN: Sign", "EN: | |\t\t\t\t\t\t\t\\/ go down to the Town"]
   ],
   "to_bath_right":[
-    ["Sign", "=> go right to the Bathhouse"]
+    ["EN: Sign", "EN: => go right to the Bathhouse"]
   ],
   "to_forest_right":[
-    ["Sign", "=> go right to the Forest"]
+    ["EN: Sign", "EN: => go right to the Forest"]
   ],
   "to_town_left":[
-    ["Sign", "<= go left to the Town"]
+    ["EN: Sign", "EN: <= go left to the Town"]
   ],
   "to_town":[
-    ["Sign", "<= go left to the 'in group'\t\t\t\t\t=> go right to the Forest\t\t\t\t\t | |\t\t\t\t\t\t\t\\/ go down to the Town"]
+    ["EN: Sign", "EN: <= go left to the 'in group'\t\t\t\t\t=> go right to the Forest\t\t\t\t\t | |\t\t\t\t\t\t\t\\/ go down to the Town"]
   ],
   "to_forest":[
-    ["Sign", "=> go right to the 'out group'\t\t\t\t\t<= go left to the Town\t\t\t\t\t | |\t\t\t\t\t\t\t\\/ go down to the Forest"]
+    ["EN: Sign", "EN: => go right to the 'out group'\t\t\t\t\t<= go left to the Town\t\t\t\t\t | |\t\t\t\t\t\t\t\\/ go down to the Forest"]
   ]
 }

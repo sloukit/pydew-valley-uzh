@@ -33,40 +33,47 @@
             "emote_wheel": true,
             "government_statistics": false,
             "resource_allocation_timestamp": [
-                720
+                999
             ],
             "resource_allocation_text": "Verteile die Ressource zwischen deinem Familienclan und der anderen Gruppe",
             "resource_allocation_item_text": "6 pairs of gloves",
             "character_introduction_timestamp": [
-                0
+                999
             ],
-            "character_introduction_text": "Das bist du",
+            "character_introduction_text": "Das bist Du: Mika [Initialen] aus Hafenwald",
             "self_assessment_timestamp": [
-                300,
-                780
+                999,
+                999
             ],
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_timestamp": [
-                30
+                999
             ],
             "ingroup_introduction_text": "Das ist dein Familienclan: Ihr seid die Blaukappen",
-            "player_hat_sequence_timestamp": [],
-            "player_hat_sequence": false,
-            "ingroup_necklace_sequence_timestamp": [],
-            "ingroup_necklace_sequence": false,
-            "player_necklace_sequence_timestamp": [],
-            "player_necklace_sequence": false,
-            "player_birthday_sequence_timestamp": [],
-            "player_birthday_sequence": false,
-            "group_market_passive_player_sequence_timestamp": [
-                480
+            "outgroup_introduction_timestamp": [
+                999
             ],
-            "group_market_passive_player_sequence": true,
+            "outgroup_introduction_text": "Das ist die andere Gruppe: Die Hornlinge",
+            "player_hat_sequence_timestamp": [
+                2
+            ],
+            "player_hat_sequence_text": "Dein Familienclan verleiht Dir den Hut als Zeichen deiner Zugehörigkeit",
+            "ingroup_necklace_sequence_timestamp": [],
+            "ingroup_necklace_sequence_text": "Dein Familienclan verleiht Dir die Kette. Jetzt bist Du vollwertiges Familienclan Mitglied",
+            "player_necklace_sequence_timestamp": [],
+            "player_necklace_sequence_text": "Eines unserer Blaukappen bekommt die Kette verliehen und ist jetzt ein vollwertiges Mitglied des Familienclans",
+            "player_birthday_sequence_timestamp": [],
+            "player_birthday_sequence_text": "Die Blaukappen gratulieren Dir zum Geburtstag",
+            "group_market_passive_player_sequence_timestamp": [
+                999
+            ],
+            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur täglichen Abstimmung darüber, was auf dem Markt gekauft werden soll",
             "group_market_active_player_sequence_timestamp": [],
-            "group_market_active_player_sequence": false,
-            "ingroup_40p_hat_necklace_appearance": true
+            "group_market_active_player_sequence_text": "Stimme ab:",
+            "ingroup_40p_hat_necklace_appearance": true,
+            "outgroup_npcs_identical_appearance": true
         },
         {
             "level_name_text": "Level 2",
@@ -119,25 +126,28 @@
             "minigame_rooting_npcs": true,
             "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
+            "outgroup_introduction_timestamp": [],
+            "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [
                 420
             ],
-            "player_hat_sequence": true,
+            "player_hat_sequence_text": "Dein Familienclan verleiht Dir den Hut als Zeichen deiner Zugehörigkeit",
             "ingroup_necklace_sequence_timestamp": [
                 120
             ],
-            "ingroup_necklace_sequence": true,
+            "ingroup_necklace_sequence_text": "Dein Familienclan verleiht Dir die Kette. Jetzt bist Du vollwertiges Familienclan Mitglied",
             "player_necklace_sequence_timestamp": [],
-            "player_necklace_sequence": false,
+            "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
-            "player_birthday_sequence": false,
+            "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [
                 540
             ],
-            "group_market_passive_player_sequence": true,
+            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur täglichen Abstimmung darüber, was auf dem Markt gekauft werden soll",
             "group_market_active_player_sequence_timestamp": [],
-            "group_market_active_player_sequence": false,
-            "ingroup_40p_hat_necklace_appearance": true
+            "group_market_active_player_sequence_text": "",
+            "ingroup_40p_hat_necklace_appearance": true,
+            "outgroup_npcs_identical_appearance": true
         },
         {
             "level_name_text": "Level 3",
@@ -191,21 +201,24 @@
             "minigame_rooting_npcs": true,
             "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
+            "outgroup_introduction_timestamp": [],
+            "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
-            "player_hat_sequence": false,
+            "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
-            "ingroup_necklace_sequence": false,
+            "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [],
-            "player_necklace_sequence": false,
+            "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
-            "player_birthday_sequence": false,
+            "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [
                 420
             ],
-            "group_market_passive_player_sequence": true,
+            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur täglichen Abstimmung darüber, was auf dem Markt gekauft werden soll",
             "group_market_active_player_sequence_timestamp": [],
-            "group_market_active_player_sequence": false,
-            "ingroup_40p_hat_necklace_appearance": true
+            "group_market_active_player_sequence_text": "",
+            "ingroup_40p_hat_necklace_appearance": true,
+            "outgroup_npcs_identical_appearance": true
         },
         {
             "level_name_text": "Level 4",
@@ -260,23 +273,26 @@
             "minigame_rooting_npcs": true,
             "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
+            "outgroup_introduction_timestamp": [],
+            "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
-            "player_hat_sequence": false,
+            "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
-            "ingroup_necklace_sequence": false,
+            "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [
                 480
             ],
-            "player_necklace_sequence": true,
+            "player_necklace_sequence_text": "Eines unserer Blaukappen bekommt die Kette verliehen und ist jetzt ein vollwertiges Mitglied des Familienclans",
             "player_birthday_sequence_timestamp": [],
-            "player_birthday_sequence": false,
+            "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [],
-            "group_market_passive_player_sequence": false,
+            "group_market_passive_player_sequence_text": "",
             "group_market_active_player_sequence_timestamp": [
                 240
             ],
-            "group_market_active_player_sequence": true,
-            "ingroup_40p_hat_necklace_appearance": true
+            "group_market_active_player_sequence_text": "Stimme ab:",
+            "ingroup_40p_hat_necklace_appearance": true,
+            "outgroup_npcs_identical_appearance": true
         },
         {
             "level_name_text": "Level 5",
@@ -332,21 +348,24 @@
             "minigame_rooting_npcs": true,
             "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
+            "outgroup_introduction_timestamp": [],
+            "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
-            "player_hat_sequence": false,
+            "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
-            "ingroup_necklace_sequence": false,
+            "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [],
-            "player_necklace_sequence": false,
+            "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
-            "player_birthday_sequence": false,
+            "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [],
-            "group_market_passive_player_sequence": false,
+            "group_market_passive_player_sequence_text": "",
             "group_market_active_player_sequence_timestamp": [
                 360
             ],
-            "group_market_active_player_sequence": true,
-            "ingroup_40p_hat_necklace_appearance": true
+            "group_market_active_player_sequence_text": "Stimme ab:",
+            "ingroup_40p_hat_necklace_appearance": true,
+            "outgroup_npcs_identical_appearance": true
         },
         {
             "level_name_text": "Level 6",
@@ -403,21 +422,24 @@
             "minigame_rooting_npcs": true,
             "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
+            "outgroup_introduction_timestamp": [],
+            "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
-            "player_hat_sequence": false,
+            "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
-            "ingroup_necklace_sequence": false,
+            "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [],
-            "player_necklace_sequence": false,
+            "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
-            "player_birthday_sequence": false,
+            "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [],
-            "group_market_passive_player_sequence": false,
+            "group_market_passive_player_sequence_text": "",
             "group_market_active_player_sequence_timestamp": [
                 420
             ],
-            "group_market_active_player_sequence": true,
-            "ingroup_40p_hat_necklace_appearance": true
+            "group_market_active_player_sequence_text": "Stimme ab:",
+            "ingroup_40p_hat_necklace_appearance": true,
+            "outgroup_npcs_identical_appearance": true
         }
     ],
     [
@@ -473,20 +495,26 @@
                 30
             ],
             "ingroup_introduction_text": "Das ist deine Freundesfarm: Ihr seid die Blaukappen",
-            "player_hat_sequence_timestamp": [],
-            "player_hat_sequence": false,
+            "outgroup_introduction_timestamp": [
+                40
+            ],
+            "outgroup_introduction_text": "Das ist die andere Gruppe: Die Hornlinge",
+            "player_hat_sequence_timestamp": [
+                2
+            ],
+            "player_hat_sequence_text": "Dein Familienclan verleiht Dir den Hut als Zeichen deiner Zugehörigkeit",
             "ingroup_necklace_sequence_timestamp": [],
-            "ingroup_necklace_sequence": false,
+            "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [],
-            "player_necklace_sequence": false,
+            "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
-            "player_birthday_sequence": false,
+            "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [
                 480
             ],
-            "group_market_passive_player_sequence": true,
+            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur täglichen Abstimmung darüber, was auf dem Markt gekauft werden soll",
             "group_market_active_player_sequence_timestamp": [],
-            "group_market_active_player_sequence": false,
+            "group_market_active_player_sequence_text": "",
             "ingroup_40p_hat_necklace_appearance": true
         },
         {
@@ -540,24 +568,26 @@
             "minigame_rooting_npcs": true,
             "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
+            "outgroup_introduction_timestamp": [],
+            "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [
                 420
             ],
-            "player_hat_sequence": true,
+            "player_hat_sequence_text": "Dein Familienclan verleiht Dir den Hut als Zeichen deiner Zugehörigkeit",
             "ingroup_necklace_sequence_timestamp": [
                 120
             ],
-            "ingroup_necklace_sequence": true,
+            "ingroup_necklace_sequence_text": "Dein Familienclan verleiht Dir die Kette. Jetzt bist Du vollwertiges Familienclan Mitglied",
             "player_necklace_sequence_timestamp": [],
-            "player_necklace_sequence": false,
+            "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
-            "player_birthday_sequence": false,
+            "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [
                 540
             ],
-            "group_market_passive_player_sequence": true,
+            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur täglichen Abstimmung darüber, was auf dem Markt gekauft werden soll",
             "group_market_active_player_sequence_timestamp": [],
-            "group_market_active_player_sequence": false,
+            "group_market_active_player_sequence_text": "",
             "ingroup_40p_hat_necklace_appearance": true
         },
         {
@@ -612,20 +642,22 @@
             "minigame_rooting_npcs": true,
             "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
+            "outgroup_introduction_timestamp": [],
+            "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
-            "player_hat_sequence": false,
+            "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
-            "ingroup_necklace_sequence": false,
+            "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [],
-            "player_necklace_sequence": false,
+            "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
-            "player_birthday_sequence": false,
+            "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [
                 420
             ],
-            "group_market_passive_player_sequence": true,
+            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur täglichen Abstimmung darüber, was auf dem Markt gekauft werden soll",
             "group_market_active_player_sequence_timestamp": [],
-            "group_market_active_player_sequence": false,
+            "group_market_active_player_sequence_text": "",
             "ingroup_40p_hat_necklace_appearance": true
         },
         {
@@ -681,22 +713,24 @@
             "minigame_rooting_npcs": true,
             "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
+            "outgroup_introduction_timestamp": [],
+            "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
-            "player_hat_sequence": false,
+            "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
-            "ingroup_necklace_sequence": false,
+            "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [
                 480
             ],
-            "player_necklace_sequence": true,
+            "player_necklace_sequence_text": "Eines unserer Blaukappen bekommt die Kette verliehen und ist jetzt ein vollwertiges Mitglied des Familienclans",
             "player_birthday_sequence_timestamp": [],
-            "player_birthday_sequence": false,
+            "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [],
-            "group_market_passive_player_sequence": false,
+            "group_market_passive_player_sequence_text": "",
             "group_market_active_player_sequence_timestamp": [
                 240
             ],
-            "group_market_active_player_sequence": true,
+            "group_market_active_player_sequence_text": "Stimme ab:",
             "ingroup_40p_hat_necklace_appearance": true
         },
         {
@@ -753,20 +787,22 @@
             "minigame_rooting_npcs": true,
             "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
+            "outgroup_introduction_timestamp": [],
+            "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
-            "player_hat_sequence": false,
+            "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
-            "ingroup_necklace_sequence": false,
+            "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [],
-            "player_necklace_sequence": false,
+            "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
-            "player_birthday_sequence": false,
+            "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [],
-            "group_market_passive_player_sequence": false,
+            "group_market_passive_player_sequence_text": "",
             "group_market_active_player_sequence_timestamp": [
                 360
             ],
-            "group_market_active_player_sequence": true,
+            "group_market_active_player_sequence_text": "Stimme ab:",
             "ingroup_40p_hat_necklace_appearance": true
         },
         {
@@ -824,20 +860,22 @@
             "minigame_rooting_npcs": true,
             "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
+            "outgroup_introduction_timestamp": [],
+            "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
-            "player_hat_sequence": false,
+            "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
-            "ingroup_necklace_sequence": false,
+            "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [],
-            "player_necklace_sequence": false,
+            "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
-            "player_birthday_sequence": false,
+            "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [],
-            "group_market_passive_player_sequence": false,
+            "group_market_passive_player_sequence_text": "",
             "group_market_active_player_sequence_timestamp": [
                 420
             ],
-            "group_market_active_player_sequence": true,
+            "group_market_active_player_sequence_text": "Stimme ab:",
             "ingroup_40p_hat_necklace_appearance": true
         }
     ],
@@ -892,19 +930,24 @@
                 30
             ],
             "ingroup_introduction_text": "Du bist zuf\u00e4llig bei den Blaukappen gelandet",
+            "outgroup_introduction_timestamp": [
+                40
+            ],
+            "outgroup_introduction_text": "Das ist die andere Gruppe: Die Hornlinge",
             "player_hat_sequence_timestamp": [],
-            "player_hat_sequence": false,
+            "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
-            "ingroup_necklace_sequence": false,
+            "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [],
-            "player_necklace_sequence": false,
+            "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
-            "player_birthday_sequence": false,
+            "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [],
-            "group_market_passive_player_sequence": false,
+            "group_market_passive_player_sequence_text": "",
             "group_market_active_player_sequence_timestamp": [],
-            "group_market_active_player_sequence": false,
-            "ingroup_40p_hat_necklace_appearance": false
+            "group_market_active_player_sequence_text": "",
+            "ingroup_40p_hat_necklace_appearance": false,
+            "outgroup_npcs_identical_appearance": true
         },
         {
             "level_name_text": "Level 2",
@@ -957,19 +1000,22 @@
             "minigame_rooting_npcs": false,
             "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
+            "outgroup_introduction_timestamp": [],
+            "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
-            "player_hat_sequence": false,
+            "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
-            "ingroup_necklace_sequence": false,
+            "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [],
-            "player_necklace_sequence": false,
+            "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
-            "player_birthday_sequence": false,
+            "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [],
-            "group_market_passive_player_sequence": false,
+            "group_market_passive_player_sequence_text": "",
             "group_market_active_player_sequence_timestamp": [],
-            "group_market_active_player_sequence": false,
-            "ingroup_40p_hat_necklace_appearance": false
+            "group_market_active_player_sequence_text": "",
+            "ingroup_40p_hat_necklace_appearance": false,
+            "outgroup_npcs_identical_appearance": true
         },
         {
             "level_name_text": "Level 3",
@@ -1023,21 +1069,24 @@
             "minigame_rooting_npcs": false,
             "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
+            "outgroup_introduction_timestamp": [],
+            "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
-            "player_hat_sequence": false,
+            "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
-            "ingroup_necklace_sequence": false,
+            "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [],
-            "player_necklace_sequence": false,
+            "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [
                 420
             ],
-            "player_birthday_sequence": true,
+            "player_birthday_sequence_text": "Die Blaukappen gratulieren Dir zum Geburtstag",
             "group_market_passive_player_sequence_timestamp": [],
-            "group_market_passive_player_sequence": false,
+            "group_market_passive_player_sequence_text": "",
             "group_market_active_player_sequence_timestamp": [],
-            "group_market_active_player_sequence": false,
-            "ingroup_40p_hat_necklace_appearance": false
+            "group_market_active_player_sequence_text": "",
+            "ingroup_40p_hat_necklace_appearance": false,
+            "outgroup_npcs_identical_appearance": true
         },
         {
             "level_name_text": "Level 4",
@@ -1092,19 +1141,22 @@
             "minigame_rooting_npcs": false,
             "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
+            "outgroup_introduction_timestamp": [],
+            "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
-            "player_hat_sequence": false,
+            "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
-            "ingroup_necklace_sequence": false,
+            "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [],
-            "player_necklace_sequence": false,
+            "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
-            "player_birthday_sequence": false,
+            "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [],
-            "group_market_passive_player_sequence": false,
+            "group_market_passive_player_sequence_text": "",
             "group_market_active_player_sequence_timestamp": [],
-            "group_market_active_player_sequence": false,
-            "ingroup_40p_hat_necklace_appearance": false
+            "group_market_active_player_sequence_text": "",
+            "ingroup_40p_hat_necklace_appearance": false,
+            "outgroup_npcs_identical_appearance": true
         },
         {
             "level_name_text": "Level 5",
@@ -1160,19 +1212,22 @@
             "minigame_rooting_npcs": false,
             "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
+            "outgroup_introduction_timestamp": [],
+            "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
-            "player_hat_sequence": false,
+            "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
-            "ingroup_necklace_sequence": false,
+            "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [],
-            "player_necklace_sequence": false,
+            "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
-            "player_birthday_sequence": false,
+            "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [],
-            "group_market_passive_player_sequence": false,
+            "group_market_passive_player_sequence_text": "",
             "group_market_active_player_sequence_timestamp": [],
-            "group_market_active_player_sequence": false,
-            "ingroup_40p_hat_necklace_appearance": false
+            "group_market_active_player_sequence_text": "",
+            "ingroup_40p_hat_necklace_appearance": false,
+            "outgroup_npcs_identical_appearance": true
         },
         {
             "level_name_text": "Level 6",
@@ -1229,19 +1284,22 @@
             "minigame_rooting_npcs": false,
             "ingroup_introduction_timestamp": [],
             "ingroup_introduction_text": "",
+            "outgroup_introduction_timestamp": [],
+            "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
-            "player_hat_sequence": false,
+            "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
-            "ingroup_necklace_sequence": false,
+            "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [],
-            "player_necklace_sequence": false,
+            "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
-            "player_birthday_sequence": false,
+            "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [],
-            "group_market_passive_player_sequence": false,
+            "group_market_passive_player_sequence_text": "",
             "group_market_active_player_sequence_timestamp": [],
-            "group_market_active_player_sequence": false,
-            "ingroup_40p_hat_necklace_appearance": false
+            "group_market_active_player_sequence_text": "",
+            "ingroup_40p_hat_necklace_appearance": false,
+            "outgroup_npcs_identical_appearance": true
         }
     ]
 ]

@@ -587,7 +587,7 @@ class Game:
                             self.round_config["player_hat_sequence_timestamp"][1:]
                         )
                         self.level.start_scripted_sequence(
-                            ScriptedSequenceType.PLAYER_RECEIVES_HAT
+                            ScriptedSequenceType.PLAYER_HAT_SEQUENCE
                         )
                     elif (
                         len(
@@ -604,7 +604,7 @@ class Game:
                             self.round_config["ingroup_necklace_sequence_timestamp"][1:]
                         )
                         self.level.start_scripted_sequence(
-                            ScriptedSequenceType.NPC_RECEIVES_NECKLACE
+                            ScriptedSequenceType.INGROUP_NECKLACE_SEQUENCE
                         )
                     elif (
                         len(
@@ -621,7 +621,7 @@ class Game:
                             self.round_config["player_necklace_sequence_timestamp"][1:]
                         )
                         self.level.start_scripted_sequence(
-                            ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE
+                            ScriptedSequenceType.PLAYER_NECKLACE_SEQUENCE
                         )
                     elif (
                         len(
@@ -638,7 +638,7 @@ class Game:
                             self.round_config["player_birthday_sequence_timestamp"][1:]
                         )
                         self.level.start_scripted_sequence(
-                            ScriptedSequenceType.PLAYERS_BIRTHDAY
+                            ScriptedSequenceType.PLAYER_BIRTHDAY_SEQUENCE
                         )
                     elif (
                         len(
@@ -660,7 +660,7 @@ class Game:
                                 "group_market_passive_player_sequence_timestamp"
                             ][1:]
                         self.level.start_scripted_sequence(
-                            ScriptedSequenceType.PASSIVE_DECIDE_TOMATO_OR_CORN
+                            ScriptedSequenceType.GROUP_MARKET_PASSIVE_PLAYER_SEQUENCE
                         )
                     elif (
                         len(
@@ -682,7 +682,7 @@ class Game:
                                 "group_market_active_player_sequence_timestamp"
                             ][1:]
                         self.level.start_scripted_sequence(
-                            ScriptedSequenceType.ACTIVE_DECIDE_TOMATO_OR_CORN
+                            ScriptedSequenceType.GROUP_MARKET_ACTIVE_PLAYER_SEQUENCE
                         )
                     elif (
                         self.round_config.get("resource_allocation_text", "")

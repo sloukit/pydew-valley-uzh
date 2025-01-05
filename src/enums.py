@@ -455,12 +455,12 @@ class ClockVersion(IntEnum):
 
 
 class ScriptedSequenceType(StrEnum):
-    PLAYER_RECEIVES_HAT = "player_receives_hat"
-    PLAYER_RECEIVES_NECKLACE = "player_receives_necklace"
-    PLAYERS_BIRTHDAY = "players_birthday"
-    NPC_RECEIVES_NECKLACE = "npc_receives_necklace"
-    PASSIVE_DECIDE_TOMATO_OR_CORN = "passive_decide_tomato_or_corn"
-    ACTIVE_DECIDE_TOMATO_OR_CORN = "active_decide_tomato_or_corn"
+    PLAYER_HAT_SEQUENCE = "player_hat_sequence"
+    PLAYER_NECKLACE_SEQUENCE = "player_necklace_sequence"
+    PLAYER_BIRTHDAY_SEQUENCE = "player_birthday_sequence"
+    INGROUP_NECKLACE_SEQUENCE = "ingroup_necklace_sequence"
+    GROUP_MARKET_PASSIVE_PLAYER_SEQUENCE = "group_market_passive_player_sequence"
+    GROUP_MARKET_ACTIVE_PLAYER_SEQUENCE = "group_market_active_player_sequence"
 
 
 class CustomCursor(IntEnum):
