@@ -15,6 +15,8 @@ from typing import Any
 import pygame
 
 from src import support
+from src.support import get_translated_string as _
+
 from src.client import send_telemetry
 from src.enums import (
     CustomCursor,
@@ -75,7 +77,7 @@ class Game:
         pygame.init()
         screen_size = (SCREEN_WIDTH, SCREEN_HEIGHT)
         self.display_surface = pygame.display.set_mode(screen_size)
-        pygame.display.set_caption("Clear Skies")
+        pygame.display.set_caption(_("Clear Skies"))
 
         # frames
         self.level_frames: dict | None = None
@@ -438,11 +440,11 @@ class Game:
                         "intro_to_game",
                         [
                             [
-                                "Clear Skies",
+                                _("Clear Skies"),
                                 f"{self.round_config["character_introduction_text"]}\t\t\t\t\t\t\t{label}",
                             ],
                             [
-                                "Clear Skies",
+                                _("Clear Skies"),
                                 f"{self.round_config["ingroup_introduction_text"]}\t\t\t\t\t\t\t{label}",
                             ],
                         ],

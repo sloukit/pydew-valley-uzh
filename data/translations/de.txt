@@ -1,3 +1,7 @@
+# Game name
+
+Clear Skies@@Der Acker ruft!
+
 # main menu
 
 Enter play token:@@3-stelligen Token eingeben:

@@ -1,3 +1,7 @@
+# Game name
+
+Clear Skies@@Clear Skies
+
 # main menu
 
 Enter play token:@@Please enter token:
