@@ -147,7 +147,7 @@ class SaveFile:
         data.setdefault("group", StudyGroup.INGROUP)
         data.setdefault("goggles_status", None)
         data.setdefault("necklace_status", None)
-        data.setdefault("hat_status", True)
+        data.setdefault("hat_status", False)
         data.setdefault("horn_status", False)
         data.setdefault("outgroup_skin_status", False)
         data.setdefault("current_tool", FarmingTool.get_first_tool_id())
