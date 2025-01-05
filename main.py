@@ -166,7 +166,11 @@ class Game:
 
         self.token_status = False
         self.allocation_task = PlayerTask(self.send_resource_allocation)
-        self.main_menu = MainMenu(self.switch_state, self.set_token)
+        self.main_menu = MainMenu(
+            self.switch_state,
+            self.set_token,
+            self.set_initials,
+        )
         self.pause_menu = PauseMenu(self.switch_state)
         self.settings_menu = SettingsMenu(
             self.switch_state,
@@ -265,6 +269,10 @@ class Game:
             }
             send_telemetry(self.jwt, telemetry)
         self.switch_state(GameState.PLAY)
+
+    def set_initials(self, initials: str) -> None:
+        if self.player:
+            self.player.name = initials
 
     def set_token(self, response: dict[str, Any]) -> None:
         self.token = response["token"]
@@ -439,17 +447,18 @@ class Game:
                     and self.round_end_timer
                     > self.round_config["character_introduction_timestamp"][0]
                 ):
-                    label = "press <Space> to continue"
+
                     self.dialogue_manager.set_item(
                         "intro_to_game",
                         [
                             [
                                 _("Clear Skies"),
-                                f"{self.round_config["character_introduction_text"]}\t\t\t\t\t\t\t{label}",
+                                self.round_config["character_introduction_text"].replace(
+                                    "[Initialen]", self.player.name),
                             ],
                             [
                                 _("Clear Skies"),
-                                f"{self.round_config["ingroup_introduction_text"]}\t\t\t\t\t\t\t{label}",
+                                self.round_config["ingroup_introduction_text"],
                             ],
                         ],
                     )

@@ -12,19 +12,24 @@ from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH, USE_SERVER
 from src.support import get_translated_string as _
 
 _SCREEN_CENTER = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+MAX_TOKEN_LEN = 3
+MAX_INITIALS_LEN = 2
 
 
 class MainMenu(GeneralMenu):
+
     def __init__(
         self,
         switch_screen: Callable[[GameState], None],
         set_token: Callable[[dict[str, Any]], None],
+        set_initials: Callable[[dict[str, Any]], None],
     ) -> None:
         options = [_("Play"), _("Quit"), _("Enter authentication data")]
         title = _("Main Menu")
         size = (400, 400)
         super().__init__(title, options, switch_screen, size)
         self.set_token = set_token
+        self.set_initials = set_initials
         self.token = ""  # Variable to store token
         self.initials = ""  # Variable to store initials
         self.play_button_enabled = False  # Initialize as False
@@ -52,7 +57,7 @@ class MainMenu(GeneralMenu):
 
     def validate_initials(self, initials: str) -> bool:
         """Validate if initials are exactly 2 characters and only letters."""
-        return len(initials) == 2 and initials.isalpha()
+        return len(initials) == MAX_INITIALS_LEN and initials.isalpha()
 
     def draw_input_box(self, box, input_text, label_text, input_active) -> None:
         button_width = 400
@@ -150,7 +155,7 @@ class MainMenu(GeneralMenu):
 
         if event.type == pygame.MOUSEBUTTONDOWN and mouse_buttons()[0]:
             self.pressed_button = self.get_hovered_button()
-            if self.input_box.collidepoint(event.pos):
+            if self.input_box.collidepoint(event.pos) and not self.initials_active:
                 self.input_active = True
                 self.initials_active = False
                 return True
@@ -184,7 +189,7 @@ class MainMenu(GeneralMenu):
                 elif event.key == pygame.K_BACKSPACE:
                     self.input_text = self.input_text[:-1]
                     return True
-                elif len(self.input_text) < 4:
+                elif len(self.input_text) < MAX_TOKEN_LEN:
                     self.input_text += event.unicode
                     return True
 
@@ -192,6 +197,7 @@ class MainMenu(GeneralMenu):
                 if event.key in [pygame.K_RETURN, pygame.K_KP_ENTER]:
                     if self.validate_initials(self.initials_text):
                         self.initials = self.initials_text
+                        self.set_initials(self.initials)
                         self.play_button_enabled = True
                         self.initials_active = False
                         self.remove_button(_("Enter authentication data"))
@@ -203,7 +209,7 @@ class MainMenu(GeneralMenu):
                 elif event.key == pygame.K_BACKSPACE:
                     self.initials_text = self.initials_text[:-1]
                     return True
-                elif len(self.initials_text) < 2:
+                elif len(self.initials_text) < MAX_INITIALS_LEN:
                     self.initials_text += event.unicode
                     return True
 
