@@ -532,7 +532,8 @@ class Game:
             if not is_game_paused or is_first_frame:
                 if self.level.cutscene_animation.active:
                     event = pygame.key.get_pressed()
-                    if event[pygame.K_RSHIFT]:
+                    if event[pygame.K_RSHIFT] and self.game_version == DEBUG_MODE_VERSION:
+                        # fast-forward
                         self.level.update(dt * 5, self.current_state == GameState.PLAY)
                     else:
                         self.level.update(dt, self.current_state == GameState.PLAY)
@@ -705,7 +706,7 @@ class Game:
 
             if self.level.cutscene_animation.active:
                 self.all_sprites.update_blocked(dt)
-                if self.current_state == GameState.PLAY:
+                if self.current_state == GameState.PLAY and self.game_version == DEBUG_MODE_VERSION:
                     event = pygame.key.get_pressed()
                     self.fast_forward.draw_option(self.display_surface)
                     if event[pygame.K_RSHIFT]:
