@@ -49,6 +49,7 @@ from src.settings import (
     SCREEN_WIDTH,
     TB_SIZE,
     USE_SERVER,
+    WORLD_TIME_MULTIPLIER,
     AniFrames,
     MapDict,
     SoundDict,
@@ -153,6 +154,7 @@ class Game:
             self.sounds,
             self.save_file,
             self.clock,
+            self.get_world_time,
             self.dialogue_manager,
         )
         self.player = self.level.player
@@ -248,6 +250,11 @@ class Game:
         # intro to game and in-group msg.
         self.intro_txt_is_rendering = False
         self.intro_txt_rendered = False
+
+    def get_world_time(self) -> tuple[int, int]:
+        min = round(self.round_end_timer) // 60
+        sec = round(self.round_end_timer) % 60
+        return (min, sec)
 
     def send_self_assessment(self, assessment: dict[str, int]) -> None:
         if USE_SERVER:
@@ -603,7 +610,7 @@ class Game:
                     not self.level.current_minigame
                     or not self.level.current_minigame.running
                 ):
-                    self.round_end_timer += dt
+                    self.round_end_timer += dt * WORLD_TIME_MULTIPLIER
                     if self.round_end_timer > self.ROUND_END_TIME_IN_MINUTES * 60:
                         self.round_end_timer = 0
                         self.switch_state(GameState.ROUND_END)

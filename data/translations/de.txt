@@ -149,7 +149,7 @@ Hornlinge needed %.2f seconds@@Horlinge: %.2f Sekunden
 cows herded in@@Kühe im Stall
 Ready?@@Fertig?
 GO!@@Los!
-Cow Herding Minigame@Kuh-in-den-Stall Spiel
+Cow Herding Minigame@@Kuh-in-den-Stall Spiel
 Herd the cows into the barn@@Treibe die Kühe in den Stall
 as fast as possible!@@so schnell wie möglich!
 Objective:@@Aufgabe:

@@ -121,6 +121,7 @@ class Level:
         sounds: SoundDict,
         save_file: SaveFile,
         clock: pygame.time.Clock,
+        get_world_time: Callable[[None], tuple[int, int]],
         dialogue_manager: DialogueManager,
     ) -> None:
         # main setup
@@ -216,7 +217,12 @@ class Level:
 
         # overlays
         self.overlay = Overlay(
-            self.player, frames["items"], self.game_time, clock, round_config
+            self.player,
+            frames["items"],
+            self.game_time,
+            get_world_time,
+            clock,
+            round_config,
         )
         self.show_hitbox_active = False
         self.show_pf_overlay = False

@@ -1,16 +1,20 @@
+from collections.abc import Callable
 from math import cos, pi, sin
 
 import pygame
 
 from src.enums import ClockVersion
 from src.overlay.game_time import GameTime
-from src.settings import OVERLAY_POSITIONS
+from src.settings import OVERLAY_POSITIONS, USE_GAME_TIME
 from src.support import import_font
 
 
 class Clock:
     def __init__(
-        self, game_time: GameTime, clock_ver: ClockVersion = ClockVersion.ANALOG
+        self,
+        game_time: GameTime,
+        get_world_time: Callable[[None], tuple[int, int]],
+        clock_ver: ClockVersion = ClockVersion.ANALOG,
     ):
         # setup
         self.display_surface = pygame.display.get_surface()
@@ -19,6 +23,11 @@ class Clock:
         # dimensions
         self.left = 20
         self.top = 20
+
+        if USE_GAME_TIME:
+            self.get_time = lambda: self.game_time.get_time()
+        else:
+            self.get_time = get_world_time
 
         # analog
         if clock_ver == ClockVersion.ANALOG:
@@ -42,7 +51,7 @@ class Clock:
 
     def display_analog(self):
         # get time
-        time = self.game_time.get_time()
+        time = self.get_time()
         hour = time[0] % 12
         minute = time[1]
 
@@ -67,7 +76,7 @@ class Clock:
 
     def display_digital(self):
         # get time
-        time = self.game_time.get_time()
+        time = self.get_time()
 
         # if hours are less than 10, add a 0 to stay in the hh:mm format
         hours = str(time[0]).rjust(2, "0")

@@ -32,6 +32,14 @@ TEST_ANIMALS = True
 
 GAME_LANGUAGE = os.environ.get("GAME_LANGUAGE", "en")
 DEBUG_MODE_VERSION = 0
+# True  => virtual game time
+# False => real world time
+USE_GAME_TIME = False
+# number of seconds per in game minute (reference - in Stardew Valley each minute is 0.7 seconds)
+# change to e.g. 0.1 for debug to speed-up day/night cycle
+SECONDS_PER_GAME_MINUTE = 0.7
+# should be 1.0 - increase x10 for debug to speed-up round end
+WORLD_TIME_MULTIPLIER = 1.0
 USE_SERVER = False
 # for now, in web mode, do not use dummy server (which requires `requests` module not available via pygbag)
 if sys.platform not in ("emscripten", "wasm"):
