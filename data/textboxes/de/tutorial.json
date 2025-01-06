@@ -1,41 +1,41 @@
 {
     "Basic_movement":[
-        ["EN: Tutorial", "EN: Press Up, Down, Right, Left to move"]
+        ["Übungsrunde", "Drücke die Pfeiltasten nach oben, unten, links und rechts, um dich zu bewegen"]
     ],
     "Get_hat_from_ingroup":[
-        ["EN: Tutorial", "Get the hat from the ingroup"]
+        ["Übungsrunde", "Get the hat from the ingroup"]
     ],
     "Get_necklace_from_ingroup":[
-        ["EN: Tutorial", "Get the necklace from the ingroup"]
+        ["Übungsrunde", "Get the necklace from the ingroup"]
     ],
     "Farm_tile":[
-        ["EN: Tutorial", "Farm with your hoe \t\t\t\t Go to your group farm \t\t\t\t Tab to switch tool \t\t\t\t I to open inventory \t\t\t\t Left Click to farm"]
+        ["Übungsrunde", "Gehe auf deine Farm \t\t\t\t Drücke die linke Maustaste, um dein Werkzeug zu benutzen \t\t\t\t Drücke die Tabulatortaste, um das Werkzeug zu wechseln \t\t\t\t Drücke i, um das Lager zu öffnen. Dort kannst Du ebenfalls zwischen Werkzeugen wechseln"]
     ],
     "Plant_crop":[
-        ["EN: Tutorial", "Plant a crop \t\t\t\t\t Left Shift to change seed \t\t\t\t Right Click to plant"]
+        ["Übungsrunde", "Drücke die rechte Maustaste, um einen Samen zu setzen \t\t\t\t\t Drücke die linke Shifttaste, um den Samen zu wechseln"]
     ],
     "Water_crop":[
-        ["EN: Tutorial", "Water the crop"]
+        ["Übungsrunde", "Wechsle dein Werkzeug zur Giesskasse, indem du die Tabulatortaste drückst \t\t\t\t Giesse eine Pflanze, indem Du die linke Maustaste drückst"]
     ],
     "Go_to_forest_and_hit_tree":[
-        ["EN: Tutorial", "Go to the forest and hit a tree"]
+        ["Übungsrunde", "Gehe in den Wald und benutze deine Axt, um einen Baum zu fällen"]
     ],
     "Interact_with_ingroup_member":[
-        ["EN: Tutorial", "Interact with an ingroup member \t\t\t\t E to show or hide emojis  \t\t\t\t Right and Left to change selected emoji \t\t\t\t Space to show emoji"]
+        ["Übungsrunde", "Drücke e, um mit einer Blaukappe zu interagieren \t\t\t\t Drücke die linke oder rechte Pfeiltaste, um zwischen den Emojis zu wählen \t\t\t\t Drücke die Leertaste, um ein Emoji auszuwählen"]
     ],
     "Interact_with_outgroup_member":[
-        ["EN: Tutorial", "Interact with an outgroup member"]
+        ["Übungsrunde", "Drücke e, um mit einem Hornling zu interagieren \t\t\t\t Drücke die linke oder rechte Pfeiltaste, um zwischen den Emojis zu wählen \t\t\t\t Drücke die Leertaste, um ein Emoji auszuwählen"]
     ],
     "Walk_around_outgroup_farm_and_switch_to_outgroup":[
-        ["EN: Tutorial", "Walk around on the outgroup farm \t\t\t and switch to the outgroup"]
+        ["Übungsrunde", "Walk around on the outgroup farm \t\t\t and switch to the outgroup"]
     ],
     "Go_to_market_and_buy/sell_something":[
-        ["EN: Tutorial", "Go to the market and buy or sell something \t\t\t\t Up and Down to select \t\t\t\t Space to sell or buy \t\t\t\t Esc to exit"]
+        ["Übungsrunde", "Gehe in die Stadt und suche den Markt auf \t\t\t\t Drücke die rechte Maustaste, um mit dem Verkäufer zu interagieren \t\t\t\t Drücke die Leertaste, um etwas zu kaufen oder zu verkaufen \t\t\t\t Drücke esc, um den Markt zu verlassen"]
     ],
     "Go_to_minigame_map_and_play":[
-        ["EN: Tutorial", "Go to the minigame area \t\t\t and play the minigame"]
+        ["Übungsrunde", "Gehe in den Spielstall in der Stadt \t\t\t und spiele eine Runde"]
     ],
     "Tutorial_end":[
-        ["EN: Tutorial", "Well done. Since you completed \t\t\t the EN: Tutorial, the real game will begin ! \t\t .\t\t\t\t\t\t Space to continue"]
+        ["Übungsrunde", "Gut gemacht, Du hast die Übungsrunde erfolgreich beendet. Du findest alle Tastenkombinationen, indem Du esc klickst und dann Optionen auswählst. \t\t\t Nun gehe zurück auf deine Farm und beginne das Spiel \t\t - der Acker ruft! \t\t\t\t\t\t Drücke die Leertaste, um fortzufahren"]
     ]
 }

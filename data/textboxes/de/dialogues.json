@@ -4,31 +4,31 @@
     ["EN: A character", "EN: Insightful text here, or something. I mean, what the heck should I say?"]
   ],
   "intro_to_game": [
-    ["EN: Tutorial", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
+    ["Übungsrunde", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
   "scripted_sequence_player_hat_sequence": [
-    ["EN: Special event!", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
+    ["Ereignis", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
   "scripted_sequence_player_necklace_sequence": [
-    ["EN: Special event!", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
+    ["Ereignis", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
   "scripted_sequence_player_birthday_sequence": [
-    ["EN: Special event!", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
+    ["Ereignis", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
   "scripted_sequence_ingroup_necklace_sequence": [
-    ["EN: Special event!", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
+    ["Ereignis", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
   "scripted_sequence_group_market_passive_player_sequence": [
-    ["EN: Group gathering", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
+    ["Versammlung", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
   "scripted_sequence_group_market_active_player_sequence": [
-    ["EN: Group gathering", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
+    ["Versammlung", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
   "scripted_sequence_buy_tomato": [
-    ["EN: Group gathering", "EN: The group has decided to sell tomato!"]
+    ["Versammlung", "Die Gruppe hat entschieden, heute Tomaten zu verkaufen. Auf geht's zum Markt!"]
   ],
   "scripted_sequence_buy_corn": [
-    ["EN: Group gathering", "EN: The group has decided to sell corn!"]
+    ["Versammlung", "Die Gruppe hat entschieden, heute Mais zu verkaufen. Auf geht's zum Markt!"]
   ],
   "label_not_available":[
     ["EN: Sign", "EN: label not available"],
