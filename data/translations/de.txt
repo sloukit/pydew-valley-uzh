@@ -138,3 +138,24 @@ Show Shop@@EN: Show Shop
 
 Music@@Musik
 SFX@@SFX
+
+# src/screens/minigames/cow_herding_overlay.py
+
+Cow Herding@@EN: Cow Herding
+Return to Town@@EN: Return to Town
+Minigame complete!@@EN: Minigame complete!
+seconds needed@@EN: seconds needed
+Hornlinge needed %.2f seconds@@EN: Hornlinge needed %.2f seconds
+cows herded in@@EN: cows herded in
+Ready?@@EN: Ready?
+GO!@@EN: GO!
+Cow Herding Minigame@@EN: Cow Herding Minigame
+Herd the cows into the barn@@EN: Herd the cows into the barn
+as fast as possible!@@EN: as fast as possible!
+Objective:@@EN: Objective:
+Herd the cows into the barn!@@EN: Herd the cows into the barn!
+Blaukappen (ingroup) progress:@@EN: Blaukappen (ingroup) progress:
+Hornlinge (outgroup) progress:@@EN: Hornlinge (outgroup) progress:
+Cows in the barn@@EN: Cows in the barn
+[cheering group]@@EN: [cheering group]
+[disappointed group]@@EN: [disappointed group]
