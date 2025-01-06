@@ -281,21 +281,21 @@ class Game:
         self.game_version = response["game_version"]
 
         if not USE_SERVER:
-            # token 100-349 triggers game version 1,
-            # token 350-599 triggers game version 2,
-            # token 600-849 triggers game version 3
-            # token 0 or 999 triggers game in debug mode (all features enabled)
+            # token 100-379 triggers game version 1,
+            # token 380-659 triggers game version 2,
+            # token 660-939 triggers game version 3
+            # token 0 triggers game in debug mode (all features enabled)
             try:
                 token_int = int(self.token)
             except ValueError:
                 raise ValueError("Invalid token value") from None
-            if token_int in range(100, 350):
+            if token_int in range(100, 380):
                 self.game_version = 1
-            elif token_int in range(350, 600):
+            elif token_int in range(380, 660):
                 self.game_version = 2
-            elif token_int in range(600, 850):
+            elif token_int in range(660, 940):
                 self.game_version = 3
-            elif token_int in [0, 999]:
+            elif token_int in [0]:
                 self.game_version = DEBUG_MODE_VERSION
             else:
                 raise ValueError("Invalid token value")

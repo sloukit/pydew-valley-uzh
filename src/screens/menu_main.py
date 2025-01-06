@@ -126,8 +126,8 @@ class MainMenu(GeneralMenu):
                 result = resp
                 result["token"] = token
         else:
-            valid_tokens = [0, 999]
-            valid_tokens.extend(range(100, 850))
+            valid_tokens = [0]
+            valid_tokens.extend(range(100, 940))
             try:
                 token_int = int(token)
                 if token_int in valid_tokens:
