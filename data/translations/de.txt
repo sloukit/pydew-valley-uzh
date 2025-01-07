@@ -145,7 +145,7 @@ Cow Herding@@Kühe treiben
 Return to Town@@Zurück in die Stadt
 Minigame complete!@@Spiel beendet!
 seconds needed@@Sekunden gebraucht
-Hornlinge needed %.2f seconds@@Horlinge: %.2f Sekunden
+Hornlinge needed %.2f seconds@@Hornlinge: %.2f Sekunden
 cows herded in@@Kühe im Stall
 Ready?@@Fertig?
 GO!@@Los!
@@ -154,8 +154,8 @@ Herd the cows into the barn@@Treibe die Kühe in den Stall
 as fast as possible!@@so schnell wie möglich!
 Objective:@@Aufgabe:
 Herd the cows into the barn!@@Treibe die Kühe in den Stall!
-Blaukappen (ingroup) progress:@@Blaukappen Fortschritt:
-Hornlinge (outgroup) progress:@@Hornlinge Fortschritt:
-Cows in the barn@@Kühe im Stall
+Blaukappen (ingroup) progress:@@Blaukappen:
+Hornlinge (outgroup) progress:@@Hornlinge:
+Cows in the barn@@Kühe im Stall:
 [cheering group]@@[Anfeuernde Blaukappen]
 [disappointed group]@@[Enttäuschte Blaukappen]

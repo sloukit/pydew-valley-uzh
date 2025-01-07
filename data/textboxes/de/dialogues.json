@@ -25,10 +25,10 @@
     ["Versammlung", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
   "scripted_sequence_buy_tomato": [
-    ["Versammlung", "Die Gruppe hat entschieden, heute Tomaten zu verkaufen. Auf geht's zum Markt!"]
+    ["Versammlung", "Die Gruppe hat entschieden, heute Tomaten \t\t\t zu verkaufen. Auf geht's zum Markt! \t\t\t\t\t\t Drücke die Leertaste, um fortzufahren."]
   ],
   "scripted_sequence_buy_corn": [
-    ["Versammlung", "Die Gruppe hat entschieden, heute Mais zu verkaufen. Auf geht's zum Markt!"]
+    ["Versammlung", "Die Gruppe hat entschieden, heute Mais \t\t\t zu verkaufen. Auf geht's zum Markt! \t\t\t\t\t\t Drücke die Leertaste, um fortzufahren."]
   ],
   "label_not_available":[
     ["EN: Sign", "EN: label not available"],

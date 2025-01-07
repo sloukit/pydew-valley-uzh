@@ -1,6 +1,6 @@
 {
     "Basic_movement":[
-        ["Übungsrunde", "Drücke die Pfeiltasten nach oben, unten, links und rechts, um dich zu bewegen"]
+        ["Übungsrunde", "Drücke die Pfeiltasten nach oben, unten, links und rechts, um dich zu bewegen."]
     ],
     "Get_hat_from_ingroup":[
         ["Übungsrunde", "Get the hat from the ingroup"]
@@ -9,19 +9,19 @@
         ["Übungsrunde", "Get the necklace from the ingroup"]
     ],
     "Farm_tile":[
-        ["Übungsrunde", "Gehe auf deine Farm \t\t\t\t Drücke die linke Maustaste, um dein Werkzeug zu benutzen \t\t\t\t Drücke die Tabulatortaste, um das Werkzeug zu wechseln \t\t\t\t Drücke i, um das Lager zu öffnen. Dort kannst Du ebenfalls zwischen Werkzeugen wechseln"]
+        ["Übungsrunde", "Gehe auf deine Farm. \t\t\t\t Drücke die linke Maustaste, um deine Hake \t\t\t zu benutzen. \t\t\t\t Drücke die Tabulatortaste, um das Werkzeug \t\t\t zu wechseln. \t\t\t\t Drücke i, um das Lager zu öffnen. \t\t\t\t Dort kannst du ebenfalls zwischen \t\t\t Werkzeugen wechseln."]
     ],
     "Plant_crop":[
-        ["Übungsrunde", "Drücke die rechte Maustaste, um einen Samen zu setzen \t\t\t\t\t Drücke die linke Shifttaste, um den Samen zu wechseln"]
+        ["Übungsrunde", "Drücke die rechte Maustaste, um einen \t\t\t Samen zu pflanzen. \t\t\t\t\t Drücke die linke Shifttaste, um zwischen Samen zu wechseln."]
     ],
     "Water_crop":[
-        ["Übungsrunde", "Wechsle dein Werkzeug zur Giesskasse, indem du die Tabulatortaste drückst \t\t\t\t Giesse eine Pflanze, indem Du die linke Maustaste drückst"]
+        ["Übungsrunde", "Wechsle dein Werkzeug zur Giesskasse, \t\t\t indem du die Tabulatortaste drückst. \t\t\t\t Giesse deine neue Pflanze, \t\t\t indem du die linke Maustaste drückst."]
     ],
     "Go_to_forest_and_hit_tree":[
-        ["Übungsrunde", "Gehe in den Wald und benutze deine Axt, um einen Baum zu fällen"]
+        ["Übungsrunde", "Gehe in den Wald und benutze deine Axt, um einen Baum zu fällen. \t\t\t\t Wähle deine Axt im Lager (Drücke i), \t\t\t oder, indem du die Tabulatortaste drückst. \t\t\t Benutze die Axt mit der linken Maustaste."]
     ],
     "Interact_with_ingroup_member":[
-        ["Übungsrunde", "Drücke e, um mit einer Blaukappe zu interagieren \t\t\t\t Drücke die linke oder rechte Pfeiltaste, um zwischen den Emojis zu wählen \t\t\t\t Drücke die Leertaste, um ein Emoji auszuwählen"]
+        ["Übungsrunde", "Drücke e, um mit einer Blaukappe zu interagieren. \t\t\t\t Drücke die linke oder rechte Pfeiltaste, um zwischen den Emojis zu wählen. \t\t\t\t Drücke die Leertaste, um ein Emoji auszuwählen."]
     ],
     "Interact_with_outgroup_member":[
         ["Übungsrunde", "Drücke e, um mit einem Hornling zu interagieren \t\t\t\t Drücke die linke oder rechte Pfeiltaste, um zwischen den Emojis zu wählen \t\t\t\t Drücke die Leertaste, um ein Emoji auszuwählen"]
@@ -30,12 +30,12 @@
         ["Übungsrunde", "Walk around on the outgroup farm \t\t\t and switch to the outgroup"]
     ],
     "Go_to_market_and_buy/sell_something":[
-        ["Übungsrunde", "Gehe in die Stadt und suche den Markt auf \t\t\t\t Drücke die rechte Maustaste, um mit dem Verkäufer zu interagieren \t\t\t\t Drücke die Leertaste, um etwas zu kaufen oder zu verkaufen \t\t\t\t Drücke esc, um den Markt zu verlassen"]
+        ["Übungsrunde", "Gehe in die Stadt und suche den Markt auf. \t\t\t\t Drücke die Leertaste, um mit dem Verkäufer \t\t\t zu interagieren. \t\t\t\t Drücke die Leertaste, um neue Samen \t\t\t zu kaufen und verkaufe Früchte und Holz. \t\t\t\t Drücke esc, um den Markt zu verlassen."]
     ],
     "Go_to_minigame_map_and_play":[
-        ["Übungsrunde", "Gehe in den Spielstall in der Stadt \t\t\t und spiele eine Runde"]
+        ["Übungsrunde", "Gehe in den grossen Kuhstall in der Stadt \t\t\t und spiele eine Runde 'Kuh-in-den-Stall' gegen die Hornlinge."]
     ],
     "Tutorial_end":[
-        ["Übungsrunde", "Gut gemacht, Du hast die Übungsrunde erfolgreich beendet. Du findest alle Tastenkombinationen, indem Du esc klickst und dann Optionen auswählst. \t\t\t Nun gehe zurück auf deine Farm und beginne das Spiel \t\t - der Acker ruft! \t\t\t\t\t\t Drücke die Leertaste, um fortzufahren"]
+        ["Übungsrunde", "Gut gemacht, du hast die Übungsrunde erfolgreich beendet. Klicke esc und wähle Optionen, um alle Tastenkombinationen zu sehen. \t\t\t\t\t\t Gehe nun zurück auf deine Farm und beginne mit der Arbeit - der Acker ruft! \t\t\t\t\t\t Drücke die Leertaste, um fortzufahren."]
     ]
 }
