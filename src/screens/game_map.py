@@ -645,7 +645,7 @@ class GameMap:
         if "spawnpoint" in name and (player_group == spawnpoint_group):
             if self.player_spawnpoint:
                 warnings.warn(
-                    f"Multiple spawnpoints found " f"({self.player_spawnpoint}, {pos})",
+                    f"Multiple spawnpoints found ({self.player_spawnpoint}, {pos})",
                     GameMapWarning,
                 )
             self.player_spawnpoint = pos
