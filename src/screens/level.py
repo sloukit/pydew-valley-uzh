@@ -121,6 +121,7 @@ class Level:
         sounds: SoundDict,
         save_file: SaveFile,
         clock: pygame.time.Clock,
+        get_world_time: Callable[[None], tuple[int, int]],
         dialogue_manager: DialogueManager,
     ) -> None:
         # main setup
@@ -216,7 +217,12 @@ class Level:
 
         # overlays
         self.overlay = Overlay(
-            self.player, frames["items"], self.game_time, clock, round_config
+            self.player,
+            frames["items"],
+            self.game_time,
+            get_world_time,
+            clock,
+            round_config,
         )
         self.show_hitbox_active = False
         self.show_pf_overlay = False
@@ -629,27 +635,31 @@ class Level:
                 self.switch_screen(GameState.NOTIFICATION_MENU)
 
             if self.controls.DEBUG_PLAYER_RECEIVES_HAT.click:
-                self.start_scripted_sequence(ScriptedSequenceType.PLAYER_RECEIVES_HAT)
+                self.start_scripted_sequence(ScriptedSequenceType.PLAYER_HAT_SEQUENCE)
 
             if self.controls.DEBUG_PLAYER_RECEIVES_NECKLACE.click:
                 self.start_scripted_sequence(
-                    ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE
+                    ScriptedSequenceType.PLAYER_NECKLACE_SEQUENCE
                 )
 
             if self.controls.DEBUG_PLAYERS_BIRTHDAY.click:
-                self.start_scripted_sequence(ScriptedSequenceType.PLAYERS_BIRTHDAY)
+                self.start_scripted_sequence(
+                    ScriptedSequenceType.PLAYER_BIRTHDAY_SEQUENCE
+                )
 
             if self.controls.DEBUG_NPC_RECEIVES_NECKLACE.click:
-                self.start_scripted_sequence(ScriptedSequenceType.NPC_RECEIVES_NECKLACE)
+                self.start_scripted_sequence(
+                    ScriptedSequenceType.INGROUP_NECKLACE_SEQUENCE
+                )
 
             if self.controls.DEBUG_PASSIVE_DECIDE_TOMATO_OR_CORN.click:
                 self.start_scripted_sequence(
-                    ScriptedSequenceType.PASSIVE_DECIDE_TOMATO_OR_CORN
+                    ScriptedSequenceType.GROUP_MARKET_PASSIVE_PLAYER_SEQUENCE
                 )
 
             if self.controls.DEBUG_ACTIVE_DECIDE_TOMATO_OR_CORN.click:
                 self.start_scripted_sequence(
-                    ScriptedSequenceType.ACTIVE_DECIDE_TOMATO_OR_CORN
+                    ScriptedSequenceType.GROUP_MARKET_ACTIVE_PLAYER_SEQUENCE
                 )
 
             if self.controls.DEBUG_SHOW_HITBOXES.click:
@@ -664,10 +674,21 @@ class Level:
             if self.controls.DEBUG_SHOW_SHOP.click:
                 self.switch_screen(GameState.SHOP)
 
+    def set_dialogue_from_round_config(
+        self, sequence_type: ScriptedSequenceType
+    ) -> None:
+        dialogue_key = f"scripted_sequence_{sequence_type.value}"
+        config_key = f"{sequence_type.value}_text"
+        new_text = self.round_config[config_key]
+        self.dialogue_manager.dialogues[dialogue_key][0][1] = new_text
+
     def start_scripted_sequence(self, sequence_type: ScriptedSequenceType):
         # do not start new scripted sequence when one is already running
         if self.cutscene_animation.active:
             return
+
+        # scripted sequence dialog text is set from `round_config.json` (derived from `game_levels.xlsx`)
+        self.set_dialogue_from_round_config(sequence_type)
 
         active_group = self.player.study_group
         if active_group == StudyGroup.INGROUP:
@@ -676,8 +697,8 @@ class Level:
             animation_name = "outgroup_gathering"
 
         decide_sequence = [
-            ScriptedSequenceType.PASSIVE_DECIDE_TOMATO_OR_CORN,
-            ScriptedSequenceType.ACTIVE_DECIDE_TOMATO_OR_CORN,
+            ScriptedSequenceType.GROUP_MARKET_PASSIVE_PLAYER_SEQUENCE,
+            ScriptedSequenceType.GROUP_MARKET_ACTIVE_PLAYER_SEQUENCE,
         ]
         if sequence_type in decide_sequence:
             if not self.current_map == Map.TOWN and not self.map_transition:
@@ -703,7 +724,7 @@ class Level:
                     for npc in self.game_map.npcs
                     if npc.study_group != active_group and not npc.is_dead
                 ]
-            if sequence_type == ScriptedSequenceType.NPC_RECEIVES_NECKLACE:
+            if sequence_type == ScriptedSequenceType.INGROUP_NECKLACE_SEQUENCE:
                 npc_in_center = random.choice(npcs)
                 npcs.remove(npc_in_center)
                 npcs.append(self.player)
@@ -785,19 +806,19 @@ class Level:
         if self.player.blocked:
             return False
 
-        if sequence_type == ScriptedSequenceType.PLAYER_RECEIVES_HAT:
+        if sequence_type == ScriptedSequenceType.PLAYER_HAT_SEQUENCE:
             npc.has_hat = True
-        elif sequence_type == ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE:
+        elif sequence_type == ScriptedSequenceType.PLAYER_NECKLACE_SEQUENCE:
             npc.has_necklace = True
-        elif sequence_type == ScriptedSequenceType.PLAYERS_BIRTHDAY:
+        elif sequence_type == ScriptedSequenceType.PLAYER_BIRTHDAY_SEQUENCE:
             pass
-        elif sequence_type == ScriptedSequenceType.NPC_RECEIVES_NECKLACE:
+        elif sequence_type == ScriptedSequenceType.INGROUP_NECKLACE_SEQUENCE:
             npc.has_necklace = True
-        elif sequence_type == ScriptedSequenceType.PASSIVE_DECIDE_TOMATO_OR_CORN:
+        elif sequence_type == ScriptedSequenceType.GROUP_MARKET_PASSIVE_PLAYER_SEQUENCE:
             buy_list = TOMATO_OR_CORN_LIST
             self.end_scripted_sequence_decide(buy_list, is_player_active=False)
             return False
-        elif sequence_type == ScriptedSequenceType.ACTIVE_DECIDE_TOMATO_OR_CORN:
+        elif sequence_type == ScriptedSequenceType.GROUP_MARKET_ACTIVE_PLAYER_SEQUENCE:
             buy_list = TOMATO_OR_CORN_LIST
             self.end_scripted_sequence_decide(buy_list, is_player_active=True)
             return False
@@ -1065,17 +1086,6 @@ class Level:
         self.overlay.display()
 
     def draw(self, dt: float, move_things: bool):
-        # if self.dialogue_manager.showing_dialogue:
-        #     print("dialog index", self.dialogue_manager._msg_index,
-        #           "animation name", self.cutscene_animation.current_animation_name,
-        #           "animation index", self.cutscene_animation.current_index,
-        #           "animation active", self.cutscene_animation.active)
-        # else:
-        #     print("dialog index", -1,
-        #           "animation name", self.cutscene_animation.current_animation_name,
-        #           "animation index", self.cutscene_animation.current_index,
-        #           "animation active", self.cutscene_animation.active)
-
         self.player.hp = self.overlay.health_bar.hp
         self.display_surface.fill((130, 168, 132))
         self.all_sprites.draw(self.camera, False)

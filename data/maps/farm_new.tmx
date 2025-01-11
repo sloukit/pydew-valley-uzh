@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="80" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="28" nextobjectid="414">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="80" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="28" nextobjectid="415">
  <tileset firstgid="1" source="../tilesets/grass_tileset.tsx"/>
  <tileset firstgid="78" source="../tilesets/Interaction.tsx"/>
  <tileset firstgid="80" source="../tilesets/fence_tileset.tsx"/>
@@ -904,6 +904,30 @@
    </properties>
    <point/>
   </object>
+  <object id="411" name="CAMTARGET_4" x="837.667" y="217">
+   <properties>
+    <property name="animation_name" value="intro"/>
+    <property name="speed" type="int" value="600"/>
+    <property name="targ_id" type="int" value="4"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="412" name="CAMTARGET_5" x="1031.33" y="185.333">
+   <properties>
+    <property name="animation_name" value="intro"/>
+    <property name="speed" type="int" value="600"/>
+    <property name="targ_id" type="int" value="5"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="414" name="CAMTARGET_6" x="654" y="506.667">
+   <properties>
+    <property name="animation_name" value="intro"/>
+    <property name="speed" type="int" value="500"/>
+    <property name="targ_id" type="int" value="6"/>
+   </properties>
+   <point/>
+  </object>
   <object id="410" name="SEQTARGET_IN_END" x="230.182" y="332.727">
    <properties>
     <property name="animation_name" value="ingroup_gathering_end"/>
@@ -951,20 +975,6 @@
     <property name="pause" type="float" value="1"/>
     <property name="speed" type="float" value="0.25"/>
     <property name="targ_id" type="int" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="411" name="CAMTARGET_4" x="837.667" y="217">
-   <properties>
-    <property name="animation_name" value="intro"/>
-    <property name="speed" type="int" value="600"/>
-    <property name="targ_id" type="int" value="4"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="412" name="CAMTARGET_5" x="1031.33" y="185.333">
-   <properties>
-    <property name="targ_id" type="int" value="5"/>
    </properties>
    <point/>
   </object>

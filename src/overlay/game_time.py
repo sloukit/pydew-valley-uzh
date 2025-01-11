@@ -1,5 +1,7 @@
 import pygame
 
+from src.settings import SECONDS_PER_GAME_MINUTE
+
 
 class GameTime:
     """In-game clock implementation."""
@@ -7,9 +9,6 @@ class GameTime:
     def __init__(self):
         self.game_hour = 12  # game starts at this hour
         self.game_minute = 0  # game starts at this minute
-
-        # number of seconds per in game minute (reference - in Stardew Valley each minute is 0.7 seconds)
-        self.seconds_per_game_minute = 0.7
 
         # gets the creation time in ticks
         self.last_time = pygame.time.get_ticks()
@@ -25,8 +24,8 @@ class GameTime:
         # day-night cycle
         current_time = pygame.time.get_ticks()
 
-        # if more than seconds_per_game_minute has passed, update clock
-        if current_time - self.last_time > self.seconds_per_game_minute * 1000:
+        # if more than SECONDS_PER_GAME_MINUTE has passed, update clock
+        if current_time - self.last_time > SECONDS_PER_GAME_MINUTE * 1000:
             self.last_time = current_time
             self.game_minute += 1
 

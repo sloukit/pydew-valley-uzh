@@ -49,11 +49,13 @@ from src.settings import (
     SCREEN_WIDTH,
     TB_SIZE,
     USE_SERVER,
+    WORLD_TIME_MULTIPLIER,
     AniFrames,
     MapDict,
     SoundDict,
 )
 from src.sprites.setup import setup_entity_assets
+from src.support import get_translated_string as _
 from src.tutorial.tutorial import Tutorial
 
 # set random seed. It has to be set first before any other random function is called.
@@ -73,9 +75,15 @@ class Game:
     def __init__(self) -> None:
         # main setup
         pygame.init()
+
+        program_icon = pygame.image.load(
+            support.resource_path("images/objects/rabbit.png")
+        )
+        pygame.display.set_icon(program_icon)
+
         screen_size = (SCREEN_WIDTH, SCREEN_HEIGHT)
         self.display_surface = pygame.display.set_mode(screen_size)
-        pygame.display.set_caption("Clear Skies")
+        pygame.display.set_caption(_("Clear Skies"))
 
         # frames
         self.level_frames: dict | None = None
@@ -146,6 +154,7 @@ class Game:
             self.sounds,
             self.save_file,
             self.clock,
+            self.get_world_time,
             self.dialogue_manager,
         )
         self.player = self.level.player
@@ -160,7 +169,11 @@ class Game:
 
         self.token_status = False
         self.allocation_task = PlayerTask(self.send_resource_allocation)
-        self.main_menu = MainMenu(self.switch_state, self.set_token)
+        self.main_menu = MainMenu(
+            self.switch_state,
+            self.set_token,
+            self.set_initials,
+        )
         self.pause_menu = PauseMenu(self.switch_state)
         self.settings_menu = SettingsMenu(
             self.switch_state,
@@ -238,6 +251,11 @@ class Game:
         self.intro_txt_is_rendering = False
         self.intro_txt_rendered = False
 
+    def get_world_time(self) -> tuple[int, int]:
+        min = round(self.round_end_timer) // 60
+        sec = round(self.round_end_timer) % 60
+        return (min, sec)
+
     def send_self_assessment(self, assessment: dict[str, int]) -> None:
         if USE_SERVER:
             telemetry = {
@@ -260,27 +278,30 @@ class Game:
             send_telemetry(self.jwt, telemetry)
         self.switch_state(GameState.PLAY)
 
+    def set_initials(self, initials: str) -> None:
+        self.player.name = initials
+
     def set_token(self, response: dict[str, Any]) -> None:
         self.token = response["token"]
         self.jwt = response["jwt"]
         self.game_version = response["game_version"]
 
         if not USE_SERVER:
-            # token 100-349 triggers game version 1,
-            # token 350-599 triggers game version 2,
-            # token 600-849 triggers game version 3
-            # token 0 or 999 triggers game in debug mode (all features enabled)
+            # token 100-379 triggers game version 1,
+            # token 380-659 triggers game version 2,
+            # token 660-939 triggers game version 3
+            # token 0 triggers game in debug mode (all features enabled)
             try:
                 token_int = int(self.token)
             except ValueError:
                 raise ValueError("Invalid token value") from None
-            if token_int in range(100, 350):
+            if token_int in range(100, 380):
                 self.game_version = 1
-            elif token_int in range(350, 600):
+            elif token_int in range(380, 660):
                 self.game_version = 2
-            elif token_int in range(600, 850):
+            elif token_int in range(660, 940):
                 self.game_version = 3
-            elif token_int in [0, 999]:
+            elif token_int in [0]:
                 self.game_version = DEBUG_MODE_VERSION
             else:
                 raise ValueError("Invalid token value")
@@ -426,44 +447,80 @@ class Game:
         # A Message At The Starting Of The Game Giving Introduction To The Game And The InGroup.
         if not self.intro_txt_is_rendering:
             if not self.game_paused():
-                # TODO revert, this only for debug
                 if (
-                    self.round_config.get("character_introduction_text", "")
+                    self.level.current_map == Map.NEW_FARM
+                    # and self.round_config.get("character_introduction_text", "")
                     and self.round_config["character_introduction_timestamp"]
                     and self.round_end_timer
                     > self.round_config["character_introduction_timestamp"][0]
                 ):
-                    label = "press <Space> to continue"
-                    self.dialogue_manager.set_item(
-                        "intro_to_game",
-                        [
-                            [
-                                "Clear Skies",
-                                f"{self.round_config["character_introduction_text"]}\t\t\t\t\t\t\t{label}",
-                            ],
-                            [
-                                "Clear Skies",
-                                f"{self.round_config["ingroup_introduction_text"]}\t\t\t\t\t\t\t{label}",
-                            ],
-                        ],
-                    )
-                    self.dialogue_manager.open_dialogue(
-                        "intro_to_game", self.msg_left, self.msg_top
-                    )
-                    self.intro_txt_is_rendering = True
-                    self.intro_txt_rendered = True
+                    # get previous dialog text
+                    intro_text = self.dialogue_manager.dialogues["intro_to_game"][0][1]
+
+                    if self.level.cutscene_animation.active:
+                        # start of intro - camera at home location
+                        if self.level.cutscene_animation.current_index == 0:
+                            if self.round_config.get("character_introduction_text", ""):
+                                intro_text = self.round_config[
+                                    "character_introduction_text"
+                                ]
+                        # ingroup introduction - camera over ingroup area
+                        elif self.level.cutscene_animation.current_index == 2:
+                            if self.round_config.get("ingroup_introduction_text", ""):
+                                intro_text = self.round_config[
+                                    "ingroup_introduction_text"
+                                ]
+                        # outgroup introduction - camera over outgroup area
+                        elif self.level.cutscene_animation.current_index == 5:
+                            if self.round_config.get("outgroup_introduction_text", ""):
+                                intro_text = self.round_config[
+                                    "outgroup_introduction_text"
+                                ]
+                        # end of intro - camera heading back to home location
+                        elif self.level.cutscene_animation.current_index == 7:
+                            if self.dialogue_manager.showing_dialogue:
+                                self.dialogue_manager.close_dialogue()
+
+                            self.intro_txt_is_rendering = True
+                            self.intro_txt_rendered = True
+
+                    intro_text = intro_text.replace("[Initialen]", self.player.name)
+
+                    if (
+                        self.dialogue_manager.dialogues["intro_to_game"][0][1]
+                        != intro_text
+                    ):
+                        # dialog text has changed -> camera arrived to next intro stage,
+                        # set new dialog text
+                        self.dialogue_manager.dialogues["intro_to_game"][0][1] = (
+                            intro_text
+                        )
+                        # set header to game name
+                        # self.dialogue_manager.dialogues["intro_to_game"][0][0] = _("Clear Skies")
+
+                        # if old text is still displayed, reset dialog manager
+                        if self.dialogue_manager.showing_dialogue:
+                            self.dialogue_manager.close_dialogue()
+
+                        # show dialog with new text in the position the same as tutorial
+                        self.dialogue_manager.open_dialogue(
+                            "intro_to_game",
+                            self.tutorial.left_pos,
+                            self.tutorial.top_pos,
+                        )
+                    # self.intro_txt_rendered = True
         elif not self.level.cutscene_animation.active:
-            if (
-                self.dialogue_manager.showing_dialogue
-            ):  # prepare text box to switch to tutorial
+            if self.dialogue_manager.showing_dialogue:
+                # prepare text box to switch to tutorial
                 if self.intro_txt_rendered:
-                    self.dialogue_manager.advance()
+                    self.dialogue_manager.close_dialogue()
                     self.intro_txt_rendered = False
-            elif not self.player.save_file.is_tutorial_completed:
-                try:
-                    self.tutorial.dialogue_manager._get_current_tb()  # to execute ready() only at the beginning
-                except Exception:
-                    self.tutorial.ready()
+            if (
+                not self.player.save_file.is_tutorial_completed
+                and self.intro_txt_rendered
+            ):
+                self.intro_txt_rendered = False
+                self.tutorial.ready()
 
     # events
     def event_loop(self) -> None:
@@ -532,7 +589,11 @@ class Game:
             if not is_game_paused or is_first_frame:
                 if self.level.cutscene_animation.active:
                     event = pygame.key.get_pressed()
-                    if event[pygame.K_RSHIFT]:
+                    if (
+                        event[pygame.K_RSHIFT]
+                        and self.game_version == DEBUG_MODE_VERSION
+                    ):
+                        # fast-forward
                         self.level.update(dt * 5, self.current_state == GameState.PLAY)
                     else:
                         self.level.update(dt, self.current_state == GameState.PLAY)
@@ -548,7 +609,7 @@ class Game:
                     not self.level.current_minigame
                     or not self.level.current_minigame.running
                 ):
-                    self.round_end_timer += dt
+                    self.round_end_timer += dt * WORLD_TIME_MULTIPLIER
                     if self.round_end_timer > self.ROUND_END_TIME_IN_MINUTES * 60:
                         self.round_end_timer = 0
                         self.switch_state(GameState.ROUND_END)
@@ -586,7 +647,7 @@ class Game:
                             self.round_config["player_hat_sequence_timestamp"][1:]
                         )
                         self.level.start_scripted_sequence(
-                            ScriptedSequenceType.PLAYER_RECEIVES_HAT
+                            ScriptedSequenceType.PLAYER_HAT_SEQUENCE
                         )
                     elif (
                         len(
@@ -603,7 +664,7 @@ class Game:
                             self.round_config["ingroup_necklace_sequence_timestamp"][1:]
                         )
                         self.level.start_scripted_sequence(
-                            ScriptedSequenceType.NPC_RECEIVES_NECKLACE
+                            ScriptedSequenceType.INGROUP_NECKLACE_SEQUENCE
                         )
                     elif (
                         len(
@@ -620,7 +681,7 @@ class Game:
                             self.round_config["player_necklace_sequence_timestamp"][1:]
                         )
                         self.level.start_scripted_sequence(
-                            ScriptedSequenceType.PLAYER_RECEIVES_NECKLACE
+                            ScriptedSequenceType.PLAYER_NECKLACE_SEQUENCE
                         )
                     elif (
                         len(
@@ -637,7 +698,7 @@ class Game:
                             self.round_config["player_birthday_sequence_timestamp"][1:]
                         )
                         self.level.start_scripted_sequence(
-                            ScriptedSequenceType.PLAYERS_BIRTHDAY
+                            ScriptedSequenceType.PLAYER_BIRTHDAY_SEQUENCE
                         )
                     elif (
                         len(
@@ -659,7 +720,7 @@ class Game:
                                 "group_market_passive_player_sequence_timestamp"
                             ][1:]
                         self.level.start_scripted_sequence(
-                            ScriptedSequenceType.PASSIVE_DECIDE_TOMATO_OR_CORN
+                            ScriptedSequenceType.GROUP_MARKET_PASSIVE_PLAYER_SEQUENCE
                         )
                     elif (
                         len(
@@ -681,7 +742,7 @@ class Game:
                                 "group_market_active_player_sequence_timestamp"
                             ][1:]
                         self.level.start_scripted_sequence(
-                            ScriptedSequenceType.ACTIVE_DECIDE_TOMATO_OR_CORN
+                            ScriptedSequenceType.GROUP_MARKET_ACTIVE_PLAYER_SEQUENCE
                         )
                     elif (
                         self.round_config.get("resource_allocation_text", "")
@@ -705,7 +766,10 @@ class Game:
 
             if self.level.cutscene_animation.active:
                 self.all_sprites.update_blocked(dt)
-                if self.current_state == GameState.PLAY:
+                if (
+                    self.current_state == GameState.PLAY
+                    and self.game_version == DEBUG_MODE_VERSION
+                ):
                     event = pygame.key.get_pressed()
                     self.fast_forward.draw_option(self.display_surface)
                     if event[pygame.K_RSHIFT]:
