@@ -59,11 +59,10 @@ for sheet_name in workbook.sheetnames:
     for row in range(FIRST_DATA_ROW, sheet.max_row):
         key = sheet[f"{KEY_COL}{row}"].value
 
-        # no more data - skip to next sheet
+        # when there is no data in `B` column, assume that this is the end of data range and skip to next sheet
+        # sometimes `sheet.max_row` is not detect correctly
         if not key:
             break
-
-        # row_vals = []
 
         for i, col in enumerate(col_letters):
             address = f"{col}{row}"
@@ -80,10 +79,6 @@ for sheet_name in workbook.sheetnames:
                     errors.append(f"Cell {address}: {e}")
                 except Exception as e:
                     errors.append(f"Cell {address}: unexpected error - {e}")
-
-            # row_vals.append(cell)
-
-        # print(f"row: {row_vals}")
 
     # Use the commented-out part if the JSON output should be nested document.
     final.append(levels)
