@@ -279,8 +279,7 @@ class Game:
         self.switch_state(GameState.PLAY)
 
     def set_initials(self, initials: str) -> None:
-        if self.player:
-            self.player.name = initials
+        self.player.name = initials
 
     def set_token(self, response: dict[str, Any]) -> None:
         self.token = response["token"]
