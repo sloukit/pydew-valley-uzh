@@ -206,6 +206,10 @@ class DialogueManager:
 
         self._push_current_tb_to_foreground()
 
+    def close_dialogue(self) -> None:
+        self._purge_tb_list()
+        self._showing_dialogue = False
+
     def advance(self):
         """Show the next part of the current dialogue, or forces the current textbox to display
         the whole text before it finishes typing.
