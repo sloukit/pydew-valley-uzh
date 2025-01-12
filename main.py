@@ -479,11 +479,11 @@ class Game:
                         [
                             [
                                 "Clear Skies",
-                                f"{self.round_config["character_introduction_text"]}\t\t\t\t\t\t\t{label}",
+                                f"{self.round_config['character_introduction_text']}\t\t\t\t\t\t\t{label}",
                             ],
                             [
                                 "Clear Skies",
-                                f"{self.round_config["ingroup_introduction_text"]}\t\t\t\t\t\t\t{label}",
+                                f"{self.round_config['ingroup_introduction_text']}\t\t\t\t\t\t\t{label}",
                             ],
                         ],
                     )
