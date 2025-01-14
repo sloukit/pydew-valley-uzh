@@ -34,7 +34,7 @@ Amount  Value@@Anzahl  Preis
 none@@Keine
 wood@@Holz
 apple@@Apfel
-blackberry@@Schwarzbeeren
+blackberry@@Trauben
 blueberry@@Blaubeeren
 raspberry@@Himbeeren
 orange@@Orangen
@@ -72,7 +72,7 @@ Reset@@Standard
 
 # round end menu
 
-Round %d has ended. You currently have $%d, and:@@Runde %d ist fertig. Du hast $%d und:
+Round %d has ended. You currently have $%d, and:@@Runde %d ist fertig. Besitz der Rothüte: $%d und:
 continue to next round@@Weiter in die nächste Runde
 
 # task (items allocation) menu
@@ -85,7 +85,7 @@ You don't have that many items to distribute.@@Du hast nichts mehr zum verteilen
 Items missing:@@Noch ausstehend:
 Take out:@@Lösche:
 You have received@@Du erhältst
-Your group's inventory:@@An die Blaukappen:
+Your group's inventory:@@An die Rothüte:
 Other group's inventory:@@An die Hornlinge:
 
 # src/screens/menu_notification.py
@@ -115,7 +115,7 @@ Plant Seed@@Samen pflanzen
 Interact@@Ansprechen
 Open Inventory@@Lager öffnen
 Toggle Emote Wheel@@Interaktion wählen
-Advance Dialog@@Vorspulen
+Advance Dialog@@Fortfahren
 Apply health@@EN: Apply health
 Apply damage@@EN: Apply damage
 Start Earthquake Effect@@EN: Start Earthquake Effect
@@ -154,8 +154,8 @@ Herd the cows into the barn@@Treibe die Kühe in den Stall
 as fast as possible!@@so schnell wie möglich!
 Objective:@@Aufgabe:
 Herd the cows into the barn!@@Treibe die Kühe in den Stall!
-Blaukappen (ingroup) progress:@@Blaukappen:
+Rothüte (ingroup) progress:@@Rothüte:
 Hornlinge (outgroup) progress:@@Hornlinge:
 Cows in the barn@@Kühe im Stall:
-[cheering group]@@[Anfeuernde Blaukappen]
-[disappointed group]@@[Enttäuschte Blaukappen]
+[cheering group]@@Die Rothüte sind stolz! 
+[disappointed group]@@Die Rothüte sind enttäuscht
