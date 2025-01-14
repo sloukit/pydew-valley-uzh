@@ -30,7 +30,7 @@ GAME_MAP = Map.NEW_FARM
 ENABLE_NPCS = True
 TEST_ANIMALS = True
 
-GAME_LANGUAGE = os.environ.get("GAME_LANGUAGE", "en")
+GAME_LANGUAGE = os.environ.get("GAME_LANGUAGE", "de")
 DEBUG_MODE_VERSION = 0
 # True  => virtual game time
 # False => real world time
