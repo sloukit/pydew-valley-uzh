@@ -59,13 +59,13 @@ SAM_BORDER_SIZE = (
 )  # absolute size of the border around self-assessment manikins
 
 GROW_SPEED = {
-    "corn": 1,
-    "tomato": 0.7,
-    "beetroot": 0.7,
-    "carrot": 0.7,
-    "eggplant": 0.7,
-    "pumpkin": 0.7,
-    "parsnip": 0.7,
+    "corn": 1.40,
+    "tomato": 1.40,
+    "beetroot": 1.40,
+    "carrot": 1.40,
+    "eggplant": 1.40,
+    "pumpkin": 1.40,
+    "parsnip": 1.40,
 }
 
 BASE_ALLOWED_CROPS = [
