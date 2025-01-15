@@ -9,16 +9,16 @@
         ["Übungsrunde", "Get the necklace from the ingroup"]
     ],
     "Farm_tile":[
-        ["Übungsrunde", "Gehe auf deine Farm und übe, wie man ackert. \t\t\t\t Drücke die linke Maustaste, um deine Hake \t\t\t zu benutzen. \t\t\t\t Drücke die Tab-Taste, um das Werkzeug \t\t\t zu wechseln."]
+        ["Übungsrunde", "Gehe auf deine Farm und übe, wie man ackert. \t\t\t Deine Werkzeuge sind Hake, Axt und Gieskanne. \t\t\t Drücke die linke Maustaste, um deine Hake \t\t\t zu benutzen. \t\t\t Drücke die Tab-Taste, um das Werkzeug \t\t\t zu wechseln."]
     ],
     "Plant_crop":[
-        ["Übungsrunde", "Drücke die rechte Maustaste, um einen \t\t\t Samen zu pflanzen. \t\t\t\t\t Drücke die linke Shifttaste, um zwischen Samen zu wechseln."]
+        ["Übungsrunde", "Drücke die rechte Maustaste, um einen \t\t\t Samen zu pflanzen. \t\t\t Drücke die linke Shifttaste, um den Samen zu wechseln. \t\t\t Wenn die Samen leer sind, musst du \t\t\t auf dem Markt neue kaufen."]
     ],
     "Water_crop":[
-        ["Übungsrunde", "Wechsle dein Werkzeug zur Giesskasse, \t\t\t indem du die Tab-Taste drückst. \t\t\t\t Giesse deine neue Pflanze, \t\t\t indem du die linke Maustaste drückst. \t\t\t Hier wächst nun eine Pflanze, \t\t\t die du bald ernten und auf dem Markt \t\t\t verkaufen kannst."]
+        ["Übungsrunde", "Wechsle zu deiner Giesskanne. \t\t\t und giesse deine neue Pflanze. \t\t\t Hier wächst bald ein Gemüse, \t\t\t das du ernten und auf dem Markt \t\t\t verkaufen kannst."]
     ],
     "Go_to_forest_and_hit_tree":[
-        ["Übungsrunde", "Folge dem Holzweg nach unten und rechts. \t\t\t Nimm die zweite Abzweigung nach rechts unten in den Wald. \t\t\t Benutze dort deine Axt, um einen Baum zu fällen. \t\t\t\t Wähle deine Axt, indem du die Tab-Taste drückst. \t\t\t Benutze die Axt mit der linken Maustaste."]
+        ["Übungsrunde", "Folge dem Holzweg nach rechts unten. \t\t\t Nimm die zweite Abzweigung nach rechts in den Wald \t\t\t Achte auf die Wegschilder! \t\t\t Benutze im Wald die Axt, um einen Baum zu fällen. \t\t\t Drücke Shift, um Früchte zu sammeln."]
     ],
     "Interact_with_ingroup_member":[
         ["Übungsrunde", "Drücke e, um mit einem Rothut zu interagieren. \t\t\t\t Drücke die linke oder rechte Pfeiltaste, um zwischen den Emojis zu wählen. \t\t\t\t Drücke die Leertaste, um ein Emoji auszuwählen."]
@@ -30,12 +30,12 @@
         ["Übungsrunde", "Walk around on the outgroup farm \t\t\t and switch to the outgroup"]
     ],
     "Go_to_market_and_buy/sell_something":[
-        ["Übungsrunde", "Gehe links durch den Wald und nach unten, \t\t\t um den Eingang zur Stadt zu finden. \t\t\t Folge dem steinigen Weg über die Brücke zum Markt. \t\t\t\t Man kennt dich dort, denn du verwaltest \t\t\t das Geld der Rothüte! \t\t\t Drücke die Leertaste, um mit dem Verkäufer \t\t\t zu interagieren. \t\t\t\t Drücke die Leertaste, um zu kaufen und verkaufe. \t\t\t\t Drücke esc, um den Markt zu verlassen."]
+        ["Übungsrunde", "Gehe links durch den Wald und finde die Stadt. \t\t\t Folge dem steinigen Weg über die Brücke zum Markt. \t\t\t\t Man kennt dich dort, du verwaltest das Geld der Rothüte! \t\t\t Drücke die Leertaste, um mit dem Verkäufer zu reden. \t\t\t\t Drücke die Leertaste, um zu kaufen und verkaufe. \t\t\t\t Drücke esc, um den Markt zu verlassen."]
     ],
     "Go_to_minigame_map_and_play":[
         ["Übungsrunde", "Gehe zurück über die Brücke und betrete den grossen Kuhstall. \t\t\t Spiele dort eine Runde 'Kuh-in-den-Stall' gegen die Hornlinge."]
     ],
     "Tutorial_end":[
-        ["Übungsrunde", "Gut gemacht, du hast die Übungsrunde erfolgreich beendet. Alle Tastenkombinationen sind links zu sehen. \t\t\t\t\t\t Gehe nun zurück auf deine Farm und pflanze mindestens 5 Maispflanzen - der Acker ruft! \t\t\t\t\t\t Drücke die Leertaste, um fortzufahren."]
+        ["Übungsrunde", "Gut gemacht, du hast die Übungsrunde erfolgreich beendet. Alle Tastenkombinationen sind links zu sehen. \t\t\t Gehe nun zurück auf deine Farm und pflanze mindestens 5 Maispflanzen - der Acker ruft! \t\t\t Drücke die Leertaste, um fortzufahren."]
     ]
 }
