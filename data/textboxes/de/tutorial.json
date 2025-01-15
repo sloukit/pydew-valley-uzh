@@ -9,33 +9,33 @@
         ["Übungsrunde", "Get the necklace from the ingroup"]
     ],
     "Farm_tile":[
-        ["Übungsrunde", "Gehe auf deine Farm und übe, wie man ackert. \t\t\t Deine Werkzeuge sind Hake, Axt und Gieskanne. \t\t\t Drücke die linke Maustaste, um deine Hake \t\t\t zu benutzen. \t\t\t Drücke die Tab-Taste, um das Werkzeug \t\t\t zu wechseln."]
+        ["Übungsrunde", "Gehe auf deine Farm und übe, das Ackern. \t\t\t Deine Werkzeuge sind Hake, Axt und \t\t\t Gieskanne. Drücke die linke Maustaste, um \t\t\t dein Werkzeug zu benutzen. Drücke die Tab-\t\t\t Taste, um das Werkzeug zu wechseln."]
     ],
     "Plant_crop":[
-        ["Übungsrunde", "Drücke die rechte Maustaste, um einen \t\t\t Samen zu pflanzen. \t\t\t Drücke die linke Shifttaste, um den Samen zu wechseln. \t\t\t Wenn die Samen leer sind, musst du \t\t\t auf dem Markt neue kaufen."]
+        ["Übungsrunde", "Drücke die rechte Maustaste, um einen \t\t\t Samen zu pflanzen. Drücke die linke \t\t\t Shifttaste, um den Samen zu wechseln. \t\t\t  Wenn die Samen leer sind, musst du auf \t\t\t dem Markt neue kaufen."]
     ],
     "Water_crop":[
-        ["Übungsrunde", "Wechsle zu deiner Giesskanne. \t\t\t und giesse deine neue Pflanze. \t\t\t Hier wächst bald ein Gemüse, \t\t\t das du ernten und auf dem Markt \t\t\t verkaufen kannst."]
+        ["Übungsrunde", "Wechsle zu deiner Giesskanne und giesse \t\t\t deine neue Pflanze. Hier wächst bald ein \t\t\t Gemüse, das du ernten und auf dem Markt \t\t\t verkaufen kannst. Alle Pflanzen müssen \t\t\t immer gegossen sein, damit sie wachsen."]
     ],
     "Go_to_forest_and_hit_tree":[
-        ["Übungsrunde", "Folge dem Holzweg nach rechts unten. \t\t\t Nimm die zweite Abzweigung nach rechts in den Wald \t\t\t Achte auf die Wegschilder! \t\t\t Benutze im Wald die Axt, um einen Baum zu fällen. \t\t\t Drücke Shift, um Früchte zu sammeln."]
+        ["Übungsrunde", "Folge dem Holzweg nach rechts unten. \t\t\t Nimm die zweite Abzweigung nach rechts \t\t\t in den Wald. Achte immer auf die \t\t\t Wegschilder! Benutze im Wald die Axt, um \t\t\t einen Baum zu fällen. Drücke Shift, um \t\t\t Früchte im Gebüsch zu sammeln."]
     ],
     "Interact_with_ingroup_member":[
-        ["Übungsrunde", "Drücke e, um mit einem Rothut zu interagieren. \t\t\t\t Drücke die linke oder rechte Pfeiltaste, um zwischen den Emojis zu wählen. \t\t\t\t Drücke die Leertaste, um ein Emoji auszuwählen."]
+        ["Übungsrunde", "Drücke e, um mit einem Rothut zu inter-\t\t\t agieren. Drücke die linke oder rechte \t\t\t Pfeiltaste, um zwischen den Emojis zu \t\t\t wählen. Drücke die Leertaste, um ein \t\t\t  Emoji auszuwählen."]
     ],
     "Interact_with_outgroup_member":[
-        ["Übungsrunde", "Drücke e, um mit einem Hornling zu interagieren \t\t\t\t Drücke die linke oder rechte Pfeiltaste, um zwischen den Emojis zu wählen \t\t\t\t Drücke die Leertaste, um ein Emoji auszuwählen"]
+        ["Übungsrunde", "Drücke e, um mit einem Hornling zu inter-\t\t\t agieren. Drücke die linke oder rechte \t\t\t Pfeiltaste, um zwischen den Emojis zu \t\t\t wählen. Drücke die Leertaste, um ein \t\t\t  Emoji auszuwählen."]
     ],
     "Walk_around_outgroup_farm_and_switch_to_outgroup":[
         ["Übungsrunde", "Walk around on the outgroup farm \t\t\t and switch to the outgroup"]
     ],
     "Go_to_market_and_buy/sell_something":[
-        ["Übungsrunde", "Gehe links durch den Wald und finde die Stadt. \t\t\t Folge dem steinigen Weg über die Brücke zum Markt. \t\t\t\t Man kennt dich dort, du verwaltest das Geld der Rothüte! \t\t\t Drücke die Leertaste, um mit dem Verkäufer zu reden. \t\t\t\t Drücke die Leertaste, um zu kaufen und verkaufe. \t\t\t\t Drücke esc, um den Markt zu verlassen."]
+        ["Übungsrunde", "Gehe links durch den Wald und finde die \t\t\t Stadt. Folge dem steinigen Weg über \t\t\t die Brücke zum Markt. Man kennt dich \t\t\t dort, du verwaltest das Geld der Rot-\t\t\t hüte! Rede mit dem Verkäufer und kaufe \t\t\t oder verkaufe mit der Leertaste. Drücke \t\t\t esc, um den Markt zu verlassen."]
     ],
     "Go_to_minigame_map_and_play":[
-        ["Übungsrunde", "Gehe zurück über die Brücke und betrete den grossen Kuhstall. \t\t\t Spiele dort eine Runde 'Kuh-in-den-Stall' gegen die Hornlinge."]
+        ["Übungsrunde", "Gehe zurück über die Brücke und betrete \t\t\t den grossen Kuhstall. Spiele dort eine \t\t\t Runde 'Kuh-in-den-Stall' gegen die \t\t\t Hornlinge."]
     ],
     "Tutorial_end":[
-        ["Übungsrunde", "Gut gemacht, du hast die Übungsrunde erfolgreich beendet. Alle Tastenkombinationen sind links zu sehen. \t\t\t Gehe nun zurück auf deine Farm und pflanze mindestens 5 Maispflanzen - der Acker ruft! \t\t\t Drücke die Leertaste, um fortzufahren."]
+        ["Übungsrunde", "Gut gemacht, du hast die Übungsrunde \t\t\t erfolgreich beendet. Alle Tasten-\t\t\t kombinationen sind links zu sehen. Gehe \t\t\t nun zurück auf deine Farm und pflanze 5 \t\t\t Maispflanzen - der Acker ruft! \t\t\t Drücke die Leertaste, um fortzufahren."]
     ]
 }
