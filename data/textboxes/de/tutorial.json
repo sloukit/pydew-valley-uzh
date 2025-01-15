@@ -9,10 +9,10 @@
         ["Übungsrunde", "Get the necklace from the ingroup"]
     ],
     "Farm_tile":[
-        ["Übungsrunde", "Gehe auf deine Farm und übe das Ackern. \t\t\t Deine Werkzeuge sind Hake, Axt und \t\t\t Gieskanne. Drücke die linke Maustaste, um \t\t\t dein Werkzeug zu benutzen. Drücke die Tab-\t\t\t Taste, um das Werkzeug zu wechseln."]
+        ["Übungsrunde", "Gehe auf deine Farm und übe das Ackern. \t\t\t Deine Werkzeuge sind Hake, Axt und \t\t\t Gieskanne. Oben links siehst du das gerade \t\t\t genutzte Werkzeug. Drücke die linke Maus-\t\t\t taste, um dein Werkzeug zu benutzen. \t\t\t Drücke die Tab-Taste, um das Werkzeug \t\t\t zu wechseln."]
     ],
     "Plant_crop":[
-        ["Übungsrunde", "Drücke die rechte Maustaste, um einen \t\t\t Samen zu pflanzen. Drücke die linke \t\t\t Shifttaste, um den Samen zu wechseln. \t\t\t  Wenn die Samen leer sind, musst du auf \t\t\t dem Markt neue kaufen."]
+        ["Übungsrunde", "Drücke die rechte Maustaste, um einen \t\t\t Samen zu pflanzen. Oben links siehst du \t\t\t den gerade genutzten Samen. Drücke die \t\t\t linke Shifttaste, um den Samen zu \t\t\t wechseln. Wenn die Samen leer sind, \t\t\t musst du auf dem Markt neue kaufen."]
     ],
     "Water_crop":[
         ["Übungsrunde", "Wechsle zu deiner Giesskanne und giesse \t\t\t deine neue Pflanze. Hier wächst bald ein \t\t\t Gemüse, das du ernten und auf dem Markt \t\t\t verkaufen kannst. Alle Pflanzen müssen \t\t\t immer gegossen sein, damit sie wachsen."]
