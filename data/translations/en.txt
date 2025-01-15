@@ -9,7 +9,7 @@ Enter authentication data@@Enter authentication data
 Play@@Play
 Quit@@Quit
 Enter a Token to Play@@Enter a Token to Play
-Enter initials:@@Enter initials:
+Enter player's name:@@Enter player's name:
 Main Menu@@Main Menu
 
 # Inventory

@@ -13,7 +13,7 @@ from src.support import get_translated_string as _
 
 _SCREEN_CENTER = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
 MAX_TOKEN_LEN = 3
-MAX_INITIALS_LEN = 2
+MAX_PLAYERS_NAME_LEN = 16
 
 
 class MainMenu(GeneralMenu):
@@ -21,25 +21,26 @@ class MainMenu(GeneralMenu):
         self,
         switch_screen: Callable[[GameState], None],
         set_token: Callable[[dict[str, Any]], None],
-        set_initials: Callable[[dict[str, Any]], None],
+        set_players_name: Callable[[dict[str, Any]], None],
     ) -> None:
         options = [_("Play"), _("Quit"), _("Enter authentication data")]
         title = _("Main Menu")
         size = (400, 400)
         super().__init__(title, options, switch_screen, size)
         self.set_token = set_token
-        self.set_initials = set_initials
+        self.set_players_name = set_players_name
         self.token = ""  # Variable to store token
-        self.initials = ""  # Variable to store initials
+        self.players_name = ""  # Variable to store players_name
+        self.round_config = {}
         self.play_button_enabled = False  # Initialize as False
 
         # Input fields
         self.input_active = False
-        self.initials_active = False
+        self.players_name_active = False
         self.input_box = pygame.Rect(100, 390, 200, 50)
-        self.initials_box = pygame.Rect(100, 390, 200, 50)
+        self.players_name_box = pygame.Rect(100, 390, 200, 50)
         self.input_text = ""
-        self.initials_text = ""
+        self.players_name_text = ""
 
         # Cursor blinking
         self.cursor_visible = True
@@ -49,14 +50,14 @@ class MainMenu(GeneralMenu):
     def reset_fields(self) -> None:
         """Reset all input fields and hide them."""
         self.input_active = False
-        self.initials_active = False
+        self.players_name_active = False
         self.input_text = ""
-        self.initials_text = ""
+        self.players_name_text = ""
         self.play_button_enabled = False
 
-    def validate_initials(self, initials: str) -> bool:
-        """Validate if initials are exactly 2 characters and only letters."""
-        return len(initials) == MAX_INITIALS_LEN and initials.isalpha()
+    def validate_players_name(self, players_name: str) -> bool:
+        """Validate if players_name are exactly 2 characters and only letters."""
+        return len(players_name) <= MAX_PLAYERS_NAME_LEN and players_name.isalnum()
 
     def draw_input_box(self, box, input_text, label_text, input_active) -> None:
         button_width = 400
@@ -109,12 +110,12 @@ class MainMenu(GeneralMenu):
                 _("Enter play token:"),
                 self.input_active,
             )
-        if self.initials_active:
+        if self.players_name_active:
             self.draw_input_box(
-                self.initials_box,
-                self.initials_text,
-                _("Enter initials:"),
-                self.initials_active,
+                self.players_name_box,
+                self.players_name_text,
+                _("Enter player's name:"),
+                self.players_name_active,
             )
 
     def validate_token(self, token: str) -> dict[str, Any]:
@@ -154,17 +155,17 @@ class MainMenu(GeneralMenu):
 
         if event.type == pygame.MOUSEBUTTONDOWN and mouse_buttons()[0]:
             self.pressed_button = self.get_hovered_button()
-            if self.input_box.collidepoint(event.pos) and not self.initials_active:
+            if self.input_box.collidepoint(event.pos) and not self.players_name_active:
                 self.input_active = True
-                self.initials_active = False
+                self.players_name_active = False
                 return True
-            elif self.initials_box.collidepoint(event.pos):
+            elif self.players_name_box.collidepoint(event.pos):
                 self.input_active = False
-                self.initials_active = True
+                self.players_name_active = True
                 return True
             else:
                 self.input_active = False
-                self.initials_active = False
+                self.players_name_active = False
 
         if event.type == pygame.KEYDOWN:
             # Ignore the Tab key
@@ -177,9 +178,16 @@ class MainMenu(GeneralMenu):
                         response = self.validate_token(self.input_text)
                         if response.get("jwt", ""):
                             self.token = self.input_text
-                            self.set_token(response)
+                            self.round_config = self.set_token(response)
                             self.input_active = False
-                            self.initials_active = True
+                            # get players_name only if used in introduction
+                            if self.round_config.get("character_introduction_text", ""):
+                                self.players_name_active = True
+                            else:
+                                self.set_players_name("")
+                                self.play_button_enabled = True
+                                self.remove_button(_("Enter authentication data"))
+                                self.draw()
                             self.input_text = ""
                         return True
                 elif event.key == pygame.K_ESCAPE:
@@ -192,13 +200,13 @@ class MainMenu(GeneralMenu):
                     self.input_text += event.unicode
                     return True
 
-            if self.initials_active:
+            if self.players_name_active:
                 if event.key in [pygame.K_RETURN, pygame.K_KP_ENTER]:
-                    if self.validate_initials(self.initials_text):
-                        self.initials = self.initials_text
-                        self.set_initials(self.initials)
+                    if self.validate_players_name(self.players_name_text):
+                        self.players_name = self.players_name_text
+                        self.set_players_name(self.players_name)
                         self.play_button_enabled = True
-                        self.initials_active = False
+                        self.players_name_active = False
                         self.remove_button(_("Enter authentication data"))
                         self.draw()
                     return True
@@ -206,15 +214,15 @@ class MainMenu(GeneralMenu):
                     self.reset_fields()
                     return True
                 elif event.key == pygame.K_BACKSPACE:
-                    self.initials_text = self.initials_text[:-1]
+                    self.players_name_text = self.players_name_text[:-1]
                     return True
-                elif len(self.initials_text) < MAX_INITIALS_LEN:
-                    self.initials_text += event.unicode
+                elif self.validate_players_name(self.players_name_text + event.unicode):
+                    self.players_name_text += event.unicode
                     return True
 
-            if not self.input_active and not self.initials_active:
+            if not self.input_active and not self.players_name_active:
                 if event.key in [pygame.K_RETURN, pygame.K_KP_ENTER]:
-                    if not self.token and not self.initials:
+                    if not self.token and not self.players_name:
                         self.button_action(_("Enter authentication data"))
                         return True
                     elif self.play_button_enabled:
