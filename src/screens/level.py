@@ -14,7 +14,7 @@ from src.camera.quaker import Quaker
 from src.camera.zoom_manager import ZoomManager
 from src.controls import Controls
 from src.enums import FarmingTool, GameState, Map, ScriptedSequenceType, StudyGroup, Layer, Direction
-from src.events import DIALOG_ADVANCE, DIALOG_SHOW, START_QUAKE, post_event
+from src.events import DIALOG_ADVANCE, DIALOG_SHOW, START_QUAKE, VOLCANO_ERUPTION, post_event
 from src.exceptions import GameMapWarning
 from src.groups import AllSprites, PersistentSpriteGroup
 from src.gui.interface.emotes import NPCEmoteManager, PlayerEmoteManager
@@ -597,6 +597,9 @@ class Level:
                 self.set_round(7)
             return True
 
+        elif event.type == VOLCANO_ERUPTION:
+            self.volcano(True)
+
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.switch_screen(GameState.PAUSE)
@@ -618,6 +621,10 @@ class Level:
         if self.get_game_version() == DEBUG_MODE_VERSION:
             # if self.controls.DEBUG_QUAKE.click:
             #     post_event(START_QUAKE, duration=2.0, debug=True)
+            
+            if self.controls.DEBUG_VOLCANO.click:
+                post_event(VOLCANO_ERUPTION)
+            
             if self.controls.DEBUG_APPLY_HEALTH.click:
                 self.overlay.health_bar.apply_health(1)
 
@@ -904,7 +911,7 @@ class Level:
     # Creating Volcano on volcano map
     def create_volcano(self):
         Sprite(
-            VOLCANO_SIZE, self.frames["level"]["animations"]["volcano"][0], z=Layer.VOLCANO
+            VOLCANO_POS, self.frames["level"]["animations"]["volcano"][0], z=Layer.VOLCANO
         ).add(self.all_sprites)
         self.volcano_animation()
 
@@ -943,8 +950,8 @@ class Level:
             self.map_transition.reset = lambda: self.switch_to_map(self.previous_map)
             self.start_map_transition()
 
-    def volcano(self):
-        if self.get_round() == 7:
+    def volcano(self, event = None):
+        if self.get_round() == 7 or event == True:
             if not self.start_volcano_animation:
                 self.previous_map = self.game_map.current_map
             self.start_volcano_map_transition()

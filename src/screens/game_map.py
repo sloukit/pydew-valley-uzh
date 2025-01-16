@@ -356,6 +356,8 @@ class GameMap:
         self.npcs = []
         self.animals = []
 
+        self.current_map = selected_map
+
         self._setup_layers(save_file, selected_map, scene_ani, zoom_man)
 
         if selected_map == Map.MINIGAME and not self.round_config.get(

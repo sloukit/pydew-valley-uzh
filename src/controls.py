@@ -100,6 +100,7 @@ class Controls(Control, Enum):
     DEBUG_APPLY_HEALTH = (pygame.K_1, "Apply health")
     DEBUG_APPLY_DAMAGE = (pygame.K_2, "Apply damage")
     DEBUG_QUAKE = (pygame.K_m, "Start Earthquake Effect")
+    DEBUG_VOLCANO = (pygame.K_a, "Start Volcano Script")
     DEBUG_PLAYER_TASK = (pygame.K_b, "Show Player Task")
     DEBUG_END_ROUND = (pygame.K_r, "Skip to End of Round")
     DEBUG_SELF_ASSESSMENT = (pygame.K_v, "Open self assessment menu")
