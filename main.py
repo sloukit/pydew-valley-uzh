@@ -172,7 +172,7 @@ class Game:
         self.main_menu = MainMenu(
             self.switch_state,
             self.set_token,
-            self.set_initials,
+            self.set_players_name,
         )
         self.pause_menu = PauseMenu(self.switch_state)
         self.settings_menu = SettingsMenu(
@@ -278,10 +278,10 @@ class Game:
             send_telemetry(self.jwt, telemetry)
         self.switch_state(GameState.PLAY)
 
-    def set_initials(self, initials: str) -> None:
-        self.player.name = initials
+    def set_players_name(self, players_name: str) -> None:
+        self.player.name = players_name
 
-    def set_token(self, response: dict[str, Any]) -> None:
+    def set_token(self, response: dict[str, Any]) -> dict[str, Any]:
         self.token = response["token"]
         self.jwt = response["jwt"]
         self.game_version = response["game_version"]
@@ -308,6 +308,8 @@ class Game:
 
         print(f"Game version {self.game_version}")
         self.set_round(1)
+
+        return self.round_config
 
     def set_round(self, round: int) -> None:
         self.round = round

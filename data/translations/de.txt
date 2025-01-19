@@ -9,7 +9,7 @@ Enter authentication data@@Anmelden
 Play@@Spiel starten
 Quit@@Spiel verlassen
 Enter a Token to Play@@Klicken um Token einzugeben
-Enter initials:@@Initialen eingeben:
+Enter player's name:@@Name des Spielers eingeben:
 Main Menu@@Hauptmenü
 
 # Inventory
@@ -157,5 +157,5 @@ Herd the cows into the barn!@@Treibe die Kühe in den Stall!
 Rothüte (ingroup) progress:@@Rothüte:
 Hornlinge (outgroup) progress:@@Hornlinge:
 Cows in the barn@@Kühe im Stall:
-[cheering group]@@Die Rothüte sind stolz! 
+[cheering group]@@Die Rothüte sind stolz!
 [disappointed group]@@Die Rothüte sind enttäuscht
