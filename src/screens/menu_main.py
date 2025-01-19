@@ -56,7 +56,7 @@ class MainMenu(GeneralMenu):
         self.play_button_enabled = False
 
     def validate_players_name(self, players_name: str) -> bool:
-        """Validate if players_name are exactly 2 characters and only letters."""
+        """Validate if `players_name` is shorter or equal to MAX_PLAYERS_NAME_LEN and alphanumeric."""
         return len(players_name) <= MAX_PLAYERS_NAME_LEN and players_name.isalnum()
 
     def draw_input_box(self, box, input_text, label_text, input_active) -> None:
