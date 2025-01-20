@@ -11,6 +11,8 @@
             "sign_interaction": false,
             "notify_new_crop_timestamp": [],
             "notify_new_crop_text": "",
+            "notify_questionnaire_timestamp": [],
+            "notify_questionnaire_text": "",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -49,6 +51,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "Das ist dein Familienclan: Ihr seid die Roth\u00fcte",
+            "ingroup_hat_necklace_introduction_text": "Das ist ein vollwertiges Mika des Familienclans der Roth\u00fcte. Vollwertige Mitglieder tragen einen Hut und eine blaue Kette.",
+            "ingroup_hat_introduction_text": "Dieses Mika ist noch kein vollwertiges Mitglied des Familienclans der Roth\u00fcte und hat bislang nur den Hut erhalten.",
+            "narrative_text": "Der Winter naht - und der Acker ruft! Bereitet euch als Gruppe vor, sammelt Holz, verdient M\u00fcnzen, erntet Fr\u00fcchte und pflanzt Gem\u00fcse, um die nahende K\u00e4lte zu \u00fcberstehen. Doch Vorsicht: Die Hornlinge wollen dasselbe, und die Rohstoffe sind knapp. Beginne mit einer \u00dcbungsrunde, um die Steuerung zu meistern und eure Farm, den Wald und die Stadt zu erkunden.",
             "outgroup_introduction_text": "Das ist die andere Gruppe: Die Hornlinge",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -82,6 +87,10 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt rote Beete pflanzen!",
+            "notify_questionnaire_timestamp": [
+                870
+            ],
+            "notify_questionnaire_text": "Am Ende des Spiels gibt es einen kurzen Fragebogen",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -119,6 +128,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [
                 600
@@ -152,6 +164,8 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt Karotten pflanzen!",
+            "notify_questionnaire_timestamp": [],
+            "notify_questionnaire_text": "",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -190,6 +204,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -221,6 +238,10 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt Auberginen pflanzen!",
+            "notify_questionnaire_timestamp": [
+                870
+            ],
+            "notify_questionnaire_text": "Am Ende des Spiels gibt es einen kurzen Fragebogen",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -260,6 +281,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -293,6 +317,8 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt K\u00fcrbis pflanzen!",
+            "notify_questionnaire_timestamp": [],
+            "notify_questionnaire_text": "",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -333,6 +359,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -364,6 +393,10 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt Pastinaken pflanzen!",
+            "notify_questionnaire_timestamp": [
+                870
+            ],
+            "notify_questionnaire_text": "Am Ende des Spiels gibt es einen kurzen Fragebogen",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -405,6 +438,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -436,6 +472,8 @@
             "sign_interaction": false,
             "notify_new_crop_timestamp": [],
             "notify_new_crop_text": "",
+            "notify_questionnaire_timestamp": [],
+            "notify_questionnaire_text": "",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -474,6 +512,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "Das ist deine Freundesfarm: Ihr seid die Roth\u00fcte",
+            "ingroup_hat_necklace_introduction_text": "Das ist ein vollwertiges Mika der Freundesfarm der Roth\u00fcte. Vollwertige Mitglieder tragen einen Hut und eine blaue Kette.",
+            "ingroup_hat_introduction_text": "Dieses Mika ist noch kein vollwertiges Mitglied der Freundesfarm der Roth\u00fcte und hat bislang nur den Hut erhalten.",
+            "narrative_text": "Der Winter naht - und der Acker ruft! Bereitet euch als Gruppe vor, sammelt Holz, verdient M\u00fcnzen, erntet Fr\u00fcchte und pflanzt Gem\u00fcse, um die nahende K\u00e4lte zu \u00fcberstehen. Doch Vorsicht: Die Hornlinge wollen dasselbe, und die Rohstoffe sind knapp. Beginne mit einer \u00dcbungsrunde, um die Steuerung zu meistern und eure Farm, den Wald und die Stadt zu erkunden.",
             "outgroup_introduction_text": "Das ist die andere Gruppe: Die Hornlinge",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -506,6 +547,10 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt rote Beete pflanzen!",
+            "notify_questionnaire_timestamp": [
+                870
+            ],
+            "notify_questionnaire_text": "Am Ende des Spiels gibt es einen kurzen Fragebogen",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -543,6 +588,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [
                 600
@@ -575,6 +623,8 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt Karotten pflanzen!",
+            "notify_questionnaire_timestamp": [],
+            "notify_questionnaire_text": "",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -613,6 +663,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -643,6 +696,10 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt Auberginen pflanzen!",
+            "notify_questionnaire_timestamp": [
+                870
+            ],
+            "notify_questionnaire_text": "Am Ende des Spiels gibt es einen kurzen Fragebogen",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -682,6 +739,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -714,6 +774,8 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt K\u00fcrbis pflanzen!",
+            "notify_questionnaire_timestamp": [],
+            "notify_questionnaire_text": "",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -754,6 +816,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -784,6 +849,10 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt Pastinaken pflanzen!",
+            "notify_questionnaire_timestamp": [
+                870
+            ],
+            "notify_questionnaire_text": "Am Ende des Spiels gibt es einen kurzen Fragebogen",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -825,6 +894,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -855,6 +927,8 @@
             "sign_interaction": false,
             "notify_new_crop_timestamp": [],
             "notify_new_crop_text": "",
+            "notify_questionnaire_timestamp": [],
+            "notify_questionnaire_text": "",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -893,6 +967,9 @@
             "minigame": true,
             "minigame_rooting_npcs": false,
             "ingroup_introduction_text": "Du bist zuf\u00e4llig bei den Roth\u00fcten gelandet",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "Der Winter naht - und der Acker ruft! Bereitet dich mit den Roth\u00fcten vor, sammelt Holz, verdient M\u00fcnzen, erntet Fr\u00fcchte und pflanzt Gem\u00fcse, um die nahende K\u00e4lte zu \u00fcberstehen. Beginne mit einer \u00dcbungsrunde, um die Steuerung zu meistern und die Farm, den Wald und die Stadt zu erkunden.",
             "outgroup_introduction_text": "Das sind die Hornlinge",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -922,6 +999,10 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt rote Beete pflanzen!",
+            "notify_questionnaire_timestamp": [
+                870
+            ],
+            "notify_questionnaire_text": "Am Ende des Spiels gibt es einen kurzen Fragebogen",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -959,6 +1040,9 @@
             "minigame": true,
             "minigame_rooting_npcs": false,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -988,6 +1072,8 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt Karotten pflanzen!",
+            "notify_questionnaire_timestamp": [],
+            "notify_questionnaire_text": "",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -1026,6 +1112,9 @@
             "minigame": true,
             "minigame_rooting_npcs": false,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -1057,6 +1146,10 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt Auberginen pflanzen!",
+            "notify_questionnaire_timestamp": [
+                870
+            ],
+            "notify_questionnaire_text": "Am Ende des Spiels gibt es einen kurzen Fragebogen",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -1096,6 +1189,9 @@
             "minigame": true,
             "minigame_rooting_npcs": false,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -1125,6 +1221,8 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt K\u00fcrbis pflanzen!",
+            "notify_questionnaire_timestamp": [],
+            "notify_questionnaire_text": "",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -1165,6 +1263,9 @@
             "minigame": true,
             "minigame_rooting_npcs": false,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -1194,6 +1295,10 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt Pastinaken pflanzen!",
+            "notify_questionnaire_timestamp": [
+                870
+            ],
+            "notify_questionnaire_text": "Am Ende des Spiels gibt es einen kurzen Fragebogen",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -1235,6 +1340,9 @@
             "minigame": true,
             "minigame_rooting_npcs": false,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
