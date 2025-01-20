@@ -629,6 +629,19 @@ class Game:
                         self.round_config["notify_new_crop_text"] = ""
                         self.round_config["notify_new_crop_timestamp"] = []
                     elif (
+                        self.round_config.get("notify_questionnaire_text", "")
+                        and self.round_config["notify_questionnaire_timestamp"]
+                        and self.round_end_timer
+                        > self.round_config["notify_questionnaire_timestamp"][0]
+                    ):
+                        # make a copy of a string
+                        message = self.round_config["notify_questionnaire_text"][:]
+                        self.notification_menu.message = message
+                        self.switch_state(GameState.NOTIFICATION_MENU)
+                        # set to empty to not repeat
+                        self.round_config["notify_questionnaire_text"] = ""
+                        self.round_config["notify_questionnaire_timestamp"] = []
+                    elif (
                         len(self.round_config.get("self_assessment_timestamp", [])) > 0
                         and self.round_end_timer
                         > self.round_config["self_assessment_timestamp"][0]
