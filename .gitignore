@@ -182,3 +182,4 @@ images/characters/rabbit/temp_hat.png
 *.code-workspace
 .env_name.leave
 .envrc
+.ignore

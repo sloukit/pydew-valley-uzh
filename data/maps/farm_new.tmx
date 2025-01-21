@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="80" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="28" nextobjectid="415">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="80" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="28" nextobjectid="430">
  <tileset firstgid="1" source="../tilesets/grass_tileset.tsx"/>
  <tileset firstgid="78" source="../tilesets/Interaction.tsx"/>
  <tileset firstgid="80" source="../tilesets/fence_tileset.tsx"/>
@@ -877,7 +877,7 @@
   <object id="382" name="CAMTARGET_0" x="624.333" y="514">
    <properties>
     <property name="animation_name" value="intro"/>
-    <property name="pause" type="int" value="2"/>
+    <property name="pause" type="int" value="10"/>
     <property name="targ_id" type="int" value="0"/>
    </properties>
    <point/>
@@ -885,46 +885,43 @@
   <object id="383" name="CAMTARGET_1" x="386.667" y="377">
    <properties>
     <property name="animation_name" value="intro"/>
+    <property name="pause" type="int" value="7"/>
     <property name="speed" type="int" value="500"/>
     <property name="targ_id" type="int" value="1"/>
    </properties>
    <point/>
   </object>
-  <object id="388" name="CAMTARGET_2" x="473.667" y="196.333">
+  <object id="388" name="CAMTARGET_2" x="512.667" y="337.83">
    <properties>
     <property name="animation_name" value="intro"/>
+    <property name="pause" type="int" value="7"/>
     <property name="targ_id" type="int" value="2"/>
    </properties>
    <point/>
   </object>
-  <object id="389" name="CAMTARGET_3" x="232" y="181">
+  <object id="389" name="CAMTARGET_3" x="400.5" y="437">
    <properties>
     <property name="animation_name" value="intro"/>
+    <property name="pause" type="int" value="7"/>
     <property name="targ_id" type="int" value="3"/>
    </properties>
    <point/>
   </object>
-  <object id="411" name="CAMTARGET_4" x="837.667" y="217">
+  <object id="415" name="CAMTARGET_4" x="880.667" y="392">
    <properties>
     <property name="animation_name" value="intro"/>
+    <property name="pause" type="int" value="7"/>
     <property name="speed" type="int" value="600"/>
     <property name="targ_id" type="int" value="4"/>
    </properties>
    <point/>
   </object>
-  <object id="412" name="CAMTARGET_5" x="1031.33" y="185.333">
+  <object id="414" name="CAMTARGET_5" x="625.5" y="509.667">
    <properties>
     <property name="animation_name" value="intro"/>
-    <property name="speed" type="int" value="600"/>
-    <property name="targ_id" type="int" value="5"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="414" name="CAMTARGET_6" x="654" y="506.667">
-   <properties>
-    <property name="animation_name" value="intro"/>
+    <property name="pause" type="int" value="20"/>
     <property name="speed" type="int" value="500"/>
-    <property name="targ_id" type="int" value="6"/>
+    <property name="targ_id" type="int" value="5"/>
    </properties>
    <point/>
   </object>
@@ -999,18 +996,52 @@
     <property name="speed" type="float" value="0.5"/>
    </properties>
   </object>
+  <object id="416" name="ZAREA_HAT_NECKLACE" x="499.625" y="326.25" width="25.5" height="25.5">
+   <properties>
+    <property name="factor" type="float" value="0.5"/>
+    <property name="speed" type="float" value="0.5"/>
+   </properties>
+  </object>
+  <object id="417" name="ZAREA_HAT" x="388" y="422.625" width="25.5" height="25.5">
+   <properties>
+    <property name="factor" type="float" value="0.5"/>
+    <property name="speed" type="float" value="0.5"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="25" name="NPCs">
-  <object id="368" gid="825" x="390" y="448" width="20" height="21"/>
+  <object id="368" gid="825" x="390" y="448" width="20" height="21">
+   <properties>
+    <property name="features" value="hat"/>
+   </properties>
+  </object>
   <object id="369" gid="825" x="326" y="416" width="20" height="21"/>
   <object id="370" gid="825" x="406" y="368" width="20" height="21"/>
   <object id="371" gid="825" x="470" y="400" width="20" height="21"/>
-  <object id="372" gid="825" x="502" y="352" width="20" height="21"/>
+  <object id="372" gid="825" x="502" y="351" width="20" height="21">
+   <properties>
+    <property name="features" value="hat_necklace"/>
+   </properties>
+  </object>
   <object id="373" gid="827" x="791" y="416" width="18" height="17"/>
   <object id="374" gid="827" x="759" y="352" width="18" height="17"/>
   <object id="375" gid="827" x="871" y="400" width="18" height="17"/>
-  <object id="376" gid="827" x="951" y="448" width="18" height="17"/>
+  <object id="376" gid="827" x="900.569" y="422.569" width="18" height="17"/>
   <object id="377" gid="827" x="935" y="368" width="18" height="17"/>
+  <object id="415" gid="825" x="463.707" y="373.931" width="20" height="21"/>
+  <object id="416" gid="825" x="424.052" y="375.655" width="20" height="21"/>
+  <object id="417" gid="825" x="447.328" y="392.897" width="20" height="21"/>
+  <object id="419" gid="825" x="340" y="392.466" width="20" height="21"/>
+  <object id="420" gid="825" x="348.19" y="412.724" width="20" height="21"/>
+  <object id="421" gid="825" x="356.379" y="377.81" width="20" height="21"/>
+  <object id="422" gid="825" x="390.862" y="386.431" width="20" height="21"/>
+  <object id="423" gid="827" x="777.638" y="360.724" width="18" height="17"/>
+  <object id="424" gid="827" x="781.086" y="380.983" width="18" height="17"/>
+  <object id="425" gid="827" x="800.483" y="368.914" width="18" height="17"/>
+  <object id="426" gid="827" x="809.966" y="393.052" width="18" height="17"/>
+  <object id="427" gid="827" x="831.086" y="378.397" width="18" height="17"/>
+  <object id="428" gid="827" x="846.172" y="403.828" width="18" height="17"/>
+  <object id="429" gid="827" x="863.845" y="374.517" width="18" height="17"/>
  </objectgroup>
  <layer id="16" name="Border" width="80" height="40">
   <properties>

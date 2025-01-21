@@ -37,6 +37,9 @@ class NPC(NPCBase):
         emote_manager: NPCEmoteManager,
         tree_sprites: pygame.sprite.Group,
         sickness_allowed: bool,
+        has_hat: bool,
+        has_necklace: bool,
+        special_features: str | None,
     ):
         self.tree_sprites = tree_sprites
 
@@ -54,8 +57,9 @@ class NPC(NPCBase):
         )
         self.start_tile_pos = self.get_tile_pos()  # capture the NPC start position
         self.soil_area = soil_manager.get_area(self.study_group)
-        self.has_necklace = False
-        self.has_hat = False
+        self.has_necklace = has_necklace
+        self.has_hat = has_hat
+        self.special_features = special_features
         self.has_horn = False
         self.has_outgroup_skin = False
         self.sickness_allowed = sickness_allowed
@@ -191,6 +195,11 @@ class NPC(NPCBase):
     def assign_outfit_ingroup(self, ingroup_40p_hat_necklace_appearance: bool = False):
         # 40% of the ingroup NPCs should wear a hat and a necklace, and 60% of the ingroup NPCs should only wear the hat
         if self.study_group == StudyGroup.INGROUP:
+            # # if npc has special features set in Tiled map using 'features' custom field - do not change it
+            # # it's used in intro scripted sequence
+            if (self.special_features):
+                return
+
             if ingroup_40p_hat_necklace_appearance:
                 if random.random() <= 0.4:
                     self.has_necklace = True
