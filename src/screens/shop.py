@@ -292,5 +292,5 @@ class ShopMenu:
             img = self.img_surfs[text_index]
             item = self.options[text_index]
             amount = self.player.inventory[item]
-            value = item.get_worth() // 2 if item.is_seed() else item.get_worth()
+            value = item.get_worth() // 1 if item.is_seed() else item.get_worth()
             self.show_entry(text_surf, img, amount, value, top, self.index, text_index)

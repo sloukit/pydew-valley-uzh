@@ -11,6 +11,8 @@
             "sign_interaction": false,
             "notify_new_crop_timestamp": [],
             "notify_new_crop_text": "",
+            "notify_questionnaire_timestamp": [],
+            "notify_questionnaire_text": "",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -85,6 +87,10 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt rote Beete pflanzen!",
+            "notify_questionnaire_timestamp": [
+                870
+            ],
+            "notify_questionnaire_text": "Am Ende des Spiels gibt es einen kurzen Fragebogen",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -122,6 +128,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [
                 600
@@ -155,6 +164,8 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt Karotten pflanzen!",
+            "notify_questionnaire_timestamp": [],
+            "notify_questionnaire_text": "",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -193,6 +204,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -224,6 +238,10 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt Auberginen pflanzen!",
+            "notify_questionnaire_timestamp": [
+                870
+            ],
+            "notify_questionnaire_text": "Am Ende des Spiels gibt es einen kurzen Fragebogen",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -263,6 +281,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -296,6 +317,8 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt K\u00fcrbis pflanzen!",
+            "notify_questionnaire_timestamp": [],
+            "notify_questionnaire_text": "",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -336,6 +359,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -367,6 +393,10 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt Pastinaken pflanzen!",
+            "notify_questionnaire_timestamp": [
+                870
+            ],
+            "notify_questionnaire_text": "Am Ende des Spiels gibt es einen kurzen Fragebogen",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -408,6 +438,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -439,6 +472,8 @@
             "sign_interaction": false,
             "notify_new_crop_timestamp": [],
             "notify_new_crop_text": "",
+            "notify_questionnaire_timestamp": [],
+            "notify_questionnaire_text": "",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -512,6 +547,10 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt rote Beete pflanzen!",
+            "notify_questionnaire_timestamp": [
+                870
+            ],
+            "notify_questionnaire_text": "Am Ende des Spiels gibt es einen kurzen Fragebogen",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -549,6 +588,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [
                 600
@@ -581,6 +623,8 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt Karotten pflanzen!",
+            "notify_questionnaire_timestamp": [],
+            "notify_questionnaire_text": "",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -619,6 +663,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -649,6 +696,10 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt Auberginen pflanzen!",
+            "notify_questionnaire_timestamp": [
+                870
+            ],
+            "notify_questionnaire_text": "Am Ende des Spiels gibt es einen kurzen Fragebogen",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -688,6 +739,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -720,6 +774,8 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt K\u00fcrbis pflanzen!",
+            "notify_questionnaire_timestamp": [],
+            "notify_questionnaire_text": "",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -760,6 +816,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -790,6 +849,10 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt Pastinaken pflanzen!",
+            "notify_questionnaire_timestamp": [
+                870
+            ],
+            "notify_questionnaire_text": "Am Ende des Spiels gibt es einen kurzen Fragebogen",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -831,6 +894,9 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -861,6 +927,8 @@
             "sign_interaction": false,
             "notify_new_crop_timestamp": [],
             "notify_new_crop_text": "",
+            "notify_questionnaire_timestamp": [],
+            "notify_questionnaire_text": "",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -931,6 +999,10 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt rote Beete pflanzen!",
+            "notify_questionnaire_timestamp": [
+                870
+            ],
+            "notify_questionnaire_text": "Am Ende des Spiels gibt es einen kurzen Fragebogen",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -968,6 +1040,9 @@
             "minigame": true,
             "minigame_rooting_npcs": false,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -997,6 +1072,8 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt Karotten pflanzen!",
+            "notify_questionnaire_timestamp": [],
+            "notify_questionnaire_text": "",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -1035,6 +1112,9 @@
             "minigame": true,
             "minigame_rooting_npcs": false,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -1066,6 +1146,10 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt Auberginen pflanzen!",
+            "notify_questionnaire_timestamp": [
+                870
+            ],
+            "notify_questionnaire_text": "Am Ende des Spiels gibt es einen kurzen Fragebogen",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -1105,6 +1189,9 @@
             "minigame": true,
             "minigame_rooting_npcs": false,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -1134,6 +1221,8 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt K\u00fcrbis pflanzen!",
+            "notify_questionnaire_timestamp": [],
+            "notify_questionnaire_text": "",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -1174,6 +1263,9 @@
             "minigame": true,
             "minigame_rooting_npcs": false,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -1203,6 +1295,10 @@
                 15
             ],
             "notify_new_crop_text": "Hurra! Du kannst jetzt Pastinaken pflanzen!",
+            "notify_questionnaire_timestamp": [
+                870
+            ],
+            "notify_questionnaire_text": "Am Ende des Spiels gibt es einen kurzen Fragebogen",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -1244,6 +1340,9 @@
             "minigame": true,
             "minigame_rooting_npcs": false,
             "ingroup_introduction_text": "",
+            "ingroup_hat_necklace_introduction_text": "",
+            "ingroup_hat_introduction_text": "",
+            "narrative_text": "",
             "outgroup_introduction_text": "",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
