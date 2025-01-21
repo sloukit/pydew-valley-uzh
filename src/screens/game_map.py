@@ -722,9 +722,9 @@ class GameMap:
             emote_manager=self.npc_emote_manager,
             tree_sprites=self.tree_sprites,
             sickness_allowed=self.round_config.get("sickness", False),
-            has_hat = has_hat,
-            has_necklace = has_necklace,
-            special_features = features,
+            has_hat=has_hat,
+            has_necklace=has_necklace,
+            special_features=features,
         )
         npc.teleport(pos)
         # Ingroup NPCs wearing only the hat and no necklace should not be able to walk on the forest and town map,

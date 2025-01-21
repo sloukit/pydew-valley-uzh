@@ -197,7 +197,7 @@ class NPC(NPCBase):
         if self.study_group == StudyGroup.INGROUP:
             # # if npc has special features set in Tiled map using 'features' custom field - do not change it
             # # it's used in intro scripted sequence
-            if (self.special_features):
+            if self.special_features:
                 return
 
             if ingroup_40p_hat_necklace_appearance:

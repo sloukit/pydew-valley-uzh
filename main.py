@@ -472,7 +472,9 @@ class Game:
                         index = self.level.cutscene_animation.current_index
                         if index in CAMERA_TARGET_TO_TEXT:
                             if self.round_config.get(CAMERA_TARGET_TO_TEXT[index], ""):
-                                intro_text = self.round_config[CAMERA_TARGET_TO_TEXT[index]]
+                                intro_text = self.round_config[
+                                    CAMERA_TARGET_TO_TEXT[index]
+                                ]
                         # # end of intro - camera is over the home location
                         elif index == len(self.level.cutscene_animation.targets) - 1:
                             if self.dialogue_manager.showing_dialogue:
@@ -489,7 +491,9 @@ class Game:
                     ):
                         # dialog text has changed -> camera arrived to next intro stage,
                         # set new dialog text
-                        self.dialogue_manager.dialogues["intro_to_game"][0][1] = intro_text
+                        self.dialogue_manager.dialogues["intro_to_game"][0][1] = (
+                            intro_text
+                        )
 
                         # if old text is still displayed, reset dialog manager
                         if self.dialogue_manager.showing_dialogue:
@@ -517,7 +521,9 @@ class Game:
                 for npc in self.level.game_map.npcs:
                     npc.special_features = None
                     npc.assign_outfit_ingroup(
-                        self.round_config.get("ingroup_40p_hat_necklace_appearance", False)
+                        self.round_config.get(
+                            "ingroup_40p_hat_necklace_appearance", False
+                        )
                     )
                 self.tutorial.ready()
 
