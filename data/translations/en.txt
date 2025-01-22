@@ -1,3 +1,7 @@
+# Game name
+
+Clear Skies@@Clear Skies
+
 # main menu
 
 Enter play token:@@Please enter token:
@@ -5,7 +9,7 @@ Enter authentication data@@Enter authentication data
 Play@@Play
 Quit@@Quit
 Enter a Token to Play@@Enter a Token to Play
-Enter initials:@@Enter initials:
+Enter player's name:@@Enter player's name:
 Main Menu@@Main Menu
 
 # Inventory
@@ -134,3 +138,24 @@ Show Shop@@Show Shop
 
 Music@@Music
 SFX@@SFX
+
+# src/screens/minigames/cow_herding_overlay.py
+
+Cow Herding@@Cow Herding
+Return to Town@@Return to Town
+Minigame complete!@@Minigame complete!
+seconds needed@@seconds needed
+Hornlinge needed %.2f seconds@@Hornlinge needed %.2f seconds
+cows herded in@@cows herded in
+Ready?@@Ready?
+GO!@@GO!
+Cow Herding Minigame@@Cow Herding Minigame
+Herd the cows into the barn@@Herd the cows into the barn
+as fast as possible!@@as fast as possible!
+Objective:@@Objective:
+Herd the cows into the barn!@@Herd the cows into the barn!
+Blaukappen (ingroup) progress:@@Blaukappen (ingroup) progress:
+Hornlinge (outgroup) progress:@@Hornlinge (outgroup) progress:
+Cows in the barn@@Cows in the barn
+[cheering group]@@[cheering group]
+[disappointed group]@@[disappointed group]

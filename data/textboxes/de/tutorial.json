@@ -1,41 +1,41 @@
 {
     "Basic_movement":[
-        ["EN: Tutorial", "EN: Press Up, Down, Right, Left to move"]
+        ["Übungsrunde", "Drücke die Pfeiltasten nach oben, unten, links und rechts, um dich zu bewegen."]
     ],
     "Get_hat_from_ingroup":[
-        ["Tutorial", "Get the hat from the ingroup"]
+        ["Übungsrunde", "Get the hat from the ingroup"]
     ],
     "Get_necklace_from_ingroup":[
-        ["Tutorial", "Get the necklace from the ingroup"]
+        ["Übungsrunde", "Get the necklace from the ingroup"]
     ],
     "Farm_tile":[
-        ["Tutorial", "Farm with your hoe \t\t\t\t Go to your group farm \t\t\t\t Tab to switch tool \t\t\t\t I to open inventory \t\t\t\t Left Click to farm"]
+        ["Übungsrunde", "Gehe auf deine Farm und übe das Ackern. \t\t\t Deine Werkzeuge sind Hake, Axt und \t\t\t Gieskanne. Oben links siehst du das gerade \t\t\t genutzte Werkzeug. Drücke die linke Maus-\t\t\t taste, um dein Werkzeug zu benutzen. \t\t\t Drücke die Tab-Taste, um das Werkzeug \t\t\t zu wechseln."]
     ],
     "Plant_crop":[
-        ["Tutorial", "Plant a crop \t\t\t\t\t Left Shift to change seed \t\t\t\t Right Click to plant"]
+        ["Übungsrunde", "Drücke die rechte Maustaste, um einen \t\t\t Samen zu pflanzen. Oben links siehst du \t\t\t den gerade genutzten Samen. Drücke die \t\t\t linke Shifttaste, um den Samen zu \t\t\t wechseln. Wenn die Samen leer sind, \t\t\t musst du auf dem Markt neue kaufen."]
     ],
     "Water_crop":[
-        ["Tutorial", "Water the crop"]
+        ["Übungsrunde", "Wechsle zu deiner Giesskanne und giesse \t\t\t deine neue Pflanze. Hier wächst bald ein \t\t\t Gemüse, das du ernten und auf dem Markt \t\t\t verkaufen kannst. Alle Pflanzen müssen \t\t\t immer gegossen sein, damit sie wachsen."]
     ],
     "Go_to_forest_and_hit_tree":[
-        ["Tutorial", "Go to the forest and hit a tree"]
+        ["Übungsrunde", "Folge dem Holzweg nach rechts unten. \t\t\t Nimm die zweite Abzweigung nach rechts \t\t\t in den Wald. Achte immer auf die \t\t\t Wegschilder! Benutze im Wald die Axt, um \t\t\t einen Baum zu fällen. Drücke Shift, um \t\t\t Früchte im Gebüsch zu sammeln."]
     ],
     "Interact_with_ingroup_member":[
-        ["Tutorial", "Interact with an ingroup member \t\t\t\t E to show or hide emojis  \t\t\t\t Right and Left to change selected emoji \t\t\t\t Space to show emoji"]
+        ["Übungsrunde", "Drücke e, um mit einem Rothut zu inter-\t\t\t agieren. Drücke die linke oder rechte \t\t\t Pfeiltaste, um zwischen den Emojis zu \t\t\t wählen. Drücke die Leertaste, um ein \t\t\t  Emoji auszuwählen."]
     ],
     "Interact_with_outgroup_member":[
-        ["Tutorial", "Interact with an outgroup member"]
+        ["Übungsrunde", "Drücke e, um mit einem Hornling zu inter-\t\t\t agieren. Drücke die linke oder rechte \t\t\t Pfeiltaste, um zwischen den Emojis zu \t\t\t wählen. Drücke die Leertaste, um ein \t\t\t  Emoji auszuwählen."]
     ],
     "Walk_around_outgroup_farm_and_switch_to_outgroup":[
-        ["Tutorial", "Walk around on the outgroup farm \t\t\t and switch to the outgroup"]
+        ["Übungsrunde", "Walk around on the outgroup farm \t\t\t and switch to the outgroup"]
     ],
     "Go_to_market_and_buy/sell_something":[
-        ["Tutorial", "Go to the market and buy or sell something \t\t\t\t Up and Down to select \t\t\t\t Space to sell or buy \t\t\t\t Esc to exit"]
+        ["Übungsrunde", "Gehe links durch den Wald und finde die \t\t\t Stadt. Folge dem steinigen Weg über \t\t\t die Brücke zum Markt. Man kennt dich \t\t\t dort, du verwaltest das Geld der Rot-\t\t\t hüte! Rede mit dem Verkäufer und kaufe \t\t\t oder verkaufe mit der Leertaste. Drücke \t\t\t esc, um den Markt zu verlassen."]
     ],
     "Go_to_minigame_map_and_play":[
-        ["Tutorial", "Go to the minigame area \t\t\t and play the minigame"]
+        ["Übungsrunde", "Gehe zurück über die Brücke und betrete \t\t\t den grossen Kuhstall. Spiele dort eine \t\t\t Runde 'Kuh-in-den-Stall' gegen die \t\t\t Hornlinge."]
     ],
     "Tutorial_end":[
-        ["Tutorial", "Well done. Since you completed \t\t\t the tutorial, the real game will begin ! \t\t .\t\t\t\t\t\t Space to continue"]
+        ["Übungsrunde", "Gut gemacht, du hast die Übungsrunde \t\t\t erfolgreich beendet. Alle Tasten-\t\t\t kombinationen sind links zu sehen. Gehe \t\t\t nun zurück auf deine Farm und pflanze 5 \t\t\t Maispflanzen - der Acker ruft! \t\t\t Drücke die Leertaste, um fortzufahren."]
     ]
 }

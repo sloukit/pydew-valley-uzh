@@ -4,31 +4,25 @@
     ["A character", "Insightful text here, or something. I mean, what the heck should I say?"]
   ],
   "intro_to_game": [
-    ["Ingroup", "Welcome to Clear Skies. \t\t ----- You are ingroup ! -----"]
+    ["Tutorial", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
-  "scripted_sequence_player_receives_hat": [
-    ["Special event!", "We gather here for a special occasion"],
-    ["Special event!", "You have received a hat!"]
+  "scripted_sequence_player_hat_sequence": [
+    ["Special event!", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
-  "scripted_sequence_player_receives_necklace": [
-    ["Special event!", "We gather here for a special occasion"],
-    ["Special event!", "You have received a necklace!"]
+  "scripted_sequence_player_necklace_sequence": [
+    ["Special event!", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
-  "scripted_sequence_players_birthday": [
-    ["Special event!", "We gather here for a special occasion"],
-    ["Special event!", "We wish you a Happy birthday!"]
+  "scripted_sequence_player_birthday_sequence": [
+    ["Special event!", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
-  "scripted_sequence_npc_receives_necklace": [
-    ["Special event!", "We gather here for a special occasion"],
-    ["Special event!", "Our group member received a necklace!"]
+  "scripted_sequence_ingroup_necklace_sequence": [
+    ["Special event!", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
-  "scripted_sequence_passive_decide_tomato_or_corn": [
-    ["Group gathering", "We gather here to decide what to sell at the market"],
-    ["Group gathering", "This time you can't decide. Wait for the group to decide."]
+  "scripted_sequence_group_market_passive_player_sequence": [
+    ["Group gathering", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
-  "scripted_sequence_active_decide_tomato_or_corn": [
-    ["Group gathering", "We gather here to decide what to sell at the market"],
-    ["Group gathering", "Everyone needs to vote one of the items:\t - tomato\n\t\t\t\t\t\t\t - corn"]
+  "scripted_sequence_group_market_active_player_sequence": [
+    ["Group gathering", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
   "scripted_sequence_buy_tomato": [
     ["Group gathering", "The group has decided to sell tomato!"]

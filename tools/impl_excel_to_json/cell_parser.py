@@ -89,8 +89,8 @@ def _to_seconds(time: dt.time | dt.timedelta, from_excel: bool = False) -> int:
         minutes = time.minute
         seconds = time.second
 
-    if minutes > 15 or (minutes == 15 and seconds > 0):
-        raise ValueError(f"Invalid timestamp '{time}'. Must be < 15:00.")
+    if minutes > 25 or (minutes == 25 and seconds > 0):
+        raise ValueError(f"Invalid timestamp '{time}'. Must be < 25:00.")
 
     return minutes * 60 + seconds
 

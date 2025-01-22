@@ -30,8 +30,16 @@ GAME_MAP = Map.NEW_FARM
 ENABLE_NPCS = True
 TEST_ANIMALS = True
 
-GAME_LANGUAGE = os.environ.get("GAME_LANGUAGE", "en")
+GAME_LANGUAGE = os.environ.get("GAME_LANGUAGE", "de")
 DEBUG_MODE_VERSION = 0
+# True  => virtual game time
+# False => real world time
+USE_GAME_TIME = False
+# number of seconds per in game minute (reference - in Stardew Valley each minute is 0.7 seconds)
+# change to e.g. 0.1 for debug to speed-up day/night cycle
+SECONDS_PER_GAME_MINUTE = 0.7
+# should be 1.0 - increase x10 for debug to speed-up round end
+WORLD_TIME_MULTIPLIER = 1.0
 USE_SERVER = False
 # for now, in web mode, do not use dummy server (which requires `requests` module not available via pygbag)
 if sys.platform not in ("emscripten", "wasm"):
@@ -51,13 +59,13 @@ SAM_BORDER_SIZE = (
 )  # absolute size of the border around self-assessment manikins
 
 GROW_SPEED = {
-    "corn": 1,
-    "tomato": 0.7,
-    "beetroot": 0.7,
-    "carrot": 0.7,
-    "eggplant": 0.7,
-    "pumpkin": 0.7,
-    "parsnip": 0.7,
+    "corn": 1.40,
+    "tomato": 1.40,
+    "beetroot": 1.40,
+    "carrot": 1.40,
+    "eggplant": 1.40,
+    "pumpkin": 1.40,
+    "parsnip": 1.40,
 }
 
 BASE_ALLOWED_CROPS = [

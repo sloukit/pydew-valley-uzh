@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from typing import Any
 
 import pygame
@@ -16,6 +17,7 @@ class Overlay:
         entity,
         item_frames,
         game_time: GameTime,
+        get_world_time: Callable[[None], tuple[int, int]],
         clock: pygame.time.Clock,
         round_config: dict[str, Any],
     ) -> None:
@@ -31,7 +33,7 @@ class Overlay:
         # ui objects
         self.health_bar = HealthProgressBar(100)
 
-        self.clock = Clock(game_time, ClockVersion.DIGITAL)
+        self.clock = Clock(game_time, get_world_time, ClockVersion.DIGITAL)
         self.FPS = FPS(clock)
 
         self.round_config = round_config

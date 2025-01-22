@@ -1,98 +1,102 @@
+# Game name
+
+Clear Skies@@Der Acker ruft!
+
 # main menu
 
-Enter play token:@@Bitte Token eingeben:
-Enter authentication data@@EN: Enter authentication data
-Play@@Spielen
-Quit@@Verlassen
-Enter a Token to Play@@Token eingeben
-Enter initials:@@EN: Enter initials:
+Enter play token:@@3-stelligen Token eingeben:
+Enter authentication data@@Anmelden
+Play@@Spiel starten
+Quit@@Spiel verlassen
+Enter a Token to Play@@Klicken um Token einzugeben
+Enter player's name:@@Name des Spielers eingeben:
 Main Menu@@Hauptmenü
 
 # Inventory
 
-Resources@@Ressourcen
-Inventory@@EN: Inventory
-Tools@@EN: Tools
-Equipment@@EN: Equipment
-goggles@@EN: goggles
-hat@@EN: hat
-necklace@@EN: necklace
-horn@@EN: horn
-No equipment@@EN: No equipment
+Resources@@Ernte und Samen
+Inventory@@Lager
+Tools@@Werkzeuge
+Equipment@@Ausrüstung
+goggles@@Brille
+hat@@Hut
+necklace@@Kette
+horn@@Horn
+No equipment@@Keine Werkzeuge
 
 # shop menu
 
-buy one@@EN: buy one
-sell one@@EN: sell one
-Welcome to the shop!@@EN: Welcome to the shop!
-Your money:@@EN: Your money:
-Amount  Value@@EN: Amount  Value
-none@@EN: none
-wood@@EN: wood
-apple@@EN: apple
-blackberry@@EN: blackberry
-blueberry@@EN: blueberry
-raspberry@@EN: raspberry
-orange@@EN: orange
-peach@@EN: peach
-pear@@EN: pear
-corn@@EN: corn
-tomato@@EN: tomato
-beetroot@@EN: beetroot
-carrot@@EN: carrot
-eggplant@@EN: eggplant
-pumpkin@@EN: pumpkin
-parsnip@@EN: parsnip
-corn seed@@EN: corn seed
-tomato seed@@EN: tomato seed
-beetroot seed@@EN: beetroot seed
-carrot seed@@EN: carrot seed
-eggplant seed@@EN: eggplant seed
-pumpkin seed@@EN: pumpkin seed
-parsnip seed@@EN: parsnip seed
+buy one@@Kaufen
+sell one@@Verkaufen
+Welcome to the shop!@@Willkommen auf dem Markt!
+Your money:@@Verfügbares Geld:
+Amount  Value@@Anzahl  Preis
+none@@Keine
+wood@@Holz
+apple@@Apfel
+blackberry@@Trauben
+blueberry@@Blaubeeren
+raspberry@@Himbeeren
+orange@@Orangen
+peach@@Pfirsiche
+pear@@Birnen
+corn@@Mais
+tomato@@Tomaten
+beetroot@@Rote Beete
+carrot@@Karotten
+eggplant@@Auberginen
+pumpkin@@Kürbis
+parsnip@@Pastinaken
+corn seed@@Mais: Samen
+tomato seed@@Tomaten: Samen
+beetroot seed@@Rote Beete: Samen
+carrot seed@@Karotten: Samen
+eggplant seed@@Aubergine: Samen
+pumpkin seed@@Kürbis: Samen
+parsnip seed@@Pastinaken: Samen
 
 # pause menu
 
-Resume@@EN: Resume
-Options@@EN: Options
-Save and Resume@@EN: Save and Resume
-Pause Menu@@EN: Pause Menu
+Resume@@Spiel fortsetzen
+Options@@Optionen
+Save and Resume@@Spiel speichern und fortsetzen
+Pause Menu@@Pause
 
 # options menu
 
-Keybinds@@EN: Keybinds
-Volume@@EN: Volume
-Back@@EN: Back
-Settings@@EN: Settings
-Reset@@EN: Reset
+Keybinds@@Tastenkombinationen
+Volume@@Lautstärke
+Back@@Zurück
+Settings@@Einstellungen
+Reset@@Standard
 
 # round end menu
 
-Round %d has ended. You currently have $%d, and:@@EN: Round %d has ended. You currently have $%d, and:
-continue to next round@@EN: continue to next round
+Round %d has ended. You currently have $%d, and:@@Runde %d ist fertig. Besitz der Rothüte: $%d und:
+continue to next round@@Weiter in die nächste Runde
 
 # task (items allocation) menu
 
-Task@@EN: Task
-Confirm@@EN: Confirm
-Distribute them@@EN: Distribute them
-You have not allocated all of the items yet!@@EN: You have not allocated all of the items yet!
-You don't have that many items to distribute.@@EN: You don't have that many items to distribute.
-Items missing:@@EN: Items missing:
-Take out:@@EN: Take out:
-You have received@@EN: You have received
-Your group's inventory:@@EN: Your group's inventory:
-Other group's inventory:@@EN: Other group's inventory:
+Task@@Aufgabe
+Confirm@@Bestätigen
+Distribute them@@Wem möchtest Du wie viel geben?
+You have not allocated all of the items yet!@@Du hast noch nicht alles verteilt.
+You don't have that many items to distribute.@@Du hast nichts mehr zum verteilen.
+Items missing:@@Noch ausstehend:
+Take out:@@Lösche:
+You have received@@Du erhältst
+Your group's inventory:@@An die Rothüte:
+Other group's inventory:@@An die Hornlinge:
 
 # src/screens/menu_notification.py
 
-OK@@EN: OK
-Notification@@EN: Notification
+OK@@OK
+Notification@@Benachrichtigung
 
 # src/screens/self_assessment_menu.py
 
-How do you feel right now?@@EN: How do you feel right now?
-Continue@@EN: Continue
+How do you feel right now?@@Wie fühlst Du dich jetzt gerade?
+Continue@@Weiter
 
 # src/overlay/fast_forward.py
 
@@ -100,18 +104,18 @@ Right Shift to Fast Forward@@EN: Right Shift to Fast Forward
 
 # src/controls.py
 
-Move Up@@EN: Move Up
-Move Down@@EN: Move Down
-Move Left@@EN: Move Left
-Move Right@@EN: Move Right
-Use Tool@@EN: Use Tool
-Cycle Tools@@EN: Cycle Tools
-Cycle Seeds@@EN: Cycle Seeds
-Plant Seed@@EN: Plant Seed
-Interact@@EN: Interact
-Open Inventory@@EN: Open Inventory
-Toggle Emote Wheel@@EN: Toggle Emote Wheel
-Advance Dialog@@EN: Advance Dialog
+Move Up@@Nach oben bewegen
+Move Down@@Nach unten bewegen
+Move Left@@Nach links bewegen
+Move Right@@Nach rechts bewegen
+Use Tool@@Werkzeug benutzen
+Cycle Tools@@Werkzeug wechseln
+Cycle Seeds@@Samen wechseln
+Plant Seed@@Samen pflanzen
+Interact@@Ansprechen
+Open Inventory@@Lager öffnen
+Toggle Emote Wheel@@Interaktion wählen
+Advance Dialog@@Fortfahren
 Apply health@@EN: Apply health
 Apply damage@@EN: Apply damage
 Start Earthquake Effect@@EN: Start Earthquake Effect
@@ -132,5 +136,26 @@ Show Shop@@EN: Show Shop
 
 # src/gui/menu/description.py
 
-Music@@EN: Music
-SFX@@EN: SFX
+Music@@Musik
+SFX@@SFX
+
+# src/screens/minigames/cow_herding_overlay.py
+
+Cow Herding@@Kühe treiben
+Return to Town@@Zurück in die Stadt
+Minigame complete!@@Spiel beendet!
+seconds needed@@Sekunden gebraucht
+Hornlinge needed %.2f seconds@@Hornlinge: %.2f Sekunden
+cows herded in@@Kühe im Stall
+Ready?@@Fertig?
+GO!@@Los!
+Cow Herding Minigame@@Kuh-in-den-Stall Spiel
+Herd the cows into the barn@@Treibe die Kühe in den Stall
+as fast as possible!@@so schnell wie möglich!
+Objective:@@Aufgabe:
+Herd the cows into the barn!@@Treibe die Kühe in den Stall!
+Rothüte (ingroup) progress:@@Rothüte:
+Hornlinge (outgroup) progress:@@Hornlinge:
+Cows in the barn@@Kühe im Stall:
+[cheering group]@@Die Rothüte sind stolz!
+[disappointed group]@@Die Rothüte sind enttäuscht
