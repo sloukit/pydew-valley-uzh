@@ -210,7 +210,6 @@ class SelfAssessmentMenu(AbstractMenu):
         )
 
         for i in range(len(self._sam_buttons)):
-            self._sam_buttons[i].move(
             x_offset = -(len(self._sam_buttons) - 1) / 1.75 * sam_button_wp
             self._sam_buttons[i].move(
                 (
