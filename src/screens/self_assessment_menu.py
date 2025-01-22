@@ -177,7 +177,7 @@ class SelfAssessmentMenu(AbstractMenu):
         sam_button_hp = sam_button_h + sam_button_padding
 
         box_size = (
-            sam_button_wp * 5 + padding[0] * 2,
+            sam_button_wp * 7 + padding[0] * 2,
             text.surface_rect.height
             + sam_button_hp
             + padding[1] * 2
@@ -211,10 +211,10 @@ class SelfAssessmentMenu(AbstractMenu):
 
         for i in range(len(self._sam_buttons)):
             self._sam_buttons[i].move(
+            x_offset = -(len(self._sam_buttons) - 1) / 1.75 * sam_button_wp
+            self._sam_buttons[i].move(
                 (
-                    box_center[0]
-                    - (sam_button_wp * 2 + sam_button_w / 2)
-                    + sam_button_wp * i,
+                    box_center[0] + x_offset + sam_button_wp * i,
                     box_center[1] - sam_button_h / 2,
                 )
             )
@@ -222,7 +222,7 @@ class SelfAssessmentMenu(AbstractMenu):
     @staticmethod
     def _load_sam_img(dim: str, i: int) -> pygame.Surface:
         return pygame.image.load(
-            resource_path(f"images/sam/{dim}/sam-{dim}-{i * 2 + 1}.png")
+            resource_path(f"images/sam/{dim}/sam-{dim}-{i + 1}.png")
         ).convert_alpha()
 
     def _continue(self):
@@ -264,7 +264,7 @@ class SelfAssessmentMenu(AbstractMenu):
         self._continue_button = _ReturnButton(self._continue_button_text)
         self.buttons.append(self._continue_button)
 
-        for i in range(5):
+        for i in range(7):
             btn = _SAMButton(
                 str(i),
                 self._load_sam_img(
