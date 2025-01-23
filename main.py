@@ -14,6 +14,7 @@ from typing import Any
 
 import pygame
 
+import src.utils  # noqa [ to patch utf-8 on top of file without linting errors ]
 from src import support
 from src.client import send_telemetry
 from src.enums import (
