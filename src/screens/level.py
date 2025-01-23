@@ -471,7 +471,6 @@ class Level:
                     if (
                         isinstance(character, Player)
                         and True in self.crop_planted
-                        and pos in self.crop_planted
                     ):
                         self.crop_watered = True
 
