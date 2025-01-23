@@ -468,10 +468,7 @@ class Level:
             case FarmingTool.WATERING_CAN:
                 if self.soil_manager.water(character, pos):
                     # check if the player achieved task "water the crop"
-                    if (
-                        isinstance(character, Player)
-                        and True in self.crop_planted
-                    ):
+                    if isinstance(character, Player) and True in self.crop_planted:
                         self.crop_watered = True
 
                 self._play_playeronly_sound("water", character)
