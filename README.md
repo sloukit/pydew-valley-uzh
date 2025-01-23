@@ -58,7 +58,7 @@ We use [Ruff](https://docs.astral.sh/ruff/) for linting and formatting. Run `pip
 > Or alternatively, run the following commands individually:
 > 
 > ```sh
-> ruff format . && ruff check --include I --fix . #  format code and sort imports
+> ruff format . && ruff check --select I --fix . #  format code and sort imports
 > ruff check . # Run linting and perform fixes accordingly, or use '# noqa: <RULE>' followed by a comment justifying why the rule is ignored
 > ```
 
