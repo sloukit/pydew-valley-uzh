@@ -159,3 +159,5 @@ Hornlinge (outgroup) progress:@@Hornlinge:
 Cows in the barn@@Kühe im Stall:
 [cheering group]@@Die Rothüte sind stolz!
 [disappointed group]@@Die Rothüte sind enttäuscht
+[money win]@@Du hast 200$ gewonnen
+[money lost]@@Du hast 50$ verloren

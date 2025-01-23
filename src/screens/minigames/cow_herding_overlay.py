@@ -74,10 +74,11 @@ class _CowHerdingScoreboard(AbstractMenu):
                 self.font_description,
             ),
             Linebreak(),
-            TextChunk(f"{cows_herded_in} ", self.font_number),
-            TextChunk(_("cows herded in"), self.font_description),
+            TextChunk(
+                _("[money win]") if opp_time > time_needed else _("[money lost]"),
+                self.font_description,
+            ),
         )
-
         box_size = (
             text.surface_rect.width + padding[0] * 2,
             text.surface_rect.height + padding[1] * 2 + button_area_height,
