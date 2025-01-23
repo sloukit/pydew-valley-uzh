@@ -38,7 +38,7 @@ class SettingsMenu(GeneralMenu):
         )  # used to be self.keybinds_description
 
         # buttons
-        self.buttons.append(self.keybinds_description.reset_button)
+        # self.buttons.append(self.keybinds_description.reset_button)
         self.show_debug_keybinds: bool = False
 
     def round_config_changed(self, round_config: dict[str, Any]) -> None:
