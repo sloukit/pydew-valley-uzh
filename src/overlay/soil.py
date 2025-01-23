@@ -330,20 +330,20 @@ class SoilArea:
 
         WARNING: this method is for internal usage.
         Use SoilLayer.water instead."""
-        if tile is not None and tile.hoed and not tile.watered:
-            tile.watered = True
+        if tile is not None and tile.hoed:
+            if not tile.watered:
+                tile.watered = True
 
-            water_frames = list(self.level_frames["soil water"].values())
-            water_frame = choice(water_frames)
-            water = Sprite(
-                tile_to_screen(tile.pos),
-                water_frame,
-                (),
-                Layer.SOIL_WATER,
-            )
-            water.add(self.all_sprites, self.water_sprites)
+                water_frames = list(self.level_frames["soil water"].values())
+                water_frame = choice(water_frames)
+                water = Sprite(
+                    tile_to_screen(tile.pos),
+                    water_frame,
+                    (),
+                    Layer.SOIL_WATER,
+                )
+                water.add(self.all_sprites, self.water_sprites)
             return True
-
         return False
 
     def water(self, pos):
