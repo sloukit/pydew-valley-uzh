@@ -183,7 +183,6 @@ class ShopMenu:
                         # check if the player achieved task "go to the marketplace and buy or sell"
                         # "here it is buy" something"
                         self.player.bought_sold = True
-
                         self.player.inventory[current_item] += 1
                         self.player.money -= current_item.get_worth()
                 else:
@@ -191,9 +190,8 @@ class ShopMenu:
                         # check if the player achieved task "go to the marketplace and buy or sell"
                         # "here it is sell" something"
                         self.player.bought_sold = True
-
                         self.player.inventory[current_item] -= 1
-                        self.player.money += current_item.get_worth() // 2
+                        self.player.money += current_item.get_worth()
                 return True
 
             elif event.key in (pygame.K_DOWN, pygame.K_UP):
@@ -292,5 +290,5 @@ class ShopMenu:
             img = self.img_surfs[text_index]
             item = self.options[text_index]
             amount = self.player.inventory[item]
-            value = item.get_worth() // 1 if item.is_seed() else item.get_worth()
+            value = item.get_worth()
             self.show_entry(text_surf, img, amount, value, top, self.index, text_index)
