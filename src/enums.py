@@ -114,20 +114,20 @@ class InventoryResource(_SerialisableEnum):
             20,  # ORANGE
             15,  # PEACH
             10,  # PEAR
-            20,  # CORN
-            40,  # TOMATO
-            20,  # BEETROOT
-            20,  # CARROT
-            20,  # EGGPLANT
+            8,  # CORN
+            10,  # TOMATO
+            12,  # BEETROOT
+            8,  # CARROT
+            14,  # EGGPLANT
             20,  # PUMPKIN
-            20,  # PARSNIP
+            32,  # PARSNIP
             4,  # CORN_SEED
             5,  # TOMATO_SEED
             6,  # BEETROOT_SEED
-            6,  # CARROT_SEED
+            3,  # CARROT_SEED
             6,  # EGGPLANT_SEED
-            6,  # PUMPKIN_SEED
-            6,  # PARSNIP_SEED
+            7,  # PUMPKIN_SEED
+            10,  # PARSNIP_SEED
         )
     )
 
