@@ -374,8 +374,6 @@ class GameMap:
         self.round_config = round_config
         self.process_npc_round_config()
 
-        self.process_npc_round_config()
-
     def process_npc_round_config(self):
         crop_types_list = self.round_config.get("crop_types_list", [])
         allowed_seeds = parse_crop_types(
@@ -687,6 +685,15 @@ class GameMap:
         ):
             return None
 
+        features = obj.properties.get("features")
+        has_hat = False
+        has_necklace = False
+        if features:
+            if "hat" in features:
+                has_hat = True
+            if "necklace" in features:
+                has_necklace = True
+
         study_group = StudyGroup.NO_GROUP
         group = obj.properties.get("group")
         if group is None:
@@ -715,6 +722,9 @@ class GameMap:
             emote_manager=self.npc_emote_manager,
             tree_sprites=self.tree_sprites,
             sickness_allowed=self.round_config.get("sickness", False),
+            has_hat=has_hat,
+            has_necklace=has_necklace,
+            special_features=features,
         )
         npc.teleport(pos)
         # Ingroup NPCs wearing only the hat and no necklace should not be able to walk on the forest and town map,
