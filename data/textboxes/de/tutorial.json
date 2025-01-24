@@ -1,6 +1,6 @@
 {
     "Basic_movement":[
-        ["Übungsrunde", "Drücke die Pfeiltasten nach oben, unten, links und rechts, um dich zu bewegen."]
+        ["Übungsrunde", "Los geht die Übungsrunde, um die Steuerung \t\t\t zu lernen und Farm, Wald und Stadt zu \t\t\t erkunden. Drücke die Pfeiltasten nach \t\t\t oben, unten, links und rechts, um \t\t\t dich zu bewegen."]
     ],
     "Get_hat_from_ingroup":[
         ["Übungsrunde", "Get the hat from the ingroup"]
@@ -33,7 +33,7 @@
         ["Übungsrunde", "Gehe links durch den Wald und finde die \t\t\t Stadt. Folge dem steinigen Weg über \t\t\t die Brücke zum Markt. Man kennt dich \t\t\t dort, du verwaltest das Geld der Rot-\t\t\t hüte! Rede mit dem Verkäufer und kaufe \t\t\t oder verkaufe mit der Leertaste. Drücke \t\t\t esc, um den Markt zu verlassen."]
     ],
     "Go_to_minigame_map_and_play":[
-        ["Übungsrunde", "Gehe zurück über die Brücke und betrete \t\t\t den grossen Kuhstall. Spiele dort eine \t\t\t Runde 'Kuh-in-den-Stall' gegen die \t\t\t Hornlinge."]
+        ["Übungsrunde", "Gehe zurück über die Brücke und betrete \t\t\t den grossen Kuhstall. Spiele dort eine \t\t\t Runde 'Kuh-in-den-Stall' gegen die \t\t\t Hornlinge. Es gibt 200$ zu gewinnen - und 50$ zu verlieren!"]
     ],
     "Tutorial_end":[
         ["Übungsrunde", "Gut gemacht, du hast die Übungsrunde \t\t\t erfolgreich beendet. Alle Tasten-\t\t\t kombinationen sind links zu sehen. Gehe \t\t\t nun zurück auf deine Farm und pflanze 5 \t\t\t Maispflanzen - der Acker ruft! \t\t\t Drücke die Leertaste, um fortzufahren."]
