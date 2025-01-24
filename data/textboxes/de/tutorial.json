@@ -18,13 +18,13 @@
         ["Übungsrunde", "Wechsle zu deiner Giesskanne und giesse \t\t\t deine neue Pflanze. Hier wächst bald ein \t\t\t Gemüse, das du ernten und auf dem Markt \t\t\t verkaufen kannst. Alle Pflanzen müssen \t\t\t immer gegossen sein, damit sie wachsen."]
     ],
     "Go_to_forest_and_hit_tree":[
-        ["Übungsrunde", "Folge dem Holzweg nach rechts unten. \t\t\t Nimm die zweite Abzweigung nach rechts \t\t\t in den Wald. Achte immer auf die \t\t\t Wegschilder! Benutze im Wald die Axt, um \t\t\t einen Baum zu fällen. Drücke Shift, um \t\t\t Früchte im Gebüsch zu sammeln."]
+        ["Übungsrunde", "Folge dem Holzweg nach rechts unten. \t\t\t Nimm die zweite Abzweigung nach rechts \t\t\t in den Wald. Achte immer auf die \t\t\t Wegschilder! Benutze im Wald die Axt, um \t\t\t einen Baum zu fällen. Drücke die Leer-\t\t\t taste, um Früchte im Gebüsch zu sammeln."]
     ],
     "Interact_with_ingroup_member":[
-        ["Übungsrunde", "Drücke e, um mit einem Rothut zu inter-\t\t\t agieren. Drücke die linke oder rechte \t\t\t Pfeiltaste, um zwischen den Emojis zu \t\t\t wählen. Drücke die Leertaste, um ein \t\t\t  Emoji auszuwählen."]
+        ["Übungsrunde", "Gehe zu einem Rothut und drücke e, um \t\t\t eine Interaktion zu starten. Drücke die \t\t\t linke oder rechte Pfeiltaste, um \t\t\t zwischen den Emojis zu wählen. Drücke \t\t\t die Leertaste, um ein Emoji auszuwählen."]
     ],
     "Interact_with_outgroup_member":[
-        ["Übungsrunde", "Drücke e, um mit einem Hornling zu inter-\t\t\t agieren. Drücke die linke oder rechte \t\t\t Pfeiltaste, um zwischen den Emojis zu \t\t\t wählen. Drücke die Leertaste, um ein \t\t\t  Emoji auszuwählen."]
+        ["Übungsrunde", "Gehe zu einem Hornling und drücke e, um \t\t\t eine Interaktion zu starten. Drücke die \t\t\t linke oder rechte Pfeiltaste, um \t\t\t zwischen den Emojis zu wählen. Drücke \t\t\t die Leertaste, um ein Emoji auszuwählen."]
     ],
     "Walk_around_outgroup_farm_and_switch_to_outgroup":[
         ["Übungsrunde", "Walk around on the outgroup farm \t\t\t and switch to the outgroup"]
