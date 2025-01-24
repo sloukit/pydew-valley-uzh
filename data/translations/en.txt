@@ -159,3 +159,5 @@ Hornlinge (outgroup) progress:@@Hornlinge (outgroup) progress:
 Cows in the barn@@Cows in the barn
 [cheering group]@@[cheering group]
 [disappointed group]@@[disappointed group]
+[money win]@@You won 200$
+[money lost]@@You lost 50$
