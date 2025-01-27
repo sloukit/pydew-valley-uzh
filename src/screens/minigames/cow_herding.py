@@ -242,8 +242,8 @@ class CowHerding(Minigame):
             self._state.player.direction.update((0, 0))
             if self._minigame_time < self._opponent_side_script.total_time:
                 self._state.player.money += 200
-            elif self._state.player.money > 50:
-                self._state.player.money -= 50
+            elif self._state.player.money > 200:
+                self._state.player.money -= 200
             else:
                 self._state.player.money = 0  # make sure we do not go below 0
             self.scoreboard.setup(
