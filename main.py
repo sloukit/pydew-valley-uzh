@@ -633,10 +633,10 @@ class Game:
                         self.round_config["notify_new_crop_text"] = ""
                         self.round_config["notify_new_crop_timestamp"] = []
                     elif (
-                            self.round_config.get("notify_questionnaire_text", "")
-                            and self.round_config["notify_questionnaire_timestamp"]
-                            and self.round_end_timer
-                            > self.round_config["notify_questionnaire_timestamp"][0]
+                        self.round_config.get("notify_questionnaire_text", "")
+                        and self.round_config["notify_questionnaire_timestamp"]
+                        and self.round_end_timer
+                        > self.round_config["notify_questionnaire_timestamp"][0]
                     ):
                         # make a copy of a string
                         message = self.round_config["notify_questionnaire_text"][:]
