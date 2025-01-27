@@ -14,6 +14,7 @@ from typing import Any
 
 import pygame
 
+import src.utils  # noqa [ to patch utf-8 on top of file without linting errors ]
 from src import support
 from src.client import send_telemetry
 from src.enums import (
@@ -459,27 +460,24 @@ class Game:
                     # get previous dialog text
                     intro_text = self.dialogue_manager.dialogues["intro_to_game"][0][1]
 
+                    CAMERA_TARGET_TO_TEXT = {
+                        0: "character_introduction_text",
+                        1: "ingroup_introduction_text",
+                        2: "ingroup_hat_necklace_introduction_text",
+                        3: "ingroup_hat_introduction_text",
+                        4: "outgroup_introduction_text",
+                        5: "narrative_text",
+                    }
                     if self.level.cutscene_animation.active:
                         # start of intro - camera at home location
-                        if self.level.cutscene_animation.current_index == 0:
-                            if self.round_config.get("character_introduction_text", ""):
+                        index = self.level.cutscene_animation.current_index
+                        if index in CAMERA_TARGET_TO_TEXT:
+                            if self.round_config.get(CAMERA_TARGET_TO_TEXT[index], ""):
                                 intro_text = self.round_config[
-                                    "character_introduction_text"
+                                    CAMERA_TARGET_TO_TEXT[index]
                                 ]
-                        # ingroup introduction - camera over ingroup area
-                        elif self.level.cutscene_animation.current_index == 2:
-                            if self.round_config.get("ingroup_introduction_text", ""):
-                                intro_text = self.round_config[
-                                    "ingroup_introduction_text"
-                                ]
-                        # outgroup introduction - camera over outgroup area
-                        elif self.level.cutscene_animation.current_index == 5:
-                            if self.round_config.get("outgroup_introduction_text", ""):
-                                intro_text = self.round_config[
-                                    "outgroup_introduction_text"
-                                ]
-                        # end of intro - camera heading back to home location
-                        elif self.level.cutscene_animation.current_index == 7:
+                        # # end of intro - camera is over the home location
+                        elif index == len(self.level.cutscene_animation.targets) - 1:
                             if self.dialogue_manager.showing_dialogue:
                                 self.dialogue_manager.close_dialogue()
 
@@ -497,8 +495,6 @@ class Game:
                         self.dialogue_manager.dialogues["intro_to_game"][0][1] = (
                             intro_text
                         )
-                        # set header to game name
-                        # self.dialogue_manager.dialogues["intro_to_game"][0][0] = _("Clear Skies")
 
                         # if old text is still displayed, reset dialog manager
                         if self.dialogue_manager.showing_dialogue:
@@ -510,7 +506,6 @@ class Game:
                             self.tutorial.left_pos,
                             self.tutorial.top_pos,
                         )
-                    # self.intro_txt_rendered = True
         elif not self.level.cutscene_animation.active:
             if self.dialogue_manager.showing_dialogue:
                 # prepare text box to switch to tutorial
@@ -522,6 +517,15 @@ class Game:
                 and self.intro_txt_rendered
             ):
                 self.intro_txt_rendered = False
+                # we no longer need special npc features for the intro
+                # assign hat and necklace according to regular logic
+                for npc in self.level.game_map.npcs:
+                    npc.special_features = None
+                    npc.assign_outfit_ingroup(
+                        self.round_config.get(
+                            "ingroup_40p_hat_necklace_appearance", False
+                        )
+                    )
                 self.tutorial.ready()
 
     # events
@@ -629,18 +633,18 @@ class Game:
                         self.round_config["notify_new_crop_text"] = ""
                         self.round_config["notify_new_crop_timestamp"] = []
                     elif (
-                        self.round_config.get("notify_questionnaire_text", "")
-                        and self.round_config["notify_questionnaire_timestamp"]
+                        self.round_config.get("notify_round_end_outgroup_text", "")
+                        and self.round_config["notify_round_end_outgroup_timestamp"]
                         and self.round_end_timer
-                        > self.round_config["notify_questionnaire_timestamp"][0]
+                        > self.round_config["notify_round_end_outgroup_timestamp"][0]
                     ):
                         # make a copy of a string
-                        message = self.round_config["notify_questionnaire_text"][:]
+                        message = self.round_config["notify_round_end_outgroup_text"][:]
                         self.notification_menu.message = message
                         self.switch_state(GameState.NOTIFICATION_MENU)
                         # set to empty to not repeat
-                        self.round_config["notify_questionnaire_text"] = ""
-                        self.round_config["notify_questionnaire_timestamp"] = []
+                        self.round_config["notify_round_end_outgroup_text"] = ""
+                        self.round_config["notify_round_end_outgroup_timestamp"] = []
                     elif (
                         len(self.round_config.get("self_assessment_timestamp", [])) > 0
                         and self.round_end_timer
