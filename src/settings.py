@@ -82,7 +82,8 @@ BASE_ALLOWED_CROPS = [
 
 OVERLAY_POSITIONS = {
     "tool": (86, 150),
-    "seed": (47, 142),
+    "seed": (47, 141),
+    "money": (115, 205),
     "clock": (SCREEN_WIDTH - 10, 10),
     "FPS": (SCREEN_WIDTH - 10, SCREEN_HEIGHT - 10),
 }
