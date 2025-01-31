@@ -17,6 +17,9 @@
     "Water_crop":[
         ["Übungsrunde", "Wechsle zu deiner Giesskanne und giesse \t\t\t deine neue Pflanze. Hier wächst bald ein \t\t\t Gemüse, das du ernten und auf dem Markt \t\t\t verkaufen kannst. Alle Pflanzen müssen \t\t\t immer gegossen sein, damit sie wachsen."]
     ],
+    "Go_to_bed":[
+        ["Übungsrunde", "Gehe in dein Haus, links oberhalb der \t\t\t Farm. \t\t\t\t\t\t Stelle dich auf den grünen Teppich \t\t\t\t\t\t und drücke die Leertaste, um einen neuen \t\t\t Tag zu starten. \t\t\t\t\t\t Schau an, wie das Gemüse gewachsen ist!"]
+    ],
     "Go_to_forest_and_hit_tree":[
         ["Übungsrunde", "Folge dem Holzweg nach rechts unten. \t\t\t Nimm die zweite Abzweigung nach rechts \t\t\t in den Wald. Achte immer auf die \t\t\t Wegschilder! Benutze im Wald die Axt, um \t\t\t einen Baum zu fällen. Drücke die Leer-\t\t\t taste, um Früchte im Gebüsch zu sammeln."]
     ],

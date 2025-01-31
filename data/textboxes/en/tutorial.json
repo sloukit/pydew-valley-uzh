@@ -17,6 +17,9 @@
     "Water_crop":[
         ["Tutorial", "Water the crop"]
     ],
+    "Go_to_bed":[
+        ["Tutorial", "Go to your house, to the left above the \t\t\t farm. \t\t\t\t\t\t Stand on the green carpet \t\t\t\t\t\t and press the space bar to start a new \t\t\t day. \t\t\t\t\t\t Look how the vegetables have grown!"]
+    ],
     "Go_to_forest_and_hit_tree":[
         ["Tutorial", "Go to the forest and hit a tree"]
     ],

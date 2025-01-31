@@ -251,6 +251,7 @@ class Level:
         self.tile_farmed = False
         self.crop_planted: set = set()
         self.crop_watered = False
+        self.had_slept = False
         self.hit_tree = False
 
     def hide_bath_signs(self) -> None:
@@ -937,6 +938,7 @@ class Level:
 
     def finish_transition(self):
         self.player.blocked = False
+        self.had_slept = True
 
     def start_day_transition(self):
         self.day_transition.activate()
