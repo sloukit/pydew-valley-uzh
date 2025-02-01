@@ -1011,17 +1011,11 @@
  </objectgroup>
  <objectgroup id="25" name="NPCs">
   <object id="368" gid="825" x="390" y="448" width="20" height="21">
-   <properties>
-    <property name="features" value="hat"/>
-   </properties>
   </object>
   <object id="369" gid="825" x="374.597" y="368.618" width="20" height="21"/>
   <object id="370" gid="825" x="406" y="368" width="20" height="21"/>
   <object id="371" gid="825" x="347.293" y="409.415" width="20" height="21"/>
   <object id="372" gid="825" x="502" y="351" width="20" height="21">
-   <properties>
-    <property name="features" value="hat_necklace"/>
-   </properties>
   </object>
   <object id="373" gid="827" x="817.424" y="415.696" width="18" height="17"/>
   <object id="374" gid="827" x="862.572" y="421.858" width="18" height="17"/>
