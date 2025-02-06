@@ -9,7 +9,7 @@ from src.overlay.clock import Clock
 from src.overlay.fps import FPS
 from src.overlay.game_time import GameTime
 from src.overlay.money import Money
-from src.overlay.box_keybindings import BoxKeybindingsLabel
+from src.overlay.box_keybindings import BoxKeybindingsLabel, BoxKeybindings
 from src.settings import OVERLAY_POSITIONS
 
 
@@ -26,6 +26,8 @@ class Overlay:
         # general setup
         self.display_surface = pygame.display.get_surface()
         self.player = entity
+
+        self.box_keybindings = BoxKeybindings()
 
         # imports
         self.item_frames = item_frames
@@ -57,6 +59,7 @@ class Overlay:
 
         # Box keybindings label display
         self.box_keybindings_label.display()
+        self.box_keybindings.draw(self.display_surface)
 
         # tool
         tool_surf = self.item_frames[self.player.get_current_tool_string()]

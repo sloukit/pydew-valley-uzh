@@ -165,3 +165,4 @@ Cows in the barn@@Cows in the barn
 # src/overlay/box_keybindings.py
 
 box info label@@Press S for the control options
+box info space@@bla bla bla

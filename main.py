@@ -24,7 +24,7 @@ from src.enums import (
     ScriptedSequenceType,
     SelfAssessmentDimension,
 )
-from src.events import DIALOG_ADVANCE, DIALOG_SHOW, OPEN_INVENTORY, SET_CURSOR
+from src.events import SHOW_BOX_KEYBINDINGS, DIALOG_ADVANCE, DIALOG_SHOW, OPEN_INVENTORY, SET_CURSOR
 from src.groups import AllSprites
 from src.gui.interface.dialog import DialogueManager
 from src.gui.setup import setup_gui
@@ -576,6 +576,9 @@ class Game:
                 self.dialogue_manager.advance()
                 if not self.dialogue_manager.showing_dialogue:
                     self.player.blocked = False
+            return True
+        elif event.type == SHOW_BOX_KEYBINDINGS:
+            self.level.overlay.box_keybindings.toggle_visibility()
             return True
         elif event.type == SET_CURSOR:
             self.set_cursor(event.cursor)

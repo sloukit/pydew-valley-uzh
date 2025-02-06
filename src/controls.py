@@ -96,6 +96,7 @@ class Controls(Control, Enum):
     INVENTORY = (pygame.K_i, "Open Inventory")
     EMOTE_WHEEL = (pygame.K_e, "Toggle Emote Wheel")
     ADVANCE_DIALOG = (pygame.K_SPACE, "Advance Dialog")
+    SHOW_BOX_KEYBINDINGS = (pygame.K_s, "Show Box Keybindings")
 
     DEBUG_APPLY_HEALTH = (pygame.K_1, "Apply health")
     DEBUG_APPLY_DAMAGE = (pygame.K_2, "Apply damage")

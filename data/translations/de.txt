@@ -165,3 +165,5 @@ Cows in the barn@@Kühe im Stall:
 # src/overlay/box_keybindings.py
 
 box info label@@Drücke S für die Steueroptionen
+box info space@@Markthändler ansprechen, auswählen, Früchte sammeln, schlafen
+

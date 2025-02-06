@@ -85,6 +85,7 @@ OVERLAY_POSITIONS = {
     "seed": (47, 141),
     "money": (115, 205),
     "box_info_label": (15, SCREEN_HEIGHT - 70),
+    "box_info": (150, 26),
     "clock": (SCREEN_WIDTH - 10, 10),
     "FPS": (SCREEN_WIDTH - 10, SCREEN_HEIGHT - 10),
 }
