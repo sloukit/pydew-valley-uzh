@@ -9,6 +9,7 @@ from src.overlay.clock import Clock
 from src.overlay.fps import FPS
 from src.overlay.game_time import GameTime
 from src.overlay.money import Money
+from src.overlay.box_keybindings import BoxKeybindingsLabel
 from src.settings import OVERLAY_POSITIONS
 
 
@@ -36,6 +37,7 @@ class Overlay:
 
         self.clock = Clock(game_time, get_world_time, ClockVersion.DIGITAL)
         self.FPS = FPS(clock)
+        self.box_keybindings_label = BoxKeybindingsLabel(entity)
         self.money = Money(entity)
 
         self.round_config = round_config
@@ -52,6 +54,9 @@ class Overlay:
 
         # Money amount display
         self.money.display()
+
+        # Box keybindings label display
+        self.box_keybindings_label.display()
 
         # tool
         tool_surf = self.item_frames[self.player.get_current_tool_string()]

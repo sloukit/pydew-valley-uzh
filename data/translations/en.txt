@@ -161,3 +161,7 @@ Cows in the barn@@Cows in the barn
 [disappointed group]@@[disappointed group]
 [money win]@@You won 200$
 [money lost]@@You lost 200$
+
+# src/overlay/box_keybindings.py
+
+box info label@@Press S for the control options

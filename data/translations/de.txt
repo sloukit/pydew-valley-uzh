@@ -161,3 +161,7 @@ Cows in the barn@@Kühe im Stall:
 [disappointed group]@@Die Rothüte sind enttäuscht
 [money win]@@Du hast 200$ gewonnen
 [money lost]@@Du hast 200$ verloren
+
+# src/overlay/box_keybindings.py
+
+box info label@@Drücke S für die Steueroptionen
