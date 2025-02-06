@@ -31,12 +31,12 @@ class Money:
         # rects and surfs
         pad_y = 2
 
-        fps_surf = self.font.render(f"${self.player.money}", False, foreground_color)
-        fps_rect = fps_surf.get_frect(
+        money_surf = self.font.render(f"${self.player.money}", False, foreground_color)
+        money_rect = money_surf.get_frect(
             midright=(self.rect.right - 20, self.rect.centery + pad_y)
         )
 
         # display
         pygame.draw.rect(self.display_surface, "White", self.rect, 0, 4)
         pygame.draw.rect(self.display_surface, foreground_color, self.rect, 4, 4)
-        self.display_surface.blit(fps_surf, fps_rect)
+        self.display_surface.blit(money_surf, money_rect)
