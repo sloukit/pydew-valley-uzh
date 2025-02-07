@@ -4,7 +4,7 @@
     ["EN: A character", "EN: Insightful text here, or something. I mean, what the heck should I say?"]
   ],
   "intro_to_game": [
-    ["Übungsrunde", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
+    ["Willkommen!", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
   ],
   "scripted_sequence_player_hat_sequence": [
     ["Ereignis", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
