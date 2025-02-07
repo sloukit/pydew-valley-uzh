@@ -19,6 +19,7 @@ type OutgroupSkinStatus = bool | None
 
 SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720
 TILE_SIZE = 16
+VOLCANO_SIZE = 500
 CHAR_TILE_SIZE = 48
 SCALE_FACTOR = 4
 SCALED_TILE_SIZE = TILE_SIZE * SCALE_FACTOR
@@ -93,6 +94,8 @@ APPLE_POS = {
     "default": [(12, 12), (46, 10), (40, 34), (3, 42), (65, 55), (32, 59)],
     "bush": [(10, 10), (8, 37), (25, 25), (40, 13), (33, 40)],
 }
+
+VOLCANO_POS = (640, 0)
 
 CHARS_PER_LINE = 45
 TB_SIZE = (403, 264)

@@ -13,8 +13,8 @@ from src.camera.camera_target import CameraTarget
 from src.camera.quaker import Quaker
 from src.camera.zoom_manager import ZoomManager
 from src.controls import Controls
-from src.enums import FarmingTool, GameState, Map, ScriptedSequenceType, StudyGroup
-from src.events import DIALOG_ADVANCE, DIALOG_SHOW, START_QUAKE, post_event
+from src.enums import FarmingTool, GameState, Map, ScriptedSequenceType, StudyGroup, Layer, Direction
+from src.events import DIALOG_ADVANCE, DIALOG_SHOW, START_QUAKE, VOLCANO_ERUPTION, post_event
 from src.exceptions import GameMapWarning
 from src.groups import AllSprites, PersistentSpriteGroup
 from src.gui.interface.dialog import DialogueManager
@@ -41,10 +41,12 @@ from src.settings import (
     SCREEN_HEIGHT,
     SCREEN_WIDTH,
     TOMATO_OR_CORN_LIST,
+    VOLCANO_POS,
+    VOLCANO_SIZE,
     MapDict,
     SoundDict,
 )
-from src.sprites.base import Sprite
+from src.sprites.base import Sprite, AnimatedSprite
 from src.sprites.entities.character import Character
 from src.sprites.entities.player import Player
 from src.sprites.particle import ParticleSprite
@@ -246,6 +248,22 @@ class Level:
             self.finish_transition,
             dur=2400,
         )
+        
+        # Volcano
+        self.volcano_map_transition = Transition(
+            lambda: self.switch_to_map(Map.VOLCANO),
+            self.create_volcano,
+            dur=2400,
+        )
+        image = self.frames["level"]["animations"]["volcano_exploding_new"]
+        self.volcano_sprite = AnimatedSprite(VOLCANO_POS, image, z=Layer.VOLCANO)
+        self.start_volcano_animation = False
+        self.volcano_sounds = [
+            self.sounds["mixkit-inside-a-volcano-2438"],
+            self.sounds["mixkit-volcano-lava-hiss-2447"],
+        ]
+        self.volcano_erupt_count = 0
+        self.sound_no = 0
 
         # watch the player behaviour in achieving tutorial tasks
         self.tile_farmed = False
@@ -592,6 +610,9 @@ class Level:
                 self.set_round(7)
             return True
 
+        elif event.type == VOLCANO_ERUPTION:
+            self.volcano(True)
+
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.switch_screen(GameState.PAUSE)
@@ -613,6 +634,10 @@ class Level:
         if self.get_game_version() == DEBUG_MODE_VERSION:
             # if self.controls.DEBUG_QUAKE.click:
             #     post_event(START_QUAKE, duration=2.0, debug=True)
+            
+            if self.controls.DEBUG_VOLCANO.click:
+                post_event(VOLCANO_ERUPTION)
+            
             if self.controls.DEBUG_APPLY_HEALTH.click:
                 self.overlay.health_bar.apply_health(1)
 
@@ -977,6 +1002,58 @@ class Level:
         self.map_transition.activate()
         self.start_transition()
 
+    def start_volcano_map_transition(self):
+        self.volcano_map_transition.activate()
+        self.start_transition()
+
+    # Creating Volcano on volcano map
+    def create_volcano(self):
+        Sprite(
+            VOLCANO_POS, self.frames["level"]["animations"]["volcano"][0], z=Layer.VOLCANO
+        ).add(self.all_sprites)
+        self.volcano_animation()
+
+    def volcano_animation(self):
+        self.sounds["music"].stop()
+        pygame.mixer.init(44100, -16, 2, 262144)
+        if not pygame.mixer.get_busy() and self.volcano_erupt_count < 6:
+            self.start_volcano_animation = True
+
+            self.quaker.reset()
+            self.quaker.start(10000)
+
+            if self.sound_no == 1 and not self.volcano_sprite.alive():
+                self.volcano_sprite.add(self.all_sprites)
+                self.quaker.reset()
+                self.quaker.direction = Direction.UPLEFT
+                self.quaker.start(1000)
+            else:
+                self.volcano_sprite.kill()
+
+            self.volcano_sounds[self.sound_no].set_volume(0.7)
+            self.volcano_sounds[self.sound_no].play()
+
+            self.volcano_erupt_count += 1
+            self.sound_no += 1
+
+            if self.sound_no > 1:
+                self.sound_no = 0
+
+        elif not pygame.mixer.get_busy():
+            self.volcano_sprite.kill()
+            self.start_volcano_animation = False
+            self.quaker.reset()
+            time.sleep(5)
+            self.activate_music()
+            self.map_transition.reset = lambda: self.switch_to_map(self.previous_map)
+            self.start_map_transition()
+
+    def volcano(self, event = None):
+        if self.get_round() == 7 or event == True:
+            if not self.start_volcano_animation:
+                self.previous_map = self.game_map.current_map
+            self.start_volcano_map_transition()
+
     def decay_health(self):
         if self.player.hp > 10:
             if not self.player.bathstat and not self.player.has_goggles:
@@ -1103,6 +1180,7 @@ class Level:
         # transitions
         self.day_transition.draw()
         self.map_transition.draw()
+        self.volcano_map_transition.draw()
 
     # update
     def update_rain(self):
@@ -1132,9 +1210,14 @@ class Level:
 
         if self.current_minigame and self.current_minigame.running:
             self.current_minigame.update(dt)
+            
+        self.volcano()
+        if self.start_volcano_animation:
+            self.volcano_animation()
 
         self.update_rain()
         self.day_transition.update()
+        self.volcano_map_transition.update()
         self.map_transition.update()
         if move_things:
             if self.cutscene_animation.active:
