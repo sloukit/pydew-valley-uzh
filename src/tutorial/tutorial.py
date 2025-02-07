@@ -227,7 +227,7 @@ class Tutorial:
                         self.player.outgroup_member_interacted = False
                     else:
                         self.show_tutorial_end()
-                        self.tasks_achieved = 10
+                        self.tasks_achieved = 11
 
                         self.player.blocked = True
 
