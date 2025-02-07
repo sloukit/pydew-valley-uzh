@@ -192,7 +192,7 @@ class Tutorial:
                     self.level.hit_tree
                     and self.dialogue_manager._get_current_tb().finished_advancing
                 ):
-                    self.switch_to_task(6)
+                    self.switch_to_task(7)
                     self.tasks_achieved += 1
 
             case 7:
@@ -202,7 +202,7 @@ class Tutorial:
                     and not game_paused
                     and self.dialogue_manager._get_current_tb().finished_advancing
                 ):
-                    self.switch_to_task(7)
+                    self.switch_to_task(8)
                     self.tasks_achieved += 1
 
             case 8:
@@ -211,7 +211,7 @@ class Tutorial:
                     self.player.minigame_finished
                     and self.dialogue_manager._get_current_tb().finished_advancing
                 ):
-                    self.switch_to_task(8)
+                    self.switch_to_task(9)
                     self.tasks_achieved += 1
 
             case 9:
@@ -221,7 +221,7 @@ class Tutorial:
                     and self.dialogue_manager._get_current_tb().finished_advancing
                 ):
                     if self.round_config.get("playable_outgroup", False):
-                        self.switch_to_task(9)
+                        self.switch_to_task(10)
                         self.tasks_achieved += 1
 
                         self.player.outgroup_member_interacted = False
