@@ -5,7 +5,7 @@ import pygame
 
 from src import utils
 from src.enums import Layer
-from src.settings import CHARS_PER_LINE, TB_SIZE
+from src.settings import TB_SIZE
 from src.sprites.base import Sprite
 from src.support import resource_path
 from src.timer import Timer
@@ -59,11 +59,14 @@ class TextBox(Sprite):
         self.font: pygame.Font = font
         self.name: str = character_name
         max_text_width = TB_SIZE[0] - 6  # 4px left, ~2mm (~5px) right
-        estimated_char_width = self.font.size("M")[0]  # Get width of a typical character
-        adjusted_chars_per_line = max_text_width // estimated_char_width  # Dynamically adjust
+        estimated_char_width = self.font.size("M")[
+            0
+        ]  # Get width of a typical character
+        adjusted_chars_per_line = (
+            max_text_width // estimated_char_width
+        )  # Dynamically adjust
 
         self.text: str = textwrap.fill(text, width=adjusted_chars_per_line)
-
 
         self.image: pygame.Surface = pygame.Surface(TB_SIZE, flags=pygame.SRCALPHA)
         self.__prepare_image()
