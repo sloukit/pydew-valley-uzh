@@ -1,70 +1,70 @@
 {
-  "test":[
-    ["EN: A character", "EN: BLAH BLAH BLAH"],
-    ["EN: A character", "EN: Insightful text here, or something. I mean, what the heck should I say?"]
-  ],
-  "intro_to_game": [
-    ["Übungsrunde", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
-  ],
-  "scripted_sequence_player_hat_sequence": [
-    ["Ereignis", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
-  ],
-  "scripted_sequence_player_necklace_sequence": [
-    ["Ereignis", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
-  ],
-  "scripted_sequence_player_birthday_sequence": [
-    ["Ereignis", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
-  ],
-  "scripted_sequence_ingroup_necklace_sequence": [
-    ["Ereignis", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
-  ],
-  "scripted_sequence_group_market_passive_player_sequence": [
-    ["Versammlung", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
-  ],
-  "scripted_sequence_group_market_active_player_sequence": [
-    ["Versammlung", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
-  ],
-  "scripted_sequence_buy_tomato": [
-    ["Versammlung", "Die Gruppe hat entschieden, heute Tomaten \t\t\t zu verkaufen. Auf geht's zum Markt! \t\t\t\t\t\t Drücke die Leertaste, um fortzufahren."]
-  ],
-  "scripted_sequence_buy_corn": [
-    ["Versammlung", "Die Gruppe hat entschieden, heute Mais \t\t\t zu verkaufen. Auf geht's zum Markt! \t\t\t\t\t\t Drücke die Leertaste, um fortzufahren."]
-  ],
-  "label_not_available":[
-    ["EN: Sign", "EN: label not available"],
-    ["EN: Sign", "EN: check map tmx, Interactions layer, custom property: label"]
-  ],
-  "to_trader_up":[
-    ["EN: Sign", "EN: /\\\t\t\t\t\t\t\t | |  go up to the Trader"]
-  ],
-  "to_farm_up":[
-    ["EN: Sign", "EN: /\\\t\t\t\t\t\t\t | |  go up to the Farm"]
-  ],
-  "to_minigame_up":[
-    ["EN: Sign", "EN: /\\\t\t\t\t\t\t\t | |  go up to the Mini game"]
-  ],
-  "to_bath_down":[
-    ["EN: Sign", "EN: | |\t\t\t\t\t\t\t\\/ go down to the Bathhouse"]
-  ],
-  "to_forest_down":[
-    ["EN: Sign", "EN: | |\t\t\t\t\t\t\t\\/ go down to the Forest"]
-  ],
-  "to_town_down":[
-    ["EN: Sign", "EN: | |\t\t\t\t\t\t\t\\/ go down to the Town"]
-  ],
-  "to_bath_right":[
-    ["EN: Sign", "EN: => go right to the Bathhouse"]
-  ],
-  "to_forest_right":[
-    ["EN: Sign", "EN: => go right to the Forest"]
-  ],
-  "to_town_left":[
-    ["EN: Sign", "EN: <= go left to the Town"]
-  ],
-  "to_town":[
-    ["EN: Sign", "EN: <= go left to the 'in group'\t\t\t\t\t=> go right to the Forest\t\t\t\t\t | |\t\t\t\t\t\t\t\\/ go down to the Town"]
-  ],
-  "to_forest":[
-    ["EN: Sign", "EN: => go right to the 'out group'\t\t\t\t\t<= go left to the Town\t\t\t\t\t | |\t\t\t\t\t\t\t\\/ go down to the Forest"]
-  ]
+ "test":[
+  ["EN: A character", "EN: BLAH BLAH BLAH"],
+  ["EN: A character", "EN: Insightful text here, or something. I mean, what the heck should I say?"]
+ ],
+ "intro_to_game": [
+  ["Willkommen!", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
+ ],
+ "scripted_sequence_player_hat_sequence": [
+  ["Ereignis", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
+ ],
+ "scripted_sequence_player_necklace_sequence": [
+  ["Ereignis", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
+ ],
+ "scripted_sequence_player_birthday_sequence": [
+  ["Ereignis", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
+ ],
+ "scripted_sequence_ingroup_necklace_sequence": [
+  ["Ereignis", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
+ ],
+ "scripted_sequence_group_market_passive_player_sequence": [
+  ["Versammlung", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
+ ],
+ "scripted_sequence_group_market_active_player_sequence": [
+  ["Versammlung", "<< PLACEHOLDER - WILL BE SET BY ROUNDS_CONFIG >>"]
+ ],
+ "scripted_sequence_buy_tomato": [
+  ["Versammlung", "Die Gruppe hat entschieden, heute Tomaten zu verkaufen. Auf geht's zum Markt! Drücke die Leertaste, um fortzufahren."]
+ ],
+ "scripted_sequence_buy_corn": [
+  ["Versammlung", "Die Gruppe hat entschieden, heute Mais zu verkaufen. Auf geht's zum Markt! Drücke die Leertaste, um fortzufahren."]
+ ],
+ "label_not_available":[
+  ["EN: Sign", "EN: label not available"],
+  ["EN: Sign", "EN: check map tmx, Interactions layer, custom property: label"]
+ ],
+ "to_trader_up":[
+  ["EN: Sign", "EN: /\\ | | go up to the Trader"]
+ ],
+ "to_farm_up":[
+  ["EN: Sign", "EN: /\\ | | go up to the Farm"]
+ ],
+ "to_minigame_up":[
+  ["EN: Sign", "EN: /\\ | | go up to the Mini game"]
+ ],
+ "to_bath_down":[
+  ["EN: Sign", "EN: | |\\/ go down to the Bathhouse"]
+ ],
+ "to_forest_down":[
+  ["EN: Sign", "EN: | |\\/ go down to the Forest"]
+ ],
+ "to_town_down":[
+  ["EN: Sign", "EN: | |\\/ go down to the Town"]
+ ],
+ "to_bath_right":[
+  ["EN: Sign", "EN: => go right to the Bathhouse"]
+ ],
+ "to_forest_right":[
+  ["EN: Sign", "EN: => go right to the Forest"]
+ ],
+ "to_town_left":[
+  ["EN: Sign", "EN: <= go left to the Town"]
+ ],
+ "to_town":[
+  ["EN: Sign", "EN: <= go left to the 'in group'=> go right to the Forest | |\\/ go down to the Town"]
+ ],
+ "to_forest":[
+  ["EN: Sign", "EN: => go right to the 'out group'<= go left to the Town | |\\/ go down to the Forest"]
+ ]
 }
