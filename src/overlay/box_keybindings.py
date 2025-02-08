@@ -210,7 +210,7 @@ class BoxKeybindings:
 
         display_surface.blit(key_img, key_rect)
         if generic:
-            key_surf = self.font.render(key, False, "White")
+            key_surf = self.font.render(key, False, "Black")
             key_tmp_rect = key_surf.get_frect()
             key_surf.get_frect(left=key_tmp_rect.left + 10, top=key_rect.top + 10)
             display_surface.blit(key_surf, key_rect)
