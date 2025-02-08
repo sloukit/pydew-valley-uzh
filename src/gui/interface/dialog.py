@@ -58,7 +58,13 @@ class TextBox(Sprite):
 
         self.font: pygame.Font = font
         self.name: str = character_name
-        self.text: str = textwrap.fill(text, width=CHARS_PER_LINE)
+        max_text_width = TB_SIZE[0] - 6  # 4px left, ~2mm (~5px) right
+        estimated_char_width = self.font.size("M")[0]  # Get width of a typical character
+        adjusted_chars_per_line = max_text_width // estimated_char_width  # Dynamically adjust
+
+        self.text: str = textwrap.fill(text, width=adjusted_chars_per_line)
+
+
         self.image: pygame.Surface = pygame.Surface(TB_SIZE, flags=pygame.SRCALPHA)
         self.__prepare_image()
         self._tmp_img: pygame.Surface = self._TB_IMAGE.copy()
@@ -106,7 +112,7 @@ class TextBox(Sprite):
         text_surf = self.font.render(
             self.text[: self._chr_index], True, color=pygame.Color("black")
         )
-        text_rect = text_surf.get_rect(topleft=(15, 78))
+        text_rect = text_surf.get_rect(topleft=(15, 80))
         blit_list = [(self._tmp_img, (0, 0)), (text_surf, text_rect)]
         self.image.fblits(blit_list)
         self._txt_needs_rerender = False
@@ -125,7 +131,7 @@ class TextBox(Sprite):
         cname = self.font.render(self.name, True, color=pygame.Color("black"))
         cname_rect = cname.get_rect(center=self._CNAME_SURF_RECT.center)
         text_surf = self.font.render(self.text, True, color=pygame.Color("black"))
-        text_rect = text_surf.get_rect(topleft=(15, 78))
+        text_rect = text_surf.get_rect(topleft=(15, 80))
         blit_list = [
             (self._TB_IMAGE, (0, 0)),
             (cname, cname_rect),
