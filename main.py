@@ -24,7 +24,13 @@ from src.enums import (
     ScriptedSequenceType,
     SelfAssessmentDimension,
 )
-from src.events import SHOW_BOX_KEYBINDINGS, DIALOG_ADVANCE, DIALOG_SHOW, OPEN_INVENTORY, SET_CURSOR
+from src.events import (
+    DIALOG_ADVANCE,
+    DIALOG_SHOW,
+    OPEN_INVENTORY,
+    SET_CURSOR,
+    SHOW_BOX_KEYBINDINGS,
+)
 from src.groups import AllSprites
 from src.gui.interface.dialog import DialogueManager
 from src.gui.setup import setup_gui

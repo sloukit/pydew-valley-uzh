@@ -5,11 +5,11 @@ import pygame
 
 from src.enums import ClockVersion
 from src.gui.health_bar import HealthProgressBar
+from src.overlay.box_keybindings import BoxKeybindings, BoxKeybindingsLabel
 from src.overlay.clock import Clock
 from src.overlay.fps import FPS
 from src.overlay.game_time import GameTime
 from src.overlay.money import Money
-from src.overlay.box_keybindings import BoxKeybindingsLabel, BoxKeybindings
 from src.settings import OVERLAY_POSITIONS
 
 

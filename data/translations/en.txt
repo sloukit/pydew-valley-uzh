@@ -165,4 +165,12 @@ Cows in the barn@@Cows in the barn
 # src/overlay/box_keybindings.py
 
 box info label@@Press S for the control options
-box info space@@bla bla bla
+box info left mouse@@Using tools
+box info tab@@Change tool
+box info right mouse@@Planting seeds
+box info left shift@@Change seeds
+box info space@@Approach market traders,|select, gather fruit, sleep
+box info i@@Open storage
+box info e@@Interact
+box info esc@@Pause
+box info player task@@How to make money:|Digging the soil, planting seeds,|watering plants|Harvesting after sleeping|Collecting wood and fruit in the forest|Selling the harvest, wood and fruit|at the market|Winning money at the|'cow-in-the-stable' event
