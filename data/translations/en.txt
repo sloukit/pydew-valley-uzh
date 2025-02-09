@@ -173,4 +173,4 @@ box info space@@Approach market traders,|select, gather fruit, sleep
 box info i@@Open storage
 box info e@@Interact
 box info esc@@Pause
-box info player task@@How to make money:|Digging the soil, planting seeds,|watering plants|Harvesting after sleeping|Collecting wood and fruit in the forest|Selling the harvest, wood and fruit|at the market|Winning money at the|'cow-in-the-stable' event
+box info player task@@How to make money:|Digging the soil, planting seeds,|watering plants|Harvesting after sleeping|Collecting wood and|fruit in the forest|Selling the harvest, wood and|fruit at the market|Winning money at the|'cow-in-the-stable' event

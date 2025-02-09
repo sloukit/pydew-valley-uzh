@@ -47,12 +47,12 @@ class BoxKeybindingsLabel:
 
 class BoxKeybindings:
     def __init__(self):
-        self.font_size = 17
-        self.key_image_size = (30, 30)
+        self.font_size = 19
+        self.key_image_size = (45, 45)
         self.key_images = {}
         self.info_order = []
         self.image = self.load_and_scale_image_by_factor(
-            "images/ui/KeyBindUI_Placeholder.png"
+            "images/ui/KeyBindUI_Placeholder-new.png"
         )
         self.width = self.image.get_width()
         self.info = []
@@ -76,33 +76,57 @@ class BoxKeybindings:
             {
                 "key": "",
                 "descr": self.get_text("box info player task"),
-                "pos": (122, 510),
+                "rel_pos": (10, 10),
+                "descr_pos": (5, 382),
             },
             {
                 "key": "lclick",
                 "descr": self.get_text("box info left mouse"),
-                "pos": (172, 120),
+                "rel_pos": (10, 15),
+                "descr_pos": (55, 12),
             },
-            {"key": "tab", "descr": self.get_text("box info tab"), "pos": (172, 168)},
+            {
+                "key": "tab",
+                "descr": self.get_text("box info tab"),
+                "rel_pos": (10, 63),
+                "descr_pos": (55, 12),
+            },
             {
                 "key": "rclick",
                 "descr": self.get_text("box info right mouse"),
-                "pos": (172, 215),
+                "rel_pos": (10, 110),
+                "descr_pos": (55, 12),
             },
             {
                 "key": "lshift",
                 "descr": self.get_text("box info left shift"),
-                "pos": (172, 263),
+                "rel_pos": (10, 158),
+                "descr_pos": (55, 12),
             },
             {
                 "key": "space",
                 "descr": self.get_text("box info space"),
-                "pos": (172, 310),
-                "descr_vert_shift": -12,
+                "rel_pos": (10, 205),
+                "descr_pos": (55, -5),
             },
-            {"key": "I", "descr": self.get_text("box info i"), "pos": (172, 357)},
-            {"key": "E", "descr": self.get_text("box info e"), "pos": (172, 405)},
-            {"key": "ESC", "descr": self.get_text("box info esc"), "pos": (172, 452)},
+            {
+                "key": "I",
+                "descr": self.get_text("box info i"),
+                "rel_pos": (10, 252),
+                "descr_pos": (55, 12),
+            },
+            {
+                "key": "E",
+                "descr": self.get_text("box info e"),
+                "rel_pos": (10, 300),
+                "descr_pos": (55, 12),
+            },
+            {
+                "key": "ESC",
+                "descr": self.get_text("box info esc"),
+                "rel_pos": (10, 347),
+                "descr_pos": (55, 12),
+            },
         ]
         self.info_order = [
             "lclick",
@@ -131,6 +155,12 @@ class BoxKeybindings:
             "space": self.load_and_scale_image(
                 "images/ui/keys/space.png", self.key_image_size
             ),
+            "E": self.load_and_scale_image(
+                "images/ui/keys/E-white.png", self.key_image_size
+            ),
+            "I": self.load_and_scale_image(
+                "images/ui/keys/I-white.png", self.key_image_size
+            ),
             "generic": self.load_and_scale_image(
                 "images/ui/keys/generic.png", self.key_image_size
             ),
@@ -156,20 +186,25 @@ class BoxKeybindings:
         # display box
         display_surface.blit(self.image, self.box_keybindings_rect)
 
+        start_key_topleft = self.box_keybindings_rect.topleft
         # iterate over text list
         for info_key in self.info_order:
             current_info = self.get_ordered_info(info_key)
             key = current_info["key"]
-            current_key_topleft = current_info["pos"]
+            key_rel_pos = current_info["rel_pos"]
+            current_key_topleft = (
+                start_key_topleft[0] + key_rel_pos[0],
+                start_key_topleft[1] + key_rel_pos[1],
+            )
             description = current_info["descr"]
             vertical_shift = (
-                current_info["descr_vert_shift"]
-                if "descr_vert_shift" in current_info.keys()
-                else 0
+                current_info["descr_pos"]
+                if "descr_pos" in current_info.keys()
+                else (40, 0)
             )
             current_desc_topleft = (
-                current_key_topleft[0] + 40,
-                current_key_topleft[1] + vertical_shift,
+                current_key_topleft[0] + vertical_shift[0],
+                current_key_topleft[1] + vertical_shift[1],
             )
 
             # prepare key for draw
@@ -210,7 +245,7 @@ class BoxKeybindings:
 
         display_surface.blit(key_img, key_rect)
         if generic:
-            key_surf = self.font.render(key, False, "Black")
+            key_surf = self.font.render(key, False, "White")
             key_tmp_rect = key_surf.get_frect()
             key_surf.get_frect(left=key_tmp_rect.left + 10, top=key_rect.top + 10)
             display_surface.blit(key_surf, key_rect)
