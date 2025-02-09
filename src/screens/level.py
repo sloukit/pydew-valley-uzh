@@ -14,7 +14,13 @@ from src.camera.quaker import Quaker
 from src.camera.zoom_manager import ZoomManager
 from src.controls import Controls
 from src.enums import FarmingTool, GameState, Map, ScriptedSequenceType, StudyGroup
-from src.events import DIALOG_ADVANCE, DIALOG_SHOW, START_QUAKE, post_event
+from src.events import (
+    DIALOG_ADVANCE,
+    DIALOG_SHOW,
+    SHOW_BOX_KEYBINDINGS,
+    START_QUAKE,
+    post_event,
+)
 from src.exceptions import GameMapWarning
 from src.groups import AllSprites, PersistentSpriteGroup
 from src.gui.interface.dialog import DialogueManager
@@ -609,6 +615,9 @@ class Level:
     def handle_controls(self):
         if self.controls.ADVANCE_DIALOG.click:
             post_event(DIALOG_ADVANCE)
+
+        if self.controls.SHOW_BOX_KEYBINDINGS.click:
+            post_event(SHOW_BOX_KEYBINDINGS)
 
         if self.get_game_version() == DEBUG_MODE_VERSION:
             # if self.controls.DEBUG_QUAKE.click:
