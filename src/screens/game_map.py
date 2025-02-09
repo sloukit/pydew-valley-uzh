@@ -307,7 +307,10 @@ class GameMap:
         # assets
         frames: dict,
         round_config: dict[str, Any],
+        get_game_version: Callable[[], int],
     ):
+        self.get_game_version = get_game_version
+        self.number_of_hats_to_exclude = 2
         self._tilemap = tilemap
 
         if "Player" not in self._tilemap.layernames:
@@ -383,12 +386,14 @@ class GameMap:
             include_seeds=True,
         )
 
+        self.number_of_hats_to_exclude = 2
         for npc in self.npcs:
             npc.set_sickness_allowed(self.round_config.get("sickness", False))
             npc.set_allowed_seeds(allowed_seeds)
             npc.assign_outfit_ingroup(
                 self.round_config.get("ingroup_40p_hat_necklace_appearance", False)
             )
+            self.exclude_hat_if_possible(npc)
 
     @property
     def size(self):
@@ -725,6 +730,7 @@ class GameMap:
             has_hat=has_hat,
             has_necklace=has_necklace,
             special_features=features,
+            npc_id=obj.id,
         )
         npc.teleport(pos)
         # Ingroup NPCs wearing only the hat and no necklace should not be able to walk on the forest and town map,
@@ -990,3 +996,19 @@ class GameMap:
 
     def get_size(self):
         return self._tilemap_scaled_size
+
+    def exclude_hat_if_possible(self, npc: NPC):
+        # in version 3 of the game we remove all hat and necklaces for npcs with special features added in the map
+        if self.get_game_version() == 3:
+            if npc.study_group == StudyGroup.INGROUP and npc.npc_id in [368, 372]:
+                npc.has_hat = False
+                npc.has_necklace = False
+        # in version 1 and 2 of the game we remove hats for two npcs without special features
+        elif self.get_game_version() in [1, 2]:
+            if (
+                npc.npc_id not in [368, 372]
+                and npc.has_hat
+                and self.number_of_hats_to_exclude > 0
+            ):
+                npc.has_hat = False
+                self.number_of_hats_to_exclude -= 1

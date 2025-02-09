@@ -40,6 +40,7 @@ class NPC(NPCBase):
         has_hat: bool,
         has_necklace: bool,
         special_features: str | None,
+        npc_id: int,
     ):
         self.tree_sprites = tree_sprites
 
@@ -54,6 +55,7 @@ class NPC(NPCBase):
             behaviour_tree_context=NPCIndividualContext(self),
             z=Layer.MAIN,
             emote_manager=emote_manager,
+            npc_id=npc_id,
         )
         self.start_tile_pos = self.get_tile_pos()  # capture the NPC start position
         self.soil_area = soil_manager.get_area(self.study_group)

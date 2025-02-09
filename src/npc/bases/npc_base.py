@@ -38,6 +38,7 @@ class NPCBase(Character, AIBehaviour, ABC):
         behaviour_tree_context: ContextType,
         z: int,
         emote_manager: NPCEmoteManager,
+        npc_id: int,
     ):
         Character.__init__(
             self,
@@ -52,5 +53,5 @@ class NPCBase(Character, AIBehaviour, ABC):
         )
         AIBehaviour.__init__(self, behaviour_tree_context=behaviour_tree_context)
         self.emote_manager = emote_manager
-
+        self.npc_id = npc_id
         self.speed = 250

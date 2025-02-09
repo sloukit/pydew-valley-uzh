@@ -306,6 +306,7 @@ class Level:
             frames=self.frames,
             save_file=self.save_file,
             round_config=self.round_config,
+            get_game_version=self.get_game_version,
         )
 
         self.camera.change_size(*self.game_map.size)
