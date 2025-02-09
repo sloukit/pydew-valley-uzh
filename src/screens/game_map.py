@@ -1011,4 +1011,5 @@ class GameMap:
                 and self.number_of_hats_to_exclude > 0
             ):
                 npc.has_hat = False
+                npc.has_necklace = False
                 self.number_of_hats_to_exclude -= 1
