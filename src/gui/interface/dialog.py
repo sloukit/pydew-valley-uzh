@@ -59,7 +59,7 @@ class TextBox(Sprite):
         self.font: pygame.Font = font
         self.name: str = character_name
         max_text_width = TB_SIZE[0] - 6  # 4px left, ~2mm (~5px) right
-        estimated_char_width = self.font.size("M")[
+        estimated_char_width = self.font.size("L")[
             0
         ]  # Get width of a typical character
         adjusted_chars_per_line = (
