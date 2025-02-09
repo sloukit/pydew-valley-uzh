@@ -11,7 +11,7 @@ class BoxKeybindingsLabel:
         # setup
         self.display_surface = pygame.display.get_surface()
         self.player = entity
-
+        self.enabled = False
         # dimensions
         self.left = 20
         self.top = 20
@@ -24,6 +24,9 @@ class BoxKeybindingsLabel:
         self.rect.topleft = OVERLAY_POSITIONS["box_info_label"]
 
     def display(self):
+        if not self.enabled:
+            return
+
         # colors connected to player state
         white = "White"
         gray = "Gray"

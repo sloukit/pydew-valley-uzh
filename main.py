@@ -513,6 +513,8 @@ class Game:
                             self.tutorial.top_pos,
                         )
         elif not self.level.cutscene_animation.active:
+            if not self.level.overlay.box_keybindings_label.enabled:
+                self.level.overlay.box_keybindings_label.enabled = True
             if self.dialogue_manager.showing_dialogue:
                 # prepare text box to switch to tutorial
                 if self.intro_txt_rendered:
@@ -584,7 +586,8 @@ class Game:
                     self.player.blocked = False
             return True
         elif event.type == SHOW_BOX_KEYBINDINGS:
-            self.level.overlay.box_keybindings.toggle_visibility()
+            if not self.level.cutscene_animation.active:
+                self.level.overlay.box_keybindings.toggle_visibility()
             return True
         elif event.type == SET_CURSOR:
             self.set_cursor(event.cursor)
