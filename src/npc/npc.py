@@ -40,7 +40,7 @@ class NPC(NPCBase):
         has_hat: bool,
         has_necklace: bool,
         special_features: str | None,
-        npc_id: int,
+        npc_id: int=0,
     ):
         self.tree_sprites = tree_sprites
 

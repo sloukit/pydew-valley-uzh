@@ -38,7 +38,7 @@ class NPCBase(Character, AIBehaviour, ABC):
         behaviour_tree_context: ContextType,
         z: int,
         emote_manager: NPCEmoteManager,
-        npc_id: int,
+        npc_id: int=0,
     ):
         Character.__init__(
             self,
