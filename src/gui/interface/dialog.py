@@ -231,8 +231,7 @@ class DialogueManager:
         self._msg_index += 1
         if self._msg_index >= len(self._tb_list):
             # Reached the end of the dialogue, clear everything away to make space for the next dialogue
-            self._purge_tb_list()
-            self._showing_dialogue = False
+            self.close_dialogue()
             return
         self._push_current_tb_to_foreground()
 

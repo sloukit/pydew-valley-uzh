@@ -60,6 +60,8 @@ from src.settings import (
     AniFrames,
     MapDict,
     SoundDict,
+    TUTORIAL_TB_LEFT,
+    TUTORIAL_TB_TOP
 )
 from src.sprites.setup import setup_entity_assets
 from src.support import get_translated_string as _
@@ -171,9 +173,6 @@ class Game:
         self.shop_menu = None
         self.settings_menu = None
         self.round_menu = None
-        if not USE_SERVER:
-            self.set_token({"token": "123", "jwt": "dummy_token", "game_version": 1})
-
         self.token_status = False
         self.allocation_task = PlayerTask(self.send_resource_allocation)
         self.main_menu = MainMenu(
@@ -342,6 +341,8 @@ class Game:
             self.inventory_menu.round_config_changed(self.round_config)
         if self.tutorial:
             self.tutorial.round_config = self.round_config
+            if self.round > 1:
+                self.tutorial.deactivate()
         if self.shop_menu:
             self.shop_menu.round_config_changed(self.round_config)
         if self.settings_menu:
@@ -509,8 +510,8 @@ class Game:
                         # show dialog with new text in the position the same as tutorial
                         self.dialogue_manager.open_dialogue(
                             "intro_to_game",
-                            self.tutorial.left_pos,
-                            self.tutorial.top_pos,
+                            TUTORIAL_TB_LEFT,
+                            TUTORIAL_TB_TOP
                         )
         elif not self.level.cutscene_animation.active:
             if not self.level.overlay.box_keybindings_label.enabled:
