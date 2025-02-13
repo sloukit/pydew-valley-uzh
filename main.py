@@ -55,13 +55,13 @@ from src.settings import (
     SCREEN_HEIGHT,
     SCREEN_WIDTH,
     TB_SIZE,
+    TUTORIAL_TB_LEFT,
+    TUTORIAL_TB_TOP,
     USE_SERVER,
     WORLD_TIME_MULTIPLIER,
     AniFrames,
     MapDict,
     SoundDict,
-    TUTORIAL_TB_LEFT,
-    TUTORIAL_TB_TOP
 )
 from src.sprites.setup import setup_entity_assets
 from src.support import get_translated_string as _
@@ -509,9 +509,7 @@ class Game:
 
                         # show dialog with new text in the position the same as tutorial
                         self.dialogue_manager.open_dialogue(
-                            "intro_to_game",
-                            TUTORIAL_TB_LEFT,
-                            TUTORIAL_TB_TOP
+                            "intro_to_game", TUTORIAL_TB_LEFT, TUTORIAL_TB_TOP
                         )
         elif not self.level.cutscene_animation.active:
             if not self.level.overlay.box_keybindings_label.enabled:

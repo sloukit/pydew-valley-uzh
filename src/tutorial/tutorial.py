@@ -263,4 +263,3 @@ class Tutorial:
         self.player.blocked = False
         self.tasks_achieved = 12
         self.level.player.save_file.is_tutorial_completed = True
-
