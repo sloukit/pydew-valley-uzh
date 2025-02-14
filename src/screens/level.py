@@ -1133,11 +1133,8 @@ class Level:
 
         # show intro scripted sequence only once
         if not self.intro_shown.get(self.current_map, False):
-            if self.round_config.get(
-                "character_introduction_timestamp", []
-            ) and self.round_config.get("character_introduction_text", ""):
+            if len(self.round_config.get("character_introduction_timestamp", [])) > 0:
                 self.intro_shown[self.current_map] = True
-                # TODO revert, this only for debug
                 self.cutscene_animation.start()
 
         if self.current_minigame and self.current_minigame.running:
