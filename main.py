@@ -255,8 +255,8 @@ class Game:
         )
 
         # intro to game and in-group msg.
-        self.intro_txt_is_rendering = False
-        self.intro_txt_rendered = False
+        self.last_intro_txt_rendered = False
+        self.switched_to_tutorial = False
 
     def get_world_time(self) -> tuple[int, int]:
         min = round(self.round_end_timer) // 60
@@ -298,7 +298,6 @@ class Game:
         self.game_version = int(response["game_version"])
         xplat.log(f"token: {self.token}")
         xplat.log(f"jwt: {self.jwt}")
-        xplat.log(f"game version: {self.game_version}")
         if USE_SERVER:
             client.send_telemetry(self.jwt, {"event": "player_login"})
 
@@ -466,7 +465,7 @@ class Game:
 
     def show_intro_msg(self) -> None:
         # A Message At The Starting Of The Game Giving Introduction To The Game And The InGroup.
-        if not self.intro_txt_is_rendering:
+        if not self.last_intro_txt_rendered:
             if not self.game_paused():
                 if (
                     self.level.current_map == Map.NEW_FARM
@@ -475,6 +474,7 @@ class Game:
                     and self.round_end_timer
                     > self.round_config["character_introduction_timestamp"][0]
                 ):
+                    print("debug1b")
                     # get previous dialog text
                     intro_text = self.dialogue_manager.dialogues["intro_to_game"][0][1]
 
@@ -499,8 +499,7 @@ class Game:
                             if self.dialogue_manager.showing_dialogue:
                                 self.dialogue_manager.close_dialogue()
 
-                            self.intro_txt_is_rendering = True
-                            self.intro_txt_rendered = True
+                            self.last_intro_txt_rendered = True
 
                     intro_text = intro_text.replace("[Initialen]", self.player.name)
 
@@ -522,19 +521,18 @@ class Game:
                         self.dialogue_manager.open_dialogue(
                             "intro_to_game", TUTORIAL_TB_LEFT, TUTORIAL_TB_TOP
                         )
-        elif not self.level.cutscene_animation.active:
+                elif not(self.round_config["character_introduction_timestamp"]):
+                    self.last_intro_txt_rendered = True
+                print("DEBUG1", self.last_intro_txt_rendered, self.level.current_map, self.round_config["character_introduction_timestamp"])
+        elif not self.level.cutscene_animation.active and not self.switched_to_tutorial:
             if not self.level.overlay.box_keybindings_label.enabled:
                 self.level.overlay.box_keybindings_label.enabled = True
-            if self.dialogue_manager.showing_dialogue:
-                # prepare text box to switch to tutorial
-                if self.intro_txt_rendered:
-                    self.dialogue_manager.close_dialogue()
-                    self.intro_txt_rendered = False
+            print("DEBUG2", self.player.save_file.is_tutorial_completed, self.last_intro_txt_rendered)
             if (
                 not self.player.save_file.is_tutorial_completed
-                and self.intro_txt_rendered
+                and self.last_intro_txt_rendered
             ):
-                self.intro_txt_rendered = False
+                self.switched_to_tutorial = True
                 # we no longer need special npc features for the intro
                 # assign hat and necklace according to regular logic
                 for npc in self.level.game_map.npcs:
@@ -544,7 +542,7 @@ class Game:
                             "ingroup_40p_hat_necklace_appearance", False
                         )
                     )
-                self.tutorial.ready()
+                self.tutorial.start() # will be automatically skipped if the level does not have a tutorial (aka is > 1)
 
     # events
     def event_loop(self) -> None:

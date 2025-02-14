@@ -48,7 +48,8 @@ class Tutorial:
             9: self.interact_with_outgroup_member,
             10: self.walk_around_outgroup_farm_and_switch_to_outgroup,
         }
-        self.tasks_achieved = 0
+        self.tasks_achieved = -1
+        self.n_tasks = max(self.instructions.keys())+1
 
     # show instructions text boxes
 
@@ -116,14 +117,17 @@ class Tutorial:
         self.dialogue_manager.open_dialogue("Tutorial_end", self.left_pos, self.top_pos)
 
     def switch_to_task(self, index: int):
-        if len(self.dialogue_manager._tb_list):
-            self.dialogue_manager.advance()
-            self.instructions[index]()
-        else:
-            self.instructions[index]()
+        if index < self.n_tasks:
+            if len(self.dialogue_manager._tb_list):
+                self.dialogue_manager.advance()
+                self.instructions[index]()
+            else:
+                self.instructions[index]()
 
     def check_tasks(self, game_paused):
         match self.tasks_achieved:
+            case -1: # tutorial has not been started yet
+                return
             case 0:
                 # check if the player achieved task "Basic movement"
                 if (
@@ -227,8 +231,7 @@ class Tutorial:
                         self.player.outgroup_member_interacted = False
                     else:
                         self.show_tutorial_end()
-                        self.tasks_achieved = 11
-
+                        self.tasks_achieved = self.n_tasks
                         self.player.blocked = True
 
             case 10:
@@ -239,10 +242,9 @@ class Tutorial:
                 ):
                     self.show_tutorial_end()
                     self.tasks_achieved += 1
-
                     self.player.blocked = True
 
-            case 11:
+            case self.n_tasks: # wait for space pressed to end the tutorial
                 # check if the player interacted to complete the tutorial
                 if (
                     self.dialogue_manager._get_current_tb().finished_advancing
@@ -251,9 +253,10 @@ class Tutorial:
                     self.deactivate()
 
     # run at the beginning of the tutorial
-    def ready(self):
-        if self.tasks_achieved == 0:
-            self.switch_to_task(0)
+    def start(self):
+        if self.tasks_achieved == -1:
+            self.tasks_achieved = 0
+        self.switch_to_task(self.tasks_achieved)
 
     def update(self, game_paused):
         self.check_tasks(game_paused)
@@ -261,5 +264,5 @@ class Tutorial:
     def deactivate(self):
         self.dialogue_manager.close_dialogue()
         self.player.blocked = False
-        self.tasks_achieved = 12
+        self.tasks_achieved = self.n_tasks
         self.level.player.save_file.is_tutorial_completed = True
