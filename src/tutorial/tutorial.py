@@ -5,7 +5,7 @@ import pygame
 from src.enums import StudyGroup
 from src.gui.interface.dialog import DialogueManager
 from src.screens.level import Level
-from src.settings import GAME_LANGUAGE, SCREEN_HEIGHT, SCREEN_WIDTH, TB_SIZE
+from src.settings import GAME_LANGUAGE, TUTORIAL_TB_LEFT, TUTORIAL_TB_TOP
 from src.sprites.entities.player import Player
 
 
@@ -30,8 +30,8 @@ class Tutorial:
         self.round_config = round_config
 
         # position of the tutorial text box
-        self.left_pos = SCREEN_WIDTH - TB_SIZE[0]
-        self.top_pos = SCREEN_HEIGHT / 1.5 - TB_SIZE[1]
+        self.left_pos = TUTORIAL_TB_LEFT
+        self.top_pos = TUTORIAL_TB_TOP
         # check if the player moved in the four directions
         self.movement_axis = [0, 0, 0, 0]
 
@@ -248,10 +248,7 @@ class Tutorial:
                     self.dialogue_manager._get_current_tb().finished_advancing
                     and self.player.controls.INTERACT.hold
                 ):
-                    self.player.blocked = False
-                    self.dialogue_manager._purge_tb_list()
-                    self.tasks_achieved += 1
-                    self.level.player.save_file.is_tutorial_completed = True
+                    self.deactivate()
 
     # run at the beginning of the tutorial
     def ready(self):
@@ -260,3 +257,9 @@ class Tutorial:
 
     def update(self, game_paused):
         self.check_tasks(game_paused)
+
+    def deactivate(self):
+        self.dialogue_manager.close_dialogue()
+        self.player.blocked = False
+        self.tasks_achieved = 12
+        self.level.player.save_file.is_tutorial_completed = True
