@@ -11,7 +11,6 @@ import logging
 import platform
 import sys
 import urllib.request
-
 from typing import Callable
 
 
@@ -252,11 +251,11 @@ async def post_request(url: str, headers: dict, data: dict) -> list | dict:
 
 
 async def post_request_with_callback(
-        url: str,
-        headers: dict,
-        data: dict,
-        callback: Callable[[dict], None],
-        ) -> None:
+    url: str,
+    headers: dict,
+    data: dict,
+    callback: Callable[[dict], None],
+) -> None:
     # Send the reponse to the callback
     response = await post_request(url, headers, data)
     callback(response)

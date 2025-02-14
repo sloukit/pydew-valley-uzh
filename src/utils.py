@@ -1,7 +1,7 @@
 import json
 import typing
-from typing import TextIO
 import urllib
+from typing import TextIO
 
 from src import xplat
 

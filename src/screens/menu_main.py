@@ -4,7 +4,7 @@ from typing import Any
 import pygame
 from pygame.mouse import get_pressed as mouse_buttons
 
-from src import client
+from src import client, xplat
 from src.enums import CustomCursor, GameState
 from src.events import SET_CURSOR, post_event
 from src.gui.menu.general_menu import GeneralMenu
@@ -14,7 +14,6 @@ from src.settings import (
     # USE_SERVER,
 )
 from src.support import get_translated_string as _
-from src import xplat
 
 _SCREEN_CENTER = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
 # MAX_TOKEN_LEN = 3

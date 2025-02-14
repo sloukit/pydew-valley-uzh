@@ -1,6 +1,7 @@
 import asyncio
 from typing import Callable
 
+from src import xplat
 from src.settings import (
     # API_KEY,
     # PORT,
@@ -8,7 +9,6 @@ from src.settings import (
     SERVER_URL,
     USE_SERVER,
 )
-from src import xplat
 
 # if USE_SERVER and sys.platform not in ("emscripten", "wasm"):
 #     import requests  # type: ignore[import-untyped]
@@ -21,6 +21,7 @@ BAD_PLAY_TOKEN_1 = "9"
 BAD_PLAY_TOKEN_2 = "zzz"
 
 DUMMY_TELEMETRY_DATA = {"self_assessment": "ok"}
+
 
 def authn(play_token: str, post_login_callback: Callable[[dict], None]) -> None:
     if USE_SERVER:
@@ -39,11 +40,14 @@ def authn(play_token: str, post_login_callback: Callable[[dict], None]) -> None:
             )
         )
     else:
-        post_login_callback({
-            'token' : play_token,
-            'jwt' : 'dummy_token',
-            'game_version': 1,
-        })
+        post_login_callback(
+            {
+                "token": play_token,
+                "jwt": "dummy_token",
+                "game_version": 1,
+            }
+        )
+
 
 def send_telemetry(encoded_jwt: str, payload: dict) -> None:
     """Send telemetry to the backend, asynchronously."""
