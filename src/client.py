@@ -6,7 +6,7 @@ from src.settings import (
     # PORT,
     # SERVER_IP,
     SERVER_URL,
-    # USE_SERVER,
+    USE_SERVER,
 )
 from src import xplat
 
@@ -22,23 +22,28 @@ BAD_PLAY_TOKEN_2 = "zzz"
 
 DUMMY_TELEMETRY_DATA = {"self_assessment": "ok"}
 
-
 def authn(play_token: str, post_login_callback: Callable[[dict], None]) -> None:
-    url = f"{SERVER_URL}/authn"
-    headers = {}
-    payload = {
-        "play_token": play_token,
-    }
-    # Do this all asynchronously:
-    asyncio.create_task(
-        xplat.post_request_with_callback(
-            url,
-            headers,
-            payload,
-            post_login_callback,
+    if USE_SERVER:
+        url = f"{SERVER_URL}/authn"
+        headers = {}
+        payload = {
+            "play_token": play_token,
+        }
+        # Do this all asynchronously:
+        asyncio.create_task(
+            xplat.post_request_with_callback(
+                url,
+                headers,
+                payload,
+                post_login_callback,
+            )
         )
-    )
-
+    else:
+        post_login_callback({
+            'token' : play_token,
+            'jwt' : 'dummy_token',
+            'game_version': 1,
+        })
 
 def send_telemetry(encoded_jwt: str, payload: dict) -> None:
     """Send telemetry to the backend, asynchronously."""
