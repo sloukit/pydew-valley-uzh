@@ -16,8 +16,7 @@ from typing import Any
 import pygame
 
 import src.utils  # noqa [ to patch utf-8 on top of file without linting errors ]
-from src import support
-from src import client
+from src import client, support, xplat
 from src.enums import (
     CustomCursor,
     GameState,
@@ -66,7 +65,6 @@ from src.settings import (
 from src.sprites.setup import setup_entity_assets
 from src.support import get_translated_string as _
 from src.tutorial.tutorial import Tutorial
-from src import xplat
 
 # set random seed. It has to be set first before any other random function is called.
 random.seed(RANDOM_SEED)
