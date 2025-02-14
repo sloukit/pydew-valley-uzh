@@ -40,14 +40,30 @@ USE_GAME_TIME = False
 SECONDS_PER_GAME_MINUTE = 0.7
 # should be 1.0 - increase x10 for debug to speed-up round end
 WORLD_TIME_MULTIPLIER = 1.0
-USE_SERVER = False
-# for now, in web mode, do not use dummy server (which requires `requests` module not available via pygbag)
-if sys.platform not in ("emscripten", "wasm"):
-    USE_SERVER = False
+# USE_SERVER = False
+USE_SERVER = True
 
-SERVER_IP = "http://127.0.0.1"
-PORT = 5000
-API_KEY = "123"
+IS_WEB = sys.platform in ("emscripten", "wasm")
+# for now, in web mode, do not use dummy server (which requires `requests` module not available via pygbag)
+if not IS_WEB:
+    # If we're running locally, set this via environment variable:
+    if os.getenv("USE_SERVER") == "true":
+        USE_SERVER = True
+    else:
+        USE_SERVER = False
+
+# NOTE(larsbutler): Don't change this line at all.
+# WEB_SERVER_URL is populated during build,
+# and build scripts expect this value exactly
+# so we can populate it with the actual server URL
+# at deploy time.
+WEB_SERVER_URL = "WEB_SERVER_URL_PLACEHOLDER"
+if IS_WEB:
+    # For the web distribution, this should be replaced during
+    # build time.
+    SERVER_URL = WEB_SERVER_URL
+else:
+    SERVER_URL = os.getenv("SERVER_URL", "http://127.0.0.0:8888")
 
 SETUP_PATHFINDING = any((ENABLE_NPCS, TEST_ANIMALS))
 

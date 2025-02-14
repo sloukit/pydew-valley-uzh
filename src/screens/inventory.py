@@ -320,7 +320,7 @@ class InventoryMenu(AbstractMenu):
             chain(self._inv_buttons, self._ft_buttons, self._special_btns)
         )
 
-    def handle_event(self, event):
+    def handle_event(self, event) -> bool:
         if super().handle_event(event):
             return True
 

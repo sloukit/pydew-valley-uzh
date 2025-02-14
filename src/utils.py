@@ -1,6 +1,9 @@
 import json
 import typing
 from typing import TextIO
+import urllib
+
+from src import xplat
 
 _DOUBLE_SLASH = "//"
 
@@ -85,3 +88,57 @@ def json_load(stream: TextIO, **kwargs) -> typing.Any:
     Wrapper function for `json.load`, with custom decoder.
     """
     return json.load(stream, cls=JSONWithCommentsDecoder, **kwargs)
+
+
+URL: str = "https://oxpvhqou52.execute-api.eu-central-2.amazonaws.com/default/telemetry"
+_JWT: str | None = None
+
+
+def get_credentials() -> str:
+    global _JWT
+    # if not logged in:
+    #   send play token and get a JWT back
+    #   cache the JWT
+    # return the cached JWT
+    pass
+
+
+def send_telemetry(url: str, jwt: str, data: dict):
+    import js
+
+    js.console.log("sending telemetry")
+    print("sending telemetry")
+    headers = {
+        "Authorization": f"Bearer {jwt}",
+        "x-api-key": "tAXb3oVtqI6KBO6p9Ca1M3TdPCcYj021aUwU6QKc",
+    }
+    payload = json.dumps(data).encode("utf-8")
+    request = urllib.request.Request(
+        url,
+        data=payload,
+        method="POST",
+    )
+    for header_name, header_value in sorted(headers.items()):
+        request.add_header(header_name, header_value)
+
+    try:
+        with urllib.request.urlopen(request) as response:
+            response_data = response.read().decode("utf-8")
+            print(f"Response status: {response.status}")
+            print(f"Response data: {response_data}")
+    except urllib.request.HTTPError as e:
+        # TODO: error handling
+        print(f"HTTP Error: {e.code} - {e.reason}")
+        js.console.log(f"HTTP Error: {e.code} - {e.reason}")
+    except urllib.request.URLError as e:
+        # TODO: error handling
+        print(f"URL Error: {e.reason}")
+        js.console.log(f"URL Error: {e.reason}")
+
+
+def log(message: str) -> None:
+    """Cross platform logging helper function.
+
+    Basically, just print a message to the console.
+    """
+    return xplat.log(message)

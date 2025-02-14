@@ -372,7 +372,7 @@ class CowHerding(Minigame):
                     if side == self._player_side:
                         self._state.sounds["success"].play()
 
-    def handle_event(self, event: pygame.Event):
+    def handle_event(self, event: pygame.Event) -> bool:
         if self._complete:
             return self.scoreboard.handle_event(event)
         else:

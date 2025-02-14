@@ -1,0 +1,6 @@
+**/Dockerfile
+*.md
+**/__pycache__
+.github
+.git
+.ruff_cache
