@@ -1133,9 +1133,7 @@ class Level:
 
         # show intro scripted sequence only once
         if not self.intro_shown.get(self.current_map, False):
-            if len(self.round_config.get(
-                "character_introduction_timestamp", []
-            )) > 0:
+            if len(self.round_config.get("character_introduction_timestamp", [])) > 0:
                 self.intro_shown[self.current_map] = True
                 self.cutscene_animation.start()
 

@@ -49,7 +49,7 @@ class Tutorial:
             10: self.walk_around_outgroup_farm_and_switch_to_outgroup,
         }
         self.tasks_achieved = -1
-        self.n_tasks = max(self.instructions.keys())+1
+        self.n_tasks = max(self.instructions.keys()) + 1
 
     # show instructions text boxes
 
@@ -126,7 +126,7 @@ class Tutorial:
 
     def check_tasks(self, game_paused):
         match self.tasks_achieved:
-            case -1: # tutorial has not been started yet
+            case -1:  # tutorial has not been started yet
                 return
             case 0:
                 # check if the player achieved task "Basic movement"
@@ -244,7 +244,7 @@ class Tutorial:
                     self.tasks_achieved += 1
                     self.player.blocked = True
 
-            case self.n_tasks: # wait for space pressed to end the tutorial
+            case self.n_tasks:  # wait for space pressed to end the tutorial
                 # check if the player interacted to complete the tutorial
                 if (
                     self.dialogue_manager._get_current_tb().finished_advancing

@@ -48,7 +48,7 @@ IS_WEB = sys.platform in ("emscripten", "wasm")
 if not IS_WEB:
     # If we're running locally, set this via environment variable:
     if os.getenv("USE_SERVER") == "true":
-        USE_SERVER = False
+        USE_SERVER = True
     else:
         USE_SERVER = False
 

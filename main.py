@@ -520,12 +520,11 @@ class Game:
                         self.dialogue_manager.open_dialogue(
                             "intro_to_game", TUTORIAL_TB_LEFT, TUTORIAL_TB_TOP
                         )
-                elif not(self.round_config["character_introduction_timestamp"]):
+                elif not (self.round_config["character_introduction_timestamp"]):
                     self.last_intro_txt_rendered = True
         elif not self.level.cutscene_animation.active and not self.switched_to_tutorial:
             if not self.level.overlay.box_keybindings_label.enabled:
                 self.level.overlay.box_keybindings_label.enabled = True
-            print("DEBUG2", self.player.save_file.is_tutorial_completed, self.last_intro_txt_rendered)
             if (
                 not self.player.save_file.is_tutorial_completed
                 and self.last_intro_txt_rendered
@@ -540,7 +539,7 @@ class Game:
                             "ingroup_40p_hat_necklace_appearance", False
                         )
                     )
-                self.tutorial.start() # will be automatically skipped if the level does not have a tutorial (aka is > 1)
+                self.tutorial.start()  # will be automatically skipped if the level does not have a tutorial (aka is > 1)
 
     # events
     def event_loop(self) -> None:
