@@ -474,7 +474,6 @@ class Game:
                     and self.round_end_timer
                     > self.round_config["character_introduction_timestamp"][0]
                 ):
-                    print("debug1b")
                     # get previous dialog text
                     intro_text = self.dialogue_manager.dialogues["intro_to_game"][0][1]
 
@@ -523,7 +522,6 @@ class Game:
                         )
                 elif not(self.round_config["character_introduction_timestamp"]):
                     self.last_intro_txt_rendered = True
-                print("DEBUG1", self.last_intro_txt_rendered, self.level.current_map, self.round_config["character_introduction_timestamp"])
         elif not self.level.cutscene_animation.active and not self.switched_to_tutorial:
             if not self.level.overlay.box_keybindings_label.enabled:
                 self.level.overlay.box_keybindings_label.enabled = True
