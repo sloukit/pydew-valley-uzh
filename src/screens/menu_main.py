@@ -133,7 +133,7 @@ class MainMenu(GeneralMenu):
         self.round_config = self.set_token(login_response)
         self.token = self.input_text
         self.players_name_active = True
-        self.input_active = True
+        self.input_active = False
         self.input_text = ""
         # get players_name only if used in introduction
         if self.round_config.get("character_introduction_text", ""):

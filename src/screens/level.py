@@ -129,12 +129,14 @@ class Level:
         clock: pygame.time.Clock,
         get_world_time: Callable[[None], tuple[int, int]],
         dialogue_manager: DialogueManager,
+        send_telemetry: Callable[[str, dict[str, Any]], None],
     ) -> None:
         # main setup
         self.display_surface = pygame.display.get_surface()
         self.switch_screen = switch
         self.save_file = save_file
         self.dialogue_manager = dialogue_manager
+        self.send_telemetry = send_telemetry
 
         # cutscene
         # target_points = [(100, 100), (200, 200), (300, 100), (800, 900)]
@@ -204,6 +206,7 @@ class Level:
             save_file=self.save_file,
             round_config=self.round_config,
             get_game_version=get_game_version,
+            send_telemetry=self.send_telemetry,
         )
         self.prev_player_pos = (0, 0)
         self.all_sprites.add_persistent(self.player)
@@ -499,6 +502,7 @@ class Level:
         )
         if collided_interactions:
             if collided_interactions[0].name == "Bed":
+                self.send_telemetry("going_to_bed", {})
                 self.start_day_transition()
             if (
                 collided_interactions[0].name == "sign"
@@ -509,6 +513,7 @@ class Level:
                 collided_interactions[0].name == "Trader"
                 and self.round_config["market"]
             ):
+                self.send_telemetry("marketer_start", {})
                 self.switch_screen(GameState.SHOP)
             if collided_interactions[0] in self.bush_sprites.sprites():
                 if self.player.axe_hitbox.colliderect(
@@ -875,6 +880,17 @@ class Level:
                     players_vote = self.player_emote_manager.emote_wheel._current_emote
                     if players_vote == buy_list[0]:
                         first_item_votes += 1
+
+                    payload = {}
+                    payload["emote_index"] = (
+                        self.player_emote_manager.emote_wheel.emote_index
+                    )
+                    payload["winner_item"] = (
+                        self.player_emote_manager.emote_wheel._emotes[
+                            payload["emote_index"]
+                        ]
+                    )
+                    self.send_telemetry("players_decision", payload)
                 else:
                     total_votes = 0
                     first_item_votes = 0
@@ -897,6 +913,11 @@ class Level:
                 winner_item = (
                     buy_list[0] if first_item_votes > total_votes / 2 else buy_list[1]
                 )
+                if not is_player_active:
+                    payload = {}
+                    payload["winner_item"] = winner_item
+                    self.send_telemetry("groups_decision", payload)
+
                 # restore backup EmoteManager
                 self.player_emote_manager = self.backup_emote_mgr
                 self.player.emote_manager = self.player_emote_manager
