@@ -60,12 +60,15 @@ class RoundMenu(GeneralMenu):
         get_round: Callable[[], int],
         round_config: dict[str, Any],
         frames: dict[str, dict[str, pygame.Surface]],
+        send_telemetry: Callable[[dict[str, Any]], None],
     ):
         self.player = player
         self.textUIs: list = []
         self.min_scroll = self.get_min_scroll()
         self.scroll = 0
         self.get_round = get_round
+        self.send_telemetry = send_telemetry
+        self.telemetry: dict[str, int] = {}
         # note that this is config from previous round (the one that has just ended)
         self.round_config = round_config
         self.item_frames: dict[str, pygame.Surface] = frames["items"]
@@ -106,6 +109,7 @@ class RoundMenu(GeneralMenu):
         basicRect.centerx = self.rect.centerx
 
         self.textUIs = []
+        self.telemetry = {}
         values = list(self.player.inventory.values())
         for index, item in enumerate(list(self.player.inventory)):
             if item.as_serialised_string() not in self.allowed_crops:
@@ -119,6 +123,8 @@ class RoundMenu(GeneralMenu):
             itemUI = self.TextUI(self.font, itemName, str(values[index]), icon, rect)
             self.textUIs.append(itemUI)
             basicRect = basicRect.move(0, 60)
+
+            self.telemetry[itemName] = str(values[index])
 
         self.min_scroll = self.get_min_scroll()
 
@@ -145,9 +151,13 @@ class RoundMenu(GeneralMenu):
             self.buttons.append(button)
             generic_button_rect = rect.move(0, button_height + space)
 
+    def close(self):
+        self.send_telemetry(self.telemetry)
+        self.switch_screen(GameState.PLAY)
+
     def button_action(self, text: str):
         if text == _("continue to next round"):
-            self.switch_screen(GameState.PLAY)
+            self.close()
 
     def handle_event(self, event: pygame.event.Event) -> bool:
         if super().handle_event(event):
@@ -155,7 +165,7 @@ class RoundMenu(GeneralMenu):
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:
-                self.switch_screen(GameState.PLAY)
+                self.close()
                 self.scroll = 0
                 return True
             elif event.key == pygame.K_UP:

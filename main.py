@@ -11,6 +11,7 @@ import asyncio
 import copy
 import random
 import sys
+from functools import partial
 from typing import Any
 
 import pygame
@@ -166,6 +167,7 @@ class Game:
             self.clock,
             self.get_world_time,
             self.dialogue_manager,
+            self.send_telemetry,
         )
         self.player = self.level.player
 
@@ -175,7 +177,9 @@ class Game:
         self.settings_menu = None
         self.round_menu = None
         self.token_status = False
-        self.allocation_task = PlayerTask(self.send_resource_allocation)
+        self.allocation_task = PlayerTask(
+            partial(self.send_telemetry_and_play, "resource_allocation")
+        )
         self.main_menu = MainMenu(
             self.switch_state,
             self.set_token,
@@ -210,6 +214,7 @@ class Game:
             self.get_round,
             self.round_config,
             self.frames,
+            partial(self.send_telemetry, "round_end_content"),
         )
         self.outgroup_menu = OutgroupMenu(
             self.player,
@@ -217,7 +222,7 @@ class Game:
         )
 
         self.self_assessment_menu = SelfAssessmentMenu(
-            self.send_self_assessment,
+            partial(self.send_telemetry_and_play, "self_assessment"),
             (
                 SelfAssessmentDimension.VALENCE,
                 SelfAssessmentDimension.AROUSAL,
@@ -263,30 +268,26 @@ class Game:
         sec = round(self.round_end_timer) % 60
         return (min, sec)
 
-    def send_self_assessment(self, assessment: dict[str, int]) -> None:
+    def send_telemetry(self, event: str, payload: dict[str, int]) -> None:
         if USE_SERVER:
             telemetry = {
-                "self_assessment": assessment,
+                "event": event,
+                "payload": payload,
                 "game_version": self.game_version,
                 "game_round": self.round,
-                "round_timer": round(self.round_end_timer, 2),
+                "round_timer": str(round(self.round_end_timer, 2)),
             }
             client.send_telemetry(self.jwt, telemetry)
-        self.switch_state(GameState.PLAY)
 
-    def send_resource_allocation(self, resource_allocation: dict[str, Any]) -> None:
-        if USE_SERVER:
-            telemetry = {
-                "resource_allocation": resource_allocation,
-                "game_version": self.game_version,
-                "game_round": self.round,
-                "round_timer": round(self.round_end_timer, 2),
-            }
-            client.send_telemetry(self.jwt, telemetry)
+    def send_telemetry_and_play(self, event: str, payload: dict[str, int]) -> None:
+        self.send_telemetry(event, payload)
+
         self.switch_state(GameState.PLAY)
 
     def set_players_name(self, players_name: str) -> None:
         self.player.name = players_name
+        if players_name:
+            self.send_telemetry("players_name", {"players_name": players_name})
 
     def set_token(self, response: dict[str, Any]) -> dict[str, Any]:
         xplat.log("Login successful!")
@@ -298,8 +299,6 @@ class Game:
         self.game_version = int(response["game_version"])
         xplat.log(f"token: {self.token}")
         xplat.log(f"jwt: {self.jwt}")
-        if USE_SERVER:
-            client.send_telemetry(self.jwt, {"event": "player_login"})
 
         if not USE_SERVER:
             xplat.log("Not using server!")
@@ -324,6 +323,7 @@ class Game:
 
         xplat.log(f"Game version {self.game_version}")
         self.set_round(1)
+        self.send_telemetry("player_login", {"token": self.token})
 
         return self.round_config
 
@@ -539,7 +539,8 @@ class Game:
                             "ingroup_40p_hat_necklace_appearance", False
                         )
                     )
-                self.tutorial.start()  # will be automatically skipped if the level does not have a tutorial (aka is > 1)
+                # will be automatically skipped if the level does not have a tutorial (aka is > 1)
+                self.tutorial.start()
 
     # events
     def event_loop(self) -> None:
@@ -634,7 +635,8 @@ class Game:
                 ):
                     self.round_end_timer += dt * WORLD_TIME_MULTIPLIER
                     if self.round_end_timer > self.ROUND_END_TIME_IN_MINUTES * 60:
-                        self.round_end_timer = 0
+                        self.send_telemetry("round_end", {})
+                        self.round_end_timer = 0.0
                         self.switch_state(GameState.ROUND_END)
                     elif (
                         self.round_config.get("notify_new_crop_text", "")

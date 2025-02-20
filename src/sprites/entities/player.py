@@ -54,6 +54,7 @@ class Player(Character):
         save_file: SaveFile,
         round_config: dict[str, Any],
         get_game_version: Callable[[], int],
+        send_telemetry: Callable[[str, dict[str, Any]], None],
     ) -> None:
         super().__init__(
             pos=pos,
@@ -67,6 +68,7 @@ class Player(Character):
 
         self.round_config = round_config
         self.get_game_version = get_game_version
+        self.send_telemetry = send_telemetry
         # movement
         self.save_file = save_file
         self.controls = controls
@@ -177,14 +179,26 @@ class Player(Character):
         if self.emote_manager.emote_wheel.visible:
             if self.controls.RIGHT.click:
                 self.emote_manager.emote_wheel.emote_index += 1
+                self.emote_manager.emote_wheel.emote_index %= len(
+                    self.emote_manager.emote_wheel._emotes
+                )
 
             if self.controls.LEFT.click:
                 self.emote_manager.emote_wheel.emote_index -= 1
+                self.emote_manager.emote_wheel.emote_index %= len(
+                    self.emote_manager.emote_wheel._emotes
+                )
 
             if self.controls.USE.click or self.controls.INTERACT.click:
                 self.emote_manager.show_emote(
                     self, self.emote_manager.emote_wheel._current_emote
                 )
+                payload = {}
+                payload["emote_index"] = self.emote_manager.emote_wheel.emote_index
+                payload["emote_name"] = self.emote_manager.emote_wheel._emotes[
+                    payload["emote_index"]
+                ]
+                self.send_telemetry("player_interaction", payload)
                 self.emote_manager.toggle_emote_wheel()
 
         # movement
