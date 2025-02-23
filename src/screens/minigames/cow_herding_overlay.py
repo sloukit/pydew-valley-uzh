@@ -151,8 +151,12 @@ class _CowHerdingOverlay:
             for char in "0123456789.:"
         }
         # ensures that the timer numbers maintain their position by using equal spacing
-        self.timer_char_width = max(char.get_width() for char in self.timer_chars.values())
-        self.timer_char_height = max(char.get_height() for char in self.timer_chars.values())
+        self.timer_char_width = max(
+            char.get_width() for char in self.timer_chars.values()
+        )
+        self.timer_char_height = max(
+            char.get_height() for char in self.timer_chars.values()
+        )
 
     def _render_countdown_text(self, text: str):
         rendered_text = self.font_countdown.render(text, False, SL_ORANGE_BRIGHTEST)
