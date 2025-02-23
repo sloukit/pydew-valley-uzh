@@ -90,10 +90,10 @@ class EmoteBox(EmoteBoxBase):
         self.image.blit(
             self._current_emote_image,
             (
-                EmoteBox.EMOTE_DIALOG_BOX.width / 2
-                - self._current_emote_image.width / 2,
-                EmoteBox.EMOTE_DIALOG_BOX.height / 2
-                - self._current_emote_image.height / 2
+                EmoteBox.EMOTE_DIALOG_BOX.get_width() / 2
+                - self._current_emote_image.get_width() / 2,
+                EmoteBox.EMOTE_DIALOG_BOX.get_height() / 2
+                - self._current_emote_image.get_height() / 2
                 - 8,
             ),
         )
