@@ -221,8 +221,8 @@ class _CowHerdingOverlay:
         self.display_surface.blit(
             rendered_text,
             (
-                SCREEN_WIDTH / 2 - rendered_text.width / 2,
-                SCREEN_HEIGHT / 3 - rendered_text.height / 2,
+                SCREEN_WIDTH / 2 - rendered_text.get_width() / 2,
+                SCREEN_HEIGHT / 3 - rendered_text.get_height() / 2,
             ),
         )
 
