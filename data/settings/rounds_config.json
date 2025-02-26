@@ -2,7 +2,7 @@
     [
         {
             "level_name_text": "Level 1",
-            "level_duration": 1500,
+            "level_duration": 900,
             "town_area": true,
             "farm_area": true,
             "forest_area": true,
@@ -37,7 +37,7 @@
             "emote_wheel": true,
             "government_statistics": false,
             "resource_allocation_timestamp": [
-                1380
+                780
             ],
             "resource_allocation_text": "Verteile sie frei! Die Handschuhe helfen beim Ernten.",
             "resource_allocation_item_text": "6 Paar Handschuhe",
@@ -46,8 +46,8 @@
             ],
             "character_introduction_text": "Willkommen in der Stadt Hafenwald! Das bist Du: Ein Mika Wesen namens [Initialen]. Du lebst hier in Hafenwald, zusammen mit vielen anderen Mikas.",
             "self_assessment_timestamp": [
-                960,
-                1320
+                600,
+                840
             ],
             "self_assessment_menu": true,
             "minigame": true,
@@ -60,7 +60,7 @@
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [
-                1260
+                660
             ],
             "ingroup_necklace_sequence_text": "Eines unserer Roth\u00fcte bekommt die Kette verliehen und ist jetzt ein vollwertiges Mitglied des Familienclans! Dr\u00fccke die Leertaste, um fortzufahren.",
             "player_necklace_sequence_timestamp": [],
@@ -68,7 +68,7 @@
             "player_birthday_sequence_timestamp": [],
             "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [
-                1020
+                720
             ],
             "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Du darfst noch nicht mitentscheiden, da Du noch kein vollwertiges Mitglied bist. Dr\u00fccke die Leertaste, um fortzufahren.",
             "group_market_active_player_sequence_timestamp": [],
@@ -481,7 +481,7 @@
     [
         {
             "level_name_text": "Level 1",
-            "level_duration": 1500,
+            "level_duration": 900,
             "town_area": true,
             "farm_area": true,
             "forest_area": true,
@@ -516,7 +516,7 @@
             "emote_wheel": true,
             "government_statistics": false,
             "resource_allocation_timestamp": [
-                1380
+                780
             ],
             "resource_allocation_text": "Verteile sie frei! Die Handschuhe helfen beim Ernten.",
             "resource_allocation_item_text": "6 Paar Handschuhe",
@@ -525,8 +525,8 @@
             ],
             "character_introduction_text": "Willkommen in der Stadt Hafenwald! Das bist Du: Ein Mika Wesen namens [Initialen]. Du lebst hier in Hafenwald, zusammen mit vielen anderen Mikas.",
             "self_assessment_timestamp": [
-                960,
-                1320
+                600,
+                840
             ],
             "self_assessment_menu": true,
             "minigame": true,
@@ -539,7 +539,7 @@
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [
-                1260
+                660
             ],
             "ingroup_necklace_sequence_text": "Eines unserer Roth\u00fcte bekommt die Kette verliehen und ist jetzt ein vollwertiges Mitglied der Freundesfarm! Dr\u00fccke die Leertaste, um fortzufahren.",
             "player_necklace_sequence_timestamp": [],
@@ -547,7 +547,7 @@
             "player_birthday_sequence_timestamp": [],
             "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [
-                1020
+                720
             ],
             "group_market_passive_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Du darfst noch nicht mitentscheiden, da Du noch kein vollwertiges Mitglied bist. Dr\u00fccke die Leertaste, um fortzufahren.",
             "group_market_active_player_sequence_timestamp": [],
@@ -989,7 +989,7 @@
             "emote_wheel": true,
             "government_statistics": false,
             "resource_allocation_timestamp": [
-                1380
+                780
             ],
             "resource_allocation_text": "Verteile sie frei! Die Handschuhe helfen beim Ernten.",
             "resource_allocation_item_text": "6 Paar Handschuhe",
@@ -998,8 +998,8 @@
             ],
             "character_introduction_text": "",
             "self_assessment_timestamp": [
-                960,
-                1320
+                600,
+                840
             ],
             "self_assessment_menu": true,
             "minigame": true,
