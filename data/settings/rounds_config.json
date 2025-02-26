@@ -996,7 +996,7 @@
             "character_introduction_timestamp": [
                 0
             ],
-            "character_introduction_text": "",
+            "character_introduction_text": "Willkommen in der Stadt Hafenwald!",
             "self_assessment_timestamp": [
                 600,
                 840
@@ -1004,7 +1004,7 @@
             "self_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": false,
-            "ingroup_introduction_text": "Willkommen in der Stadt Hafenwald! Du bist zuf\u00e4llig bei den Roth\u00fcten gelandet.",
+            "ingroup_introduction_text": "Du bist zuf\u00e4llig bei den Roth\u00fcten gelandet.",
             "ingroup_hat_necklace_introduction_text": "",
             "ingroup_hat_introduction_text": "",
             "narrative_text": "Die Roth\u00fcte brauchen dringend Geld, denn unweit tobt ein Vulkan und sie m\u00fcssen umziehen - je mehr Geld sie verdienen, desto sicherer sind sie! Verkauft Ernte, Holz und Fr\u00fcchte und verdient M\u00fcnzen bei 'Kuh-in-den-Stall'.",
