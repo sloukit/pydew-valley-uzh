@@ -1,4 +1,5 @@
 import copy
+import gc
 import random
 import time
 import warnings
@@ -294,6 +295,9 @@ class Level:
         # clear existing soil_layer (not done due to the fact we need to keep hoed tiles in memory)
         # self.soil_layer.reset()
         self.quaker.reset()
+
+        # manual memory cleaning
+        gc.collect()
 
         self.game_map = GameMap(
             selected_map=game_map,
