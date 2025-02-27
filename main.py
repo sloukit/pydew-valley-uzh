@@ -9,6 +9,7 @@
 
 import asyncio
 import copy
+import gc
 import random
 import sys
 from functools import partial
@@ -68,6 +69,15 @@ from src.settings import (
 from src.sprites.setup import setup_entity_assets
 from src.support import get_translated_string as _
 from src.tutorial.tutorial import Tutorial
+
+# memory cleaning settings
+print(f"gc.get_threshold: {gc.get_threshold()}")
+
+print("setting new threshold:")
+allocs, g1, g2 = gc.get_threshold()
+gc.set_threshold(50000, g1, g2)
+print(f"gc.get_threshold: {gc.get_threshold()}")
+
 
 # set random seed. It has to be set first before any other random function is called.
 random.seed(RANDOM_SEED)
