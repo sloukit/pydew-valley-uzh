@@ -4,7 +4,7 @@ Clear Skies@@Der Acker ruft!
 
 # main menu
 
-Enter play token:@@3-stelligen Token eingeben:
+Enter play token:@@Bitte Token eingeben:
 Enter authentication data@@Anmelden
 Play@@Spiel starten
 Quit@@Spiel verlassen
