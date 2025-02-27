@@ -420,8 +420,8 @@ class InputField:
         self.surface.blit(
             text_surf,
             (
-                self.rect.x + self.rect.width / 2 - text_surf.width / 2,
-                self.rect.y + self.rect.height / 2 - text_surf.height / 2 + 2,
+                self.rect.x + self.rect.width / 2 - text_surf.get_width() / 2,
+                self.rect.y + self.rect.height / 2 - text_surf.get_height() / 2 + 2,
             ),
         )
         self.draw_hover()
