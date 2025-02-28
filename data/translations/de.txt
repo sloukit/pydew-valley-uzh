@@ -9,7 +9,7 @@ Enter authentication data@@Anmelden
 Play@@Spiel starten
 Quit@@Spiel verlassen
 Enter a Token to Play@@Klicken um Token einzugeben
-Enter player's name:@@Name des Spielers eingeben:
+Enter player's name:@@Name für deine Spielfigur:
 Main Menu@@Hauptmenü
 
 # Inventory
