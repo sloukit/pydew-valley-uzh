@@ -265,14 +265,14 @@ class _CowHerdingOverlay:
             Linebreak(),
             TextChunk(_("Herd the cows into the barn!"), self.font_objective),
             Linebreak((0, 32)),
-            TextChunk(_("Blaukappen (ingroup) progress:"), self.font_objective),
+            TextChunk(_("Rothüte:"), self.font_objective),
             Linebreak(),
             TextChunk(
                 f"({own_cows_herded_in}/{own_cows_total}) " + _("Cows in the barn"),
                 self.font_objective,
             ),
             Linebreak((0, 32)),
-            TextChunk(_("Hornlinge (outgroup) progress:"), self.font_objective),
+            TextChunk(_("Hornlinge:"), self.font_objective),
             Linebreak(),
             TextChunk(
                 f"({opp_cows_herded_in}/{opp_cows_total}) " + _("Cows in the barn"),
