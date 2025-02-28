@@ -154,8 +154,8 @@ Herd the cows into the barn@@Treibe die Kühe in den Stall
 as fast as possible!@@so schnell wie möglich!
 Objective:@@Aufgabe:
 Herd the cows into the barn!@@Treibe die Kühe in den Stall!
-Rothüte (ingroup) progress:@@Rothüte:
-Hornlinge (outgroup) progress:@@Hornlinge:
+Rothüte (ingroup) progress:@@Rothüte
+Hornlinge (outgroup) progress:@@Hornlinge
 Cows in the barn@@Kühe im Stall:
 [cheering group]@@Die Rothüte sind stolz!
 [disappointed group]@@Die Rothüte sind enttäuscht
