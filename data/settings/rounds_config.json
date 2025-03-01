@@ -279,7 +279,7 @@
             "emote_wheel": true,
             "government_statistics": false,
             "resource_allocation_timestamp": [
-                360
+                720
             ],
             "resource_allocation_text": "Verteile sie frei! Die Hemden helfen bei K\u00e4lte.",
             "resource_allocation_item_text": "8 Hemden",
@@ -287,7 +287,7 @@
             "character_introduction_text": "",
             "self_assessment_timestamp": [
                 180,
-                660
+                600
             ],
             "self_assessment_menu": true,
             "minigame": true,
@@ -302,7 +302,7 @@
             "ingroup_necklace_sequence_timestamp": [],
             "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [
-                600
+                360
             ],
             "player_necklace_sequence_text": "Dein Familienclan verleiht Dir die Kette. Jetzt bist Du vollwertiges Mitglied des Familienclans! Dr\u00fccke die Leertaste, um fortzufahren.",
             "player_birthday_sequence_timestamp": [],
@@ -310,7 +310,7 @@
             "group_market_passive_player_sequence_timestamp": [],
             "group_market_passive_player_sequence_text": "",
             "group_market_active_player_sequence_timestamp": [
-                120
+                480
             ],
             "group_market_active_player_sequence_text": "Stimme ab:",
             "ingroup_40p_hat_necklace_appearance": true,
