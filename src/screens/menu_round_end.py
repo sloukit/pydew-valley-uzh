@@ -34,13 +34,15 @@ class RoundMenu(GeneralMenu):
 
             # crop icon
             self.img.blit(
-                icon, icon.get_rect().move(10, rect.height // 2 - icon.get_height() // 2)
+                icon,
+                icon.get_rect().move(10, rect.height // 2 - icon.get_height() // 2),
             )
 
             # crop name
             label = font.render(text, False, "Black")
             self.img.blit(
-                label, label.get_rect().move(50, rect.height // 2 - label.get_height() // 2)
+                label,
+                label.get_rect().move(50, rect.height // 2 - label.get_height() // 2),
             )
 
             # crop amount
