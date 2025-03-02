@@ -735,6 +735,14 @@ class Level:
                     for npc in self.game_map.npcs
                     if npc.study_group == active_group and not npc.is_dead
                 ]
+                # restrict npcs to only 4 and the player
+                if sequence_type in [
+                    ScriptedSequenceType.PLAYER_HAT_SEQUENCE,
+                    ScriptedSequenceType.PLAYER_NECKLACE_SEQUENCE,
+                    ScriptedSequenceType.INGROUP_NECKLACE_SEQUENCE,
+                ]:
+                    npcs = self.limit_npcs_amount(npcs)
+
                 other_npcs = [
                     npc
                     for npc in self.game_map.npcs
@@ -814,6 +822,16 @@ class Level:
 
             dialog_name = f"scripted_sequence_{sequence_type.value}"
             post_event(DIALOG_SHOW, dial=dialog_name)
+
+    def limit_npcs_amount(self, npcs):
+        counter: int = 0
+        restricted_npcs = []
+        for npc in npcs:
+            if counter == len(npcs) or counter == 4:
+                break
+            restricted_npcs.append(npc)
+            counter += 1
+        return restricted_npcs
 
     def end_scripted_sequence(
         self, sequence_type: ScriptedSequenceType, npc: NPC | Player
