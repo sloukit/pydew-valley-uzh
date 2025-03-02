@@ -48,7 +48,8 @@ class RoundMenu(GeneralMenu):
             # crop amount
             val = font.render(value, False, "Black")
             val_rect = val.get_rect().move(
-                rect.width - val.get_width() - 10, rect.height // 2 - val.get_height() // 2
+                rect.width - val.get_width() - 10,
+                rect.height // 2 - val.get_height() // 2,
             )
             self.img.blit(val, val_rect)
 
