@@ -332,7 +332,7 @@ class Game:
                 raise ValueError("Invalid token value")
 
         xplat.log(f"Game version {self.game_version}")
-        self.set_round(1)
+        self.set_round(4)
         self.send_telemetry("player_login", {"token": self.token})
 
         return self.round_config
