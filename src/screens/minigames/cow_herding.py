@@ -249,6 +249,7 @@ class CowHerding(Minigame):
                 self._state.player.money -= 200
             else:
                 self._state.player.money = 0  # make sure we do not go below 0
+            self._state.player.send_telemetry("minigame_complete", {"self_time": f"{self._minigame_time:.2f}", "opp_time": f"{self._opponent_side_script.total_time:.2f}"})
             self.scoreboard.setup(
                 self._minigame_time,
                 self._player_side.cows_herded_in,
