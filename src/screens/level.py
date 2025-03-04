@@ -417,6 +417,7 @@ class Level:
 
     def switch_to_map(self, map_name: Map):
         if self.tmx_maps.get(map_name):
+            self.send_telemetry("switch_map", {"old_map": self.current_map, "new_map": map_name})
             self.load_map(map_name, from_map=self.current_map)
             self.hide_bath_signs()
             self.game_map.process_npc_round_config()
