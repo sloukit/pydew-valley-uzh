@@ -1,4 +1,3 @@
-import copy
 import glob
 import random
 
@@ -187,7 +186,7 @@ class CowHerding(Minigame):
         )
         opponent = NPC(
             pos=(0, 0),
-            assets=copy.deepcopy(ENTITY_ASSETS.RABBIT),
+            assets=ENTITY_ASSETS.RABBIT,
             groups=(self._state.all_sprites, self._state.collision_sprites),
             collision_sprites=self._state.collision_sprites,
             study_group=opponent_study_group,

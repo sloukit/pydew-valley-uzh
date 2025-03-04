@@ -1,4 +1,3 @@
-import copy
 import warnings
 from collections.abc import Callable
 from typing import Any
@@ -717,9 +716,7 @@ class GameMap:
 
         npc = NPC(
             pos=pos,
-            assets=ENTITY_ASSETS.RABBIT
-            if gmap == Map.MINIGAME
-            else copy.deepcopy(ENTITY_ASSETS.RABBIT),
+            assets=ENTITY_ASSETS.RABBIT,
             groups=(self.all_sprites, self.collision_sprites),
             collision_sprites=self.collision_sprites,
             study_group=study_group,

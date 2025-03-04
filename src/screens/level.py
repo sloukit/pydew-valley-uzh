@@ -1,4 +1,3 @@
-import copy
 import gc
 import random
 import time
@@ -192,7 +191,7 @@ class Level:
 
         self.player = Player(
             pos=(0, 0),
-            assets=copy.deepcopy(ENTITY_ASSETS.RABBIT),
+            assets=ENTITY_ASSETS.RABBIT,
             groups=(),
             collision_sprites=self.collision_sprites,
             controls=self.controls,
