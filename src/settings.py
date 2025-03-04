@@ -42,8 +42,13 @@ SECONDS_PER_GAME_MINUTE = 0.7
 WORLD_TIME_MULTIPLIER = 1.0
 # USE_SERVER = False
 USE_SERVER = True
-# position logging interval (in seconds), lowering this may lead to server issues
-POS_LOG_INTERVAL = 3
+
+# position is normally only logged after movement and when the character stands still
+# this is the minimum accumulated moving time to trigger logging for this scenario, to reduce server load
+POS_MIN_LOG_INTERVAL = 1
+
+# if a player moves for a long time continuously, we log the position during movement
+POS_MOVE_LOG_INTERVAL = 15
 
 IS_WEB = sys.platform in ("emscripten", "wasm")
 # for now, in web mode, do not use dummy server (which requires `requests` module not available via pygbag)
