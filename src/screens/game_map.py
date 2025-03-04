@@ -974,7 +974,7 @@ class GameMap:
                     payload["emote_index"]
                 ]
                 payload["player_pos"] = ", ".join(str(round(v)) for v in self.player.rect.topleft)
-                payload["npc_pos"] = ", ".join(str(round(v)) for v in self.npc.rect.topleft)
+                payload["npc_pos"] = ", ".join(str(round(v)) for v in npc.rect.topleft)
 
 
                 if self.player.study_group == npc.study_group:
