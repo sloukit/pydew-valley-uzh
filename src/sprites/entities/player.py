@@ -193,12 +193,6 @@ class Player(Character):
                 self.emote_manager.show_emote(
                     self, self.emote_manager.emote_wheel._current_emote
                 )
-                payload = {}
-                payload["emote_index"] = self.emote_manager.emote_wheel.emote_index
-                payload["emote_name"] = self.emote_manager.emote_wheel._emotes[
-                    payload["emote_index"]
-                ]
-                self.send_telemetry("player_interaction", payload)
                 self.emote_manager.toggle_emote_wheel()
 
         # movement
