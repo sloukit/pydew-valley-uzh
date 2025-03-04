@@ -974,6 +974,9 @@ class GameMap:
                 payload["emote_name"] = self.player_emote_manager.emote_wheel._emotes[
                     payload["emote_index"]
                 ]
+                payload["player_pos"] = ", ".join(str(round(v)) for v in self.player.rect.topleft)
+                payload["npc_pos"] = ", ".join(str(round(v)) for v in self.npc.rect.topleft)
+
 
                 if self.player.study_group == npc.study_group:
                     self.player.ingroup_member_interacted = True
