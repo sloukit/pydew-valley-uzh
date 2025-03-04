@@ -42,6 +42,8 @@ SECONDS_PER_GAME_MINUTE = 0.7
 WORLD_TIME_MULTIPLIER = 1.0
 # USE_SERVER = False
 USE_SERVER = True
+# position logging interval (in seconds), lowering this may lead to server issues
+POS_LOG_INTERVAL = 3
 
 IS_WEB = sys.platform in ("emscripten", "wasm")
 # for now, in web mode, do not use dummy server (which requires `requests` module not available via pygbag)
@@ -50,7 +52,7 @@ if not IS_WEB:
     if os.getenv("USE_SERVER") == "true":
         USE_SERVER = True
     else:
-        USE_SERVER = False
+        USE_SERVER = True
 
 # NOTE(larsbutler): Don't change this line at all.
 # WEB_SERVER_URL is populated during build,
