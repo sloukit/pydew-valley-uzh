@@ -209,6 +209,8 @@ window._HTTP_HANDLER.post = function * post(
             headers = {}
         if data is None:
             data = {}
+        if 'Content-Type' not in headers:
+            headers['Content-Type'] = 'application/json'
 
         if self.is_emscripten:
             # TODO: probably need async io run call here
