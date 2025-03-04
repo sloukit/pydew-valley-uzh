@@ -49,6 +49,7 @@ from src.settings import (
     TOMATO_OR_CORN_LIST,
     MapDict,
     SoundDict,
+    TOOLS_LOG_INTERVAL,
 )
 from src.sprites.base import Sprite
 from src.sprites.entities.character import Character
@@ -166,6 +167,7 @@ class Level:
 
         self.camera = Camera(0, 0)
         self.quaker = Quaker(self.camera)
+        self.tool_statistics = {t.name: 0 for t in FarmingTool}
 
         self.soil_manager = SoilManager(self.all_sprites, self.frames["level"])
 
@@ -258,7 +260,7 @@ class Level:
 
         # watch the player behaviour in achieving tutorial tasks
         self.tile_farmed = False
-        self.crop_planted: set = set()
+        self.crop_planted = False
         self.crop_watered = False
         self.had_slept = False
         self.hit_tree = False
@@ -456,6 +458,7 @@ class Level:
             self.sounds[sound].play()
 
     def apply_tool(self, tool: FarmingTool, pos: tuple[int, int], character: Character):
+        tool_use_for_statistics = None
         match tool:
             case FarmingTool.AXE:
                 for tree in pygame.sprite.spritecollide(
@@ -471,6 +474,7 @@ class Level:
                     # check if player achieved task "go to the forest and hit a tree"
                     if isinstance(character, Player):
                         self.hit_tree = True
+                        tool_use_for_statistics = tool.name
 
                     self._play_playeronly_sound("axe", character)
             case FarmingTool.HOE:
@@ -480,11 +484,14 @@ class Level:
                     # check if the player achieved task "farm with your hoe"
                     if isinstance(character, Player):
                         self.tile_farmed = True
+                        tool_use_for_statistics = tool.name
             case FarmingTool.WATERING_CAN:
                 if self.soil_manager.water(character, pos):
                     # check if the player achieved task "water the crop"
-                    if isinstance(character, Player) and True in self.crop_planted:
-                        self.crop_watered = True
+                    if isinstance(character, Player):
+                        tool_use_for_statistics = tool.name
+                        if self.crop_planted:
+                            self.crop_watered = True
 
                 self._play_playeronly_sound("water", character)
             case _:  # All seeds
@@ -495,10 +502,16 @@ class Level:
 
                     # check if the player achieved task "plant a crop"
                     if isinstance(character, Player):
-                        self.crop_planted.add(True)
-                        self.crop_planted.add(pos)
+                        self.crop_planted = True
+                        tool_use_for_statistics = tool.name
                 else:
                     self._play_playeronly_sound("cant_plant", character)
+
+        if tool_use_for_statistics is not None:
+            self.tool_statistics[tool_use_for_statistics] += 1
+            if sum(self.tool_statistics.values()) % TOOLS_LOG_INTERVAL == 0:
+                self.send_telemetry("tool_statistics", self.tool_statistics)
+
 
     def interact(self):
         collided_interactions = pygame.sprite.spritecollide(
