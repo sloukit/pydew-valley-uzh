@@ -11,7 +11,14 @@ from src.events import OPEN_INVENTORY, START_QUAKE, post_event
 from src.gui.interface.emotes import PlayerEmoteManager
 from src.npc.bases.npc_base import NPCBase
 from src.savefile import SaveFile
-from src.settings import BATH_STATUS_TIMEOUT, DEBUG_MODE_VERSION, Coordinate, SoundDict
+from src.settings import (
+    BATH_STATUS_TIMEOUT,
+    DEBUG_MODE_VERSION,
+    POS_MIN_LOG_INTERVAL,
+    POS_MOVE_LOG_INTERVAL,
+    Coordinate,
+    SoundDict,
+)
 from src.sprites.entities.character import Character
 from src.sprites.entities.entity import Entity
 from src.sprites.setup import EntityAsset
@@ -86,6 +93,7 @@ class Player(Character):
         self.has_horn = save_file.has_horn
         self.has_outgroup_skin = save_file.has_outgroup_skin
         self.study_group: StudyGroup = save_file.study_group
+        self.dt_last_pos_log = 0
 
         self.emote_manager = emote_manager
         self.focused_entity: NPCBase | None = None
@@ -193,12 +201,6 @@ class Player(Character):
                 self.emote_manager.show_emote(
                     self, self.emote_manager.emote_wheel._current_emote
                 )
-                payload = {}
-                payload["emote_index"] = self.emote_manager.emote_wheel.emote_index
-                payload["emote_name"] = self.emote_manager.emote_wheel._emotes[
-                    payload["emote_index"]
-                ]
-                self.send_telemetry("player_interaction", payload)
                 self.emote_manager.toggle_emote_wheel()
 
         # movement
@@ -299,6 +301,22 @@ class Player(Character):
             ),
             self.rect.size,
         )
+
+        if abs(self.direction.x) + abs(self.direction.y) > 0:
+            self.dt_last_pos_log += dt
+
+            if self.dt_last_pos_log > POS_MOVE_LOG_INTERVAL:
+                self.send_telemetry(
+                    "position",
+                    {"pos": ", ".join(str(round(v)) for v in self.rect.topleft)},
+                )
+                self.dt_last_pos_log = 0
+
+        elif self.dt_last_pos_log > POS_MIN_LOG_INTERVAL:
+            self.send_telemetry(
+                "position", {"pos": ", ".join(str(round(v)) for v in self.rect.topleft)}
+            )
+            self.dt_last_pos_log = 0
 
     # sets the player's transparency and speed according to their health
 

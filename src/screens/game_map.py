@@ -968,10 +968,26 @@ class GameMap:
 
                 # check if the player achieved task "interact with an ingroup member" or "interact
                 # with an outgroup member"
+                payload = {}
+                payload["emote_index"] = (
+                    self.player_emote_manager.emote_wheel.emote_index
+                )
+                payload["emote_name"] = self.player_emote_manager.emote_wheel._emotes[
+                    payload["emote_index"]
+                ]
+                payload["player_pos"] = ", ".join(
+                    str(round(v)) for v in self.player.rect.topleft
+                )
+                payload["npc_pos"] = ", ".join(str(round(v)) for v in npc.rect.topleft)
+
                 if self.player.study_group == npc.study_group:
                     self.player.ingroup_member_interacted = True
+                    payload["emote_target"] = "ingroup"
                 else:
                     self.player.outgroup_member_interacted = True
+                    payload["emote_target"] = "outgroup"
+
+                self.player.send_telemetry("player_interaction", payload)
 
         @self.player_emote_manager.on_emote_wheel_opened
         def on_emote_wheel_opened():
