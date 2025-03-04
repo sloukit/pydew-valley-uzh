@@ -167,7 +167,7 @@ class Tutorial:
             case 3:
                 # check if the player achieved task "plant a crop"
                 if (
-                    True in self.level.crop_planted
+                    self.level.crop_planted
                     and self.dialogue_manager._get_current_tb().finished_advancing
                 ):
                     self.switch_to_task(4)

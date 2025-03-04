@@ -46,9 +46,10 @@ USE_SERVER = True
 # position is normally only logged after movement and when the character stands still
 # this is the minimum accumulated moving time to trigger logging for this scenario, to reduce server load
 POS_MIN_LOG_INTERVAL = 1
-
 # if a player moves for a long time continuously, we log the position during movement
 POS_MOVE_LOG_INTERVAL = 15
+# tool log interval after n accumulative uses of all tools and seeds, the statistics are sent to the server
+TOOLS_LOG_INTERVAL = 5
 
 IS_WEB = sys.platform in ("emscripten", "wasm")
 # for now, in web mode, do not use dummy server (which requires `requests` module not available via pygbag)
@@ -58,6 +59,7 @@ if not IS_WEB:
         USE_SERVER = True
     else:
         USE_SERVER = True
+
 
 # NOTE(larsbutler): Don't change this line at all.
 # WEB_SERVER_URL is populated during build,
