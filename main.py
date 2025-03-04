@@ -75,7 +75,7 @@ print(f"gc.get_threshold: {gc.get_threshold()}")
 
 print("setting new threshold:")
 allocs, g1, g2 = gc.get_threshold()
-gc.set_threshold(50000, g1, g2)
+# gc.set_threshold(50000, g1, g2)
 print(f"gc.get_threshold: {gc.get_threshold()}")
 
 

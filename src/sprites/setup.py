@@ -1,6 +1,7 @@
 import os
 from dataclasses import dataclass
 from types import SimpleNamespace
+from weakref import WeakValueDictionary
 
 import pygame
 
@@ -24,7 +25,10 @@ class _AniFrames:
         return len(self.frames)
 
 
-type EntityAsset = dict[EntityState, dict[Direction, _AniFrames]]
+# type EntityAsset = dict[EntityState, dict[Direction, _AniFrames]]
+type EntityAsset = WeakValueDictionary[
+    EntityState, WeakValueDictionary[Direction, _AniFrames]
+]
 
 
 class _Hitbox:
