@@ -47,9 +47,9 @@ from src.settings import (
     SCREEN_HEIGHT,
     SCREEN_WIDTH,
     TOMATO_OR_CORN_LIST,
+    TOOLS_LOG_INTERVAL,
     MapDict,
     SoundDict,
-    TOOLS_LOG_INTERVAL,
 )
 from src.sprites.base import Sprite
 from src.sprites.entities.character import Character
@@ -419,7 +419,10 @@ class Level:
 
     def switch_to_map(self, map_name: Map):
         if self.tmx_maps.get(map_name):
-            self.send_telemetry("switch_map", {"old_map": str(self.current_map), "new_map": str(map_name)})
+            self.send_telemetry(
+                "switch_map",
+                {"old_map": str(self.current_map), "new_map": str(map_name)},
+            )
             self.load_map(map_name, from_map=self.current_map)
             self.hide_bath_signs()
             self.game_map.process_npc_round_config()
@@ -508,7 +511,6 @@ class Level:
             self.tool_statistics[tool_use_for_statistics] += 1
             if sum(self.tool_statistics.values()) % TOOLS_LOG_INTERVAL == 0:
                 self.send_telemetry("tool_statistics", self.tool_statistics)
-
 
     def interact(self):
         collided_interactions = pygame.sprite.spritecollide(

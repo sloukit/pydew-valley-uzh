@@ -11,7 +11,14 @@ from src.events import OPEN_INVENTORY, START_QUAKE, post_event
 from src.gui.interface.emotes import PlayerEmoteManager
 from src.npc.bases.npc_base import NPCBase
 from src.savefile import SaveFile
-from src.settings import BATH_STATUS_TIMEOUT, DEBUG_MODE_VERSION, POS_MOVE_LOG_INTERVAL, Coordinate, SoundDict, POS_MIN_LOG_INTERVAL
+from src.settings import (
+    BATH_STATUS_TIMEOUT,
+    DEBUG_MODE_VERSION,
+    POS_MIN_LOG_INTERVAL,
+    POS_MOVE_LOG_INTERVAL,
+    Coordinate,
+    SoundDict,
+)
 from src.sprites.entities.character import Character
 from src.sprites.entities.entity import Entity
 from src.sprites.setup import EntityAsset
@@ -299,13 +306,17 @@ class Player(Character):
             self.dt_last_pos_log += dt
 
             if self.dt_last_pos_log > POS_MOVE_LOG_INTERVAL:
-                self.send_telemetry("position", {"pos": ", ".join(str(round(v)) for v in self.rect.topleft)})
+                self.send_telemetry(
+                    "position",
+                    {"pos": ", ".join(str(round(v)) for v in self.rect.topleft)},
+                )
                 self.dt_last_pos_log = 0
 
         elif self.dt_last_pos_log > POS_MIN_LOG_INTERVAL:
-            self.send_telemetry("position", {"pos": ", ".join(str(round(v)) for v in self.rect.topleft)})
+            self.send_telemetry(
+                "position", {"pos": ", ".join(str(round(v)) for v in self.rect.topleft)}
+            )
             self.dt_last_pos_log = 0
-
 
     # sets the player's transparency and speed according to their health
 
