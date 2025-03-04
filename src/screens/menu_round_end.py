@@ -1,3 +1,4 @@
+import gc
 from collections.abc import Callable
 from typing import Any
 
@@ -157,6 +158,7 @@ class RoundMenu(GeneralMenu):
     def close(self):
         self.send_telemetry(self.telemetry)
         self.switch_screen(GameState.PLAY)
+        gc.collect()
 
     def button_action(self, text: str):
         if text == _("continue to next round"):
