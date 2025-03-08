@@ -177,6 +177,6 @@ box info player task@@So macht ihr Geld:|-Erde umgraben, Samen setzen,|  Pflanze
 
 social identity assessment left info@@Gar nicht
 social identity assessment right info@@Sehr
-social identity assessment q1@@Ich gehöre zur Gruppe der Rothüte
+social identity assessment q1@@Ich gehöre zur Gruppe der Rothüte.
 social identity assessment q2@@Ich gehöre zur Gruppe der Hornlinge.
-social identity assessment q3@@Ich identifiziere mich mit Mika [Name]
+social identity assessment q3@@Ich identifiziere mich mit Mika [Name].
