@@ -300,3 +300,6 @@ class PlayerTask(AbstractMenu):
             or sum(self.allocations) > self.total_items
         ):
             self.draw_info()
+
+    def draw_description(self):
+        pass

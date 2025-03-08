@@ -50,6 +50,10 @@
                 840
             ],
             "self_assessment_menu": true,
+            "social_identity_assessment_timestamp": [
+                870
+            ],
+            "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "Das ist dein Familienclan: Ihr seid die Roth\u00fcte.",
@@ -131,6 +135,10 @@
                 660
             ],
             "self_assessment_menu": true,
+            "social_identity_assessment_timestamp": [
+                870
+            ],
+            "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
@@ -209,6 +217,10 @@
                 660
             ],
             "self_assessment_menu": true,
+            "social_identity_assessment_timestamp": [
+                870
+            ],
+            "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
@@ -290,6 +302,10 @@
                 600
             ],
             "self_assessment_menu": true,
+            "social_identity_assessment_timestamp": [
+                870
+            ],
+            "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
@@ -370,6 +386,10 @@
                 660
             ],
             "self_assessment_menu": true,
+            "social_identity_assessment_timestamp": [
+                870
+            ],
+            "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
@@ -453,6 +473,10 @@
                 660
             ],
             "self_assessment_menu": true,
+            "social_identity_assessment_timestamp": [
+                870
+            ],
+            "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
@@ -529,6 +553,10 @@
                 840
             ],
             "self_assessment_menu": true,
+            "social_identity_assessment_timestamp": [
+                870
+            ],
+            "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "Das ist deine Freundesfarm: Ihr seid die Roth\u00fcte.",
@@ -609,6 +637,10 @@
                 660
             ],
             "self_assessment_menu": true,
+            "social_identity_assessment_timestamp": [
+                870
+            ],
+            "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
@@ -686,6 +718,10 @@
                 660
             ],
             "self_assessment_menu": true,
+            "social_identity_assessment_timestamp": [
+                870
+            ],
+            "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
@@ -766,6 +802,10 @@
                 660
             ],
             "self_assessment_menu": true,
+            "social_identity_assessment_timestamp": [
+                870
+            ],
+            "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
@@ -845,6 +885,10 @@
                 660
             ],
             "self_assessment_menu": true,
+            "social_identity_assessment_timestamp": [
+                870
+            ],
+            "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
@@ -927,6 +971,10 @@
                 660
             ],
             "self_assessment_menu": true,
+            "social_identity_assessment_timestamp": [
+                870
+            ],
+            "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "",
@@ -1002,6 +1050,10 @@
                 840
             ],
             "self_assessment_menu": true,
+            "social_identity_assessment_timestamp": [
+                870
+            ],
+            "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": false,
             "ingroup_introduction_text": "Du bist zuf\u00e4llig bei den Roth\u00fcten gelandet.",
@@ -1077,6 +1129,10 @@
                 660
             ],
             "self_assessment_menu": true,
+            "social_identity_assessment_timestamp": [
+                870
+            ],
+            "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": false,
             "ingroup_introduction_text": "",
@@ -1151,6 +1207,10 @@
                 660
             ],
             "self_assessment_menu": true,
+            "social_identity_assessment_timestamp": [
+                870
+            ],
+            "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": false,
             "ingroup_introduction_text": "",
@@ -1230,6 +1290,10 @@
                 660
             ],
             "self_assessment_menu": true,
+            "social_identity_assessment_timestamp": [
+                870
+            ],
+            "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": false,
             "ingroup_introduction_text": "",
@@ -1306,6 +1370,10 @@
                 660
             ],
             "self_assessment_menu": true,
+            "social_identity_assessment_timestamp": [
+                870
+            ],
+            "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": false,
             "ingroup_introduction_text": "",
@@ -1385,6 +1453,10 @@
                 660
             ],
             "self_assessment_menu": true,
+            "social_identity_assessment_timestamp": [
+                870
+            ],
+            "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": false,
             "ingroup_introduction_text": "",

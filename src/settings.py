@@ -58,7 +58,7 @@ if not IS_WEB:
     if os.getenv("USE_SERVER") == "true":
         USE_SERVER = True
     else:
-        USE_SERVER = True
+        USE_SERVER = False
 
 
 # NOTE(larsbutler): Don't change this line at all.
@@ -82,6 +82,11 @@ SAM_BORDER_SIZE = (
     122,
     131,
 )  # absolute size of the border around self-assessment manikins
+
+SOCIAL_IDENTITY_ASSESSMENT_BORDER_SIZE = (
+    122,
+    131,
+)
 
 GROW_SPEED = {
     "corn": 1.40,
