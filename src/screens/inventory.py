@@ -334,3 +334,6 @@ class InventoryMenu(AbstractMenu):
                 post_event(SET_CURSOR, cursor=CustomCursor.ARROW)
                 self.switch_screen(GameState.PAUSE)
                 return True
+
+    def draw_description(self):
+        pass

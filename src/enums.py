@@ -43,6 +43,7 @@ class GameState(IntEnum):
     PLAYER_TASK = 13
     SELF_ASSESSMENT = 14
     NOTIFICATION_MENU = 15
+    SOCIAL_IDENTITY_ASSESSMENT = 16
 
 
 # NOTE : DO NOT pay attention to anything the IDE might complain about in this class, as the enum generation mechanisms
@@ -473,3 +474,9 @@ class SelfAssessmentDimension(IntEnum):
     AROUSAL = 0
     DOMINANCE = auto()
     VALENCE = auto()
+
+
+class SocialIdentityAssessmentDimension(IntEnum):
+    QUESTION_1 = 0
+    QUESTION_2 = 1
+    QUESTION_3 = 2

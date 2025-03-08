@@ -174,3 +174,9 @@ box info i@@Lager öffnen
 box info e@@Interagieren
 box info esc@@Pause
 box info player task@@So macht ihr Geld:|-Erde umgraben, Samen setzen,|  Pflanzen giessen|-Nach dem Schlafen Ernten|-Im Wald Holz und Früchte|sammeln|-Ernte, Holz und Früchte auf|  dem Markt verkaufen|-Bei 'Kuh-in-den-Stall' Geld|gewinnen
+
+social identity assessment left info@@Gar nicht
+social identity assessment right info@@Sehr
+social identity assessment q1@@Ich gehöre zur Gruppe der Rothüte
+social identity assessment q2@@Ich gehöre zur Gruppe der Hornlinge.
+social identity assessment q3@@Ich identifiziere mich mit Mika [Name]

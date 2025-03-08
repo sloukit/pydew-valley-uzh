@@ -68,3 +68,6 @@ class GeneralMenu(AbstractMenu):
 
     def remove_button(self, button_text: str) -> None:
         self.buttons = [button for button in self.buttons if button.text != button_text]
+
+    def draw_description(self):
+        pass

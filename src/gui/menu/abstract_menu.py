@@ -25,6 +25,7 @@ class AbstractMenu(ABC):
         self.center = center
         self.buttons_surface = pygame.Surface(size, flags=pygame.SRCALPHA)
         self.font = pygame.font.Font(resource_path("font/LycheeSoda.ttf"), 30)
+        self.numbers_font = pygame.font.Font(resource_path("font/LycheeSoda.ttf"), 60)
         self.display_surface = pygame.display.get_surface()
 
         self.buttons = []
@@ -115,9 +116,14 @@ class AbstractMenu(ABC):
 
     def draw(self):
         self.draw_title()
+        self.draw_description()
         self.draw_buttons()
 
     def update(self, dt):
         self.mouse_hover()
         self.update_buttons(dt)
         self.draw()
+
+    @abstractmethod
+    def draw_description(self):
+        pass

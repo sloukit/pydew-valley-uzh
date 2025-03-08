@@ -276,3 +276,6 @@ class SelfAssessmentMenu(AbstractMenu):
 
     def draw_title(self):
         self.display_surface.blit(self._surface, (0, 0))
+
+    def draw_description(self):
+        pass

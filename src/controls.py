@@ -104,6 +104,10 @@ class Controls(Control, Enum):
     DEBUG_PLAYER_TASK = (pygame.K_b, "Show Player Task")
     DEBUG_END_ROUND = (pygame.K_r, "Skip to End of Round")
     DEBUG_SELF_ASSESSMENT = (pygame.K_v, "Open self assessment menu")
+    DEBUG_SOCIAL_IDENTITY_ASSESSMENT = (
+        pygame.K_RSHIFT,
+        "Open social identity assessment menu",
+    )
     DEBUG_NOTIFICATION_MENU = (pygame.K_n, "Open notification menu")
     DEBUG_PLAYER_RECEIVES_HAT = (pygame.K_j, "Player receives hat")
     DEBUG_PLAYER_RECEIVES_NECKLACE = (pygame.K_k, "Player receives necklace")
