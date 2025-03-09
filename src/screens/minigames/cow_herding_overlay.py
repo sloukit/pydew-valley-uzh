@@ -122,6 +122,9 @@ class _CowHerdingScoreboard(AbstractMenu):
 
         self.update_buttons(dt)
 
+    def draw_description(self):
+        pass
+
 
 class _CowHerdingOverlay:
     display_surface: pygame.Surface
