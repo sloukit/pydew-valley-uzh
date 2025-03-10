@@ -246,9 +246,9 @@ class Game:
         self.social_identity_assessment_menu = SocialIdentityAssessmentMenu(
             partial(self.send_telemetry_and_play, "social_identity_assessment"),
             (
-                SocialIdentityAssessmentDimension.QUESTION_1,
-                SocialIdentityAssessmentDimension.QUESTION_2,
-                SocialIdentityAssessmentDimension.QUESTION_3,
+                SocialIdentityAssessmentDimension.INGROUP,
+                SocialIdentityAssessmentDimension.OUTGROUP,
+                SocialIdentityAssessmentDimension.MIKA,
             ),
             self.player,
         )
