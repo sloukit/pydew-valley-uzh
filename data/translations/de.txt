@@ -74,6 +74,7 @@ Reset@@Standard
 
 Round %d has ended. You currently have $%d, and:@@Runde %d ist fertig. Besitz der Rothüte: $%d und:
 Thanks for playing, you are done for the day. You currently have $%d, and:@@Danke fürs Spielen! Für heute ist das Spiel beendet, es geht morgen weiter. Du kannst das Fenster jetzt schliessen. Besitz der Rothüte: $%d und:
+Thanks for playing, you are done with the whole game. At the end, you had $%d, and:@@Du hast das Spiel abgeschlossen! Bitte öffne jetzt den Fragebogen aus der heutigen E-Mail. Besitz der Rothüte am Ende: $%d und:
 continue to next round@@Weiter in die nächste Runde
 
 # task (items allocation) menu

@@ -197,9 +197,14 @@ class RoundMenu(GeneralMenu):
             title_box_width = 650
             title_box_height = 50
         else:
-            self.title = _("Thanks for playing, you are done for the day. You currently have $%d, and:") % (
-                self.player.money,
-            )
+            if self.get_round() == 1: # corresponsds to last level, config overflows
+                self.title = _("Thanks for playing, you are done for the day. You currently have $%d, and:") % (
+                    self.player.money,
+                )
+            else: # daily task completion
+                self.title = _("Thanks for playing, you are done with the whole game. At the end, you had $%d, and:") % (
+                    self.player.money,
+                )
             title_box_width = 1020
             title_box_height = 90
 
