@@ -158,7 +158,7 @@ class RoundMenu(GeneralMenu):
             generic_button_rect = rect.move(0, button_height + space)
 
     def close(self):
-        if not(self.continue_disabled):
+        if not (self.continue_disabled):
             self.switch_screen(GameState.PLAY)
             gc.collect()
 
@@ -172,7 +172,7 @@ class RoundMenu(GeneralMenu):
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:
-                if not(self.continue_disabled):
+                if not (self.continue_disabled):
                     self.close()
                     self.scroll = 0
                     return True
@@ -189,7 +189,9 @@ class RoundMenu(GeneralMenu):
         return False
 
     def draw_title(self):
-        if self.get_round() % 2 == 0: # 2, 4, 6 (this corresponds to level 1, 3, 5 ends)
+        if (
+            self.get_round() % 2 == 0
+        ):  # 2, 4, 6 (this corresponds to level 1, 3, 5 ends)
             self.title = _("Round %d has ended. You currently have $%d, and:") % (
                 self.get_round() - 1,
                 self.player.money,
@@ -197,20 +199,18 @@ class RoundMenu(GeneralMenu):
             title_box_width = 650
             title_box_height = 50
         else:
-            if self.get_round() == 1: # corresponsds to last level, config overflows
-                self.title = _("Thanks for playing, you are done for the day. You currently have $%d, and:") % (
-                    self.player.money,
-                )
-            else: # daily task completion
-                self.title = _("Thanks for playing, you are done with the whole game. At the end, you had $%d, and:") % (
-                    self.player.money,
-                )
+            if self.get_round() == 1:  # corresponsds to last level, config overflows
+                self.title = _(
+                    "Thanks for playing, you are done for the day. You currently have $%d, and:"
+                ) % (self.player.money,)
+            else:  # daily task completion
+                self.title = _(
+                    "Thanks for playing, you are done with the whole game. At the end, you had $%d, and:"
+                ) % (self.player.money,)
             title_box_width = 1020
             title_box_height = 90
 
-
-
-        text_surf = self.font.render(self.title, False, "Black", wraplength = 1000)
+        text_surf = self.font.render(self.title, False, "Black", wraplength=1000)
         midtop = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 20)
         text_rect = text_surf.get_frect(midtop=midtop)
 
@@ -239,7 +239,7 @@ class RoundMenu(GeneralMenu):
     def draw(self):
         self.draw_stats()
         self.draw_title()
-        if self.get_round()%2 == 0:
+        if self.get_round() % 2 == 0:
             self.draw_buttons()
             self.continue_disabled = False
         else:
