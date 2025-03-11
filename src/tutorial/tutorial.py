@@ -28,6 +28,7 @@ class Tutorial:
         self.player = player
         self.level = level
         self.round_config = round_config
+        self.game_version = 1
 
         # position of the tutorial text box
         self.left_pos = TUTORIAL_TB_LEFT
@@ -52,6 +53,9 @@ class Tutorial:
         self.n_tasks = max(self.instructions.keys()) + 1
 
     # show instructions text boxes
+
+    def set_game_version(self, game_version: int):
+        self.game_version = game_version
 
     def farm_tile(self):
         self.dialogue_manager.open_dialogue("Farm_tile", self.left_pos, self.top_pos)
@@ -206,6 +210,8 @@ class Tutorial:
                     and not game_paused
                     and self.dialogue_manager._get_current_tb().finished_advancing
                 ):
+                    if self.game_version in [1, 2]:
+                        self.player.blocked_from_market = True
                     self.switch_to_task(8)
                     self.tasks_achieved += 1
 

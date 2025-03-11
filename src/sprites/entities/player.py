@@ -94,6 +94,7 @@ class Player(Character):
         self.has_outgroup_skin = save_file.has_outgroup_skin
         self.study_group: StudyGroup = save_file.study_group
         self.dt_last_pos_log = 0
+        self.blocked_from_market = False
 
         self.emote_manager = emote_manager
         self.focused_entity: NPCBase | None = None

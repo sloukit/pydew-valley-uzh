@@ -126,9 +126,13 @@ class SaveFile:
         self.inventory = {
             res: inventory.get(
                 res.as_serialised_string(),
-                _SEED_INVENTORY_DEFAULT_AMOUNT
-                if res >= InventoryResource.CORN_SEED
-                else _NONSEED_INVENTORY_DEFAULT_AMOUNT,
+                _SEED_INVENTORY_DEFAULT_AMOUNT * 10
+                if res in {InventoryResource.CORN_SEED, InventoryResource.TOMATO_SEED}
+                else (
+                    _SEED_INVENTORY_DEFAULT_AMOUNT
+                    if res >= InventoryResource.CORN_SEED
+                    else _NONSEED_INVENTORY_DEFAULT_AMOUNT
+                ),
             )
             for res in InventoryResource.__members__.values()
         }

@@ -477,6 +477,6 @@ class SelfAssessmentDimension(IntEnum):
 
 
 class SocialIdentityAssessmentDimension(IntEnum):
-    QUESTION_1 = 0
-    QUESTION_2 = 1
-    QUESTION_3 = 2
+    INGROUP = 0
+    OUTGROUP = 1
+    MIKA = 2

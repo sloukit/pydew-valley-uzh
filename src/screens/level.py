@@ -531,6 +531,7 @@ class Level:
             if (
                 collided_interactions[0].name == "Trader"
                 and self.round_config["market"]
+                and not self.player.blocked_from_market
             ):
                 self.send_telemetry("marketer_start", {})
                 self.switch_screen(GameState.SHOP)
@@ -860,6 +861,7 @@ class Level:
 
         if sequence_type == ScriptedSequenceType.PLAYER_HAT_SEQUENCE:
             npc.has_hat = True
+            self.player.blocked_from_market = False
         elif sequence_type == ScriptedSequenceType.PLAYER_NECKLACE_SEQUENCE:
             npc.has_necklace = True
         elif sequence_type == ScriptedSequenceType.PLAYER_BIRTHDAY_SEQUENCE:

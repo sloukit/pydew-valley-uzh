@@ -31,7 +31,7 @@ class RoundMenu(GeneralMenu):
         ) -> None:
             self.img = pygame.Surface(rect.size, flags=pygame.SRCALPHA)
             self.img.fill(pygame.Color(0, 0, 0, 0))
-            pygame.draw.rect(self.img, "White", (0, 0, rect.width, rect.height), 0, 4)
+            pygame.draw.rect(self.img, "azure3", (0, 0, rect.width, rect.height), 0, 4)
 
             # crop icon
             self.img.blit(
@@ -84,6 +84,7 @@ class RoundMenu(GeneralMenu):
         super().__init__(self.title, options, switch_screen, size)
         self.background = pygame.Surface(self.display_surface.get_size())
         self.stats_options = [""]
+        self.continue_disabled = False
 
         self.increment_round = increment_round
 
@@ -131,6 +132,7 @@ class RoundMenu(GeneralMenu):
             self.telemetry[itemName] = str(values[index])
 
         self.min_scroll = self.get_min_scroll()
+        self.send_telemetry(self.telemetry)
 
     def get_min_scroll(self):
         return -60 * len(self.textUIs) + 460
@@ -156,9 +158,9 @@ class RoundMenu(GeneralMenu):
             generic_button_rect = rect.move(0, button_height + space)
 
     def close(self):
-        self.send_telemetry(self.telemetry)
-        self.switch_screen(GameState.PLAY)
-        gc.collect()
+        if not (self.continue_disabled):
+            self.switch_screen(GameState.PLAY)
+            gc.collect()
 
     def button_action(self, text: str):
         if text == _("continue to next round"):
@@ -170,9 +172,10 @@ class RoundMenu(GeneralMenu):
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:
-                self.close()
-                self.scroll = 0
-                return True
+                if not (self.continue_disabled):
+                    self.close()
+                    self.scroll = 0
+                    return True
             elif event.key == pygame.K_UP:
                 self.stats_scroll(-self.SCROLL_AMOUNT)
             elif event.key == pygame.K_DOWN:
@@ -183,19 +186,35 @@ class RoundMenu(GeneralMenu):
 
             if event.button == 5:  # down scroll
                 self.stats_scroll(self.SCROLL_AMOUNT)
-
         return False
 
     def draw_title(self):
-        self.title = _("Round %d has ended. You currently have $%d, and:") % (
-            self.get_round() - 1,
-            self.player.money,
-        )
-        text_surf = self.font.render(self.title, False, "Black")
+        if (
+            self.get_round() % 2 == 0
+        ):  # 2, 4, 6 (this corresponds to level 1, 3, 5 ends)
+            self.title = _("Round %d has ended. You currently have $%d, and:") % (
+                self.get_round() - 1,
+                self.player.money,
+            )
+            title_box_width = 650
+            title_box_height = 50
+        else:
+            if self.get_round() == 1:  # corresponsds to last level, config overflows
+                self.title = _(
+                    "Thanks for playing, you are done for the day. You currently have $%d, and:"
+                ) % (self.player.money,)
+            else:  # daily task completion
+                self.title = _(
+                    "Thanks for playing, you are done with the whole game. At the end, you had $%d, and:"
+                ) % (self.player.money,)
+            title_box_width = 1020
+            title_box_height = 90
+
+        text_surf = self.font.render(self.title, False, "Black", wraplength=1000)
         midtop = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 20)
         text_rect = text_surf.get_frect(midtop=midtop)
 
-        bg_rect = pygame.Rect((0, 0), (650, 50))
+        bg_rect = pygame.Rect((0, 0), (title_box_width, title_box_height))
         bg_rect.center = text_rect.center
 
         pygame.draw.rect(self.display_surface, "White", bg_rect, 0, 4)
@@ -220,4 +239,8 @@ class RoundMenu(GeneralMenu):
     def draw(self):
         self.draw_stats()
         self.draw_title()
-        self.draw_buttons()
+        if self.get_round() % 2 == 0:
+            self.draw_buttons()
+            self.continue_disabled = False
+        else:
+            self.continue_disabled = True

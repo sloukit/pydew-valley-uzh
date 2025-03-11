@@ -12,6 +12,7 @@ import copy
 import gc
 import random
 import sys
+from datetime import datetime, timezone
 from functools import partial
 from typing import Any
 
@@ -245,9 +246,9 @@ class Game:
         self.social_identity_assessment_menu = SocialIdentityAssessmentMenu(
             partial(self.send_telemetry_and_play, "social_identity_assessment"),
             (
-                SocialIdentityAssessmentDimension.QUESTION_1,
-                SocialIdentityAssessmentDimension.QUESTION_2,
-                SocialIdentityAssessmentDimension.QUESTION_3,
+                SocialIdentityAssessmentDimension.INGROUP,
+                SocialIdentityAssessmentDimension.OUTGROUP,
+                SocialIdentityAssessmentDimension.MIKA,
             ),
             self.player,
         )
@@ -323,7 +324,7 @@ class Game:
         xplat.log(f"token: {self.token}")
         xplat.log(f"jwt: {self.jwt}")
 
-        if not USE_SERVER:
+        if not USE_SERVER:  # offline dev / debug version
             xplat.log("Not using server!")
             # token 100-379 triggers game version 1,
             # token 380-659 triggers game version 2,
@@ -343,9 +344,45 @@ class Game:
                 self.game_version = DEBUG_MODE_VERSION
             else:
                 raise ValueError("Invalid token value")
+            self.set_round(1)
+
+        else:
+            day_completions = []
+            max_complete_level = 0
+            if not (len(response["status"]) == 0):  # has at least 1 completed level
+                day_completions = [
+                    d for d in response["status"] if d["game_round"] % 2 == 0
+                ]  # these are day task completions
+                max_complete_level = max(d["game_round"] for d in response["status"])
+                xplat.log("Max completed level so far: {}".format(max_complete_level))
+                if max_complete_level >= 6:
+                    raise ValueError(
+                        "All levels are already completed for this player token."
+                    )
+            else:
+                xplat.log("First login ever with this token, start level 1!")
+            if len(day_completions) > 0:
+                timestamps = [
+                    datetime.fromisoformat(d["timestamp"]) for d in day_completions
+                ]
+                most_recent_completion = max(timestamps)
+                current_time = datetime.now(timezone.utc)
+
+                # Check if the newest timestamp is more than 12 hours ago
+                time_difference = (
+                    current_time - most_recent_completion
+                ).total_seconds() / 3600
+                if time_difference <= 12:
+                    raise ValueError(
+                        "Last daily task completion is less than 12 hours ago."
+                    )
+                else:
+                    xplat.log(
+                        f"Login successful: Time since last level completion: {time_difference:.2f} hours"
+                    )
+            self.set_round(max_complete_level + 1)
 
         xplat.log(f"Game version {self.game_version}")
-        self.set_round(1)
         self.send_telemetry("player_login", {"token": self.token})
 
         return self.round_config
@@ -374,6 +411,9 @@ class Game:
             self.inventory_menu.round_config_changed(self.round_config)
         if self.tutorial:
             self.tutorial.round_config = self.round_config
+            self.tutorial.set_game_version(
+                self.game_version
+            )  # needed for player market blocker
             if self.round > 1:
                 self.tutorial.deactivate()
         if self.shop_menu:
