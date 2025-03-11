@@ -73,15 +73,15 @@ Reset@@Standard
 # round end menu
 
 Round %d has ended. You currently have $%d, and:@@Runde %d ist fertig. Besitz der Rothüte: $%d und:
-Thanks for playing, you are done for the day. You currently have $%d, and:@@Danke fürs Spielen! Für heute ist das Spiel beendet, es geht morgen weiter. Du kannst das Fenster jetzt schliessen. Besitz der Rothüte: $%d und:
-Thanks for playing, you are done with the whole game. At the end, you had $%d, and:@@Du hast das Spiel abgeschlossen! Bitte öffne jetzt den Fragebogen aus der heutigen E-Mail. Besitz der Rothüte am Ende: $%d und:
+Thanks for playing, you are done for the day. You currently have $%d, and:@@Für heute ist das Spiel beendet. Morgen geht es weiter - wir schicken Ihnen wieder eine E-Mail mit dem Link zum Spiel. Sie können das Fenster jetzt schliessen. Besitz der Rothüte: $%d und:
+Thanks for playing, you are done with the whole game. At the end, you had $%d, and:@@Das Spiel ist abgeschlossen! Bitte öffnen Sie jetzt den Fragebogen aus der heutigen E-Mail. Sie können das Fenster jetzt schliessen. Besitz der Rothüte am Ende: $%d und:
 continue to next round@@Weiter in die nächste Runde
 
 # task (items allocation) menu
 
 Task@@Aufgabe
 Confirm@@Bestätigen
-Distribute them@@Wem möchtest Du wie viel geben?
+Distribute them@@Wem möchtest du wie viel geben?
 You have not allocated all of the items yet!@@Du hast noch nicht alles verteilt.
 You don't have that many items to distribute.@@Du hast nichts mehr zum verteilen.
 Items missing:@@Noch ausstehend:
@@ -97,7 +97,7 @@ Notification@@Benachrichtigung
 
 # src/screens/self_assessment_menu.py
 
-How do you feel right now?@@Wie fühlst Du dich jetzt gerade?
+How do you feel right now?@@Wie fühlst du dich jetzt gerade?
 Continue@@Weiter
 
 # src/overlay/fast_forward.py
