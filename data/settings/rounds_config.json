@@ -44,7 +44,7 @@
             "character_introduction_timestamp": [
                 0
             ],
-            "character_introduction_text": "Willkommen in der Stadt Mikhausen auf dem Planeten Mikana! Das bist Du: Ein Mika, wie die auf Mikana lebenden Wesen genannt werden. Dein Name ist [Initialen]. Du lebst zusammen mit anderen Mikas hier in Mikhausen.",
+            "character_introduction_text": "Willkommen in der Stadt Mikhausen auf dem Planeten Mikana! Das bist du: Ein Mika, wie die auf Mikana lebenden Wesen genannt werden. Dein Name ist [Initialen]. Du lebst zusammen mit anderen Mikas hier in Mikhausen.",
             "self_assessment_timestamp": [
                 600,
                 840
@@ -57,8 +57,8 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "Das ist dein Familienclan: Ihr seid die Roth\u00fcte.",
-            "ingroup_hat_necklace_introduction_text": "Man ist nicht von Anfang an ein Vollmitglied der Roth\u00fcte. Erst ist man Mini-Rothut, dann Junior-Rothut und erst dann Vollmitglied. Als Vollmitglied bekommt man Verantwortungen f\u00fcr die Gruppe. Ein Vollmitglied erkennst Du am Hut und der blauen Kette.",
-            "ingroup_hat_introduction_text": "Dies ist ein Junior-Rothut, erkennbar am Hut, und hat schon das Privileg, auf dem Markt einkaufen zu d\u00fcrfen. Aber erst mit Hut und Kette ist man ein Vollmitglied der Roth\u00fcte und mit allen Privilegien und Verantwortungen ausgestattet.",
+            "ingroup_hat_necklace_introduction_text": "Man ist nicht von Anfang an ein Vollmitglied der Roth\u00fcte. Erst ist man Mini-Rothut, dann Junior-Rothut und erst dann Vollmitglied. Als Vollmitglied erh\u00e4lt man Privilegien und Verantwortung. Ein Vollmitglied erkennst du am Hut und der blauen Kette.",
+            "ingroup_hat_introduction_text": "Dies ist ein Junior-Rothut, erkennbar am Hut, und hat schon die Verantwortung, auf dem Markt zu kaufen und verkaufen. Aber erst mit Hut und Kette ist man ein Vollmitglied der Roth\u00fcte und hat alle Privilegien und Verantwortungen.",
             "narrative_text": "Dein Familienclan braucht dringend Geld: unweit tobt ein Vulkan und ihr m\u00fcsst umziehen. Das ist teuer. Daher: je mehr Geld ihr verdient, desto sicherer seid ihr! Verkauft Ernte, Holz und Fr\u00fcchte, verdient M\u00fcnzen beim Wettstreit 'Kuh-in-den-Stall' gegen die Hornlinge.",
             "outgroup_introduction_text": "Es gibt auch eine andere in Mikhausen lebende Gruppe: Die Hornlinge.",
             "player_hat_sequence_timestamp": [],
@@ -66,7 +66,7 @@
             "ingroup_necklace_sequence_timestamp": [
                 660
             ],
-            "ingroup_necklace_sequence_text": "Ein Junior-Rothut bekommt die Kette verliehen und wird so zum Vollmitglied. Mit der Kette darf man auf dem Markt einkaufen und an Abstimmungen teilnehmen. Dr\u00fccke die Leertaste, um fortzufahren.",
+            "ingroup_necklace_sequence_text": "Ein Junior-Rothut bekommt die Kette verliehen und wird so zum Vollmitglied. Mit der Kette darf man auf dem Markt kaufen und verkaufen und darf an Abstimmungen teilnehmen. Dr\u00fccke die Leertaste, um fortzufahren.",
             "player_necklace_sequence_timestamp": [],
             "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
@@ -74,7 +74,7 @@
             "group_market_passive_player_sequence_timestamp": [
                 720
             ],
-            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Du darfst noch nicht mitentscheiden, da Du noch kein Vollmitglied bist. Dr\u00fccke die Leertaste, um fortzufahren.",
+            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Du darfst noch nicht mitentscheiden, da du noch kein Vollmitglied bist. Dr\u00fccke die Leertaste, um fortzufahren.",
             "group_market_active_player_sequence_timestamp": [],
             "group_market_active_player_sequence_text": "",
             "ingroup_40p_hat_necklace_appearance": true,
@@ -147,7 +147,7 @@
             "player_hat_sequence_timestamp": [
                 600
             ],
-            "player_hat_sequence_text": "Du wirst zum Junior-Rothut: Dein Familienclan verleiht Dir den Hut als Zeichen deiner Zugeh\u00f6rigkeit! Du darfst jetzt auf dem Markt einkaufen und bist verantwortlich f\u00fcr das Geld der Roth\u00fcte. Dr\u00fccke die Leertaste, um fortzufahren.",
+            "player_hat_sequence_text": "Du wirst zum Junior-Rothut: Deine Freundesfarm verleiht dir den Hut als Zeichen deiner Zugeh\u00f6rigkeit! Du darfst jetzt f\u00fcr die Roth\u00fcte auf dem Markt kaufen und verkaufen. Dr\u00fccke die Leertaste, um fortzufahren.",
             "ingroup_necklace_sequence_timestamp": [],
             "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [],
@@ -157,7 +157,7 @@
             "group_market_passive_player_sequence_timestamp": [
                 120
             ],
-            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Du darfst noch nicht mitentscheiden, da Du noch kein Vollmitglied bist. Dr\u00fccke die Leertaste, um fortzufahren.",
+            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Du darfst noch nicht mitentscheiden, da du noch kein Vollmitglied bist. Dr\u00fccke die Leertaste, um fortzufahren.",
             "group_market_active_player_sequence_timestamp": [],
             "group_market_active_player_sequence_text": "",
             "ingroup_40p_hat_necklace_appearance": true,
@@ -237,7 +237,7 @@
             "group_market_passive_player_sequence_timestamp": [
                 120
             ],
-            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Du darfst noch nicht mitentscheiden, da Du noch kein Vollmitglied bist. Dr\u00fccke die Leertaste, um fortzufahren.",
+            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Du darfst noch nicht mitentscheiden, da du noch kein Vollmitglied bist. Dr\u00fccke die Leertaste, um fortzufahren.",
             "group_market_active_player_sequence_timestamp": [],
             "group_market_active_player_sequence_text": "",
             "ingroup_40p_hat_necklace_appearance": true,
@@ -324,7 +324,7 @@
             "group_market_active_player_sequence_timestamp": [
                 480
             ],
-            "group_market_active_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Da Du jetzt ein Vollmitglied der Roth\u00fcte bist, darfst auch Du abstimmen! Dr\u00fccke die Leertaste, um fortzufahren.",
+            "group_market_active_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Da du jetzt ein Vollmitglied der Roth\u00fcte bist, darfst auch du abstimmen! Dr\u00fccke die Leertaste, um fortzufahren.",
             "ingroup_40p_hat_necklace_appearance": true,
             "outgroup_npcs_identical_appearance": true
         },
@@ -406,7 +406,7 @@
             "group_market_active_player_sequence_timestamp": [
                 120
             ],
-            "group_market_active_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Da Du ein Vollmitglied der Roth\u00fcte bist, darfst auch Du abstimmen! Dr\u00fccke die Leertaste, um fortzufahren.",
+            "group_market_active_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Da du ein Vollmitglied der Roth\u00fcte bist, darfst auch du abstimmen! Dr\u00fccke die Leertaste, um fortzufahren.",
             "ingroup_40p_hat_necklace_appearance": true,
             "outgroup_npcs_identical_appearance": true
         },
@@ -491,7 +491,7 @@
             "group_market_active_player_sequence_timestamp": [
                 120
             ],
-            "group_market_active_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Da Du ein Vollmitglied der Roth\u00fcte bist, darfst auch Du abstimmen! Dr\u00fccke die Leertaste, um fortzufahren.",
+            "group_market_active_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Da du ein Vollmitglied der Roth\u00fcte bist, darfst auch du abstimmen! Dr\u00fccke die Leertaste, um fortzufahren.",
             "ingroup_40p_hat_necklace_appearance": true,
             "outgroup_npcs_identical_appearance": true
         }
@@ -541,7 +541,7 @@
             "character_introduction_timestamp": [
                 0
             ],
-            "character_introduction_text": "Willkommen in der Stadt Mikhausen auf dem Planeten Mikana! Das bist Du: Ein Mika, wie die auf Mikana lebenden Wesen genannt werden. Dein Name ist [Initialen]. Du lebst zusammen mit anderen Mikas hier in Mikhausen.",
+            "character_introduction_text": "Willkommen in der Stadt Mikhausen auf dem Planeten Mikana! Das bist du: Ein Mika, wie die auf Mikana lebenden Wesen genannt werden. Dein Name ist [Initialen]. Du lebst zusammen mit anderen Mikas hier in Mikhausen.",
             "self_assessment_timestamp": [
                 600,
                 840
@@ -554,8 +554,8 @@
             "minigame": true,
             "minigame_rooting_npcs": true,
             "ingroup_introduction_text": "Das ist deine Freundesfarm: Ihr seid die Roth\u00fcte.",
-            "ingroup_hat_necklace_introduction_text": "Wie in den meisten Freundesfarmen, ist man nicht von Anfang an ein Vollmitglied. Man beginnt als Mini-Rothut, dann wird man Junior-Rothut und erst dann Vollmitglied der Roth\u00fcte. Als Vollmitglied bekommt man Verantwortungen f\u00fcr die Gruppe und ist an Entscheidungen beteiligt. Ein Vollmitglied erkennst Du an dem Hut und der blauen Kette.",
-            "ingroup_hat_introduction_text": "Dies ist ein Junior-Rothut, erkennbar am Hut, und hat schon das Privileg, auf dem Markt einkaufen zu d\u00fcrfen. Aber erst mit Hut und Kette ist man ein Vollmitglied der Roth\u00fcte und mit allen Privilegien und Verantwortungen ausgestattet.",
+            "ingroup_hat_necklace_introduction_text": "Man ist nicht von Anfang an ein Vollmitglied der Roth\u00fcte. Erst ist man Mini-Rothut, dann Junior-Rothut und erst dann Vollmitglied. Als Vollmitglied erh\u00e4lt man Privilegien und Verantwortung. Ein Vollmitglied erkennst du am Hut und der blauen Kette.",
+            "ingroup_hat_introduction_text": "Dies ist ein Junior-Rothut, erkennbar am Hut, und hat schon die Verantwortung, auf dem Markt zu kaufen und verkaufen. Aber erst mit Hut und Kette ist man ein Vollmitglied der Roth\u00fcte und hat alle Privilegien und Verantwortungen.",
             "narrative_text": "Deine Freundesfarm braucht dringend Geld: unweit tobt ein Vulkan und ihr m\u00fcsst umziehen. Das ist teuer. Daher: je mehr Geld ihr verdient, desto sicherer seid ihr! Verkauft Ernte, Holz und Fr\u00fcchte, verdient M\u00fcnzen beim Wettstreit 'Kuh-in-den-Stall' gegen die Hornlinge.",
             "outgroup_introduction_text": "Es gibt auch eine andere in Mikhausen lebende Gruppe: Die Hornlinge.",
             "player_hat_sequence_timestamp": [],
@@ -563,7 +563,7 @@
             "ingroup_necklace_sequence_timestamp": [
                 660
             ],
-            "ingroup_necklace_sequence_text": "Ein Junior-Rothut bekommt die Kette verliehen und wird so zum Vollmitglied. Mit der Kette darf man auf dem Markt einkaufen und an Abstimmungen teilnehmen. Dr\u00fccke die Leertaste, um fortzufahren.",
+            "ingroup_necklace_sequence_text": "Ein Junior-Rothut bekommt die Kette verliehen und wird so zum Vollmitglied. Mit der Kette darf man auf dem Markt kaufen und verkaufen und darf an Abstimmungen teilnehmen. Dr\u00fccke die Leertaste, um fortzufahren.",
             "player_necklace_sequence_timestamp": [],
             "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
@@ -571,7 +571,7 @@
             "group_market_passive_player_sequence_timestamp": [
                 720
             ],
-            "group_market_passive_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Du darfst noch nicht mitentscheiden, da Du noch kein Vollmitglied bist. Dr\u00fccke die Leertaste, um fortzufahren.",
+            "group_market_passive_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Du darfst noch nicht mitentscheiden, da du noch kein Vollmitglied bist. Dr\u00fccke die Leertaste, um fortzufahren.",
             "group_market_active_player_sequence_timestamp": [],
             "group_market_active_player_sequence_text": "",
             "ingroup_40p_hat_necklace_appearance": true
@@ -643,7 +643,7 @@
             "player_hat_sequence_timestamp": [
                 600
             ],
-            "player_hat_sequence_text": "Du wirst zum Junior-Rothut: Deine Freundesfarm verleiht Dir den Hut als Zeichen deiner Zugeh\u00f6rigkeit! Du darfst jetzt auf dem Markt einkaufen und bist verantwortlich f\u00fcr das Geld der Roth\u00fcte. Dr\u00fccke die Leertaste, um fortzufahren.",
+            "player_hat_sequence_text": "Du wirst zum Junior-Rothut: Deine Freundesfarm verleiht dir den Hut als Zeichen deiner Zugeh\u00f6rigkeit! Du darfst jetzt f\u00fcr die Roth\u00fcte auf dem Markt kaufen und verkaufen. Dr\u00fccke die Leertaste, um fortzufahren.",
             "ingroup_necklace_sequence_timestamp": [],
             "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [],
@@ -653,7 +653,7 @@
             "group_market_passive_player_sequence_timestamp": [
                 120
             ],
-            "group_market_passive_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Du darfst noch nicht mitentscheiden, da Du noch kein Vollmitglied bist. Dr\u00fccke die Leertaste, um fortzufahren.",
+            "group_market_passive_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Du darfst noch nicht mitentscheiden, da du noch kein Vollmitglied bist. Dr\u00fccke die Leertaste, um fortzufahren.",
             "group_market_active_player_sequence_timestamp": [],
             "group_market_active_player_sequence_text": "",
             "ingroup_40p_hat_necklace_appearance": true
@@ -732,7 +732,7 @@
             "group_market_passive_player_sequence_timestamp": [
                 120
             ],
-            "group_market_passive_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Du darfst noch nicht mitentscheiden, da Du noch kein Vollmitglied bist. Dr\u00fccke die Leertaste, um fortzufahren.",
+            "group_market_passive_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Du darfst noch nicht mitentscheiden, da du noch kein Vollmitglied bist. Dr\u00fccke die Leertaste, um fortzufahren.",
             "group_market_active_player_sequence_timestamp": [],
             "group_market_active_player_sequence_text": "",
             "ingroup_40p_hat_necklace_appearance": true
@@ -810,7 +810,7 @@
             "player_necklace_sequence_timestamp": [
                 600
             ],
-            "player_necklace_sequence_text": "Deine Freundesfarm verleiht Dir die Kette. Jetzt bist Du Vollmitglied der Roth\u00fcte! Du darfst jetzt auch an den Abstimmungen teilnehmen. Dr\u00fccke die Leertaste, um fortzufahren.",
+            "player_necklace_sequence_text": "Deine Freundesfarm verleiht dir die Kette. Jetzt bist du Vollmitglied der Roth\u00fcte! Du darfst jetzt auch an den Abstimmungen teilnehmen. Dr\u00fccke die Leertaste, um fortzufahren.",
             "player_birthday_sequence_timestamp": [],
             "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [],
@@ -818,7 +818,7 @@
             "group_market_active_player_sequence_timestamp": [
                 120
             ],
-            "group_market_active_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Da Du jetzt ein Vollmitglied der Roth\u00fcte bist, darfst auch Du abstimmen! Dr\u00fccke die Leertaste, um fortzufahren.",
+            "group_market_active_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Da du jetzt ein Vollmitglied der Roth\u00fcte bist, darfst auch du abstimmen! Dr\u00fccke die Leertaste, um fortzufahren.",
             "ingroup_40p_hat_necklace_appearance": true
         },
         {
@@ -899,7 +899,7 @@
             "group_market_active_player_sequence_timestamp": [
                 120
             ],
-            "group_market_active_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Da Du ein Vollmitglied der Roth\u00fcte bist, darfst auch Du abstimmen! Dr\u00fccke die Leertaste, um fortzufahren.",
+            "group_market_active_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Da du ein Vollmitglied der Roth\u00fcte bist, darfst auch du abstimmen! Dr\u00fccke die Leertaste, um fortzufahren.",
             "ingroup_40p_hat_necklace_appearance": true
         },
         {
@@ -983,7 +983,7 @@
             "group_market_active_player_sequence_timestamp": [
                 120
             ],
-            "group_market_active_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Da Du ein Vollmitglied der Roth\u00fcte bist, darfst auch Du abstimmen! Dr\u00fccke die Leertaste, um fortzufahren.",
+            "group_market_active_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Da du ein Vollmitglied der Roth\u00fcte bist, darfst auch du abstimmen! Dr\u00fccke die Leertaste, um fortzufahren.",
             "ingroup_40p_hat_necklace_appearance": true
         }
     ],
@@ -1032,7 +1032,7 @@
             "character_introduction_timestamp": [
                 0
             ],
-            "character_introduction_text": "Willkommen in der Stadt Mikhausen auf dem Planeten Mikana! Das bist Du: Ein Mika, wie die auf Mikana lebenden Wesen genannt werden. Du lebst zusammen mit anderen Mikas hier in Mikhausen.",
+            "character_introduction_text": "Willkommen in der Stadt Mikhausen auf dem Planeten Mikana! Das bist du: Ein Mika, wie die auf Mikana lebenden Wesen genannt werden. Du lebst zusammen mit anderen Mikas hier in Mikhausen.",
             "self_assessment_timestamp": [
                 600,
                 840
@@ -1047,7 +1047,7 @@
             "ingroup_introduction_text": "Das hier sind die Roth\u00fcte.",
             "ingroup_hat_necklace_introduction_text": "",
             "ingroup_hat_introduction_text": "",
-            "narrative_text": "Unweit tobt ein Vulkan und ihr m\u00fcsst umziehen. Das ist teuer. Daher: je mehr Geld man verdient, desto sicherer ist man. Man verkauft dazu Ernte, Holz und Fr\u00fcchte und verdient M\u00fcnzen beim Spiel 'Kuh-in-den-Stall'.",
+            "narrative_text": "Unweit von Mikahausen tobt ein Vulkan und alle m\u00fcssen umziehen. Das ist teuer. Daher: je mehr Geld man verdient, desto sicherer ist man. Man verkauft dazu Ernte, Holz und Fr\u00fcchte und verdient M\u00fcnzen beim Spiel 'Kuh-in-den-Stall'.",
             "outgroup_introduction_text": "Das hier sind die Hornlinge.",
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
@@ -1213,7 +1213,7 @@
             "player_birthday_sequence_timestamp": [
                 600
             ],
-            "player_birthday_sequence_text": "Die Roth\u00fcte gratulieren Dir zum Geburtstag! Dr\u00fccke die Leertaste, um fortzufahren.",
+            "player_birthday_sequence_text": "Die Roth\u00fcte gratulieren dir zum Geburtstag! Dr\u00fccke die Leertaste, um fortzufahren.",
             "group_market_passive_player_sequence_timestamp": [],
             "group_market_passive_player_sequence_text": "",
             "group_market_active_player_sequence_timestamp": [],
