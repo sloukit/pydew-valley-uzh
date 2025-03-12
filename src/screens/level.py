@@ -761,6 +761,10 @@ class Level:
                     ScriptedSequenceType.INGROUP_NECKLACE_SEQUENCE,
                 ]:
                     npcs = self.limit_npcs_amount(npcs)
+                if sequence_type in decide_sequence:
+                    for npc in npcs:
+                        npc.has_hat = True
+                        npc.has_necklace = True
 
                 other_npcs = [
                     npc
@@ -867,6 +871,7 @@ class Level:
         elif sequence_type == ScriptedSequenceType.PLAYER_BIRTHDAY_SEQUENCE:
             pass
         elif sequence_type == ScriptedSequenceType.INGROUP_NECKLACE_SEQUENCE:
+            npc.has_hat = True
             npc.has_necklace = True
         elif sequence_type == ScriptedSequenceType.GROUP_MARKET_PASSIVE_PLAYER_SEQUENCE:
             buy_list = TOMATO_OR_CORN_LIST
