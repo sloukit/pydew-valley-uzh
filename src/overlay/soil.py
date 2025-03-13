@@ -150,7 +150,7 @@ class SoilArea:
         self._unplanted_tiles = set()
         self._unwatered_tiles = set()
         self._harvestable_tiles = set()
-        self.planted_types = {i: 0 for i in SeedType}
+        self.planted_types = dict.fromkeys(SeedType, 0)
 
         self.neighbor_directions = [
             (0, -1),
