@@ -287,6 +287,10 @@ class Game:
         self.last_intro_txt_rendered = False
         self.switched_to_tutorial = False
 
+    def check_hat_condition(self):
+        if self.round in {3, 6} and self.game_version in {1, 2}:
+            self.player.has_hat = True
+
     def get_world_time(self) -> tuple[int, int]:
         min = round(self.round_end_timer) // 60
         sec = round(self.round_end_timer) % 60
@@ -344,7 +348,8 @@ class Game:
                 self.game_version = DEBUG_MODE_VERSION
             else:
                 raise ValueError("Invalid token value")
-            self.set_round(1)
+            self.set_round(3)
+            self.check_hat_condition()
 
         else:
             day_completions = []
