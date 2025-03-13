@@ -348,7 +348,7 @@ class Game:
                 self.game_version = DEBUG_MODE_VERSION
             else:
                 raise ValueError("Invalid token value")
-            self.set_round(3)
+            self.set_round(1)
             self.check_hat_condition()
 
         else:
