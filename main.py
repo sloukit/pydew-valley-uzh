@@ -351,7 +351,7 @@ class Game:
             self.set_round(1)
             self.check_hat_condition()
 
-        else: # online deployed version with db access
+        else:  # online deployed version with db access
             # here we check whether a person is allowed to login, bec they need to stay away for 12 hours
             day_completions = []
             max_complete_level = 0
@@ -387,7 +387,7 @@ class Game:
                         f"Login successful: Time since last level completion: {time_difference:.2f} hours"
                     )
             self.set_round(max_complete_level + 1)
-            self.check_hat_condition() # in levels above 2, the player should wear a hat unless it's version 3
+            self.check_hat_condition()  # in levels above 2, the player should wear a hat unless it's version 3
 
         xplat.log(f"Game version {self.game_version}")
         self.send_telemetry("player_login", {"token": self.token})
