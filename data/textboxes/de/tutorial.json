@@ -9,7 +9,7 @@
     ["Übungsrunde", "Get the necklace from the ingroup"]
   ],
   "Farm_tile":[
-    ["Übungsrunde", "Gehe auf deine Farm und übe den Ackerbau. Deine Werkzeuge sind Hacke, Axt und Giesskanne. Oben links siehst du das gerade genutzte Werkzeug. Drücke die linke Maustaste, um dein Werkzeug zu benutzen. Drücke die Tab-Taste, um das Werkzeug zu wechseln."]
+    ["Übungsrunde", "Gehe auf die Rothut-Farm und übe den Ackerbau. Deine Werkzeuge sind Hacke, Axt und Giesskanne. Oben links siehst du das gerade genutzte Werkzeug. Mit der linken Maustaste benutzt du das Werkzeug. Mit der Tab-Taste wechselst du das Werkzeug."]
   ],
   "Plant_crop":[
     ["Übungsrunde", "Drücke die rechte Maustaste, um einen Samen zu pflanzen. Oben links siehst du den gerade genutzten Samen. Drücke die linke Shifttaste, um den Samen zu wechseln. Auf dem Markt gibt es Samen zu kaufen."]
@@ -39,6 +39,6 @@
     ["Übungsrunde", "Gehe zurück über die Brücke und betrete den grossen Kuhstall. Spiele dort eine Runde 'Kuh-in-den-Stall' gegen die Hornlinge. Es gibt 200$ zu gewinnen - und zu verlieren!"]
   ],
   "Tutorial_end":[
-    ["Übungsrunde", "Gut gemacht, du hast die Übungsrunde erfolgreich beendet. Drücke s, um alle Tastenkombinationen und Aufgaben zu sehen. Gehe nun zurück auf deine Farm und pflanze Maispflanzen - der Acker ruft! Drücke die Leertaste, um fortzufahren."]
+    ["Übungsrunde", "Gut gemacht, du hast die Übungsrunde erfolgreich beendet. Drücke s, um Tastenkombinationen und Aufgaben zu sehen. Gehe nun zurück auf die Rothut-Farm und pflanze Maispflanzen - der Acker ruft! Drücke die Leertaste, um fortzufahren."]
   ]
 }
