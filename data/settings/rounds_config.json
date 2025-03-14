@@ -313,18 +313,16 @@
             "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
             "ingroup_necklace_sequence_text": "",
-            "player_necklace_sequence_timestamp": [
-                360
-            ],
-            "player_necklace_sequence_text": "Dein Familienclan verleiht Dir die Kette. Jetzt bist Du Vollmitglied der Roth\u00fcte! Du darfst jetzt auch an den Abstimmungen teilnehmen. Dr\u00fccke die Leertaste, um fortzufahren.",
+            "player_necklace_sequence_timestamp": [],
+            "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
             "player_birthday_sequence_text": "",
-            "group_market_passive_player_sequence_timestamp": [],
-            "group_market_passive_player_sequence_text": "",
-            "group_market_active_player_sequence_timestamp": [
-                480
+            "group_market_passive_player_sequence_timestamp": [
+                120
             ],
-            "group_market_active_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Da du jetzt ein Vollmitglied der Roth\u00fcte bist, darfst auch du abstimmen! Dr\u00fccke die Leertaste, um fortzufahren.",
+            "group_market_passive_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Du darfst noch nicht mitentscheiden, da du noch kein Vollmitglied bist. Dr\u00fccke die Leertaste, um fortzufahren.",
+            "group_market_active_player_sequence_timestamp": [],
+            "group_market_active_player_sequence_text": "",
             "ingroup_40p_hat_necklace_appearance": true,
             "outgroup_npcs_identical_appearance": true
         },
@@ -397,14 +395,16 @@
             "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
             "ingroup_necklace_sequence_text": "",
-            "player_necklace_sequence_timestamp": [],
-            "player_necklace_sequence_text": "",
+            "player_necklace_sequence_timestamp": [
+                120
+            ],
+            "player_necklace_sequence_text": "Dein Familienclan verleiht Dir die Kette. Jetzt bist Du Vollmitglied der Roth\u00fcte! Du darfst jetzt auch an den Abstimmungen teilnehmen. Dr\u00fccke die Leertaste, um fortzufahren.",
             "player_birthday_sequence_timestamp": [],
             "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [],
             "group_market_passive_player_sequence_text": "",
             "group_market_active_player_sequence_timestamp": [
-                120
+                540
             ],
             "group_market_active_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Da du ein Vollmitglied der Roth\u00fcte bist, darfst auch du abstimmen! Dr\u00fccke die Leertaste, um fortzufahren.",
             "ingroup_40p_hat_necklace_appearance": true,
@@ -807,18 +807,16 @@
             "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
             "ingroup_necklace_sequence_text": "",
-            "player_necklace_sequence_timestamp": [
-                360
-            ],
-            "player_necklace_sequence_text": "Deine Freundesfarm verleiht dir die Kette. Jetzt bist du Vollmitglied der Roth\u00fcte! Du darfst jetzt auch an den Abstimmungen teilnehmen. Dr\u00fccke die Leertaste, um fortzufahren.",
+            "player_necklace_sequence_timestamp": [],
+            "player_necklace_sequence_text": "",
             "player_birthday_sequence_timestamp": [],
             "player_birthday_sequence_text": "",
-            "group_market_passive_player_sequence_timestamp": [],
-            "group_market_passive_player_sequence_text": "",
-            "group_market_active_player_sequence_timestamp": [
-                480
+            "group_market_passive_player_sequence_timestamp": [
+                120
             ],
-            "group_market_active_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Da du jetzt ein Vollmitglied der Roth\u00fcte bist, darfst auch du abstimmen! Dr\u00fccke die Leertaste, um fortzufahren.",
+            "group_market_passive_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Du darfst noch nicht mitentscheiden, da du noch kein Vollmitglied bist. Dr\u00fccke die Leertaste, um fortzufahren.",
+            "group_market_active_player_sequence_timestamp": [],
+            "group_market_active_player_sequence_text": "",
             "ingroup_40p_hat_necklace_appearance": true
         },
         {
@@ -890,14 +888,16 @@
             "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [],
             "ingroup_necklace_sequence_text": "",
-            "player_necklace_sequence_timestamp": [],
-            "player_necklace_sequence_text": "",
+            "player_necklace_sequence_timestamp": [
+                120
+            ],
+            "player_necklace_sequence_text": "Deine Freundesfarm verleiht dir die Kette. Jetzt bist du Vollmitglied der Roth\u00fcte! Du darfst jetzt auch an den Abstimmungen teilnehmen. Dr\u00fccke die Leertaste, um fortzufahren.",
             "player_birthday_sequence_timestamp": [],
             "player_birthday_sequence_text": "",
             "group_market_passive_player_sequence_timestamp": [],
             "group_market_passive_player_sequence_text": "",
             "group_market_active_player_sequence_timestamp": [
-                120
+                540
             ],
             "group_market_active_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Da du ein Vollmitglied der Roth\u00fcte bist, darfst auch du abstimmen! Dr\u00fccke die Leertaste, um fortzufahren.",
             "ingroup_40p_hat_necklace_appearance": true
