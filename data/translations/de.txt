@@ -175,7 +175,7 @@ box info space@@Markthändler ansprechen,|auswählen, Früchte|sammeln, schlafen
 box info i@@Lager öffnen
 box info e@@Interagieren
 box info esc@@Pause
-box info player task@@So macht ihr Geld:|-Erde umgraben, Samen setzen,|  Pflanzen giessen|-Nach dem Schlafen Ernten|-Im Wald Holz und Früchte|sammeln|-Ernte, Holz und Früchte auf|  dem Markt verkaufen|-Bei 'Kuh-in-den-Stall' Geld|gewinnen
+box info player task@@So macht man Geld:|-Erde umgraben, Samen setzen,|  Pflanzen giessen|-Nach dem Schlafen Ernten|-Im Wald Holz und Früchte|sammeln|-Ernte, Holz und Früchte auf|  dem Markt verkaufen|-Bei 'Kuh-in-den-Stall' Geld|gewinnen
 
 social identity assessment left info@@Gar nicht
 social identity assessment right info@@Sehr
