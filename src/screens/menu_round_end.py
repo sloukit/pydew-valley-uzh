@@ -199,7 +199,7 @@ class RoundMenu(GeneralMenu):
             title_box_width = 650
             title_box_height = 50
         else:
-            if self.get_round() == 1:  # corresponsds to last level, config overflows
+            if self.get_round() in {1, 7}:  # corresponsds to last level, config overflows in some cases, this is why we have 1 in here
                 self.title = _(
                     "Thanks for playing, you are done with the whole game. At the end, you had $%d, and:"
                 ) % (self.player.money,)
