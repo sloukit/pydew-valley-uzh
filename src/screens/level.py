@@ -759,6 +759,7 @@ class Level:
                     ScriptedSequenceType.PLAYER_HAT_SEQUENCE,
                     ScriptedSequenceType.PLAYER_NECKLACE_SEQUENCE,
                     ScriptedSequenceType.INGROUP_NECKLACE_SEQUENCE,
+                    ScriptedSequenceType.PLAYER_BIRTHDAY_SEQUENCE,
                 ]:
                     npcs = self.limit_npcs_amount(npcs)
                 if sequence_type in decide_sequence:
