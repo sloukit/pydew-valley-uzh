@@ -37,7 +37,7 @@
             "emote_wheel": true,
             "government_statistics": false,
             "resource_allocation_timestamp": [
-                780
+                540
             ],
             "resource_allocation_text": "Verteile sie frei! Die Handschuhe helfen beim Ernten.",
             "resource_allocation_item_text": "6 Paar Handschuhe",
@@ -46,8 +46,8 @@
             ],
             "character_introduction_text": "Willkommen in der Stadt Mikhausen auf dem Planeten Mikana! Das bist du: Ein Mika, wie die auf Mikana lebenden Wesen genannt werden. Dein Name ist [Initialen]. Du lebst zusammen mit anderen Mikas hier in Mikhausen.",
             "self_assessment_timestamp": [
-                600,
-                840
+                660,
+                780
             ],
             "self_assessment_menu": true,
             "social_identity_assessment_timestamp": [
@@ -64,7 +64,7 @@
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [
-                660
+                600
             ],
             "ingroup_necklace_sequence_text": "Ein Junior-Rothut bekommt die Kette verliehen und wird so zum Vollmitglied. Mit der Kette darf man auf dem Markt kaufen und verkaufen und darf an Abstimmungen teilnehmen. Dr\u00fccke die Leertaste, um fortzufahren.",
             "player_necklace_sequence_timestamp": [],
@@ -122,14 +122,14 @@
             "emote_wheel": true,
             "government_statistics": false,
             "resource_allocation_timestamp": [
-                360
+                720
             ],
             "resource_allocation_text": "Verteile sie frei! Die Stiefel helfen bei Regen.",
             "resource_allocation_item_text": "2 Paar Stiefel",
             "character_introduction_timestamp": [],
             "character_introduction_text": "",
             "self_assessment_timestamp": [
-                60,
+                180,
                 660
             ],
             "self_assessment_menu": true,
@@ -211,7 +211,7 @@
             "character_introduction_timestamp": [],
             "character_introduction_text": "",
             "self_assessment_timestamp": [
-                60,
+                180,
                 660
             ],
             "self_assessment_menu": true,
@@ -295,7 +295,7 @@
             "character_introduction_text": "",
             "self_assessment_timestamp": [
                 180,
-                600
+                660
             ],
             "self_assessment_menu": true,
             "social_identity_assessment_timestamp": [
@@ -404,7 +404,7 @@
             "group_market_passive_player_sequence_timestamp": [],
             "group_market_passive_player_sequence_text": "",
             "group_market_active_player_sequence_timestamp": [
-                540
+                600
             ],
             "group_market_active_player_sequence_text": "Dein Familienclan versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Da du ein Vollmitglied der Roth\u00fcte bist, darfst auch du abstimmen! Dr\u00fccke die Leertaste, um fortzufahren.",
             "ingroup_40p_hat_necklace_appearance": true,
@@ -456,7 +456,7 @@
             "emote_wheel": true,
             "government_statistics": false,
             "resource_allocation_timestamp": [
-                360
+                720
             ],
             "resource_allocation_text": "Verteile sie frei! Die Sch\u00fctzen helfen beim Kochen.",
             "resource_allocation_item_text": "10 Sch\u00fcrzen",
@@ -534,7 +534,7 @@
             "emote_wheel": true,
             "government_statistics": false,
             "resource_allocation_timestamp": [
-                780
+                540
             ],
             "resource_allocation_text": "Verteile sie frei! Die Handschuhe helfen beim Ernten.",
             "resource_allocation_item_text": "6 Paar Handschuhe",
@@ -543,8 +543,8 @@
             ],
             "character_introduction_text": "Willkommen in der Stadt Mikhausen auf dem Planeten Mikana! Das bist du: Ein Mika, wie die auf Mikana lebenden Wesen genannt werden. Dein Name ist [Initialen]. Du lebst zusammen mit anderen Mikas hier in Mikhausen.",
             "self_assessment_timestamp": [
-                600,
-                840
+                660,
+                780
             ],
             "self_assessment_menu": true,
             "social_identity_assessment_timestamp": [
@@ -561,7 +561,7 @@
             "player_hat_sequence_timestamp": [],
             "player_hat_sequence_text": "",
             "ingroup_necklace_sequence_timestamp": [
-                660
+                600
             ],
             "ingroup_necklace_sequence_text": "Ein Junior-Rothut bekommt die Kette verliehen und wird so zum Vollmitglied. Mit der Kette darf man auf dem Markt kaufen und verkaufen und darf an Abstimmungen teilnehmen. Dr\u00fccke die Leertaste, um fortzufahren.",
             "player_necklace_sequence_timestamp": [],
@@ -618,14 +618,14 @@
             "emote_wheel": true,
             "government_statistics": false,
             "resource_allocation_timestamp": [
-                360
+                720
             ],
             "resource_allocation_text": "Verteile sie frei! Die Stiefel helfen bei Regen.",
             "resource_allocation_item_text": "2 Paar Stiefel",
             "character_introduction_timestamp": [],
             "character_introduction_text": "",
             "self_assessment_timestamp": [
-                60,
+                180,
                 660
             ],
             "self_assessment_menu": true,
@@ -706,7 +706,7 @@
             "character_introduction_timestamp": [],
             "character_introduction_text": "",
             "self_assessment_timestamp": [
-                60,
+                180,
                 660
             ],
             "self_assessment_menu": true,
@@ -781,7 +781,7 @@
             "emote_wheel": true,
             "government_statistics": false,
             "resource_allocation_timestamp": [
-                360
+                720
             ],
             "resource_allocation_text": "Verteile sie frei! Die Hemden helfen bei K\u00e4lte.",
             "resource_allocation_item_text": "8 Hemden",
@@ -897,7 +897,7 @@
             "group_market_passive_player_sequence_timestamp": [],
             "group_market_passive_player_sequence_text": "",
             "group_market_active_player_sequence_timestamp": [
-                540
+                600
             ],
             "group_market_active_player_sequence_text": "Deine Freundesfarm versammelt sich zur t\u00e4glichen Abstimmung dar\u00fcber, was auf dem Markt gekauft werden soll. Da du ein Vollmitglied der Roth\u00fcte bist, darfst auch du abstimmen! Dr\u00fccke die Leertaste, um fortzufahren.",
             "ingroup_40p_hat_necklace_appearance": true
@@ -948,7 +948,7 @@
             "emote_wheel": true,
             "government_statistics": false,
             "resource_allocation_timestamp": [
-                360
+                720
             ],
             "resource_allocation_text": "Verteile sie frei! Die Sch\u00fctzen helfen beim Kochen.",
             "resource_allocation_item_text": "10 Sch\u00fcrzen",
@@ -1025,7 +1025,7 @@
             "emote_wheel": true,
             "government_statistics": false,
             "resource_allocation_timestamp": [
-                780
+                540
             ],
             "resource_allocation_text": "Verteile sie frei! Die Handschuhe helfen beim Ernten.",
             "resource_allocation_item_text": "6 Paar Handschuhe",
@@ -1104,7 +1104,7 @@
             "emote_wheel": true,
             "government_statistics": false,
             "resource_allocation_timestamp": [
-                360
+                720
             ],
             "resource_allocation_text": "Verteile sie frei! Die Stiefel helfen bei Regen.",
             "resource_allocation_item_text": "2 Paar Stiefel",
@@ -1263,7 +1263,7 @@
             "emote_wheel": true,
             "government_statistics": false,
             "resource_allocation_timestamp": [
-                360
+                720
             ],
             "resource_allocation_text": "Verteile sie frei! Die Hemden helfen bei K\u00e4lte.",
             "resource_allocation_item_text": "8 Hemden",
@@ -1424,7 +1424,7 @@
             "emote_wheel": true,
             "government_statistics": false,
             "resource_allocation_timestamp": [
-                360
+                720
             ],
             "resource_allocation_text": "Verteile sie frei! Die Sch\u00fctzen helfen beim Kochen.",
             "resource_allocation_item_text": "10 Sch\u00fcrzen",
