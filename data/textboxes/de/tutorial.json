@@ -21,7 +21,7 @@
     ["Übungsrunde", "Gehe in dein Haus, links oberhalb der Farm. Stelle dich auf den grünen Teppich und drücke die Leertaste, um einen neuen Tag zu starten. Schau an, wie das Gemüse gewachsen ist!"]
   ],
   "Go_to_forest_and_hit_tree":[
-    ["Übungsrunde", "Folge dem Holzweg nach rechts unten. Nimm die zweite Abzweigung nach rechts in den Wald. Achte immer auf die Wegschilder! Wechsle mit der Tab-Taste zu deiner Axt und fälle einen Baum. Drücke die Leertaste, um Früchte im Gebüsch zu sammeln."]
+    ["Übungsrunde", "Folge dem Holzweg nach unten und nimm die zweite Abzweigung nach unten in den Wald. Achte immer auf die Wegschilder! Wechsle mit der Tab-Taste zu deiner Axt und fälle einen Baum. Drücke die Leertaste, um Früchte im Gebüsch zu sammeln."]
   ],
   "Interact_with_ingroup_member":[
     ["Übungsrunde", "Gehe zu einem Rothut und drücke e, um zu plaudern. Drücke die linke oder rechte Pfeiltaste, um zwischen Emojis zu wählen und die Leertaste, um eines auszuwählen."]
@@ -32,8 +32,11 @@
   "Walk_around_outgroup_farm_and_switch_to_outgroup":[
     ["Übungsrunde", "Walk around on the outgroup farm and switch to the outgroup"]
   ],
-  "Go_to_market_and_buy/sell_something":[
-    ["Übungsrunde", "Gehe links durch den Wald und finde die Stadt. Folge dem steinigen Weg über die Brücke zum Markt. Dort kann man mit der Leertaste Waren kaufen und verkaufen. Mit esc verlässt man den Markt."]
+  "Go_to_market_and_buy/sell_something_v1v2":[
+    ["Übungsrunde", "Gehe links durch den Wald in die Stadt. Folge dem Steinweg über die Brücke zum Markt. Als Junior darfst du dort für die Rothüte Handel treiben. Nutze die Pfeiltaste und Kaufe/Verkaufe mit der Leertaste. Verlasse mit ESC."]
+  ],
+  "Go_to_market_and_buy/sell_something_v3":[
+    ["Übungsrunde", "Gehe links durch den Wald in die Stadt. Folge dem Steinweg über die Brücke zum Markt. Nutze die Pfeiltaste und Kaufe/Verkaufe mit der Leertaste. Verlasse mit ESC."]
   ],
   "Go_to_minigame_map_and_play":[
     ["Übungsrunde", "Gehe zurück über die Brücke und betrete den grossen Kuhstall. Spiele dort eine Runde 'Kuh-in-den-Stall' gegen die Hornlinge. Es gibt 200$ zu gewinnen - und zu verlieren!"]
