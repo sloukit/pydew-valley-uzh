@@ -166,7 +166,7 @@ Cows in the barn@@Kühe im Stall
 
 # src/overlay/box_keybindings.py
 
-box info label@@Drücke S für die Steueroptionen
+box info label@@Drücke Q für die Steueroptionen
 box info left mouse@@Werkzeug benutzen
 box info tab@@Werkzeug wechseln
 box info right mouse@@Samen pflanzen
