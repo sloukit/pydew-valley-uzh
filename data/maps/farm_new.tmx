@@ -877,7 +877,7 @@
   <object id="382" name="CAMTARGET_0" x="624.333" y="514">
    <properties>
     <property name="animation_name" value="intro"/>
-    <property name="pause" type="int" value="20"/>
+    <property name="pause" type="int" value="30"/>
     <property name="targ_id" type="int" value="0"/>
    </properties>
    <point/>
@@ -885,7 +885,7 @@
   <object id="383" name="CAMTARGET_1" x="386.667" y="377">
    <properties>
     <property name="animation_name" value="intro"/>
-    <property name="pause" type="int" value="7"/>
+    <property name="pause" type="int" value="10"/>
     <property name="speed" type="int" value="500"/>
     <property name="targ_id" type="int" value="1"/>
    </properties>
@@ -894,7 +894,7 @@
   <object id="388" name="CAMTARGET_2" x="512.667" y="337.83">
    <properties>
     <property name="animation_name" value="intro"/>
-    <property name="pause" type="int" value="20"/>
+    <property name="pause" type="int" value="30"/>
     <property name="targ_id" type="int" value="2"/>
    </properties>
    <point/>
@@ -902,7 +902,7 @@
   <object id="389" name="CAMTARGET_3" x="400.5" y="437">
    <properties>
     <property name="animation_name" value="intro"/>
-    <property name="pause" type="int" value="20"/>
+    <property name="pause" type="int" value="30"/>
     <property name="targ_id" type="int" value="3"/>
    </properties>
    <point/>
@@ -910,7 +910,7 @@
   <object id="415" name="CAMTARGET_4" x="880.667" y="392">
    <properties>
     <property name="animation_name" value="intro"/>
-    <property name="pause" type="int" value="7"/>
+    <property name="pause" type="int" value="10"/>
     <property name="speed" type="int" value="600"/>
     <property name="targ_id" type="int" value="4"/>
    </properties>
@@ -919,7 +919,7 @@
   <object id="414" name="CAMTARGET_5" x="625.5" y="509.667">
    <properties>
     <property name="animation_name" value="intro"/>
-    <property name="pause" type="int" value="20"/>
+    <property name="pause" type="int" value="30"/>
     <property name="speed" type="int" value="500"/>
     <property name="targ_id" type="int" value="5"/>
    </properties>
