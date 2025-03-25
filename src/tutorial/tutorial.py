@@ -44,10 +44,11 @@ class Tutorial:
             4: self.water_crop,
             5: self.go_to_bed,
             6: self.go_to_forest_and_hit_tree,
-            7: self.go_to_market_and_buy_sell_something,
-            8: self.go_to_minigame_map_and_play,
-            9: self.interact_with_outgroup_member,
-            10: self.walk_around_outgroup_farm_and_switch_to_outgroup,
+            7: self.go_to_market_and_buy_sell_something_v1_v2,
+            8: self.go_to_market_and_buy_sell_something_v3,
+            9: self.go_to_minigame_map_and_play,
+            10: self.interact_with_outgroup_member,
+            11: self.walk_around_outgroup_farm_and_switch_to_outgroup,
         }
         self.tasks_achieved = -1
         self.n_tasks = max(self.instructions.keys()) + 1
@@ -78,9 +79,14 @@ class Tutorial:
             "Go_to_forest_and_hit_tree", self.left_pos, self.top_pos
         )
 
-    def go_to_market_and_buy_sell_something(self):
+    def go_to_market_and_buy_sell_something_v1_v2(self):
         self.dialogue_manager.open_dialogue(
-            "Go_to_market_and_buy/sell_something", self.left_pos, self.top_pos
+            "Go_to_market_and_buy/sell_something_v1v2", self.left_pos, self.top_pos
+        )
+
+    def go_to_market_and_buy_sell_something_v3(self):
+        self.dialogue_manager.open_dialogue(
+            "Go_to_market_and_buy/sell_something_v3", self.left_pos, self.top_pos
         )
 
     def go_to_minigame_map_and_play(self):
@@ -200,8 +206,12 @@ class Tutorial:
                     self.level.hit_tree
                     and self.dialogue_manager._get_current_tb().finished_advancing
                 ):
-                    self.switch_to_task(7)
-                    self.tasks_achieved += 1
+                    if self.game_version in [1, 2]:
+                        self.switch_to_task(7)
+                        self.tasks_achieved += 1
+                    else:
+                        self.switch_to_task(8)
+                        self.tasks_achieved += 1
 
             case 7:
                 # check if the player achieved task "go to the marketplace and buy or sell something"
@@ -212,26 +222,36 @@ class Tutorial:
                 ):
                     if self.game_version in [1, 2]:
                         self.player.blocked_from_market = True
-                    self.switch_to_task(8)
+                    self.switch_to_task(9)
                     self.tasks_achieved += 1
 
             case 8:
-                # check if the player achieved task "go to the minigame area and play "
+                # check if the player achieved task "go to the marketplace and buy or sell something" in version 3
                 if (
-                    self.player.minigame_finished
+                    self.player.bought_sold
+                    and not game_paused
                     and self.dialogue_manager._get_current_tb().finished_advancing
                 ):
                     self.switch_to_task(9)
                     self.tasks_achieved += 1
 
             case 9:
+                # check if the player achieved task "go to the minigame area and play "
+                if (
+                    self.player.minigame_finished
+                    and self.dialogue_manager._get_current_tb().finished_advancing
+                ):
+                    self.switch_to_task(10)
+                    self.tasks_achieved += 1
+
+            case 10:
                 # check if the player achieved task "interact with an outgroup member"
                 if (
                     self.player.outgroup_member_interacted
                     and self.dialogue_manager._get_current_tb().finished_advancing
                 ):
                     if self.round_config.get("playable_outgroup", False):
-                        self.switch_to_task(10)
+                        self.switch_to_task(11)
                         self.tasks_achieved += 1
 
                         self.player.outgroup_member_interacted = False
@@ -240,7 +260,7 @@ class Tutorial:
                         self.tasks_achieved = self.n_tasks
                         self.player.blocked = True
 
-            case 10:
+            case 11:
                 # check if the player achieved task "walk around the outgroup farm and switch to the outgroup"
                 if (
                     self.player.study_group == StudyGroup.OUTGROUP
