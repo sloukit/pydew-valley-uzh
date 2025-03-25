@@ -87,6 +87,10 @@ class Controls(Control, Enum):
     DOWN = (pygame.K_DOWN, "Move Down")
     LEFT = (pygame.K_LEFT, "Move Left")
     RIGHT = (pygame.K_RIGHT, "Move Right")
+    UP_ALPHANUM = (pygame.K_w, "Move Up")
+    DOWN_ALPHANUM = (pygame.K_s, "Move Down")
+    LEFT_ALPHANUM = (pygame.K_a, "Move Left")
+    RIGHT_ALPHANUM = (pygame.K_d, "Move Right")
 
     USE = (pygame.BUTTON_LEFT, "Use Tool")
     NEXT_TOOL = (pygame.K_TAB, "Cycle Tools")
@@ -96,7 +100,7 @@ class Controls(Control, Enum):
     INVENTORY = (pygame.K_i, "Open Inventory")
     EMOTE_WHEEL = (pygame.K_e, "Toggle Emote Wheel")
     ADVANCE_DIALOG = (pygame.K_SPACE, "Advance Dialog")
-    SHOW_BOX_KEYBINDINGS = (pygame.K_s, "Show Box Keybindings")
+    SHOW_BOX_KEYBINDINGS = (pygame.K_q, "Show Box Keybindings")
 
     DEBUG_APPLY_HEALTH = (pygame.K_1, "Apply health")
     DEBUG_APPLY_DAMAGE = (pygame.K_2, "Apply damage")

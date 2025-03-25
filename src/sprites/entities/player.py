@@ -210,11 +210,19 @@ class Player(Character):
             and not self.blocked
             and not self.emote_manager.emote_wheel.visible
         ):
-            self.direction.x = int(self.controls.RIGHT.hold) - int(
-                self.controls.LEFT.hold
+            self.direction.x = (
+                int(self.controls.RIGHT.hold) - int(self.controls.LEFT.hold)
+            ) or (
+                int(self.controls.RIGHT_ALPHANUM.hold)
+                - int(self.controls.LEFT_ALPHANUM.hold)
             )
 
-            self.direction.y = int(self.controls.DOWN.hold) - int(self.controls.UP.hold)
+            self.direction.y = (
+                int(self.controls.DOWN.hold) - int(self.controls.UP.hold)
+            ) or (
+                int(self.controls.DOWN_ALPHANUM.hold)
+                - int(self.controls.UP_ALPHANUM.hold)
+            )
 
             if self.direction:
                 self.direction = self.direction.normalize()
