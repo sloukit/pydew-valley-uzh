@@ -12,7 +12,7 @@ class PauseMenu(GeneralMenu):
         self,
         switch_screen: Callable[[GameState], None],
     ):
-        options = [_("Resume"), _("Options"), _("Save and Resume"), _("Quit")]
+        options = [_("Resume"), _("Options")]
         title = _("Pause Menu")
         size = (400, 400)
         super().__init__(title, options, switch_screen, size)
@@ -22,10 +22,6 @@ class PauseMenu(GeneralMenu):
             self.switch_screen(GameState.PLAY)
         if text == _("Options"):
             self.switch_screen(GameState.SETTINGS)
-        if text == _("Save and Resume"):
-            self.switch_screen(GameState.SAVE_AND_RESUME)
-        if text == _("Quit"):
-            self.quit_game()
 
     def handle_event(self, event: pygame.event.Event) -> bool:
         if super().handle_event(event):
