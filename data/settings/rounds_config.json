@@ -98,7 +98,7 @@
             "notify_round_end_outgroup_timestamp": [
                 5
             ],
-            "notify_round_end_outgroup_text": "Super, ihr habt letzte Runde mehr Geld verdient als die Horlinge!",
+            "notify_round_end_outgroup_text": "Die Hornlinge haben letzte Runde 2.345$ verdient.",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -261,7 +261,7 @@
             "notify_round_end_outgroup_timestamp": [
                 5
             ],
-            "notify_round_end_outgroup_text": "Die Hornlinge haben aufgeholt und letzte Runde gleich viel Geld verdient wie ihr.",
+            "notify_round_end_outgroup_text": "Die Hornlinge haben letzte Runde 4.660$ verdient.",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -428,7 +428,7 @@
             "notify_round_end_outgroup_timestamp": [
                 5
             ],
-            "notify_round_end_outgroup_text": "Gute Arbeit \u2013 ihr habt letzte Runde mehr Geld verdient als die Horlinge!",
+            "notify_round_end_outgroup_text": "Die Hornlinge haben letzte Runde 4.235$ verdient.",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -594,7 +594,7 @@
             "notify_round_end_outgroup_timestamp": [
                 5
             ],
-            "notify_round_end_outgroup_text": "Super, ihr liegt deutlich vor den Hornlingen!",
+            "notify_round_end_outgroup_text": "Die Hornlinge haben letzte Runde 2.345$ verdient.",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -755,7 +755,7 @@
             "notify_round_end_outgroup_timestamp": [
                 5
             ],
-            "notify_round_end_outgroup_text": "Ihr seid jetzt gleichauf mit den Hornlingen.",
+            "notify_round_end_outgroup_text": "Die Hornlinge haben letzte Runde 4.660$ verdient.",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
@@ -920,7 +920,7 @@
             "notify_round_end_outgroup_timestamp": [
                 5
             ],
-            "notify_round_end_outgroup_text": "Die Hornlinge haben euch aufgeholt.",
+            "notify_round_end_outgroup_text": "Die Hornlinge haben letzte Runde 4.235$ verdient.",
             "round_end_screen": true,
             "crop_types_list": [
                 "tomato",
