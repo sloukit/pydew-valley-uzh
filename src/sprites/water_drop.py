@@ -10,7 +10,7 @@ class WaterDrop(Sprite):
     def __init__(self, pos, surf, groups, moving, z):
         super().__init__(pos, surf, groups, z)
         self.timer = timer.Timer(
-            random.randint(400, 600),
+            random.randint(300, 500),
             autostart=True,
             func=self.kill,
         )
