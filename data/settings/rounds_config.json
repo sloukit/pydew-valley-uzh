@@ -1034,8 +1034,8 @@
             ],
             "character_introduction_text": "Willkommen in der Stadt Mikhausen auf dem Planeten Mikana! Das bist du: Ein Mika, wie die auf Mikana lebenden Wesen genannt werden. Du lebst zusammen mit anderen Mikas hier in Mikhausen.",
             "self_assessment_timestamp": [
-                600,
-                840
+                660,
+                780
             ],
             "self_assessment_menu": true,
             "social_identity_assessment_timestamp": [
@@ -1111,7 +1111,7 @@
             "character_introduction_timestamp": [],
             "character_introduction_text": "",
             "self_assessment_timestamp": [
-                60,
+                180,
                 660
             ],
             "self_assessment_menu": true,
@@ -1189,7 +1189,7 @@
             "character_introduction_timestamp": [],
             "character_introduction_text": "",
             "self_assessment_timestamp": [
-                60,
+                180,
                 660
             ],
             "self_assessment_menu": true,
