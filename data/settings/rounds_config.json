@@ -56,7 +56,7 @@
             "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
-            "ingroup_introduction_text": "Das ist dein Familienclan: Ihr seid die Roth\u00fcte.",
+            "ingroup_introduction_text": "Das ist dein Familienclan: Ihr seid die Roth\u00fcte. Du lebst mit deiner ganzen Verwandtschaft zusammen auf der Roth\u00fcte-Farm.",
             "ingroup_hat_necklace_introduction_text": "Man ist nicht von Anfang an ein Vollmitglied der Roth\u00fcte. Erst ist man Mini-Rothut, dann Junior-Rothut und erst dann Vollmitglied. Als Vollmitglied erh\u00e4lt man Privilegien und Verantwortung. Ein Vollmitglied erkennst du am Hut und der blauen Kette.",
             "ingroup_hat_introduction_text": "Dies ist ein Junior-Rothut, erkennbar am Hut, und hat schon die Verantwortung, auf dem Markt zu kaufen und verkaufen. Aber erst mit Hut und Kette ist man ein Vollmitglied der Roth\u00fcte und hat alle Privilegien und Verantwortungen.",
             "narrative_text": "Dein Familienclan braucht dringend Geld: unweit tobt ein Vulkan und ihr m\u00fcsst umziehen. Das ist teuer. Daher: je mehr Geld ihr verdient, desto sicherer seid ihr! Verkauft Ernte, Holz und Fr\u00fcchte, verdient M\u00fcnzen beim Wettstreit 'Kuh-in-den-Stall' gegen die Hornlinge.",
@@ -147,7 +147,7 @@
             "player_hat_sequence_timestamp": [
                 600
             ],
-            "player_hat_sequence_text": "Du wirst zum Junior-Rothut: Deine Freundesfarm verleiht dir den Hut als Zeichen deiner Zugeh\u00f6rigkeit! Du darfst jetzt f\u00fcr die Roth\u00fcte auf dem Markt kaufen und verkaufen. Dr\u00fccke die Leertaste, um fortzufahren.",
+            "player_hat_sequence_text": "Du wirst zum Junior-Rothut: Dein Familienclan verleiht dir den Hut als Zeichen deiner Zugeh\u00f6rigkeit! Du darfst jetzt f\u00fcr die Roth\u00fcte auf dem Markt kaufen und verkaufen. Dr\u00fccke die Leertaste, um fortzufahren.",
             "ingroup_necklace_sequence_timestamp": [],
             "ingroup_necklace_sequence_text": "",
             "player_necklace_sequence_timestamp": [],
@@ -553,7 +553,7 @@
             "social_identity_assessment_menu": true,
             "minigame": true,
             "minigame_rooting_npcs": true,
-            "ingroup_introduction_text": "Das ist deine Freundesfarm: Ihr seid die Roth\u00fcte.",
+            "ingroup_introduction_text": "Du hast dich mit den Roth\u00fcten angefreundet. Gemeinsam lebt ihr auf der Roth\u00fcte-Freundesfarm.",
             "ingroup_hat_necklace_introduction_text": "Man ist nicht von Anfang an ein Vollmitglied der Roth\u00fcte. Erst ist man Mini-Rothut, dann Junior-Rothut und erst dann Vollmitglied. Als Vollmitglied erh\u00e4lt man Privilegien und Verantwortung. Ein Vollmitglied erkennst du am Hut und der blauen Kette.",
             "ingroup_hat_introduction_text": "Dies ist ein Junior-Rothut, erkennbar am Hut, und hat schon die Verantwortung, auf dem Markt zu kaufen und verkaufen. Aber erst mit Hut und Kette ist man ein Vollmitglied der Roth\u00fcte und hat alle Privilegien und Verantwortungen.",
             "narrative_text": "Deine Freundesfarm braucht dringend Geld: unweit tobt ein Vulkan und ihr m\u00fcsst umziehen. Das ist teuer. Daher: je mehr Geld ihr verdient, desto sicherer seid ihr! Verkauft Ernte, Holz und Fr\u00fcchte, verdient M\u00fcnzen beim Wettstreit 'Kuh-in-den-Stall' gegen die Hornlinge.",
