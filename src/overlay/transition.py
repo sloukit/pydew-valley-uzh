@@ -3,6 +3,7 @@ from collections.abc import Callable
 import pygame
 
 from src import settings
+from src.fblitter import FBLITTER
 from src.support import oscilating_lerp
 from src.timer import Timer
 
@@ -53,6 +54,4 @@ class Transition:
     def draw(self):
         if self.timer:
             self.image.fill(self.curr_color)
-            self.display_surface.blit(
-                self.image, (0, 0), special_flags=pygame.BLEND_RGBA_MULT
-            )
+            FBLITTER.blit_with_special_flags(self.image, (0, 0), pygame.BLEND_RGBA_MULT)

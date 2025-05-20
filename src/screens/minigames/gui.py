@@ -9,6 +9,7 @@ from src.colors import (
     SL_ORANGE_DARKER,
     SL_ORANGE_MEDIUM,
 )
+from src.fblitter import FBLITTER
 from src.gui.menu.components import AbstractButton
 from src.support import import_font
 
@@ -149,8 +150,10 @@ class Text:
         )
 
     def draw(self, surface: pygame.Surface):
+        FBLITTER.set_current_surf(surface)
         for text_chunk in self.text:
-            surface.blit(text_chunk.draw(), (text_chunk.x, text_chunk.y))
+            FBLITTER.schedule_blit(text_chunk.draw(), (text_chunk.x, text_chunk.y))
+        FBLITTER.blit_all()
 
 
 class _ReturnButton(AbstractButton):

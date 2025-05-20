@@ -4,6 +4,7 @@ from math import cos, pi, sin
 import pygame
 
 from src.enums import ClockVersion
+from src.fblitter import FBLITTER
 from src.overlay.game_time import GameTime
 from src.settings import OVERLAY_POSITIONS, USE_GAME_TIME
 from src.support import import_font
@@ -103,8 +104,8 @@ class Clock:
         )
 
         # display
-        pygame.draw.rect(self.display_surface, "White", self.rect, 0, 4)
-        pygame.draw.rect(self.display_surface, "Black", self.rect, 4, 4)
-        self.display_surface.blit(colon_surf, colon_rect)
-        self.display_surface.blit(hour_surf, hour_rect)
-        self.display_surface.blit(minute_surf, minute_rect)
+        FBLITTER.draw_rect("white", self.rect, 0, 4)
+        FBLITTER.draw_rect("black", self.rect, 4, 4)
+        FBLITTER.schedule_blit(colon_surf, colon_rect)
+        FBLITTER.schedule_blit(hour_surf, hour_rect)
+        FBLITTER.schedule_blit(minute_surf, minute_rect)

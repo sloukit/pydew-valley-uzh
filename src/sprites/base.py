@@ -4,6 +4,7 @@ from typing import Any
 import pygame
 
 from src.enums import Layer
+from src.fblitter import FBLITTER
 from src.map_objects import MapObjectType
 from src.settings import SCALE_FACTOR
 
@@ -31,7 +32,9 @@ class Sprite(pygame.sprite.Sprite):
         self.hitbox_rect = self.rect.copy()
 
     def draw(self, display_surface: pygame.Surface, rect: pygame.Rect, camera):
-        display_surface.blit(self.image, rect)
+        FBLITTER.reset_to_default_surf()
+        FBLITTER.schedule_blit(self.image, rect)
+        # display_surface.blit(self.image, rect)
 
 
 class CollideableSprite(Sprite, ABC):

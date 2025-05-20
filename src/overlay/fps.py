@@ -1,5 +1,6 @@
 import pygame
 
+from src.fblitter import FBLITTER
 from src.settings import OVERLAY_POSITIONS
 from src.support import import_font
 
@@ -39,7 +40,7 @@ class FPS:
         )
 
         # display
-        pygame.draw.rect(self.display_surface, "White", self.rect, 0, 4)
-        pygame.draw.rect(self.display_surface, "Black", self.rect, 4, 4)
-        self.display_surface.blit(label_surf, label_rect)
-        self.display_surface.blit(fps_surf, fps_rect)
+        FBLITTER.draw_rect("white", self.rect, 0, 4)
+        FBLITTER.draw_rect("black", self.rect, 4, 4)
+        FBLITTER.schedule_blit(label_surf, label_rect)
+        FBLITTER.schedule_blit(fps_surf, fps_rect)

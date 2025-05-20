@@ -3,7 +3,7 @@ import os
 import pygame
 
 from src.settings import SCREEN_WIDTH
-from src.support import get_translated_string as _
+from src.support import get_translated_string
 
 
 class FastForward:
@@ -19,7 +19,9 @@ class FastForward:
                 self.total_frame = 10
                 self.font = pygame.font.Font("font/LycheeSoda.ttf", 30)
                 self.text_surface = self.font.render(
-                    _("Right Shift to Fast Forward"), True, (255, 255, 255)
+                    get_translated_string("Right Shift to Fast Forward"),
+                    True,
+                    (255, 255, 255),
                 )
                 self.text_rect = self.text_surface.get_frect(
                     midright=((SCREEN_WIDTH - 15, 600))

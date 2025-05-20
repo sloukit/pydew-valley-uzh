@@ -1,9 +1,9 @@
 import pygame
 
+from src.fblitter import FBLITTER
 from src.settings import OVERLAY_POSITIONS
 from src.sprites.entities.player import Player
-from src.support import get_translated_string as _
-from src.support import import_font, import_image
+from src.support import get_translated_string, import_font, import_image
 
 
 class BoxKeybindingsLabel:
@@ -36,16 +36,14 @@ class BoxKeybindingsLabel:
         pad_y = 2
 
         box_keybindings_label_surf = self.font.render(
-            f"{_('box info label')}", False, foreground_color
+            f"{get_translated_string('box info label')}", False, foreground_color
         )
         box_keybindings_label_rect = box_keybindings_label_surf.get_frect(
-            midright=(self.rect.right - 20, self.rect.centery + pad_y)
+            midright=(self.rect.right, self.rect.centery + pad_y)
         )
 
         # display
-        self.display_surface.blit(
-            box_keybindings_label_surf, box_keybindings_label_rect
-        )
+        FBLITTER.schedule_blit(box_keybindings_label_surf, box_keybindings_label_rect)
 
 
 class BoxKeybindings:
@@ -170,7 +168,7 @@ class BoxKeybindings:
         }
 
     def get_text(self, key):
-        translation = _(key)
+        translation = get_translated_string(key)
         return translation.split("|") if "|" in translation else [translation]
 
     def load_and_scale_image(self, img_name, target_size):
@@ -187,7 +185,7 @@ class BoxKeybindings:
             return
 
         # display box
-        display_surface.blit(self.image, self.box_keybindings_rect)
+        FBLITTER.schedule_blit(self.image, self.box_keybindings_rect)
 
         start_key_topleft = self.box_keybindings_rect.topleft
         # iterate over text list
@@ -230,7 +228,8 @@ class BoxKeybindings:
     def draw_description_item(self, current_topleft, description_item, display_surface):
         text_surf = self.font.render(description_item, False, "Black")
         text_rect = text_surf.get_frect(topleft=current_topleft)
-        display_surface.blit(text_surf, text_rect)
+        # display_surface.blit(text_surf, text_rect)
+        FBLITTER.schedule_blit(text_surf, text_rect)
 
     def draw_key_surface(self, current_key_topleft, key, display_surface):
         if key in self.key_images.keys():
@@ -246,12 +245,12 @@ class BoxKeybindings:
             7,
         )
 
-        display_surface.blit(key_img, key_rect)
+        FBLITTER.schedule_blit(key_img, key_rect)
         if generic:
             key_surf = self.font.render(key, False, "White")
             key_tmp_rect = key_surf.get_frect()
             key_surf.get_frect(left=key_tmp_rect.left + 10, top=key_rect.top + 10)
-            display_surface.blit(key_surf, key_rect)
+            FBLITTER.schedule_blit(key_surf, key_rect)
 
     def get_ordered_info(self, info_key) -> dict:
         result = {}

@@ -4,18 +4,18 @@ import pygame
 
 from src.enums import CustomCursor  # InventoryResource
 from src.events import SET_CURSOR, post_event
+from src.fblitter import FBLITTER
 from src.gui.menu.abstract_menu import AbstractMenu
 from src.gui.menu.components import ArrowButton, InputField
 from src.screens.minigames.gui import (
     Linebreak,
     Text,
     TextChunk,
-    _draw_box,
+    # _draw_box,
     _ReturnButton,
 )
 from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH
-from src.support import get_translated_string as _
-from src.support import import_font
+from src.support import get_translated_string, import_font
 
 """
 TODO:
@@ -29,13 +29,15 @@ class PlayerTask(AbstractMenu):
     """Run the item allocation task."""
 
     def __init__(self, send_resource_allocation: Callable[[dict[str, Any]], None]):
-        super().__init__(title=_("Task"), size=(SCREEN_WIDTH, SCREEN_HEIGHT))
+        super().__init__(
+            title=get_translated_string("Task"), size=(SCREEN_WIDTH, SCREEN_HEIGHT)
+        )
         self.display_surface: pygame.Surface = pygame.display.get_surface()
         self.title_font: pygame.Font = import_font(38, "font/LycheeSoda.ttf")
         self.text_font: pygame.Font = import_font(32, "font/LycheeSoda.ttf")
         self.input_field_font: pygame.font.Font = import_font(38, "font/LycheeSoda.ttf")
-        self.confirm_button_text: str = _("Confirm")
-        self.allocations_text: str = _("Distribute them")
+        self.confirm_button_text: str = get_translated_string("Confirm")
+        self.allocations_text: str = get_translated_string("Distribute them")
         self.send_resource_allocation = send_resource_allocation
         self.buttons = []
         self.button_setup()
@@ -82,15 +84,16 @@ class PlayerTask(AbstractMenu):
         self.allocations = [0, 0]
 
     def draw_title(self) -> None:
-        text = Text(Linebreak((0, 2)), TextChunk(_("Task"), self.title_font))
-        _draw_box(
-            self.display_surface,
+        text = Text(
+            Linebreak((0, 2)), TextChunk(get_translated_string("task"), self.title_font)
+        )
+        FBLITTER.draw_box(
             (SCREEN_WIDTH / 2, 0),
             (text.surface_rect.width, text.surface_rect.height + 24),
         )
         text_surface = pygame.Surface(text.surface_rect.size, pygame.SRCALPHA)
         text.draw(text_surface)
-        self.display_surface.blit(
+        FBLITTER.schedule_blit(
             text_surface,
             (SCREEN_WIDTH / 2 - text.surface_rect.width / 2, 0),
         )
@@ -122,13 +125,13 @@ class PlayerTask(AbstractMenu):
                 button.draw(self.display_surface)
 
     def draw_info(self) -> None:
-        not_enough_items: str = _("You have not allocated all of the items yet!")
-        too_many_items: str = _("You don't have that many items to distribute.")
-        items_missing: str = _("Items missing:")
+        not_enough_items: str = get_translated_string("items_unalloc")
+        too_many_items: str = get_translated_string("too_few_to_give")
+        items_missing: str = get_translated_string("missing_itms")
         missing_items: str = (
             f"{items_missing} {self.total_items - sum(self.allocations)}"
         )
-        take_out = _("Take out:")
+        take_out = get_translated_string("take_out")
         overstock_items: str = f"{take_out} {sum(self.allocations) - self.total_items}"
 
         if sum(self.allocations) < self.total_items:
@@ -146,14 +149,14 @@ class PlayerTask(AbstractMenu):
             ),
             Linebreak((0, padding_y)),
         )
-        _draw_box(
+        FBLITTER.draw_box(
             self.display_surface,
             (SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2) * 1.5),
             text.surface_rect.size,
         )
         text_surface = pygame.Surface(text.surface_rect.size, pygame.SRCALPHA)
         text.draw(text_surface)
-        self.display_surface.blit(
+        FBLITTER.schedule_blit(
             text_surface,
             (
                 SCREEN_WIDTH / 2 - text.surface_rect.width / 2,
@@ -167,7 +170,7 @@ class PlayerTask(AbstractMenu):
         box_center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 3)
         button_area_height = self.confirm_button.rect.height
 
-        you_have_received = _("You have received")
+        you_have_received = get_translated_string("You have received")
         text = Text(
             Linebreak((0, 12)),
             TextChunk(
@@ -177,9 +180,11 @@ class PlayerTask(AbstractMenu):
             Linebreak(),
             TextChunk(self.allocations_text, self.text_font),
             Linebreak((0, 18)),
-            TextChunk(_("Your group's inventory:"), self.text_font),
+            TextChunk(get_translated_string("Your group's inventory:"), self.text_font),
             Linebreak((0, 18)),
-            TextChunk(_("Other group's inventory:"), self.text_font),
+            TextChunk(
+                get_translated_string("Other group's inventory:"), self.text_font
+            ),
             Linebreak((0, 12)),
         )
         box_min_width = 400
@@ -193,13 +198,13 @@ class PlayerTask(AbstractMenu):
             text.surface_rect.height + button_area_height,
         )
 
-        _draw_box(self.display_surface, box_center, box_size)
+        FBLITTER.draw_box(box_center, box_size)
 
         text_surface = pygame.Surface(text.surface_rect.size, pygame.SRCALPHA)
         text.draw(text_surface)
         current_y = box_center[1] - box_size[1] / 2
 
-        self.display_surface.blit(
+        FBLITTER.schedule_blit(
             text_surface,
             (
                 box_center[0] - box_width / 2,
@@ -290,7 +295,7 @@ class PlayerTask(AbstractMenu):
     def draw(self) -> None:
         self._surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
         self._surface.fill((0, 0, 0, 64))
-        self.display_surface.blit(self._surface, (0, 0))
+        FBLITTER.schedule_blit(self._surface, (0, 0))
         self.draw_title()
         self.draw_task_surf()
         self.draw_allocation_buttons()

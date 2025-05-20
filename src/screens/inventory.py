@@ -1,6 +1,6 @@
 import pygame  # noqa
 
-from src.support import get_translated_string as _, parse_crop_types
+from src.support import get_translated_string, parse_crop_types
 from src.events import SET_CURSOR, post_event
 from src.gui.menu.abstract_menu import AbstractMenu
 from src.enums import (
@@ -110,7 +110,7 @@ class InventoryMenu(AbstractMenu):
         assign_seed: Callable,
         round_config: dict[str, Any],
     ):
-        super().__init__(_("Inventory"), (SCREEN_WIDTH, 800))
+        super().__init__(get_translated_string("Inventory"), (SCREEN_WIDTH, 800))
         self.player = player
         self._inventory = player.inventory
         self._av_tools = _AVAILABLE_TOOLS
@@ -136,9 +136,16 @@ class InventoryMenu(AbstractMenu):
     def sections_titles_setup(self) -> None:
         # show Equipment column only if feature "inventory_goggles" is enabled
         if self.player.round_config.get("inventory_goggles", False):
-            self.SECTION_TITLES = (_("Resources"), _("Tools"), _("Equipment"))
+            self.SECTION_TITLES = (
+                get_translated_string("Resources"),
+                get_translated_string("Tools"),
+                get_translated_string("Equipment"),
+            )
         else:
-            self.SECTION_TITLES = (_("Resources"), _("Tools"))
+            self.SECTION_TITLES = (
+                get_translated_string("Resources"),
+                get_translated_string("Tools"),
+            )
 
     def _prepare_img_for_ir_button(self, ir: InventoryResource, count: int):
         btn_name = ir.as_serialised_string()
@@ -234,10 +241,10 @@ class InventoryMenu(AbstractMenu):
         # whatsoever, show only one button with "No Equipment" on it
         # and stop yielding buttons
         if not buttons_to_display:
-            text_rect = self.font.render(_("No equipment"), False, "black").get_rect(
-                centerx=self.rect.width * 3 / 4, centery=self.rect.centery
-            )
-            yield Button(_("No equipment"), text_rect, self.font)
+            text_rect = self.font.render(
+                get_translated_string("No equipment"), False, "black"
+            ).get_rect(centerx=self.rect.width * 3 / 4, centery=self.rect.centery)
+            yield Button(get_translated_string("No equipment"), text_rect, self.font)
             return
 
         generic_rect = pygame.Rect(0, 0, *button_size)

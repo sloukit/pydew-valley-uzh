@@ -14,8 +14,7 @@ from src.gui.menu.abstract_menu import AbstractMenu
 from src.gui.menu.components import AbstractButton
 from src.screens.minigames.gui import Text, TextChunk, _draw_box, _ReturnButton
 from src.settings import SAM_BORDER_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH
-from src.support import get_translated_string as _
-from src.support import import_font, resource_path
+from src.support import get_translated_string, import_font, resource_path
 
 
 class _SAMButton(AbstractButton):
@@ -114,7 +113,8 @@ class SelfAssessmentMenu(AbstractMenu):
         selection: Iterable[SelfAssessmentDimension],
     ):
         super().__init__(
-            title=_("How do you feel right now?"), size=(SCREEN_WIDTH, SCREEN_HEIGHT)
+            title=get_translated_string("How do you feel right now?"),
+            size=(SCREEN_WIDTH, SCREEN_HEIGHT),
         )
 
         self._return_func = return_func
@@ -126,7 +126,7 @@ class SelfAssessmentMenu(AbstractMenu):
         self._selected_scale = None
 
         self._continue_button = None
-        self._continue_button_text = _("Continue")
+        self._continue_button_text = get_translated_string("Continue")
 
         self._sam_buttons = []
         self._sam_results = {}
@@ -168,7 +168,11 @@ class SelfAssessmentMenu(AbstractMenu):
         button_top_margin = 32
         button_area_height = self._continue_button.rect.height + button_top_margin
 
-        text = Text(TextChunk(_("How do you feel right now?"), self.font_title))
+        text = Text(
+            TextChunk(
+                get_translated_string("How do you feel right now?"), self.font_title
+            )
+        )
 
         sam_button_w = SAM_BORDER_SIZE[0]
         sam_button_h = SAM_BORDER_SIZE[1]

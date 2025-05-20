@@ -2,6 +2,7 @@ import pygame
 
 from src.camera import Camera
 from src.enums import Layer
+from src.fblitter import FBLITTER
 
 
 class PersistentSpriteGroup(pygame.sprite.Group):
@@ -59,3 +60,6 @@ class AllSprites(PersistentSpriteGroup):
                 # including game_paused condition to prevent drawing overlaps between tutorial text boxes and menus
                 if sprite.z == layer and not game_paused:
                     sprite.draw(self.display_surface, camera.apply(sprite), camera)
+
+        FBLITTER.reset_to_default_surf()
+        FBLITTER.blit_all()

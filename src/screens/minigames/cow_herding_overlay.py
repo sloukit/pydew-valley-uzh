@@ -4,6 +4,7 @@ from typing import Callable
 import pygame
 
 from src.colors import SL_ORANGE_BRIGHT, SL_ORANGE_BRIGHTEST
+from src.fblitter import FBLITTER
 from src.gui.menu.abstract_menu import AbstractMenu
 from src.screens.minigames.gui import (
     Linebreak,
@@ -13,8 +14,7 @@ from src.screens.minigames.gui import (
     _ReturnButton,
 )
 from src.settings import SCREEN_HEIGHT, SCREEN_WIDTH
-from src.support import get_outline, import_font
-from src.support import get_translated_string as _
+from src.support import get_outline, get_translated_string, import_font
 
 
 class _CowHerdingScoreboard(AbstractMenu):
@@ -31,12 +31,15 @@ class _CowHerdingScoreboard(AbstractMenu):
     font_button: pygame.Font
 
     def __init__(self, return_func: Callable[[], None]):
-        super().__init__(title=_("Cow Herding"), size=(SCREEN_WIDTH, SCREEN_HEIGHT))
+        super().__init__(
+            title=get_translated_string("Cow Herding"),
+            size=(SCREEN_WIDTH, SCREEN_HEIGHT),
+        )
 
         self._return_func = return_func
 
         self._return_button = None
-        self._return_button_text = _("Return to Town")
+        self._return_button_text = get_translated_string("Return to Town")
 
         self._surface = None
 
@@ -58,24 +61,27 @@ class _CowHerdingScoreboard(AbstractMenu):
         button_area_height = self._return_button.rect.height + button_top_margin
 
         text = Text(
-            TextChunk(_("Minigame complete!"), self.font_title),
+            TextChunk(get_translated_string("Minigame complete!"), self.font_title),
             Linebreak(),
             TextChunk(f"{time_needed:.2f} ", self.font_number),
-            TextChunk(_("seconds needed"), self.font_description),
+            TextChunk(get_translated_string("seconds needed"), self.font_description),
             Linebreak(),
             TextChunk(
-                _("Hornlinge needed %.2f seconds") % opp_time, self.font_description
-            ),
-            Linebreak(),
-            TextChunk(
-                _("[cheering group]")
-                if opp_time > time_needed
-                else _("[disappointed group]"),
+                get_translated_string("Hornlinge needed %.2f seconds") % opp_time,
                 self.font_description,
             ),
             Linebreak(),
             TextChunk(
-                _("[money win]") if opp_time > time_needed else _("[money lost]"),
+                get_translated_string("[cheering group]")
+                if opp_time > time_needed
+                else get_translated_string("[disappointed group]"),
+                self.font_description,
+            ),
+            Linebreak(),
+            TextChunk(
+                get_translated_string("[money win]")
+                if opp_time > time_needed
+                else get_translated_string("[money lost]"),
                 self.font_description,
             ),
         )
@@ -181,7 +187,7 @@ class _CowHerdingOverlay:
         current_fraction = current_time - current_time_int
 
         if current_time_int < ready_up_duration:
-            rendered_text = self._render_countdown_text(_("Ready?"))
+            rendered_text = self._render_countdown_text(get_translated_string("Ready?"))
             if ready_up_duration - 0.5 < current_time:
                 rendered_text = pygame.transform.scale_by(
                     rendered_text,
@@ -190,11 +196,11 @@ class _CowHerdingOverlay:
                 alpha = 1 - ((current_fraction - 0.5) * 2) * 4.5 / 2
                 rendered_text.set_alpha(max(0, int(alpha * 255)))
 
-            self.display_surface.blit(
+            FBLITTER.schedule_blit(
                 rendered_text,
                 (
-                    SCREEN_WIDTH / 2 - rendered_text.get_width() / 2,
-                    SCREEN_HEIGHT / 3 - rendered_text.get_height() / 2,
+                    SCREEN_WIDTH / 2 - rendered_text.width / 2,
+                    SCREEN_HEIGHT / 3 - rendered_text.height / 2,
                 ),
             )
 
@@ -211,7 +217,7 @@ class _CowHerdingOverlay:
                 rendered_text.set_alpha(max(0, int(alpha * 255)))
 
         else:
-            rendered_text = self._render_countdown_text(_("GO!"))
+            rendered_text = self._render_countdown_text(get_translated_string("GO!"))
 
             if current_fraction <= 1 / 4:
                 rendered_text = pygame.transform.scale_by(
@@ -221,11 +227,11 @@ class _CowHerdingOverlay:
                 alpha = current_fraction * 4 * 1.5 - 0.5
                 rendered_text.set_alpha(max(0, int(alpha * 255)))
 
-        self.display_surface.blit(
+        FBLITTER.schedule_blit(
             rendered_text,
             (
-                SCREEN_WIDTH / 2 - rendered_text.get_width() / 2,
-                SCREEN_HEIGHT / 3 - rendered_text.get_height() / 2,
+                SCREEN_WIDTH / 2 - rendered_text.width / 2,
+                SCREEN_HEIGHT / 3 - rendered_text.height / 2,
             ),
         )
 
@@ -233,19 +239,25 @@ class _CowHerdingOverlay:
         box_center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4)
 
         text = Text(
-            TextChunk(_("Cow Herding Minigame"), self.font_description),
+            TextChunk(
+                get_translated_string("cow_minigame_desc"), self.font_description
+            ),
             Linebreak(),
             Linebreak((0, 24)),
-            TextChunk(_("Herd the cows into the barn"), self.font_description),
+            TextChunk(
+                get_translated_string("cow_minigame_desc_l1"), self.font_description
+            ),
             Linebreak(),
-            TextChunk(_("as fast as possible!"), self.font_description),
+            TextChunk(
+                get_translated_string("cow_minigame_desc_l2"), self.font_description
+            ),
         )
 
-        _draw_box(self.display_surface, box_center, text.surface_rect.size)
+        FBLITTER.draw_box(box_center, text.surface_rect.size)
 
         text_surface = pygame.Surface(text.surface_rect.size, pygame.SRCALPHA)
         text.draw(text_surface)
-        self.display_surface.blit(
+        FBLITTER.schedule_blit(
             text_surface,
             (
                 box_center[0] - text.surface_rect.width / 2,
@@ -264,27 +276,31 @@ class _CowHerdingOverlay:
         padding = 12
 
         text = Text(
-            TextChunk(_("Objective:"), self.font_description),
-            Linebreak(),
-            TextChunk(_("Herd the cows into the barn!"), self.font_objective),
-            Linebreak((0, 32)),
-            TextChunk(_("Rothüte:"), self.font_objective),
+            TextChunk(get_translated_string("Objective:"), self.font_description),
             Linebreak(),
             TextChunk(
-                f"({own_cows_herded_in}/{own_cows_total}) " + _("Cows in the barn"),
+                get_translated_string("Herd the cows into the barn!"),
                 self.font_objective,
             ),
             Linebreak((0, 32)),
-            TextChunk(_("Hornlinge:"), self.font_objective),
+            TextChunk(get_translated_string("Rothüte:"), self.font_objective),
             Linebreak(),
             TextChunk(
-                f"({opp_cows_herded_in}/{opp_cows_total}) " + _("Cows in the barn"),
+                f"({own_cows_herded_in}/{own_cows_total}) "
+                + get_translated_string("Cows in the barn"),
+                self.font_objective,
+            ),
+            Linebreak((0, 32)),
+            TextChunk(get_translated_string("Hornlinge:"), self.font_objective),
+            Linebreak(),
+            TextChunk(
+                f"({opp_cows_herded_in}/{opp_cows_total}) "
+                + get_translated_string("Cows in the barn"),
                 self.font_objective,
             ),
         )
 
-        _draw_box(
-            self.display_surface,
+        FBLITTER.draw_box(
             (
                 box_top_right[0] - text.surface_rect.width / 2,
                 box_top_right[1] + text.surface_rect.height / 2,
@@ -297,7 +313,7 @@ class _CowHerdingOverlay:
 
         text_surface = pygame.Surface(text.surface_rect.size, pygame.SRCALPHA)
         text.draw(text_surface)
-        self.display_surface.blit(
+        FBLITTER.schedule_blit(
             text_surface,
             (
                 box_top_right[0] - text.surface_rect.width - padding,
@@ -323,8 +339,7 @@ class _CowHerdingOverlay:
             else:
                 total_length += self.timer_chars[char].get_width()
 
-        _draw_box(
-            self.display_surface,
+        FBLITTER.draw_box(
             (SCREEN_WIDTH / 2, 0),
             (total_length, self.timer_char_height + 32),
         )
@@ -334,7 +349,7 @@ class _CowHerdingOverlay:
         offset_y = 3
 
         for char in timer_string:
-            self.display_surface.blit(
+            FBLITTER.schedule_blit(
                 self.timer_chars[char],
                 (SCREEN_WIDTH / 2 - total_length / 2 + current_length, offset_y),
             )

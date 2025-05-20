@@ -35,6 +35,7 @@ from src.events import (
     SET_CURSOR,
     SHOW_BOX_KEYBINDINGS,
 )
+from src.fblitter import FBLITTER
 from src.groups import AllSprites
 from src.gui.interface.dialog import DialogueManager
 from src.gui.setup import setup_gui
@@ -70,7 +71,7 @@ from src.settings import (
     # SERVER_URL,
 )
 from src.sprites.setup import setup_entity_assets
-from src.support import get_translated_string as _
+from src.support import get_translated_string
 from src.tutorial.tutorial import Tutorial
 
 # memory cleaning settings
@@ -107,7 +108,7 @@ class Game:
 
         screen_size = (SCREEN_WIDTH, SCREEN_HEIGHT)
         self.display_surface = pygame.display.set_mode(screen_size)
-        pygame.display.set_caption(_("Clear Skies"))
+        pygame.display.set_caption(get_translated_string("Clear Skies"))
 
         # frames
         self.level_frames: dict | None = None
@@ -919,11 +920,12 @@ class Game:
                 self.level.camera,
                 is_game_paused,
             )
+            FBLITTER.blit_all()
 
             # Apply blur effect only if the player has goggles equipped
             if self.player.has_goggles and self.current_state == GameState.PLAY:
                 surface = pygame.transform.box_blur(self.display_surface, 3)
-                self.display_surface.blit(surface, (0, 0))
+                FBLITTER.schedule_blit(surface, (0, 0))
 
             # Into and Tutorial
             self.show_intro_msg()
@@ -936,7 +938,9 @@ class Game:
             mouse_pos = pygame.mouse.get_pos()
             if not is_game_paused or is_first_frame:
                 self.previous_frame = self.display_surface.copy()
-            self.display_surface.blit(self._cursor_img, mouse_pos)
+            FBLITTER.schedule_blit(self._cursor_img, mouse_pos)
+            FBLITTER.blit_all()
+
             is_first_frame = False
             pygame.display.update()
             await asyncio.sleep(0)
