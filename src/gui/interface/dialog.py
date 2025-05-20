@@ -5,6 +5,7 @@ import pygame
 
 from src import utils
 from src.enums import Layer
+from src.fblitter import FBLITTER
 from src.settings import TB_SIZE
 from src.sprites.base import Sprite
 from src.support import resource_path
@@ -143,7 +144,7 @@ class TextBox(Sprite):
         self.image.fblits(blit_list)
 
     def draw(self, display_surface: pygame.Surface, rect: pygame.Rect, camera):
-        display_surface.blit(self.image, self.rect)
+        FBLITTER.schedule_blit(self.image, self.rect)
 
 
 def prepare_tb_image(cname_surf: pygame.Surface, txt_surf: pygame.Surface):

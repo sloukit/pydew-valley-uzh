@@ -4,9 +4,9 @@ import pygame
 from pygame.math import Vector2 as vector
 
 from src.controls import Controls
+from src.fblitter import FBLITTER
 from src.gui.menu.components import Button, KeySetup, Slider
-from src.support import get_translated_string as _
-from src.support import load_data, resource_path, save_data
+from src.support import get_translated_string, load_data, resource_path, save_data
 
 
 class Description:
@@ -77,10 +77,10 @@ class Description:
         slide_bar_rect.right = self.description_rect.right - 2
         slide_bar_rect.top = self.description_rect.top - Y1 * coeff
 
-        pygame.draw.rect(self.display_surface, "grey", slide_bar_rect, 0, 4)
+        FBLITTER.draw_rect("grey", slide_bar_rect, 0, 4)
 
     def draw(self):
-        pygame.draw.rect(self.display_surface, "White", self.rect, 0, 4)
+        FBLITTER.draw_rect("white", self.rect, 0, 4)
 
         # blit description slider
         pos = self.description_slider_rect.topleft
@@ -88,7 +88,7 @@ class Description:
 
         # blit description
         pos = self.description_rect.topleft
-        self.display_surface.blit(self.description_surface, pos)
+        FBLITTER.schedule_blit(self.description_surface, pos)
 
         self.draw_slider_bar()
 
@@ -107,7 +107,9 @@ class KeybindsDescription(Description):
         reset_btn_rect = pygame.Rect(0, 0, 130, 50)
         reset_btn_rect.bottomright = self.rect.bottomleft - vector(10, 0)
 
-        self.reset_button = Button(_("Reset"), reset_btn_rect, self.font)
+        self.reset_button = Button(
+            get_translated_string("Reset"), reset_btn_rect, self.font
+        )
 
     def save_data(self):
         for key in self.keys_group:
@@ -370,10 +372,14 @@ class VolumeDescription(Description):
         offset = vector(0, 20)
 
         self.sound_slider.draw(self.description_slider_surface)
-        self.draw_text(_("Music"), self.sound_slider.rect.topleft + offset)
+        self.draw_text(
+            get_translated_string("Music"), self.sound_slider.rect.topleft + offset
+        )
 
         self.sfx_slider.draw(self.description_slider_surface)
-        self.draw_text(_("SFX"), self.sfx_slider.rect.topleft + offset)
+        self.draw_text(
+            get_translated_string("SFX"), self.sfx_slider.rect.topleft + offset
+        )
 
     def draw(self):
         self.make_surface_transparent()

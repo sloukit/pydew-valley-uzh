@@ -10,7 +10,7 @@ from src.enums import GameState
 from src.gui.menu.description import VolumeDescription  # , KeybindsDescription
 from src.gui.menu.general_menu import GeneralMenu
 from src.settings import DEBUG_MODE_VERSION, SCREEN_HEIGHT, SCREEN_WIDTH
-from src.support import get_translated_string as _
+from src.support import get_translated_string
 
 
 class SettingsMenu(GeneralMenu):
@@ -21,8 +21,11 @@ class SettingsMenu(GeneralMenu):
         controls: Type[Controls],
         get_game_version: Callable[[], int],
     ):
-        options = [_("Volume"), _("Back")]  # used to include _("Keybinds"),
-        title = _("Settings")
+        options = [
+            get_translated_string("Volume"),
+            get_translated_string("Back"),
+        ]  # used to include get_translated_string("Keybinds"),
+        title = get_translated_string("Settings")
         size = (400, 400)
         switch = switch_screen
         self.get_game_version = get_game_version
@@ -50,15 +53,15 @@ class SettingsMenu(GeneralMenu):
     def button_action(self, text: str):
         self.current_description.reset()
 
-        # if text == _("Keybinds"):
+        # if text == get_translated_string("Keybinds"):
         #     self.current_description = self.keybinds_description
-        if text == _("Volume"):
+        if text == get_translated_string("Volume"):
             self.current_description = self.volume_description
-        if text == _("Back"):
+        if text == get_translated_string("Back"):
             # self.keybinds_description.save_data()
             self.volume_description.save_data()
             self.switch_screen(GameState.PAUSE)
-        if text == _("Reset"):
+        if text == get_translated_string("Reset"):
             # self.keybinds_description.reset_keybinds(self.show_debug_keybinds)
             self.volume_description.reset_volumes()
 

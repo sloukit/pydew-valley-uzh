@@ -7,13 +7,14 @@ from pygame.mouse import get_pressed as mouse_buttons
 from src import client, xplat
 from src.enums import CustomCursor, GameState
 from src.events import SET_CURSOR, post_event
+from src.fblitter import FBLITTER
 from src.gui.menu.general_menu import GeneralMenu
 from src.settings import (
     SCREEN_HEIGHT,
     SCREEN_WIDTH,
     # USE_SERVER,
 )
-from src.support import get_translated_string as _
+from src.support import get_translated_string
 
 _SCREEN_CENTER = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
 # MAX_TOKEN_LEN = 3
@@ -28,8 +29,12 @@ class MainMenu(GeneralMenu):
         set_token: Callable[[dict[str, Any]], None],
         set_players_name: Callable[[dict[str, Any]], None],
     ) -> None:
-        options = [_("Play"), _("Quit"), _("Enter authentication data")]
-        title = _("Main Menu")
+        options = [
+            get_translated_string("Play"),
+            get_translated_string("Quit"),
+            get_translated_string("Enter authentication data"),
+        ]
+        title = get_translated_string("Main Menu")
         size = (400, 400)
         super().__init__(title, options, switch_screen, size)
         # This function references a method of the main `Game` object.
@@ -80,23 +85,21 @@ class MainMenu(GeneralMenu):
         background_rect = box.copy()
         background_rect.inflate_ip(0, 50)
         background_rect.move_ip(0, -8)
-        pygame.draw.rect(
-            self.display_surface, background_color, background_rect, border_radius=10
-        )
+        FBLITTER.draw_rect(background_color, background_rect, border_radius=10)
 
         if input_active:
             label_font = self.font
             label_surface = label_font.render(label_text, True, text_color)
             label_rect = label_surface.get_rect(midbottom=(box.centerx, box.top + 5))
-            self.display_surface.blit(label_surface, label_rect)
+            FBLITTER.schedule_blit(label_surface, label_rect)
 
-        pygame.draw.rect(self.display_surface, box_color, box, border_radius=10)
-        pygame.draw.rect(self.display_surface, border_color, box, 3, border_radius=10)
+        FBLITTER.draw_rect(box_color, box, border_radius=10)
+        FBLITTER.draw_rect(border_color, box, 3, border_radius=10)
 
         font = self.font
         text_surface = font.render(input_text, True, text_color)
         text_rect = text_surface.get_rect(midleft=(box.x + 10, box.centery))
-        self.display_surface.blit(text_surface, text_rect)
+        FBLITTER.schedule_blit(text_surface, text_rect)
 
         if input_active:
             current_time = pygame.time.get_ticks()
@@ -105,7 +108,7 @@ class MainMenu(GeneralMenu):
                 self.cursor_timer = current_time
             if self.cursor_visible:
                 cursor_rect = pygame.Rect(text_rect.topright, (2, text_rect.height))
-                pygame.draw.rect(self.display_surface, text_color, cursor_rect)
+                FBLITTER.draw_rect(text_color, cursor_rect)
 
     def draw(self) -> None:
         super().draw()
@@ -113,14 +116,14 @@ class MainMenu(GeneralMenu):
             self.draw_input_box(
                 self.input_box,
                 self.input_text,
-                _("Enter play token:"),
+                get_translated_string("Enter play token:"),
                 self.input_active,
             )
         if self.players_name_active:
             self.draw_input_box(
                 self.players_name_box,
                 self.players_name_text,
-                _("Enter player's name:"),
+                get_translated_string("Enter player's name:"),
                 self.players_name_active,
             )
 
@@ -144,7 +147,7 @@ class MainMenu(GeneralMenu):
             self.players_name_active = True
             self.set_players_name("")
             self.play_button_enabled = True
-            self.remove_button(_("Enter authentication data"))
+            self.remove_button(get_translated_string("Enter authentication data"))
             self.draw()
         self.input_text = ""
 
@@ -153,13 +156,13 @@ class MainMenu(GeneralMenu):
         client.authn(token, self.post_login_callback)
 
     def button_action(self, text) -> None:
-        if text == _("Play") and self.play_button_enabled:
+        if text == get_translated_string("Play") and self.play_button_enabled:
             post_event(SET_CURSOR, cursor=CustomCursor.ARROW)
             self.switch_screen(GameState.PLAY)
-        elif text == _("Enter authentication data"):
+        elif text == get_translated_string("Enter authentication data"):
             self.input_active = True
             self.token = ""  # Reset token each time we re-enter
-        elif text == _("Quit"):
+        elif text == get_translated_string("Quit"):
             self.quit_game()
 
     def handle_event(self, event: pygame.event.Event) -> bool:
@@ -201,7 +204,7 @@ class MainMenu(GeneralMenu):
                         #     else:
                         #         self.set_players_name("")
                         #         self.play_button_enabled = True
-                        #         self.remove_button(_("Enter authentication data"))
+                        #         self.remove_button(get_translated_string("Enter authentication data"))
                         #         self.draw()
                         #     self.input_text = ""
                         return True
@@ -222,7 +225,9 @@ class MainMenu(GeneralMenu):
                         self.set_players_name(self.players_name)
                         self.play_button_enabled = True
                         self.players_name_active = False
-                        self.remove_button(_("Enter authentication data"))
+                        self.remove_button(
+                            get_translated_string("Enter authentication data")
+                        )
                         self.draw()
                     return True
                 elif event.key == pygame.K_ESCAPE:
@@ -238,12 +243,14 @@ class MainMenu(GeneralMenu):
             if not self.input_active and not self.players_name_active:
                 if event.key in [pygame.K_RETURN, pygame.K_KP_ENTER]:
                     if not self.token and not self.players_name:
-                        self.button_action(_("Enter authentication data"))
+                        self.button_action(
+                            get_translated_string("Enter authentication data")
+                        )
                         return True
                     elif self.play_button_enabled:
-                        self.button_action(_("Play"))
+                        self.button_action(get_translated_string("Play"))
                         return True
                 elif event.key == pygame.K_ESCAPE:
-                    self.button_action(_("Quit"))
+                    self.button_action(get_translated_string("Quit"))
                     return True
         return False

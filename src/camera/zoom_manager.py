@@ -8,6 +8,7 @@ from src.exceptions import CameraWarning, InvalidMapError
 from src.gui.scene_animation import SceneAnimation
 from src.sprites.base import Sprite
 
+from ..fblitter import FBLITTER
 from .zoom_area import ZoomArea
 
 
@@ -89,4 +90,4 @@ class ZoomManager:
         surf_rect = surf.get_frect()
         zoomed_area = pygame.transform.scale_by(surf, self.zoom_factor + 1)
         zoomed_rect = zoomed_area.get_frect(center=surf_rect.center)
-        surf.blit(zoomed_area, zoomed_rect)
+        FBLITTER.schedule_blit(zoomed_area, zoomed_rect)

@@ -3,6 +3,7 @@ import random
 import pygame
 
 from src.enums import Layer
+from src.fblitter import FBLITTER
 from src.overlay.game_time import GameTime
 from src.settings import (
     SCREEN_HEIGHT,
@@ -73,13 +74,15 @@ class Sky:
         # draw
         self.color = self.get_color()
         self.full_surf.fill(self.color)
-        self.display_surface.blit(
-            self.full_surf, (0, 0), special_flags=pygame.BLEND_RGBA_MULT
-        )
+        FBLITTER.blit_with_special_flags(self.full_surf, (0, 0), pygame.BLEND_RGBA_MULT)
+        # self.display_surface.blit(
+        #     self.full_surf, (0, 0), special_flags=pygame.BLEND_RGBA_MULT
+        # )
 
         if level >= 7:
             self.volcanic_surf.fill(self.volcanic_color)
-            self.display_surface.blit(self.volcanic_surf, (0, 0))
+            FBLITTER.schedule_blit(self.volcanic_surf, (0, 0))
+            # self.display_surface.blit(self.volcanic_surf, (0, 0))
 
 
 class Rain:

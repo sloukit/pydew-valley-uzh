@@ -11,17 +11,21 @@ from src.colors import (
     SL_ORANGE_MEDIUM,
 )
 from src.enums import SocialIdentityAssessmentDimension
+from src.fblitter import FBLITTER
 from src.gui.menu.abstract_menu import AbstractMenu
 from src.gui.menu.components import AbstractButton
-from src.screens.minigames.gui import Text, TextChunk, _draw_box, _ReturnButton
+from src.screens.minigames.gui import (
+    Text,
+    TextChunk,
+    _ReturnButton,
+)
 from src.settings import (
     SCREEN_HEIGHT,
     SCREEN_WIDTH,
     SOCIAL_IDENTITY_ASSESSMENT_BORDER_SIZE,
 )
 from src.sprites.entities.player import Player
-from src.support import get_translated_string as _
-from src.support import import_font, resource_path
+from src.support import get_translated_string, import_font, resource_path
 
 
 class _SocialIdentityAssessmentButton(AbstractButton):
@@ -145,7 +149,7 @@ class SocialIdentityAssessmentMenu(AbstractMenu):
         self._selected_scale = None
 
         self._continue_button = None
-        self._continue_button_text = _("Continue")
+        self._continue_button_text = get_translated_string("Continue")
 
         self._social_identity_assessment_buttons: list[
             _SocialIdentityAssessmentButton
@@ -201,7 +205,8 @@ class SocialIdentityAssessmentMenu(AbstractMenu):
             + button_area_height,
         )
 
-        _draw_box(self._surface, self.box_center, box_size)
+        FBLITTER.set_current_surf(self._surface)
+        FBLITTER.draw_box(self.box_center, box_size)
 
         self._continue_button.move(
             (
@@ -236,22 +241,25 @@ class SocialIdentityAssessmentMenu(AbstractMenu):
 
             text_key: str = translations_map[i] if i in translations_map.keys() else ""
             if text_key:
-                text_surf = self.font.render(f"{_(text_key)}", False, "Black")
+                text_surf = self.font.render(
+                    get_translated_string(text_key), False, "Black"
+                )
                 half_width_of_text = text_surf.get_rect().width / 2
                 current_button_bottom_left = current_button.rect.midbottom
-                self._surface.blit(
+                FBLITTER.schedule_blit(
                     text_surf,
                     (
                         current_button_bottom_left[0] - half_width_of_text,
                         current_button_bottom_left[1] + 10,
                     ),
                 )
+        FBLITTER.blit_all()
 
     def get_description_text(self) -> Text:
         return Text(TextChunk(self.get_question_by_selection(), self.font_title))
 
     def get_question_by_selection(self):
-        description: str = _(
+        description: str = get_translated_string(
             f"social identity assessment q{self._selection[self.current_dimension_index] + 1}"
         )
         return description.replace(
@@ -317,7 +325,7 @@ class SocialIdentityAssessmentMenu(AbstractMenu):
         self.buttons.extend(self._social_identity_assessment_buttons)
 
     def draw_title(self):
-        self.display_surface.blit(self._surface, (0, 0))
+        FBLITTER.schedule_blit(self._surface, (0, 0))
 
     def create_image_number(self, number, foreground_color="Black") -> pygame.surface:
         return self.numbers_font.render(f"{number}", False, foreground_color)
@@ -342,8 +350,10 @@ class SocialIdentityAssessmentMenu(AbstractMenu):
             left=self.rect.left + 50,
             width=self.rect.width - 100,
         )
-        pygame.draw.rect(self._surface, SL_ORANGE_BRIGHT, text_rect)
-        self._surface.blit(
+        FBLITTER.set_current_surf(self._surface)
+        FBLITTER.draw_rect(SL_ORANGE_BRIGHT, text_rect)
+        FBLITTER.schedule_blit(
             text_surface,
             description_position,
         )
+        FBLITTER.blit_all()

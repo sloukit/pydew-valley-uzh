@@ -1,5 +1,6 @@
 import pygame
 
+from src.fblitter import FBLITTER
 from src.settings import OVERLAY_POSITIONS
 from src.sprites.entities.player import Player
 from src.support import import_font
@@ -37,6 +38,6 @@ class Money:
         )
 
         # display
-        pygame.draw.rect(self.display_surface, "White", self.rect, 0, 4)
-        pygame.draw.rect(self.display_surface, foreground_color, self.rect, 4, 4)
-        self.display_surface.blit(money_surf, money_rect)
+        FBLITTER.draw_rect("white", self.rect, 0, 4)
+        FBLITTER.draw_rect(foreground_color, self.rect, 4, 4)
+        FBLITTER.schedule_blit(money_surf, money_rect)

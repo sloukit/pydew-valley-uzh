@@ -2,6 +2,7 @@ import random
 
 import pygame
 
+from src.fblitter import FBLITTER
 from src.settings import SCALE_FACTOR
 from src.support import import_image
 
@@ -67,7 +68,7 @@ class HealthProgressBar:
         # cat img changing.
         if health_percent > 0.5:
             self.curr_cat = 0
-        elif health_percent <= 0.5 and health_percent > 0.25:
+        elif 0.5 >= health_percent > 0.25:
             self.curr_cat = 1
         else:
             self.curr_cat = 2
@@ -75,21 +76,17 @@ class HealthProgressBar:
         # drawing
         # health
         self.hp_rect.width = health_percent * self.health_bar_rect.width
-        pygame.draw.rect(
-            screen,
+        FBLITTER.draw_rect(
             self.color,
-            self.hp_rect.move(offset[0], offset[1]),
+            self.hp_rect.move(offset),
             border_top_right_radius=12,
             border_bottom_right_radius=12,
         )
         # frame
-        screen.blit(
-            self.health_bar,
-            (self.health_bar_rect.x + offset[0], self.health_bar_rect.y + offset[1]),
-        )
+        FBLITTER.schedule_blit(self.health_bar, self.health_bar_rect.move(offset))
         # emote
         cat_img, cat_rect = self.cat_imgs[self.curr_cat]
-        screen.blit(cat_img, (cat_rect.x + offset[0], cat_rect.y + offset[1]))
+        FBLITTER.schedule_blit(cat_img, cat_rect.move(offset))
 
     def apply_damage(self, intensity):
         self.hp = pygame.math.clamp(self.hp - intensity, 0, self.max_hp)

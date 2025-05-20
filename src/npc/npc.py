@@ -13,6 +13,7 @@ from src.enums import (
     SeedType,
     StudyGroup,
 )
+from src.fblitter import FBLITTER
 from src.gui.interface.emotes import NPCEmoteManager
 from src.npc.bases.npc_base import NPCBase
 from src.npc.behaviour.npc_behaviour_tree import NPCIndividualContext
@@ -278,7 +279,7 @@ class NPC(NPCBase):
     def draw(self, display_surface: pygame.Surface, rect: pygame.Rect, camera):
         if self.is_dead:
             # display only the dead NPC image if dead
-            display_surface.blit(self.image, rect)
+            FBLITTER.schedule_blit(self.image, rect)
             return
 
         super().draw(display_surface, rect, camera)
