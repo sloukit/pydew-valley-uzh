@@ -681,6 +681,8 @@ class Game:
 
             is_game_paused = self.game_paused()
 
+            self.display_surface.fill("#C0D470")
+
             if not is_game_paused or is_first_frame:
                 if self.level.cutscene_animation.active:
                     event = pygame.key.get_pressed()
