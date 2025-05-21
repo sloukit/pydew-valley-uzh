@@ -14,6 +14,7 @@ from src.enums import (
     Layer,
     StudyGroup,
 )
+from src.fblitter import FBLITTER
 from src.sprites.entities.entity import Entity
 from src.sprites.setup import EntityAsset
 
@@ -137,7 +138,7 @@ class Character(Entity, ABC):
 
     def draw(self, display_surface: pygame.Surface, rect: pygame.Rect, camera):
         # super().draw(display_surface, rect, camera)
-        blit_list = []
+        # blit_list = []
 
         # Render the necklace if the character has it and is in the ingroup
         is_in_ingroup = self.study_group == StudyGroup.INGROUP
@@ -149,7 +150,7 @@ class Character(Entity, ABC):
                 necklace_ani = self.assets[necklace_state][self.facing_direction]
                 necklace_frame = necklace_ani.get_frame(self.frame_index)
                 necklace_frame.set_alpha(self.image_alpha)
-                blit_list.append((necklace_frame, rect))
+                FBLITTER.schedule_blit(necklace_frame, rect)
 
         # Render the hat/horn (depending on the group)
         if is_in_ingroup:
@@ -158,14 +159,15 @@ class Character(Entity, ABC):
                 hat_ani = self.assets[hat_state][self.facing_direction]
                 hat_frame = hat_ani.get_frame(self.frame_index)
                 # hat_frame.set_alpha(self.image_alpha)  # hat is always visible, looks silly otherwise
-                blit_list.append((hat_frame, rect))
+                FBLITTER.schedule_blit(hat_frame, rect)
+
         elif self.study_group == StudyGroup.OUTGROUP:
             if self.has_outgroup_skin:
                 skin_state = EntityState(f"outgroup_{self.state.value}")
                 skin_ani = self.assets[skin_state][self.facing_direction]
                 skin_frame = skin_ani.get_frame(self.frame_index)
                 skin_frame.set_alpha(self.image_alpha)
-                blit_list.append((skin_frame, rect))
+                FBLITTER.schedule_blit(skin_frame, rect)
             else:
                 # if transition to outgroup has not finished, drew the ingroup body
                 self.image.set_alpha(self.image_alpha)
@@ -176,14 +178,14 @@ class Character(Entity, ABC):
                     hat_ani = self.assets[hat_state][self.facing_direction]
                     hat_frame = hat_ani.get_frame(self.frame_index)
                     hat_frame.set_alpha(self.image_alpha)
-                    blit_list.append((hat_frame, rect))
+                    FBLITTER.schedule_blit(hat_frame, rect)
 
             if self.has_horn:
                 horn_state = EntityState(f"horn_{self.state.value}")
                 horn_ani = self.assets[horn_state][self.facing_direction]
                 horn_frame = horn_ani.get_frame(self.frame_index)
                 horn_frame.set_alpha(self.image_alpha)
-                blit_list.append((horn_frame, rect))
+                FBLITTER.schedule_blit(horn_frame, rect)
 
         # Render the goggles
         if self.has_goggles:
@@ -191,9 +193,7 @@ class Character(Entity, ABC):
             goggles_ani = self.assets[goggles_state][self.facing_direction]
             goggles_frame = goggles_ani.get_frame(self.frame_index)
             goggles_frame.set_alpha(self.image_alpha)
-            blit_list.append((goggles_frame, rect))
-
-        display_surface.fblits(blit_list)
+            FBLITTER.schedule_blit(goggles_frame, rect)
 
     def update(self, dt: float):
         super().update(dt)
