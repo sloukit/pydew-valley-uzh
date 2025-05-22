@@ -240,16 +240,16 @@ class _CowHerdingOverlay:
 
         text = Text(
             TextChunk(
-                get_translated_string("cow_minigame_desc"), self.font_description
+                get_translated_string("Cow Herding"), self.font_description
             ),
             Linebreak(),
             Linebreak((0, 24)),
             TextChunk(
-                get_translated_string("cow_minigame_desc_l1"), self.font_description
+                get_translated_string("Herd the cows into the barn"), self.font_description
             ),
             Linebreak(),
             TextChunk(
-                get_translated_string("cow_minigame_desc_l2"), self.font_description
+                get_translated_string("as fast as possible!"), self.font_description
             ),
         )
 
