@@ -150,7 +150,6 @@ class PlayerTask(AbstractMenu):
             Linebreak((0, padding_y)),
         )
         FBLITTER.draw_box(
-            self.display_surface,
             (SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2) * 1.5),
             text.surface_rect.size,
         )
